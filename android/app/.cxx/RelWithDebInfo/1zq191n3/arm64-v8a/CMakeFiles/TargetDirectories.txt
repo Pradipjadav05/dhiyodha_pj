@@ -1,0 +1,2 @@
+/Users/krunalvegad/Downloads/Dhiyodha/android/app/.cxx/RelWithDebInfo/1zq191n3/arm64-v8a/CMakeFiles/edit_cache.dir
+/Users/krunalvegad/Downloads/Dhiyodha/android/app/.cxx/RelWithDebInfo/1zq191n3/arm64-v8a/CMakeFiles/rebuild_cache.dir

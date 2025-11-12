@@ -1,0 +1,2 @@
+/Users/krunalvegad/Downloads/Dhiyodha/android/app/.cxx/Debug/ld12u4o6/x86/CMakeFiles/rebuild_cache.dir
+/Users/krunalvegad/Downloads/Dhiyodha/android/app/.cxx/Debug/ld12u4o6/x86/CMakeFiles/edit_cache.dir
