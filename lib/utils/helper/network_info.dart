@@ -1,6 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
-import 'package:image_compression_flutter/image_compression_flutter.dart';
+// import 'package:image_compression_flutter/image_compression_flutter.dart';
 
 class NetworkInfo {
   final Connectivity connectivity;
@@ -12,7 +12,7 @@ class NetworkInfo {
     return result != ConnectivityResult.none;
   }
 
-  static Future<Uint8List> compressImage(XFile file) async {
+  /*static Future<Uint8List> compressImage(XFile file) async {
     final ImageFile input =
         ImageFile(filePath: file.path, rawBytes: await file.readAsBytes());
     final Configuration config = Configuration(
@@ -33,5 +33,5 @@ class NetworkInfo {
       debugPrint('Output size : ${output.sizeInBytes / 1048576}');
     }
     return output.rawBytes;
-  }
+  }*/
 }

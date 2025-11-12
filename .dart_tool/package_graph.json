@@ -23,7 +23,6 @@
         "get",
         "getwidget",
         "http",
-        "image_compression_flutter",
         "image_picker",
         "intl",
         "loadmore",
@@ -130,7 +129,7 @@
     },
     {
       "name": "share_plus",
-      "version": "10.1.4",
+      "version": "12.0.1",
       "dependencies": [
         "cross_file",
         "ffi",
@@ -153,17 +152,6 @@
       "version": "5.0.0",
       "dependencies": [
         "flutter"
-      ]
-    },
-    {
-      "name": "image_compression_flutter",
-      "version": "1.0.4",
-      "dependencies": [
-        "cross_file",
-        "flutter",
-        "flutter_image_compress",
-        "flutter_web_plugins",
-        "image_compression"
       ]
     },
     {
@@ -192,7 +180,7 @@
     },
     {
       "name": "getwidget",
-      "version": "6.0.0",
+      "version": "7.0.0",
       "dependencies": [
         "flutter"
       ]
@@ -520,7 +508,7 @@
     },
     {
       "name": "win32",
-      "version": "5.12.0",
+      "version": "5.15.0",
       "dependencies": [
         "ffi"
       ]
@@ -545,7 +533,7 @@
     },
     {
       "name": "share_plus_platform_interface",
-      "version": "5.0.2",
+      "version": "6.1.0",
       "dependencies": [
         "cross_file",
         "flutter",
@@ -574,27 +562,6 @@
       "dependencies": [
         "meta",
         "web"
-      ]
-    },
-    {
-      "name": "image_compression",
-      "version": "1.0.5",
-      "dependencies": [
-        "image",
-        "mime",
-        "path"
-      ]
-    },
-    {
-      "name": "flutter_image_compress",
-      "version": "2.4.0",
-      "dependencies": [
-        "flutter",
-        "flutter_image_compress_common",
-        "flutter_image_compress_macos",
-        "flutter_image_compress_ohos",
-        "flutter_image_compress_platform_interface",
-        "flutter_image_compress_web"
       ]
     },
     {
@@ -910,7 +877,7 @@
     },
     {
       "name": "shared_preferences_foundation",
-      "version": "2.5.4",
+      "version": "2.5.5",
       "dependencies": [
         "flutter",
         "shared_preferences_platform_interface"
@@ -918,7 +885,7 @@
     },
     {
       "name": "shared_preferences_android",
-      "version": "2.4.8",
+      "version": "2.4.15",
       "dependencies": [
         "flutter",
         "shared_preferences_platform_interface"
@@ -1022,58 +989,6 @@
       "version": "2.1.8",
       "dependencies": [
         "meta"
-      ]
-    },
-    {
-      "name": "image",
-      "version": "4.5.4",
-      "dependencies": [
-        "archive",
-        "meta",
-        "xml"
-      ]
-    },
-    {
-      "name": "flutter_image_compress_ohos",
-      "version": "0.0.3",
-      "dependencies": [
-        "flutter",
-        "flutter_image_compress_platform_interface"
-      ]
-    },
-    {
-      "name": "flutter_image_compress_macos",
-      "version": "1.0.3",
-      "dependencies": [
-        "flutter",
-        "flutter_image_compress_platform_interface"
-      ]
-    },
-    {
-      "name": "flutter_image_compress_web",
-      "version": "0.1.5",
-      "dependencies": [
-        "flutter",
-        "flutter_image_compress_platform_interface",
-        "flutter_web_plugins",
-        "web"
-      ]
-    },
-    {
-      "name": "flutter_image_compress_common",
-      "version": "1.0.6",
-      "dependencies": [
-        "flutter",
-        "flutter_image_compress_platform_interface"
-      ]
-    },
-    {
-      "name": "flutter_image_compress_platform_interface",
-      "version": "1.0.5",
-      "dependencies": [
-        "cross_file",
-        "flutter",
-        "plugin_platform_interface"
       ]
     },
     {
@@ -1228,15 +1143,6 @@
       ]
     },
     {
-      "name": "archive",
-      "version": "4.0.5",
-      "dependencies": [
-        "crypto",
-        "path",
-        "posix"
-      ]
-    },
-    {
       "name": "synchronized",
       "version": "3.3.1",
       "dependencies": []
@@ -1247,15 +1153,6 @@
       "dependencies": [
         "collection",
         "meta"
-      ]
-    },
-    {
-      "name": "posix",
-      "version": "6.0.1",
-      "dependencies": [
-        "ffi",
-        "meta",
-        "path"
       ]
     }
   ],

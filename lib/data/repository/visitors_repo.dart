@@ -4,7 +4,8 @@ import 'package:dhiyodha/data/api/api_client.dart';
 import 'package:dhiyodha/model/response_model/add_upload_operation_response_model.dart';
 import 'package:dhiyodha/utils/resource/app_constants.dart';
 import 'package:get/get.dart';
-import 'package:image_compression_flutter/image_compression_flutter.dart';
+// import 'package:image_compression_flutter/image_compression_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class VisitorsRepo {

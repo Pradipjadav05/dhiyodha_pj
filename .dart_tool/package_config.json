@@ -2,12 +2,6 @@
   "configVersion": 2,
   "packages": [
     {
-      "name": "archive",
-      "rootUri": "file:///Users/2000113075/.pub-cache/hosted/pub.dev/archive-4.0.5",
-      "packageUri": "lib/",
-      "languageVersion": "3.0"
-    },
-    {
       "name": "args",
       "rootUri": "file:///Users/2000113075/.pub-cache/hosted/pub.dev/args-2.7.0",
       "packageUri": "lib/",
@@ -206,42 +200,6 @@
       "languageVersion": "3.0"
     },
     {
-      "name": "flutter_image_compress",
-      "rootUri": "file:///Users/2000113075/.pub-cache/hosted/pub.dev/flutter_image_compress-2.4.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
-      "name": "flutter_image_compress_common",
-      "rootUri": "file:///Users/2000113075/.pub-cache/hosted/pub.dev/flutter_image_compress_common-1.0.6",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
-      "name": "flutter_image_compress_macos",
-      "rootUri": "file:///Users/2000113075/.pub-cache/hosted/pub.dev/flutter_image_compress_macos-1.0.3",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
-      "name": "flutter_image_compress_ohos",
-      "rootUri": "file:///Users/2000113075/.pub-cache/hosted/pub.dev/flutter_image_compress_ohos-0.0.3",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
-      "name": "flutter_image_compress_platform_interface",
-      "rootUri": "file:///Users/2000113075/.pub-cache/hosted/pub.dev/flutter_image_compress_platform_interface-1.0.5",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
-      "name": "flutter_image_compress_web",
-      "rootUri": "file:///Users/2000113075/.pub-cache/hosted/pub.dev/flutter_image_compress_web-0.1.5",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
       "name": "flutter_inappwebview",
       "rootUri": "file:///Users/2000113075/.pub-cache/hosted/pub.dev/flutter_inappwebview-6.1.5",
       "packageUri": "lib/",
@@ -333,7 +291,7 @@
     },
     {
       "name": "getwidget",
-      "rootUri": "file:///Users/2000113075/.pub-cache/hosted/pub.dev/getwidget-6.0.0",
+      "rootUri": "file:///Users/2000113075/.pub-cache/hosted/pub.dev/getwidget-7.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -348,24 +306,6 @@
       "rootUri": "file:///Users/2000113075/.pub-cache/hosted/pub.dev/http_parser-4.1.2",
       "packageUri": "lib/",
       "languageVersion": "3.4"
-    },
-    {
-      "name": "image",
-      "rootUri": "file:///Users/2000113075/.pub-cache/hosted/pub.dev/image-4.5.4",
-      "packageUri": "lib/",
-      "languageVersion": "3.0"
-    },
-    {
-      "name": "image_compression",
-      "rootUri": "file:///Users/2000113075/.pub-cache/hosted/pub.dev/image_compression-1.0.5",
-      "packageUri": "lib/",
-      "languageVersion": "3.0"
-    },
-    {
-      "name": "image_compression_flutter",
-      "rootUri": "file:///Users/2000113075/.pub-cache/hosted/pub.dev/image_compression_flutter-1.0.4",
-      "packageUri": "lib/",
-      "languageVersion": "3.0"
     },
     {
       "name": "image_picker",
@@ -584,12 +524,6 @@
       "languageVersion": "3.0"
     },
     {
-      "name": "posix",
-      "rootUri": "file:///Users/2000113075/.pub-cache/hosted/pub.dev/posix-6.0.1",
-      "packageUri": "lib/",
-      "languageVersion": "3.0"
-    },
-    {
       "name": "rxdart",
       "rootUri": "file:///Users/2000113075/.pub-cache/hosted/pub.dev/rxdart-0.28.0",
       "packageUri": "lib/",
@@ -597,13 +531,13 @@
     },
     {
       "name": "share_plus",
-      "rootUri": "file:///Users/2000113075/.pub-cache/hosted/pub.dev/share_plus-10.1.4",
+      "rootUri": "file:///Users/2000113075/.pub-cache/hosted/pub.dev/share_plus-12.0.1",
       "packageUri": "lib/",
       "languageVersion": "3.4"
     },
     {
       "name": "share_plus_platform_interface",
-      "rootUri": "file:///Users/2000113075/.pub-cache/hosted/pub.dev/share_plus_platform_interface-5.0.2",
+      "rootUri": "file:///Users/2000113075/.pub-cache/hosted/pub.dev/share_plus_platform_interface-6.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
@@ -615,15 +549,15 @@
     },
     {
       "name": "shared_preferences_android",
-      "rootUri": "file:///Users/2000113075/.pub-cache/hosted/pub.dev/shared_preferences_android-2.4.8",
+      "rootUri": "file:///Users/2000113075/.pub-cache/hosted/pub.dev/shared_preferences_android-2.4.15",
       "packageUri": "lib/",
-      "languageVersion": "3.6"
+      "languageVersion": "3.9"
     },
     {
       "name": "shared_preferences_foundation",
-      "rootUri": "file:///Users/2000113075/.pub-cache/hosted/pub.dev/shared_preferences_foundation-2.5.4",
+      "rootUri": "file:///Users/2000113075/.pub-cache/hosted/pub.dev/shared_preferences_foundation-2.5.5",
       "packageUri": "lib/",
-      "languageVersion": "3.4"
+      "languageVersion": "3.9"
     },
     {
       "name": "shared_preferences_linux",
@@ -819,9 +753,9 @@
     },
     {
       "name": "win32",
-      "rootUri": "file:///Users/2000113075/.pub-cache/hosted/pub.dev/win32-5.12.0",
+      "rootUri": "file:///Users/2000113075/.pub-cache/hosted/pub.dev/win32-5.15.0",
       "packageUri": "lib/",
-      "languageVersion": "3.7"
+      "languageVersion": "3.8"
     },
     {
       "name": "xdg_directories",

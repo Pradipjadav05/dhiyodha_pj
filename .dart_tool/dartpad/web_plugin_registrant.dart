@@ -8,9 +8,7 @@
 
 import 'package:connectivity_plus/src/connectivity_plus_web.dart';
 import 'package:firebase_core_web/firebase_core_web.dart';
-import 'package:flutter_image_compress_web/flutter_image_compress_web.dart';
 import 'package:flutter_inappwebview_web/web/main.dart';
-import 'package:image_compression_flutter/image_compression_flutter_web.dart';
 import 'package:image_picker_for_web/image_picker_for_web.dart';
 import 'package:permission_handler_html/permission_handler_html.dart';
 import 'package:share_plus/src/share_plus_web.dart';
@@ -22,9 +20,7 @@ void registerPlugins([final Registrar? pluginRegistrar]) {
   final Registrar registrar = pluginRegistrar ?? webPluginRegistrar;
   ConnectivityPlusWebPlugin.registerWith(registrar);
   FirebaseCoreWeb.registerWith(registrar);
-  FlutterImageCompressWeb.registerWith(registrar);
   InAppWebViewFlutterPlugin.registerWith(registrar);
-  ImageCompressionFlutterWeb.registerWith(registrar);
   ImagePickerPlugin.registerWith(registrar);
   WebPermissionHandler.registerWith(registrar);
   SharePlusWebPlugin.registerWith(registrar);
