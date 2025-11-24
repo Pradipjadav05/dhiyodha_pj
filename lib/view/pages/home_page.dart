@@ -578,8 +578,7 @@ class HomePageState extends State<HomePage> {
                     onTap: () async {
                       Get.back();
                       homeVM.isAllPost = true.obs;
-                      await getPosts(
-                          homeVM.page.value, homeVM.size.value, "", "", "");
+                      await callPostOrMyPostAPI(homeVM);
                     },
                     child: Row(
                       children: [
@@ -834,8 +833,7 @@ class HomePageState extends State<HomePage> {
                                 if (isSuccess) {
                                   showSnackBar("post_deleted".tr,
                                       isError: false);
-                                  await getPosts(homeVM.page.value,
-                                      homeVM.size.value, "", "", "");
+                                  await callPostOrMyPostAPI(homeVM);
                                 } else {
                                   showSnackBar("errorMessage".tr);
                                 }
@@ -846,8 +844,7 @@ class HomePageState extends State<HomePage> {
                                 if (isSuccess) {
                                   showSnackBar("post_deleted".tr,
                                       isError: false);
-                                  await getPosts(homeVM.page.value,
-                                      homeVM.size.value, "", "", "");
+                                  await callPostOrMyPostAPI(homeVM);
                                 } else {
                                   showSnackBar("errorMessage".tr);
                                 }
@@ -905,8 +902,8 @@ class HomePageState extends State<HomePage> {
                 bool result = await Get.toNamed(
                     Routes.getAddPostPageRoute(homeVM.currentUserData));
                 if (result ?? false) {
-                  await getPosts(
-                      homeVM.page.value, homeVM.size.value, "", "", "");
+                  showSnackBar(homeVM.isAllPost.value.toString(), isError: false);
+                  await callPostOrMyPostAPI(homeVM);
                 }
               },
             ),
@@ -948,6 +945,17 @@ class HomePageState extends State<HomePage> {
                       ),
                     )
         ]);
+  }
+
+  Future<void> callPostOrMyPostAPI(HomeViewModel homeVM) async {
+    if(homeVM.isAllPost.value == false) {
+      homeVM.postData = [];
+      await homeVM.getMyPosts();
+    } else {
+      homeVM.postData = [];
+      await getPosts(
+          homeVM.page.value, homeVM.size.value, "", "", "");
+    }
   }
 
   _homeDataWidget(HomeViewModel homeVM) {
@@ -2018,8 +2026,7 @@ class HomePageState extends State<HomePage> {
                       Response response = await homeVM.likeOnPost(data);
                       if (response.statusCode == 201) {
                         showSnackBar(response.body['message'], isError: false);
-                        await getPosts(
-                            homeVM.page.value, homeVM.size.value, "", "", "");
+                        await callPostOrMyPostAPI(homeVM);
                       } else {
                         showSnackBar(response.body['message']);
                       }
@@ -2379,8 +2386,7 @@ class HomePageState extends State<HomePage> {
                                         showSnackBar("added_comments".tr,
                                             isError: false);
                                         homeVM.commentController.text = "";
-                                        await getPosts(homeVM.page.value,
-                                            homeVM.size.value, "", "", "");
+                                        await callPostOrMyPostAPI(homeVM);
                                       } else {
                                         showSnackBar('errorMessage'.tr);
                                       }
@@ -2410,8 +2416,7 @@ class HomePageState extends State<HomePage> {
 
   Future<void> callInitAPIs() async {
     await Get.find<HomeViewModel>().initData();
-    await getPosts(Get.find<HomeViewModel>().page.value,
-        Get.find<HomeViewModel>().size.value, "", "", "");
+    await callPostOrMyPostAPI(Get.find<HomeViewModel>());
     await getDashboardData("ALL");
     await getCurrentUser();
   }

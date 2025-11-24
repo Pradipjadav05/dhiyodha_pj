@@ -203,7 +203,11 @@ class HomeViewModel extends GetxController implements GetxService {
   Future<bool> loadMore() async {
     if (page.value < totalPages.value) {
       page.value += 1;
-      await getPosts(page.value, size.value, "", "", "");
+      if(isAllPost.value == false) {
+        await getMyPosts();
+      } else {
+        await getPosts(page.value, size.value, "", "", "");
+      }
       return true;
     } else {
       return false;
