@@ -1,44 +1,25 @@
 class AddTestimonialRequestModel {
-  String? uuid;
   String? review;
   String? type;
-  Reviewer? reviewer;
-  String? reviewerFirstName;
-  String? reviewerLastName;
-  String? reviewerPofileUrl;
+  String? reviewerUuid;
 
   AddTestimonialRequestModel(
-      {this.uuid,
+      {
       this.review,
       this.type,
-      this.reviewer,
-      this.reviewerFirstName,
-      this.reviewerLastName,
-      this.reviewerPofileUrl});
+      this.reviewerUuid});
 
   AddTestimonialRequestModel.fromJson(Map<String, dynamic> json) {
-    uuid = json['uuid'];
     review = json['review'];
     type = json['type'];
-    reviewer = json['reviewer'] != null
-        ? new Reviewer.fromJson(json['reviewer'])
-        : null;
-    reviewerFirstName = json['reviewerFirstName'];
-    reviewerLastName = json['reviewerLastName'];
-    reviewerPofileUrl = json['reviewerPofileUrl'];
+    reviewerUuid = json['reviewerUuid'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['uuid'] = this.uuid;
     data['review'] = this.review;
     data['type'] = this.type;
-    if (this.reviewer != null) {
-      data['reviewer'] = this.reviewer!.toJson();
-    }
-    data['reviewerFirstName'] = this.reviewerFirstName;
-    data['reviewerLastName'] = this.reviewerLastName;
-    data['reviewerPofileUrl'] = this.reviewerPofileUrl;
+    data['reviewerUuid'] = this.reviewerUuid;
     return data;
   }
 }

@@ -108,119 +108,12 @@ class AddTestimonialPageState extends State<AddTestimonialPage> {
                                 ));
                                 bool isSuccess = await testVM.addTestimonial(
                                     new AddTestimonialRequestModel(
-                                        uuid: widget.membersChildData.uuid,
                                         review: testVM
                                             .testimonialController.text
                                             .trim(),
                                         type: "INSIDE",
-                                        reviewer: new Reviewer(
-                                          firstName:
-                                              globalCurrentUserData.firstName ??
-                                                  "",
-                                          lastName:
-                                              globalCurrentUserData.lastName ??
-                                                  "",
-                                          dob: globalCurrentUserData.dob ?? "",
-                                          countryCode: globalCurrentUserData
-                                                  .countryCode ??
-                                              "",
-                                          mobileNo:
-                                              globalCurrentUserData.mobileNo ??
-                                                  "",
-                                          uploadDocumentId:
-                                              globalCurrentUserData
-                                                      .uploadDocumentId ??
-                                                  "",
-                                          education:
-                                              globalCurrentUserData.education ??
-                                                  "",
-                                          children:
-                                              globalCurrentUserData.children ??
-                                                  0,
-                                          pet: globalCurrentUserData.pet ?? "",
-                                          hobbiesAndInterest:
-                                              globalCurrentUserData
-                                                      .hobbiesAndInterest ??
-                                                  "",
-                                          cityResidingYears:
-                                              globalCurrentUserData
-                                                      .cityResidingYears ??
-                                                  0,
-                                          burningDesire: globalCurrentUserData
-                                                  .burningDesire ??
-                                              "",
-                                          somethingNoOneKnowsAboutMe:
-                                              globalCurrentUserData
-                                                      .somethingNoOneKnowsAboutMe ??
-                                                  "",
-                                          keyToSuccess: globalCurrentUserData
-                                                  .keyToSuccess ??
-                                              "",
-                                          maritalStatus: globalCurrentUserData
-                                                  .maritalStatus ??
-                                              "",
-                                          companyDetailsRequest:
-                                              CompanyDetailsRequest(
-                                                  uuid: globalCurrentUserData.uuid ??
-                                                      "",
-                                                  companyName: globalCurrentUserData
-                                                          .currentUserOrganization
-                                                          ?.companyName ??
-                                                      "",
-                                                  companyEstablishment: globalCurrentUserData
-                                                          ?.currentUserOrganization
-                                                          ?.companyEstablishment ??
-                                                      "",
-                                                  companyAddress: globalCurrentUserData
-                                                          .currentUserOrganization
-                                                          ?.companyAddress ??
-                                                      "",
-                                                  registeredType: "",
-                                                  //pending
-                                                  numberOfEmployees: globalCurrentUserData
-                                                      .currentUserOrganization
-                                                      ?.numberOfEmployees,
-                                                  yearlyTurnover: globalCurrentUserData
-                                                          .currentUserOrganization
-                                                          ?.yearlyTurnover ??
-                                                      "",
-                                                  companyEmail: "",
-                                                  //pending
-                                                  companyContact: globalCurrentUserData
-                                                          .currentUserOrganization
-                                                          ?.companyContact ??
-                                                      "",
-                                                  businessCategory: globalCurrentUserData.currentUserOrganization?.businessCategory ?? "",
-                                                  businessDescription: globalCurrentUserData?.currentUserOrganization?.businessDescription ?? "",
-                                                  yearlyProfit: globalCurrentUserData.currentUserOrganization?.yearlyProfit ?? 0.0,
-                                                  gstNumber: globalCurrentUserData.currentUserOrganization?.gstNumber ?? "",
-                                                  uploadGst: globalCurrentUserData.currentUserOrganization?.uploadGst ?? "",
-                                                  panNumber: globalCurrentUserData.currentUserOrganization?.panNumber ?? "",
-                                                  uploadPan: globalCurrentUserData.currentUserOrganization?.uploadPan ?? ""),
-                                          addressRequest: AddressRequest(
-                                            city: globalCurrentUserData
-                                                    .currentUserAddress?.city ??
-                                                "",
-                                            state: globalCurrentUserData
-                                                    .currentUserAddress
-                                                    ?.state ??
-                                                "",
-                                            country: globalCurrentUserData
-                                                    .currentUserAddress
-                                                    ?.country ??
-                                                "",
-                                            pinCode: globalCurrentUserData
-                                                    .currentUserAddress
-                                                    ?.pinCode ??
-                                                "",
-                                          ),
-                                        ),
-                                        reviewerFirstName:
-                                            globalCurrentUserData.firstName,
-                                        reviewerLastName:
-                                            globalCurrentUserData.lastName,
-                                        reviewerPofileUrl:
-                                            globalCurrentUserData.profileUrl));
+                                        reviewerUuid: widget.membersChildData.uuid,
+                                    ));
                                 if (isSuccess) {
                                   Get.back(result: true);
                                   showSnackBar("testimonial_added".tr,

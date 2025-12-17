@@ -31,6 +31,7 @@ class VisitorsViewModel extends GetxController implements GetxService {
       _selectedChapter = "",
       _selectedBusinessCategory = "";
   List<String> _countryList = [];
+  List<String> unSortedList = [];
   List<String> _stateList = [];
   List<String> _cityList = [];
   List<String> _chapterList = [];
@@ -440,9 +441,14 @@ class VisitorsViewModel extends GetxController implements GetxService {
       _stateList.add("Select State");
       _cityList = [];
       _cityList.add("Select City");
+
+      unSortedList = [];
       response.body['data'].forEach((country) {
-        _countryList.add(country);
+        unSortedList.add(country);
       });
+      unSortedList.sort();
+      _countryList = _countryList + unSortedList;
+
       _selectedCountry = _countryList[0];
     } else {
       ApiChecker.checkApi(response);
@@ -460,9 +466,12 @@ class VisitorsViewModel extends GetxController implements GetxService {
       _stateList.add("Select State");
       _cityList = [];
       _cityList.add("Select City");
+      unSortedList = [];
       response.body['data'].forEach((state) {
-        _stateList.add(state);
+        unSortedList.add(state);
       });
+      unSortedList.sort();
+      _stateList = _stateList + unSortedList;
       _selectedState = _stateList[0];
     } else {
       ApiChecker.checkApi(response);
@@ -478,9 +487,12 @@ class VisitorsViewModel extends GetxController implements GetxService {
     if (response.statusCode == 200) {
       _cityList = [];
       _cityList.add("Select City");
+      unSortedList = [];
       response.body['data'].forEach((city) {
-        _cityList.add(city);
+        unSortedList.add(city);
       });
+      unSortedList.sort();
+      _cityList = _cityList + unSortedList;
       _selectedCity = _cityList[0];
     } else {
       ApiChecker.checkApi(response);
