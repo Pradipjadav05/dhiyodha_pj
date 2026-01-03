@@ -55,6 +55,9 @@ class MyBioPagePageState extends State<MyBioPage> {
     vvm.knowAboutMeController.text =
         vvm.currentUserData.somethingNoOneKnowsAboutMe ?? "";
     vvm.keyToSuccessController.text = vvm.currentUserData.keyToSuccess ?? "";
+    setState(() {
+
+    });
   }
 
   @override

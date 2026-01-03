@@ -10,9 +10,12 @@ import 'package:dhiyodha/utils/resource/app_font_size.dart';
 import 'package:dhiyodha/utils/resource/app_media_assets.dart';
 import 'package:dhiyodha/view/widgets/common_app_bar.dart';
 import 'package:dhiyodha/view/widgets/common_card.dart';
+import 'package:dhiyodha/view/widgets/common_snackbar.dart';
 import 'package:dhiyodha/viewModel/posts_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../../viewModel/visiting_card_viewmodel.dart';
 
 class ProfilePage extends StatefulWidget {
   CurrentUserData currentUserData;
@@ -30,6 +33,18 @@ class ProfilePageState extends State<ProfilePage> {
     super.initState();
     _currentUserData = widget.currentUserData;
     Get.find<PostsViewModel>().initData();
+  }
+
+  Future<void> _refreshUserData() async {
+    try {
+      VisitingCardViewModel vvm = Get.find<VisitingCardViewModel>();
+      CurrentUserData updatedData = vvm.currentUserData;
+      setState(() {
+        _currentUserData = updatedData;
+      });
+    } catch (e) {
+      print("Error refreshing user data: $e");
+    }
   }
 
   @override
@@ -193,8 +208,11 @@ class ProfilePageState extends State<ProfilePage> {
                   ),
                   SizedBox(height: paddingSize20),
                   CommonCard(
-                    onTap: () {
-                      Get.toNamed(Routes.getMyBioPageRoute(_currentUserData));
+                    onTap: () async {
+                      final result = await Get.toNamed(Routes.getMyBioPageRoute(_currentUserData));
+                      if (result == true) {
+                        await _refreshUserData();
+                      }
                     },
                     elevation: 0.0,
                     bgColor: lavenderMist,

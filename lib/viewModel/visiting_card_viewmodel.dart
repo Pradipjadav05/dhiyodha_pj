@@ -8,6 +8,8 @@ import 'package:dhiyodha/model/response_model/visitor_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'home_viewmodel.dart';
+
 class VisitingCardViewModel extends GetxController implements GetxService {
   final VisitingCardRepo visitingCardRepo;
 
@@ -155,6 +157,7 @@ class VisitingCardViewModel extends GetxController implements GetxService {
         await visitingCardRepo.updateProfile(updateProfileRequestModel);
     _isLoading = false;
     if (response.statusCode == 200) {
+      currentUserData = (await Get.find<HomeViewModel>().getCurrentUser());
       isSuccess = true;
     } else {
       isSuccess = false;

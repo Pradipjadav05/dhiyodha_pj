@@ -343,7 +343,7 @@ class HomeViewModel extends GetxController implements GetxService {
     update();
   }
 
-  Future<void> getCurrentUser() async {
+  Future<CurrentUserData> getCurrentUser() async {
     _isLoading = true;
     update();
     Response response = await homeRepo.getCurrentUser();
@@ -357,6 +357,7 @@ class HomeViewModel extends GetxController implements GetxService {
     }
 
     update();
+    return _currentUserData;
   }
 
   Future<bool> deletePost(String postUuid) async {
