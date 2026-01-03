@@ -39,6 +39,49 @@ class AddressPageState extends State<AddressPage> {
     if (widget.currentUserData.currentUserAddress!.country!.isNotEmpty) {
       await addressViewmodel
           .getStates(widget.currentUserData.currentUserAddress!.country!);
+
+      // Set country if it exists in the list, otherwise use default
+      if (addressViewmodel.countryList.contains(
+          widget.currentUserData.currentUserAddress!.country!)) {
+        addressViewmodel.selectedCountry =
+        widget.currentUserData.currentUserAddress!.country!;
+      } else {
+        addressViewmodel.selectedCountry = addressViewmodel.countryList.isNotEmpty
+            ? addressViewmodel.countryList[0]
+            : "Select Country";
+      }
+
+      if (widget.currentUserData.currentUserAddress!.state!.isNotEmpty) {
+        await addressViewmodel
+            .getCities(widget.currentUserData.currentUserAddress!.state!);
+
+        // Set state if it exists in the list, otherwise use default
+        if (addressViewmodel.stateList.contains(
+            widget.currentUserData.currentUserAddress!.state!)) {
+          addressViewmodel.selectedState =
+          widget.currentUserData.currentUserAddress!.state!;
+        } else {
+          addressViewmodel.selectedState = addressViewmodel.stateList.isNotEmpty
+              ? addressViewmodel.stateList[0]
+              : "Select State";
+        }
+
+        // Set city if it exists in the list, otherwise use default
+        if (addressViewmodel.cityList.contains(
+            widget.currentUserData.currentUserAddress!.city!)) {
+          addressViewmodel.selectedCity =
+          widget.currentUserData.currentUserAddress!.city!;
+        } else {
+          addressViewmodel.selectedCity = addressViewmodel.cityList.isNotEmpty
+              ? addressViewmodel.cityList[0]
+              : "Select City";
+        }
+      }
+    }
+
+    /*if (widget.currentUserData.currentUserAddress!.country!.isNotEmpty) {
+      await addressViewmodel
+          .getStates(widget.currentUserData.currentUserAddress!.country!);
       // addressViewmodel.selectedCountry = "";
       addressViewmodel.selectedCountry =
           widget.currentUserData.currentUserAddress!.country!;
@@ -51,7 +94,7 @@ class AddressPageState extends State<AddressPage> {
         addressViewmodel.selectedCity =
             widget.currentUserData.currentUserAddress!.city!;
       }
-    }
+    }*/
     // addressViewmodel.cityController.text =
     //     widget.currentUserData.currentUserAddress?.city ?? "";
     // addressViewmodel.stateController.text =
@@ -395,7 +438,7 @@ class AddressPageState extends State<AddressPage> {
         maritalStatus: widget.currentUserData.maritalStatus ?? "",
         previousTypesOfJobs: widget.currentUserData.previousTypesOfJobs ?? "",
         partner: widget.currentUserData.partner ?? "",
-        companyDetailsRequest: CompanyDetailsRequest(
+        businessDetailsResponse: CompanyDetailsRequest(
             uuid: widget.currentUserData.uuid ?? "",
             companyName:
                 widget.currentUserData.currentUserOrganization?.companyName ??
@@ -430,7 +473,10 @@ class AddressPageState extends State<AddressPage> {
             gstNumber: widget.currentUserData?.currentUserOrganization?.gstNumber ?? "",
             uploadGst: widget.currentUserData?.currentUserOrganization?.uploadGst ?? "",
             panNumber: widget.currentUserData?.currentUserOrganization?.panNumber ?? "",
-            uploadPan: widget.currentUserData?.currentUserOrganization?.uploadPan ?? ""),
+            uploadPan: widget.currentUserData?.currentUserOrganization?.uploadPan ?? "",
+            aadharNo: widget.currentUserData?.currentUserOrganization?.aadharNo ?? "",
+          uploadAadhar: widget.currentUserData?.currentUserOrganization?.uploadAadhar ?? "",
+        ),
         addressRequest: AddressRequest(
           city: addressVM.selectedCity ??
               widget.currentUserData.currentUserAddress?.city ??

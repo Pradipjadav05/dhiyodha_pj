@@ -125,7 +125,7 @@ class MyBusinessPageState extends State<MyBusinessPage> {
         permanentAddress: widget.currentUserData.permanentAddress ?? "",
         previousTypesOfJobs: widget.currentUserData.previousTypesOfJobs ?? "",
         partner: widget.currentUserData.partner ?? "",
-        companyDetailsRequest: CompanyDetailsRequest(
+        businessDetailsResponse: CompanyDetailsRequest(
             uuid: widget.currentUserData.uuid ?? "",
             companyName:
                 widget.currentUserData?.currentUserOrganization?.companyName ??

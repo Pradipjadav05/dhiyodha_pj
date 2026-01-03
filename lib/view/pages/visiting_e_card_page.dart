@@ -449,7 +449,7 @@ class VisitingECardPageState extends State<VisitingECardPage> {
         maritalStatus: vvm.currentUserData.maritalStatus ?? "",
         previousTypesOfJobs: vvm.currentUserData.previousTypesOfJobs ?? "",
         partner: vvm.currentUserData.partner ?? "",
-        companyDetailsRequest: CompanyDetailsRequest(
+        businessDetailsResponse: CompanyDetailsRequest(
             uuid: vvm.currentUserData.uuid ?? "",
             companyName: vvm.companyNameController.text ??
                 vvm.currentUserData?.currentUserOrganization?.companyName ??

@@ -580,7 +580,8 @@ class AddReferralSlipPageState extends State<AddReferralSlipPage> {
         selectedStatus.add("GIVEN_YOUR_CARD");
       }
       bool isSuccess = await addReferralsVM.addReferralsData(
-          addReferralsVM.toController.text.toString(),
+          addReferralsVM.selectedMemberId.toString(),
+          addReferralsVM.selectedMemberId.toString(),
           type,
           selectedStatus,
           addReferralsVM.referralsController.text.toString(),

@@ -13,6 +13,7 @@ class ReferralRepo {
 
   Future<Response> addReferralsData(
       String? referralTo,
+      String? meetingUuid,
       String? type,
       List<String?> status,
       String? referral,
@@ -20,16 +21,20 @@ class ReferralRepo {
       String? email,
       String? address,
       String? comment,
+      String? hotRating,
       int? rate) async {
     return await apiClient.postData(addReferralsUrl, {
       "referralTo": referralTo,
+      "meetingUuid": "5c6eb0a2-143e-42bc-b6e2-57cc0e3a7b66",
       "type": type,
+      "comment": comment,
       "status": status,
       "referral": referral,
       "telephone": telephone,
       "email": email,
       "address": address,
-      "rate": rate,
+      "rate": rate?.toDouble().toString(),
+      "hotRating": hotRating,
     });
   }
 

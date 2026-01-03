@@ -152,7 +152,7 @@ class ContactPageState extends State<ContactPage> {
         maritalStatus: widget.currentUserData.maritalStatus ?? "",
         previousTypesOfJobs: widget.currentUserData.previousTypesOfJobs ?? "",
         partner: widget.currentUserData.partner ?? "",
-        companyDetailsRequest: CompanyDetailsRequest(
+        businessDetailsResponse: CompanyDetailsRequest(
             uuid: widget.currentUserData.uuid ?? "",
             companyName:
                 widget.currentUserData?.currentUserOrganization?.companyName ??

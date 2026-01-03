@@ -17,8 +17,9 @@ class UpdateProfileRequestModel {
   String? keyToSuccess;
   String? residentAddress;
   String? permanentAddress;
+  String? profileUrl;
   String? maritalStatus;
-  CompanyDetailsRequest? companyDetailsRequest;
+  CompanyDetailsRequest? businessDetailsResponse;
   AddressRequest? addressRequest;
 
   UpdateProfileRequestModel(
@@ -40,8 +41,9 @@ class UpdateProfileRequestModel {
       this.keyToSuccess,
       this.residentAddress,
       this.permanentAddress,
+      this.profileUrl,
       this.maritalStatus,
-      this.companyDetailsRequest,
+      this.businessDetailsResponse,
       this.addressRequest});
 
   UpdateProfileRequestModel.fromJson(Map<String, dynamic> json) {
@@ -63,8 +65,9 @@ class UpdateProfileRequestModel {
     keyToSuccess = json['keyToSuccess'];
     residentAddress = json['residentAddress'];
     permanentAddress = json['permanentAddress'];
+    profileUrl = json['profileUrl'];
     maritalStatus = json['maritalStatus'];
-    companyDetailsRequest = json['businessDetailsResponse'] != null
+    businessDetailsResponse = json['businessDetailsResponse'] != null
         ? new CompanyDetailsRequest.fromJson(json['businessDetailsResponse'])
         : null;
     addressRequest = json['address'] != null
@@ -90,9 +93,10 @@ class UpdateProfileRequestModel {
     data['keyToSuccess'] = keyToSuccess;
     data['residentAddress'] = residentAddress;
     data['permanentAddress'] = permanentAddress;
+    data['profileUrl'] = profileUrl;
     data['maritalStatus'] = maritalStatus;
-    if (this.companyDetailsRequest != null) {
-      data['businessDetailsResponse'] = this.companyDetailsRequest?.toJson();
+    if (this.businessDetailsResponse != null) {
+      data['businessDetailsResponse'] = this.businessDetailsResponse?.toJson();
     }
     if (this.addressRequest != null) {
       data['address'] = this.addressRequest?.toJson();
@@ -120,6 +124,8 @@ class CompanyDetailsRequest {
   String? uploadGst;
   String? panNumber;
   String? uploadPan;
+  String? aadharNo;
+  String? uploadAadhar;
 
   CompanyDetailsRequest(
       {this.uuid,
@@ -139,7 +145,10 @@ class CompanyDetailsRequest {
       this.gstNumber,
       this.uploadGst,
       this.panNumber,
-      this.uploadPan});
+      this.uploadPan,
+      this.aadharNo,
+      this.uploadAadhar
+      });
 
   CompanyDetailsRequest.fromJson(Map<String, dynamic> json) {
     uuid = json['uuid'];
@@ -160,6 +169,8 @@ class CompanyDetailsRequest {
     uploadGst = json['uploadGst'];
     panNumber = json['panNumber'];
     uploadPan = json['uploadPan'];
+    aadharNo = json['aadharNo'];
+    uploadAadhar = json['uploadAadhar'];
   }
 
   Map<String, dynamic> toJson() {
@@ -182,6 +193,8 @@ class CompanyDetailsRequest {
     data['uploadGst'] = uploadGst;
     data['panNumber'] = panNumber;
     data['uploadPan'] = uploadPan;
+    data['aadharNo'] = aadharNo;
+    data['uploadAadhar'] = uploadAadhar;
     return data;
   }
 }

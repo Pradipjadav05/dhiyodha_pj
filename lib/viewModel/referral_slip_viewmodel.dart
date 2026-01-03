@@ -195,6 +195,7 @@ class ReferralSlipViewModel extends GetxController implements GetxService {
 
   Future<bool> addReferralsData(
       String? referralTo,
+      String? meetingUuid,
       String? type,
       List<String?> status,
       String? referral,
@@ -206,8 +207,8 @@ class ReferralSlipViewModel extends GetxController implements GetxService {
     _isLoading = true;
     bool isSuccess = false;
     update();
-    Response response = await referralRepo.addReferralsData(referralTo, type,
-        status, referral, telephone, email, address, comment, rate);
+    Response response = await referralRepo.addReferralsData(referralTo, meetingUuid, type,
+        status, referral, telephone, email, address, comment, NumberConverter.convertToWord(rate ?? 1), rate);
     _isLoading = false;
     if (response.statusCode == 201) {
       isSuccess = true;
@@ -217,5 +218,19 @@ class ReferralSlipViewModel extends GetxController implements GetxService {
     }
     update();
     return isSuccess;
+  }
+}
+
+class NumberConverter {
+  static const Map<int, String> _numberWords = {
+    1: 'ONE',
+    2: 'TWO',
+    3: 'THREE',
+    4: 'FOUR',
+    5: 'FIVE',
+  };
+
+  static String convertToWord(int number) {
+    return _numberWords[number] ?? '';
   }
 }

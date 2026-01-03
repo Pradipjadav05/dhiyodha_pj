@@ -318,7 +318,7 @@ class MyBioPagePageState extends State<MyBioPage> {
           "",
       partner:
           vvm.partnerController.text ?? widget.currentUserData.partner ?? "",
-      companyDetailsRequest: CompanyDetailsRequest(
+      businessDetailsResponse: CompanyDetailsRequest(
           uuid: widget.currentUserData.uuid ?? "",
           companyName:
               widget.currentUserData?.currentUserOrganization?.companyName ??
