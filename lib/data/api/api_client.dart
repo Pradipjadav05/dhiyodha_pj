@@ -93,7 +93,7 @@ class ApiClient extends GetxService {
               multipart.file!.readAsBytes().asStream(),
               list.length,
               filename: basename(multipart.file!.path),
-              contentType: MediaType('image', 'jpg'),
+              contentType: MediaType('image', 'jpeg'),
             );
             request.files.add(part);
           } else {

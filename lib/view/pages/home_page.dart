@@ -104,7 +104,7 @@ class HomePageState extends State<HomePage> {
                               Routes.getProfilePageRoute(
                                   homeVM.currentUserData));
                           if (isResult ?? false) {
-                            await getCurrentUser();
+                            await getCurrentUser(homeVM);
                           }
                         },
                         child: DrawerHeader(
@@ -236,7 +236,7 @@ class HomePageState extends State<HomePage> {
                                       homeVM.currentUserData),
                                 );
                                 if (isResult ?? false) {
-                                  await getCurrentUser();
+                                  await getCurrentUser(homeVM);
                                 }
                               },
                               child: Padding(
@@ -269,7 +269,7 @@ class HomePageState extends State<HomePage> {
                                     Routes.getAddressPageRoute(
                                         homeVM.currentUserData));
                                 if (isResult ?? false) {
-                                  await getCurrentUser();
+                                  await getCurrentUser(homeVM);
                                 }
                               },
                               child: Padding(
@@ -302,7 +302,7 @@ class HomePageState extends State<HomePage> {
                                     Routes.getContactPageRoute(
                                         homeVM.currentUserData));
                                 if (isResult ?? false) {
-                                  await getCurrentUser();
+                                  await getCurrentUser(homeVM);
                                 }
                               },
                               child: Padding(
@@ -428,7 +428,7 @@ class HomePageState extends State<HomePage> {
                                   Routes.getUpdatePasswordPageRoute(),
                                 );
                                 if (isResult ?? false) {
-                                  await getCurrentUser();
+                                  await getCurrentUser(homeVM);
                                 }
                               },
                               child: Padding(
@@ -2418,7 +2418,7 @@ class HomePageState extends State<HomePage> {
     await Get.find<HomeViewModel>().initData();
     await callPostOrMyPostAPI(Get.find<HomeViewModel>());
     await getDashboardData("ALL");
-    await getCurrentUser();
+    await getCurrentUser(Get.find<HomeViewModel>());
   }
 
   Future<void> getPosts(
@@ -2433,7 +2433,7 @@ class HomePageState extends State<HomePage> {
     await Get.find<HomeViewModel>().dashboardData(duration);
   }
 
-  Future<void> getCurrentUser() async {
-    await Get.find<HomeViewModel>().getCurrentUser();
+  Future<void> getCurrentUser(HomeViewModel homeVM) async {
+    homeVM.currentUserData = await homeVM.getCurrentUser();
   }
 }

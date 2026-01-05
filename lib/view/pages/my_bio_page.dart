@@ -48,7 +48,7 @@ class MyBioPagePageState extends State<MyBioPage> {
     vvm.petsController.text = vvm.currentUserData.pet ?? "";
     vvm.hobbiesController.text = vvm.currentUserData.hobbiesAndInterest ?? "";
     vvm.cityResidenceController.text =
-        vvm.currentUserData.cityResidingYears.toString() ?? "";
+        vvm.currentUserData.currentUserAddress?.city?.toString() ?? "";
     vvm.yearInTheCityController.text =
         vvm.currentUserData.cityResidingYears.toString() ?? "";
     vvm.burningDesireController.text = vvm.currentUserData.burningDesire ?? "";
@@ -302,7 +302,7 @@ class MyBioPagePageState extends State<MyBioPage> {
       hobbiesAndInterest: vvm.hobbiesController.text ??
           widget.currentUserData.hobbiesAndInterest ??
           "",
-      cityResidingYears: widget.currentUserData.cityResidingYears ?? 0,
+      cityResidingYears: int.parse(vvm.yearInTheCityController.text) ?? 0,
       //int.parse(vvm.cityResidenceController.text) ??
       burningDesire: vvm.burningDesireController.text ??
           widget.currentUserData.burningDesire ??
@@ -326,8 +326,7 @@ class MyBioPagePageState extends State<MyBioPage> {
           companyName:
               widget.currentUserData?.currentUserOrganization?.companyName ??
                   "",
-          companyEstablishment: widget.currentUserData?.currentUserOrganization
-                  ?.companyEstablishment ??
+          companyEstablishment: vvm.yearOfBusinessController.text ??
               "",
           companyAddress:
               widget.currentUserData?.currentUserOrganization?.companyAddress ??
@@ -361,7 +360,7 @@ class MyBioPagePageState extends State<MyBioPage> {
           panNumber: widget.currentUserData?.currentUserOrganization?.panNumber ?? "",
           uploadPan: widget.currentUserData?.currentUserOrganization?.uploadPan ?? ""),
       addressRequest: AddressRequest(
-        city: widget.currentUserData.currentUserAddress?.city ?? "",
+        city: vvm.cityResidenceController.text ?? "",
         state: widget.currentUserData.currentUserAddress?.state ?? "",
         country: widget.currentUserData.currentUserAddress?.country ?? "",
         pinCode: widget.currentUserData.currentUserAddress?.pinCode ?? "",
@@ -371,7 +370,7 @@ class MyBioPagePageState extends State<MyBioPage> {
     if (resp) {
       Get.back(result: true, canPop: true, closeOverlays: true);
     } else {
-      showSnackBar('errorMessage'.tr);
+      showSnackBar('errorMessage'.tr);2
     }
 
     // if (vvm.yearOfBusinessController.text.isEmpty) {

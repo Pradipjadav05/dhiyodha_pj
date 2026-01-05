@@ -1,3 +1,5 @@
+import '../response_model/current_user_response_model.dart';
+
 class UpdateProfileRequestModel {
   String? firstName;
   String? lastName;
@@ -228,3 +230,73 @@ class AddressRequest {
     return data;
   }
 }
+
+
+CurrentUserData toCurrentUserData({
+  required CurrentUserData currentUserData,
+  required UpdateProfileRequestModel existingData,
+}) {
+  // Update user fields
+  currentUserData.firstName = existingData.firstName ?? currentUserData.firstName;
+  currentUserData.lastName = existingData.lastName ?? currentUserData.lastName;
+  currentUserData.dob = existingData.dob ?? currentUserData.dob;
+  currentUserData.countryCode = existingData.countryCode ?? currentUserData.countryCode;
+  currentUserData.mobileNo = existingData.mobileNo ?? currentUserData.mobileNo;
+  currentUserData.uploadDocumentId = existingData.uploadDocumentId ?? currentUserData.uploadDocumentId;
+  currentUserData.profileUrl = existingData.profileUrl ?? currentUserData.profileUrl;
+  currentUserData.education = existingData.education ?? currentUserData.education;
+  currentUserData.previousTypesOfJobs = existingData.previousTypesOfJobs ?? currentUserData.previousTypesOfJobs;
+  currentUserData.partner = existingData.partner ?? currentUserData.partner;
+  currentUserData.children = existingData.children ?? currentUserData.children;
+  currentUserData.pet = existingData.pet ?? currentUserData.pet;
+  currentUserData.hobbiesAndInterest = existingData.hobbiesAndInterest ?? currentUserData.hobbiesAndInterest;
+  currentUserData.cityResidingYears = existingData.cityResidingYears ?? currentUserData.cityResidingYears;
+  currentUserData.burningDesire = existingData.burningDesire ?? currentUserData.burningDesire;
+  currentUserData.somethingNoOneKnowsAboutMe = existingData.somethingNoOneKnowsAboutMe ?? currentUserData.somethingNoOneKnowsAboutMe;
+  currentUserData.keyToSuccess = existingData.keyToSuccess ?? currentUserData.keyToSuccess;
+  currentUserData.permanentAddress = existingData.permanentAddress ?? currentUserData.permanentAddress;
+  currentUserData.maritalStatus = existingData.maritalStatus ?? currentUserData.maritalStatus;
+  currentUserData.updatedAt = DateTime.now().toIso8601String();
+
+  // Update address
+  if (existingData.addressRequest != null) {
+    if (currentUserData.currentUserAddress == null) {
+      currentUserData.currentUserAddress = CurrentUserAddress();
+    }
+    currentUserData.currentUserAddress!.city = existingData.addressRequest!.city ?? currentUserData.currentUserAddress!.city;
+    currentUserData.currentUserAddress!.state = existingData.addressRequest!.state ?? currentUserData.currentUserAddress!.state;
+    currentUserData.currentUserAddress!.country = existingData.addressRequest!.country ?? currentUserData.currentUserAddress!.country;
+    currentUserData.currentUserAddress!.pinCode = existingData.addressRequest!.pinCode ?? currentUserData.currentUserAddress!.pinCode;
+    currentUserData.currentUserAddress!.updatedAt = DateTime.now().toIso8601String();
+  }
+
+  // Update business details
+  if (existingData.businessDetailsResponse != null) {
+    if (currentUserData.currentUserOrganization == null) {
+      currentUserData.currentUserOrganization = CurrentUserOrganization();
+    }
+    currentUserData.currentUserOrganization!.uuid = existingData.businessDetailsResponse!.uuid ?? currentUserData.currentUserOrganization!.uuid;
+    currentUserData.currentUserOrganization!.companyName = existingData.businessDetailsResponse!.companyName ?? currentUserData.currentUserOrganization!.companyName;
+    currentUserData.currentUserOrganization!.companyEstablishment = existingData.businessDetailsResponse!.companyEstablishment ?? currentUserData.currentUserOrganization!.companyEstablishment;
+    currentUserData.currentUserOrganization!.companyAddress = existingData.businessDetailsResponse!.companyAddress ?? currentUserData.currentUserOrganization!.companyAddress;
+    currentUserData.currentUserOrganization!.registeredType = existingData.businessDetailsResponse!.registeredType ?? currentUserData.currentUserOrganization!.registeredType;
+    currentUserData.currentUserOrganization!.numberOfEmployees = existingData.businessDetailsResponse!.numberOfEmployees ?? currentUserData.currentUserOrganization!.numberOfEmployees;
+    currentUserData.currentUserOrganization!.yearlyTurnover = existingData.businessDetailsResponse!.yearlyTurnover ?? currentUserData.currentUserOrganization!.yearlyTurnover;
+    currentUserData.currentUserOrganization!.companyEmail = existingData.businessDetailsResponse!.companyEmail ?? currentUserData.currentUserOrganization!.companyEmail;
+    currentUserData.currentUserOrganization!.companyWebsite = existingData.businessDetailsResponse!.companyWebsite ?? currentUserData.currentUserOrganization!.companyWebsite;
+    currentUserData.currentUserOrganization!.companyContact = existingData.businessDetailsResponse!.companyContact ?? currentUserData.currentUserOrganization!.companyContact;
+    currentUserData.currentUserOrganization!.businessCategory = existingData.businessDetailsResponse!.businessCategory ?? currentUserData.currentUserOrganization!.businessCategory;
+    currentUserData.currentUserOrganization!.businessDescription = existingData.businessDetailsResponse!.businessDescription ?? currentUserData.currentUserOrganization!.businessDescription;
+    currentUserData.currentUserOrganization!.designation = existingData.businessDetailsResponse!.designation ?? currentUserData.currentUserOrganization!.designation;
+    currentUserData.currentUserOrganization!.yearlyProfit = existingData.businessDetailsResponse!.yearlyProfit ?? currentUserData.currentUserOrganization!.yearlyProfit;
+    currentUserData.currentUserOrganization!.gstNumber = existingData.businessDetailsResponse!.gstNumber ?? currentUserData.currentUserOrganization!.gstNumber;
+    currentUserData.currentUserOrganization!.uploadGst = existingData.businessDetailsResponse!.uploadGst ?? currentUserData.currentUserOrganization!.uploadGst;
+    currentUserData.currentUserOrganization!.panNumber = existingData.businessDetailsResponse!.panNumber ?? currentUserData.currentUserOrganization!.panNumber;
+    currentUserData.currentUserOrganization!.uploadPan = existingData.businessDetailsResponse!.uploadPan ?? currentUserData.currentUserOrganization!.uploadPan;
+    currentUserData.currentUserOrganization!.aadharNo = existingData.businessDetailsResponse!.aadharNo ?? currentUserData.currentUserOrganization!.aadharNo;
+    currentUserData.currentUserOrganization!.uploadAadhar = existingData.businessDetailsResponse!.uploadAadhar ?? currentUserData.currentUserOrganization!.uploadAadhar;
+  }
+
+  return currentUserData;
+}
+

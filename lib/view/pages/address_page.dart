@@ -8,6 +8,7 @@ import 'package:dhiyodha/view/widgets/common_app_bar.dart';
 import 'package:dhiyodha/view/widgets/common_button.dart';
 import 'package:dhiyodha/view/widgets/common_snackbar.dart';
 import 'package:dhiyodha/view/widgets/common_text_form_field.dart';
+import 'package:dhiyodha/view/widgets/searchable_dropdown.dart';
 import 'package:dhiyodha/viewModel/address_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -31,8 +32,7 @@ class AddressPageState extends State<AddressPage> {
     AddressViewmodel addressViewmodel = Get.find<AddressViewmodel>();
     await addressViewmodel.initData();
     await addressViewmodel.getCountries();
-    addressViewmodel.addressLine1Controller.text = "";
-    addressViewmodel.addressLine2Controller.text = "";
+    addressViewmodel.addressLine1Controller.text = widget.currentUserData.permanentAddress ??  "";
     print("C : ${widget.currentUserData.currentUserAddress?.country}");
     print("S : ${widget.currentUserData.currentUserAddress?.state}");
     print("City : ${widget.currentUserData.currentUserAddress?.city}");
@@ -134,7 +134,7 @@ class AddressPageState extends State<AddressPage> {
                         horizontal: paddingSize20, vertical: paddingSize20),
                   ),
                   SizedBox(height: paddingSize25),
-                  CommonTextFormField(
+                 /* CommonTextFormField(
                     controller: addressVM.addressLine2Controller,
                     hintText: "address_2".tr,
                     textStyle: fontMedium.copyWith(
@@ -142,137 +142,60 @@ class AddressPageState extends State<AddressPage> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: paddingSize20, vertical: paddingSize20),
                   ),
-                  SizedBox(height: paddingSize25),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: paddingSize20, vertical: paddingSize5),
-                    decoration: BoxDecoration(
-                      color: lavenderMist,
-                      borderRadius: BorderRadius.circular(radius10),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.grey,
-                            spreadRadius: 0,
-                            blurRadius: 0,
-                            offset: const Offset(0, 0))
-                      ],
+                  SizedBox(height: paddingSize25),*/
+                  SearchableDropdown(
+                    value: addressVM.selectedCountry,
+                    items: addressVM.countryList,
+                    hintText: 'Country',
+                    icon: Image.asset(
+                      dropDownArrow,
+                      width: 18.0,
+                      height: 18.0,
                     ),
-                    child: DropdownButton(
-                        icon: Image.asset(
-                          dropDownArrow,
-                          width: 18.0,
-                          height: 18.0,
-                        ),
-                        underline: const SizedBox(),
-                        style: fontMedium.copyWith(
-                            color: midnightBlue, fontSize: fontSize14),
-                        value: addressVM.selectedCountry,
-                        isExpanded: true,
-                        items: addressVM.countryList.map((String val) {
-                          return DropdownMenuItem(
-                              child: Text(
-                                val,
-                                style: fontMedium.copyWith(
-                                    color: midnightBlue, fontSize: fontSize14),
-                              ),
-                              value: val);
-                        }).toList(),
-                        onChanged: (val) async {
-                          addressVM.selectedCountry = val ?? "";
-                          addressVM.selectedState = "Select State";
-                          addressVM.selectedCity = "Select City";
-                          if (addressVM.selectedCountry !=
-                              addressVM.countryList[0]) {
-                            await addressVM
-                                .getStates(addressVM.selectedCountry);
-                          }
-                          setState(() {});
-                        }),
+                    onChanged: (val) async {
+                      addressVM.selectedCountry = val ?? "";
+                      addressVM.selectedState = "Select State";
+                      addressVM.selectedCity = "Select City";
+                      if (addressVM.selectedCountry !=
+                          addressVM.countryList[0]) {
+                        await addressVM.getStates(addressVM.selectedCountry);
+                      }
+                      setState(() {});
+                    },
                   ),
                   SizedBox(height: paddingSize25),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: paddingSize20, vertical: paddingSize5),
-                    decoration: BoxDecoration(
-                      color: lavenderMist,
-                      borderRadius: BorderRadius.circular(radius10),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.grey,
-                            spreadRadius: 0,
-                            blurRadius: 0,
-                            offset: const Offset(0, 0))
-                      ],
+                  SearchableDropdown(
+                    value: addressVM.selectedState,
+                    items: addressVM.stateList,
+                    hintText: 'State',
+                    icon: Image.asset(
+                      dropDownArrow,
+                      width: 18.0,
+                      height: 18.0,
                     ),
-                    child: DropdownButton(
-                        icon: Image.asset(
-                          dropDownArrow,
-                          width: 18.0,
-                          height: 18.0,
-                        ),
-                        underline: const SizedBox(),
-                        style: fontMedium.copyWith(
-                            color: midnightBlue, fontSize: fontSize14),
-                        value: addressVM.selectedState,
-                        isExpanded: true,
-                        items: addressVM.stateList.map((String val) {
-                          return DropdownMenuItem(
-                              child: Text(
-                                val,
-                                style: fontMedium.copyWith(
-                                    color: midnightBlue, fontSize: fontSize14),
-                              ),
-                              value: val);
-                        }).toList(),
-                        onChanged: (val) async {
-                          addressVM.selectedState = val.toString() ?? "";
-                          addressVM.selectedCity = "Select City";
-                          if (addressVM.selectedState !=
-                              addressVM.stateList[0]) {
-                            await addressVM.getCities(addressVM.selectedState);
-                          }
-                          setState(() {});
-                        }),
+                    onChanged: (val) async {
+                      addressVM.selectedState = val.toString() ?? "";
+                      addressVM.selectedCity = "Select City";
+                      if (addressVM.selectedState != addressVM.stateList[0]) {
+                        await addressVM.getCities(addressVM.selectedState);
+                      }
+                      setState(() {});
+                    },
                   ),
                   SizedBox(height: paddingSize25),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: paddingSize20, vertical: paddingSize5),
-                    decoration: BoxDecoration(
-                      color: lavenderMist,
-                      borderRadius: BorderRadius.circular(radius10),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.grey,
-                            spreadRadius: 0,
-                            blurRadius: 0,
-                            offset: const Offset(0, 0))
-                      ],
+                  SearchableDropdown(
+                    value: addressVM.selectedCity,
+                    items: addressVM.cityList,
+                    hintText: 'City',
+                    icon: Image.asset(
+                      dropDownArrow,
+                      width: 18.0,
+                      height: 18.0,
                     ),
-                    child: DropdownButton(
-                        icon: Image.asset(
-                          dropDownArrow,
-                          width: 18.0,
-                          height: 18.0,
-                        ),
-                        underline: const SizedBox(),
-                        style: fontMedium.copyWith(
-                            color: midnightBlue, fontSize: fontSize14),
-                        value: addressVM.selectedCity,
-                        isExpanded: true,
-                        items: addressVM.cityList.map((String val) {
-                          return DropdownMenuItem(
-                              child: Text(
-                                val,
-                                style: fontMedium.copyWith(
-                                    color: midnightBlue, fontSize: fontSize14),
-                              ),
-                              value: val);
-                        }).toList(),
-                        onChanged: (val) {
-                          addressVM.selectedCity = val!;
-                          setState(() {});
-                        }),
+                    onChanged: (val) {
+                      addressVM.selectedCity = val!;
+                      setState(() {});
+                    },
                   ),
                   // CommonTextFormField(
                   //   controller: addressVM.cityController,
@@ -398,8 +321,6 @@ class AddressPageState extends State<AddressPage> {
   Future<void> collectDataAndSaveProfile(AddressViewmodel addressVM) async {
     if (addressVM.addressLine1Controller.text.isEmpty) {
       showSnackBar("enter_valid_address".tr);
-    } else if (addressVM.addressLine2Controller.text.isEmpty) {
-      showSnackBar("enter_valid_address".tr);
     } else if (addressVM.selectedCountry.isEmpty ||
         addressVM.selectedCountry == addressVM.countryList[0]) {
       showSnackBar("select_country".tr);
@@ -432,7 +353,7 @@ class AddressPageState extends State<AddressPage> {
         residentAddress: addressVM.addressLine1Controller.text ??
             widget.currentUserData.permanentAddress ??
             "",
-        permanentAddress: addressVM.addressLine2Controller.text ??
+        permanentAddress: addressVM.addressLine1Controller.text ??
             widget.currentUserData.permanentAddress ??
             "",
         maritalStatus: widget.currentUserData.maritalStatus ?? "",
@@ -446,7 +367,7 @@ class AddressPageState extends State<AddressPage> {
             companyEstablishment: widget.currentUserData
                     ?.currentUserOrganization?.companyEstablishment ??
                 "",
-            companyAddress: addressVM.addressLine2Controller.text ??
+            companyAddress: addressVM.addressLine1Controller.text ??
                 widget
                     .currentUserData?.currentUserOrganization?.companyAddress ??
                 "",

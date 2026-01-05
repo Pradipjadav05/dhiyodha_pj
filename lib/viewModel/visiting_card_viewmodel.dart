@@ -157,13 +157,14 @@ class VisitingCardViewModel extends GetxController implements GetxService {
         await visitingCardRepo.updateProfile(updateProfileRequestModel);
     _isLoading = false;
     if (response.statusCode == 200) {
-      currentUserData = (await Get.find<HomeViewModel>().getCurrentUser());
+      currentUserData = toCurrentUserData(currentUserData: (await Get.find<HomeViewModel>().getCurrentUser()), existingData:  updateProfileRequestModel);
       isSuccess = true;
     } else {
       isSuccess = false;
       ApiChecker.checkApi(response);
     }
     update();
+    currentUserData = await toCurrentUserData(currentUserData: (await Get.find<HomeViewModel>().getCurrentUser()), existingData:  updateProfileRequestModel);
     return isSuccess;
   }
 

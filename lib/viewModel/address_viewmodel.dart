@@ -10,7 +10,7 @@ class AddressViewmodel extends GetxController implements GetxService {
   AddressViewmodel({required this.addressRepo}) {}
 
   TextEditingController _addressLine1Controller = TextEditingController();
-  TextEditingController _addressLine2Controller = TextEditingController();
+  // TextEditingController _addressLine2Controller = TextEditingController();
   TextEditingController _countryController = TextEditingController();
   TextEditingController _cityController = TextEditingController();
   TextEditingController _stateController = TextEditingController();
@@ -39,7 +39,7 @@ class AddressViewmodel extends GetxController implements GetxService {
 
   TextEditingController get countryController => _countryController;
 
-  TextEditingController get addressLine2Controller => _addressLine2Controller;
+  // TextEditingController get addressLine2Controller => _addressLine2Controller;
 
   TextEditingController get cityController => _cityController;
 
