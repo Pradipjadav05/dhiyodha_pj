@@ -65,6 +65,7 @@ class MyTestimonialData {
 }
 
 class MyTestimonialChildData {
+  String? id;
   String? uuid;
   String? review;
   String? type;
@@ -75,6 +76,7 @@ class MyTestimonialChildData {
 
   MyTestimonialChildData(
       {this.uuid,
+      this.id,
       this.review,
       this.type,
       this.reviewer,
@@ -83,6 +85,7 @@ class MyTestimonialChildData {
       this.reviewerPofileUrl});
 
   MyTestimonialChildData.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
     uuid = json['uuid'];
     review = json['review'];
     type = json['type'];
@@ -96,6 +99,7 @@ class MyTestimonialChildData {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
     data['uuid'] = this.uuid;
     data['review'] = this.review;
     data['type'] = this.type;
@@ -155,6 +159,7 @@ class TestimonialChildData {
 }
 
 class Reviewer {
+  String? id;
   String? uuid;
   String? firstName;
   String? lastName;
@@ -180,7 +185,8 @@ class Reviewer {
   String? updatedAt;
 
   Reviewer(
-      {this.uuid,
+      {this.id,
+      this.uuid,
       this.firstName,
       this.lastName,
       this.email,
@@ -206,6 +212,7 @@ class Reviewer {
 
   Reviewer.fromJson(Map<String, dynamic> json) {
     uuid = json['uuid'];
+    id = json['id'];
     firstName = json['firstName'];
     lastName = json['lastName'];
     email = json['email'];
@@ -241,6 +248,7 @@ class Reviewer {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['uuid'] = this.uuid;
+    data['id'] = this.id;
     data['firstName'] = this.firstName;
     data['lastName'] = this.lastName;
     data['email'] = this.email;

@@ -5,6 +5,7 @@ import 'package:dhiyodha/utils/resource/app_dimensions.dart';
 import 'package:dhiyodha/utils/resource/app_font_size.dart';
 import 'package:dhiyodha/utils/resource/app_media_assets.dart';
 import 'package:dhiyodha/view/widgets/common_app_bar.dart';
+import 'package:dhiyodha/view/widgets/common_snackbar.dart';
 import 'package:dhiyodha/viewModel/testimonial_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -90,6 +91,21 @@ class TestimonialPageState extends State<TestimonialPage> {
     super.dispose();
   }
 
+  Future<void> _refreshUserData(TestimonialViewModel testimonialVM) async {
+    try {
+      testimonialVM.myTestimonialList = [];
+      testimonialVM.page.value = 0;
+      testimonialVM.totalPages.value = 0;
+      await testimonialVM.getMyTestimonial(
+          testimonialVM.page.value, testimonialVM.size.value, "", "", "");
+      setState(() {
+
+      });
+    } catch (e) {
+      print("Error refreshing user data: $e");
+    }
+  }
+
   _testimonialListItems(int index, TestimonialViewModel testimonialVM) {
     return Padding(
       padding: const EdgeInsets.all(paddingSize5),
@@ -97,12 +113,12 @@ class TestimonialPageState extends State<TestimonialPage> {
         contentPadding: EdgeInsets.all(paddingSize10),
         onTap: () async {
           Get.toNamed(Routes.getTestimonialDetailsPageRoute(
-              testimonialVM.myTestimonialList[index]));
-          testimonialVM.myTestimonialList = [];
-          testimonialVM.page.value = 0;
-          testimonialVM.totalPages.value = 0;
-          await testimonialVM.getMyTestimonial(
-              testimonialVM.page.value, testimonialVM.size.value, "", "", "");
+              testimonialVM.myTestimonialList[index]))?.then((result) {
+            if (result == true) {
+              _refreshUserData(testimonialVM);
+              showSnackBar("testimonials_deleted".tr, isError: false);
+            }
+          });
         },
         leading: CachedNetworkImage(
           imageUrl:

@@ -370,7 +370,7 @@ class MyBioPagePageState extends State<MyBioPage> {
     if (resp) {
       Get.back(result: true, canPop: true, closeOverlays: true);
     } else {
-      showSnackBar('errorMessage'.tr);2
+      showSnackBar('errorMessage'.tr);
     }
 
     // if (vvm.yearOfBusinessController.text.isEmpty) {

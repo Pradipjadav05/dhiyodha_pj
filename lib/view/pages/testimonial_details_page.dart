@@ -211,11 +211,11 @@ class TestimonialDetailsPageState extends State<TestimonialDetailsPage> {
                               Get.back();
                               bool isDelete =
                                   await testimonialVM.deleteTestimonial(
-                                      myTestimonialChildData.uuid);
+                                      myTestimonialChildData.id);
                               if (isDelete) {
-                                Get.back();
-                                showSnackBar("testimonials_deleted".tr,
-                                    isError: false);
+                                Get.back(result: true);
+                                /*showSnackBar("testimonials_deleted".tr,
+                                    isError: false);*/
                               } else {
                                 showSnackBar('errorMessage'.tr);
                               }

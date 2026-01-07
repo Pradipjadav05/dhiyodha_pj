@@ -86,6 +86,8 @@ class UpdateProfileRequestModel {
     data['mobileNo'] = mobileNo;
     data['uploadDocumentId'] = uploadDocumentId;
     data['education'] = education;
+    data['previousTypesOfJobs'] = previousTypesOfJobs;
+    data['partner'] = partner;
     data['children'] = children;
     data['pet'] = pet;
     data['hobbiesAndInterest'] = hobbiesAndInterest;
