@@ -1,7 +1,6 @@
 import 'package:dhiyodha/model/response_model/members_list_response_model.dart';
 import 'package:dhiyodha/utils/helper/routes.dart';
 import 'package:dhiyodha/utils/resource/app_colors.dart';
-import 'package:dhiyodha/utils/resource/app_constants.dart';
 import 'package:dhiyodha/utils/resource/app_dimensions.dart';
 import 'package:dhiyodha/utils/resource/app_font_size.dart';
 import 'package:dhiyodha/utils/resource/app_media_assets.dart';
@@ -11,6 +10,7 @@ import 'package:dhiyodha/view/widgets/common_card.dart';
 import 'package:dhiyodha/view/widgets/common_snackbar.dart';
 import 'package:dhiyodha/view/widgets/common_text_form_field.dart';
 import 'package:dhiyodha/view/widgets/common_text_label.dart';
+import 'package:dhiyodha/view/widgets/searchable_dropdown.dart';
 import 'package:dhiyodha/viewModel/referral_slip_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -52,34 +52,127 @@ class AddReferralSlipPageState extends State<AddReferralSlipPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: paddingSize20),
-                    InkWell(
-                      onTap: () async {
-                        MembersChildData childData = await Get.toNamed(
-                            Routes.getMembersPageRoute("true"));
-                        addReferralsVM.selectedMemberId = childData.uuid ?? "";
-                        addReferralsVM.toController.text =
-                            '${childData.firstName} ${childData.lastName}';
-                        addReferralsVM.telephoneController.text =
-                            childData.mobileNo.toString();
-                        addReferralsVM.emailController.text =
-                            childData.email.toString();
-                        addReferralsVM.addressController.text =
-                            childData.address.toString();
-                        addReferralsVM.addressController.text =
-                            childData.address!.city!.toString();
+                    // Meeting Selection Dropdown
+                    SearchableDropdown(
+                      value: addReferralsVM.selectedMeetingName,
+                      items: addReferralsVM.meetingsList
+                          .map((meeting) => meeting['title']!)
+                          .toList(),
+                      hintText: 'Select Meeting',
+                      icon: Image.asset(
+                        dropDownArrow,
+                        width: 18.0,
+                        height: 18.0,
+                      ),
+                      onChanged: (val) async {
+                        // Find selected meeting
+                        var selectedMeeting =
+                            addReferralsVM.meetingsList.firstWhere(
+                          (meeting) => meeting['title'] == val,
+                          orElse: () => {"uuid": "", "title": ""},
+                        );
+
+                        addReferralsVM.selectedMeetingId =
+                            selectedMeeting['uuid'] ?? "";
+                        addReferralsVM.selectedMeetingName =
+                            selectedMeeting['title'] ?? "";
+
+                        // Clear existing user selection
+                        addReferralsVM.toController.clear();
+                        addReferralsVM.selectedMemberId = "";
+                        addReferralsVM.telephoneController.clear();
+                        addReferralsVM.emailController.clear();
+                        addReferralsVM.addressController.clear();
+
+                        // Fetch meeting users if meeting is selected
+                        referralTypeInsideOrOutside(addReferralsVM, addReferralsVM.selectedMeetingId.isNotEmpty == true);
+
+                        setState(() {});
                       },
-                      child: CommonTextFormField(
-                          isEnabled: false,
-                          controller: addReferralsVM.toController,
-                          hintText: "to".tr,
-                          hintColor: midnightBlue,
-                          suffixIcon: Image.asset(
-                            search,
-                            color: bluishPurple,
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: paddingSize20,
-                              vertical: paddingSize20)),
+                    ),
+                    SizedBox(height: paddingSize25),
+                    // User Selection Field
+                    Visibility(
+                      visible: addReferralsVM.selectedMeetingId.isEmpty,
+                      child: InkWell(
+                        onTap: () async {
+                          MembersChildData childData = await Get.toNamed(
+                              Routes.getMembersPageRoute("true"));
+                          addReferralsVM.selectedMemberId =
+                              childData.uuid ?? "";
+                          addReferralsVM.toController.text =
+                              '${childData.firstName} ${childData.lastName}';
+                          addReferralsVM.telephoneController.text =
+                              childData.mobileNo.toString();
+                          addReferralsVM.emailController.text =
+                              childData.email.toString();
+                          addReferralsVM.addressController.text =
+                              childData.address.toString() + " " +childData.address!.city!.toString();
+                        },
+                        child: CommonTextFormField(
+                            isEnabled: false,
+                            controller: addReferralsVM.toController,
+                            hintText: "to".tr,
+                            hintColor: midnightBlue,
+                            suffixIcon: Image.asset(
+                              search,
+                              color: bluishPurple,
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: paddingSize20,
+                                vertical: paddingSize20)),
+                      ),
+                    ),
+                    Visibility(
+                      visible: addReferralsVM.selectedMeetingId.isNotEmpty,
+                      child: SearchableDropdown(
+                        value: addReferralsVM.toController.text,
+                        items: addReferralsVM.getMeetingWiseUsersName(
+                            addReferralsVM.selectedMeetingId),
+                        hintText: 'Select Meeting User',
+                        icon: Image.asset(
+                          dropDownArrow,
+                          width: 18.0,
+                          height: 18.0,
+                        ),
+                        onChanged: (val) async {
+                          var teamUser =
+                              addReferralsVM.getMeetingWiseSelectedUsers(
+                                  addReferralsVM.selectedMeetingId, val ?? "");
+                          addReferralsVM.selectedMemberId = teamUser.uuid ?? "";
+                          addReferralsVM.toController.text =
+                              '${teamUser.firstName} ${teamUser.lastName}';
+                          addReferralsVM.telephoneController.text = teamUser.mobileNo.toString();
+                          addReferralsVM.emailController.text = teamUser.email.toString();
+                          addReferralsVM.addressController.text = teamUser.address.toString() + " " + teamUser.address!.city!.toString();
+
+                          setState(() {});
+                          // Find selected meeting
+                          /*var selectedMeeting = addReferralsVM.meetingsList
+                              .firstWhere(
+                                (meeting) => meeting['title'] == val,
+                            orElse: () => {"uuid": "", "title": ""},
+                          );
+
+                          addReferralsVM.selectedMeetingId = selectedMeeting['uuid'] ?? "";
+                          addReferralsVM.selectedMeetingName = selectedMeeting['title'] ?? "";
+
+                          // Clear existing user selection
+                          addReferralsVM.toController.clear();
+                          addReferralsVM.selectedMemberId = "";
+                          addReferralsVM.telephoneController.clear();
+                          addReferralsVM.emailController.clear();
+                          addReferralsVM.addressController.clear();
+
+                          // Fetch meeting users if meeting is selected
+                          if (addReferralsVM.selectedMeetingId.isNotEmpty) {
+                            await addReferralsVM.getMeetingWiseUsers(
+                                addReferralsVM.selectedMeetingId);
+                          }
+
+                          setState(() {});*/
+                        },
+                      ),
                     ),
                     SizedBox(height: paddingSize25),
                     Row(
@@ -112,9 +205,7 @@ class AddReferralSlipPageState extends State<AddReferralSlipPage> {
                                   ? bluishPurple
                                   : lavenderMist,
                               onTap: () {
-                                addReferralsVM.referralTypeInside.value = true;
-                                addReferralsVM.referralTypeOutside.value =
-                                    false;
+                                // referralTypeInsideOrOutside(addReferralsVM, true);
                               },
                               cardChild: Padding(
                                 padding: const EdgeInsets.symmetric(
@@ -141,8 +232,7 @@ class AddReferralSlipPageState extends State<AddReferralSlipPage> {
                                   ? bluishPurple
                                   : lavenderMist,
                               onTap: () {
-                                addReferralsVM.referralTypeInside.value = false;
-                                addReferralsVM.referralTypeOutside.value = true;
+                                // referralTypeInsideOrOutside(addReferralsVM, false);
                               },
                               cardChild: Padding(
                                 padding: const EdgeInsets.symmetric(
@@ -550,6 +640,12 @@ class AddReferralSlipPageState extends State<AddReferralSlipPage> {
     );
   }
 
+
+  void referralTypeInsideOrOutside(ReferralSlipViewModel addReferralsVM, bool isInsideClick) {
+    addReferralsVM.referralTypeInside.value = isInsideClick;
+    addReferralsVM.referralTypeOutside.value = !isInsideClick;
+  }
+
   Future<void> _collectDataAndAddReferrals(
       ReferralSlipViewModel addReferralsVM) async {
     if (addReferralsVM.toController.text.isEmpty) {
@@ -581,7 +677,9 @@ class AddReferralSlipPageState extends State<AddReferralSlipPage> {
       }
       bool isSuccess = await addReferralsVM.addReferralsData(
           addReferralsVM.selectedMemberId.toString(),
-          addReferralsVM.selectedMemberId.toString(),
+          addReferralsVM.selectedMeetingId.isEmpty
+              ? null
+              : addReferralsVM.selectedMeetingId.toString(),
           type,
           selectedStatus,
           addReferralsVM.referralsController.text.toString(),
@@ -591,12 +689,90 @@ class AddReferralSlipPageState extends State<AddReferralSlipPage> {
           addReferralsVM.commentController.text.toString(),
           addReferralsVM.referralHotnessRate.value);
       if (isSuccess) {
-        showSnackBar("referral_added".tr, isError: false);
         Get.back();
+        showSnackBar("referral_added".tr, isError: false);
       } else {
         showSnackBar('errorMessage'.tr);
       }
     }
+  }
+
+  // Show dialog to select user from meeting attendees
+  Future<MembersChildData?> _showMeetingUsersDialog(
+      BuildContext context, List<MembersChildData> users) async {
+    return await showDialog<MembersChildData>(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(radius10),
+          ),
+          child: Container(
+            height: MediaQuery.of(context).size.height * 0.6,
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                Text(
+                  'Select Meeting Attendee',
+                  style: fontBold.copyWith(
+                    fontSize: fontSize18,
+                    color: midnightBlue,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Expanded(
+                  child: users.isEmpty
+                      ? Center(
+                          child: Text(
+                            'No attendees found',
+                            style: fontMedium.copyWith(
+                              color: midnightBlue,
+                              fontSize: fontSize14,
+                            ),
+                          ),
+                        )
+                      : ListView.builder(
+                          itemCount: users.length,
+                          itemBuilder: (context, index) {
+                            final user = users[index];
+                            return ListTile(
+                              leading: CircleAvatar(
+                                backgroundColor: bluishPurple,
+                                child: Text(
+                                  '${user.firstName?[0] ?? ''}${user.lastName?[0] ?? ''}',
+                                  style: fontBold.copyWith(
+                                    color: white,
+                                    fontSize: fontSize14,
+                                  ),
+                                ),
+                              ),
+                              title: Text(
+                                '${user.firstName ?? ''} ${user.lastName ?? ''}',
+                                style: fontMedium.copyWith(
+                                  color: midnightBlue,
+                                  fontSize: fontSize14,
+                                ),
+                              ),
+                              subtitle: Text(
+                                user.email ?? '',
+                                style: fontRegular.copyWith(
+                                  color: midnightBlue.withValues(alpha: 0.7),
+                                  fontSize: fontSize12,
+                                ),
+                              ),
+                              onTap: () {
+                                Navigator.of(context).pop(user);
+                              },
+                            );
+                          },
+                        ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override

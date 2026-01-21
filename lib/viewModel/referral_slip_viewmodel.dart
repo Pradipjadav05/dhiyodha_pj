@@ -1,6 +1,8 @@
 import 'package:dhiyodha/data/api/api_checker.dart';
 import 'package:dhiyodha/data/repository/referral_repo.dart';
+import 'package:dhiyodha/model/response_model/meeting_lis_response_model.dart';
 import 'package:dhiyodha/model/response_model/referral_response_model.dart';
+import 'package:dhiyodha/model/response_model/members_list_response_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
@@ -20,11 +22,40 @@ class ReferralSlipViewModel extends GetxController implements GetxService {
       _isExpanded = false.obs;
 
   String _selectedMemberId = "";
+  String _selectedMeetingId = "";
+  String _selectedMeetingName = "Select Meeting (Optional)";
+  List<Map<String, String>> _meetingsList = [];
+  List<MeetingListResponseModel> _meetingDataList = [];
+  List<MembersChildData> _meetingUsersList = [];
 
   String get selectedMemberId => _selectedMemberId;
 
   set selectedMemberId(String value) {
     _selectedMemberId = value;
+  }
+
+  String get selectedMeetingId => _selectedMeetingId;
+
+  set selectedMeetingId(String value) {
+    _selectedMeetingId = value;
+  }
+
+  String get selectedMeetingName => _selectedMeetingName;
+
+  set selectedMeetingName(String value) {
+    _selectedMeetingName = value;
+  }
+
+  List<Map<String, String>> get meetingsList => _meetingsList;
+
+  set meetingsList(List<Map<String, String>> value) {
+    _meetingsList = value;
+  }
+
+  List<MembersChildData> get meetingUsersList => _meetingUsersList;
+
+  set meetingUsersList(List<MembersChildData> value) {
+    _meetingUsersList = value;
   }
 
   TextEditingController _toController = TextEditingController();
@@ -156,6 +187,10 @@ class ReferralSlipViewModel extends GetxController implements GetxService {
     _referralTypeOutside = true.obs;
     _isExpanded = false.obs;
     _selectedMemberId = "";
+    _selectedMeetingId = "";
+    _selectedMeetingName = "Select Meeting (Optional)";
+    _meetingsList = [];
+    _meetingUsersList = [];
     _isLoading = false;
     _referralStatusByCall = false.obs;
     _referralStatusByCards = false.obs;
@@ -172,6 +207,9 @@ class ReferralSlipViewModel extends GetxController implements GetxService {
     _emailController = TextEditingController();
     _addressController = TextEditingController();
     _commentController = TextEditingController();
+
+    // Fetch meetings list
+    await getMeetingsList();
   }
 
   Future<void> getReferralData(
@@ -187,6 +225,82 @@ class ReferralSlipViewModel extends GetxController implements GetxService {
         ReferralChildData tyfcbData = ReferralChildData.fromJson(order);
         _referralDataList.add(tyfcbData);
       });
+    } else {
+      ApiChecker.checkApi(response);
+    }
+    update();
+  }
+
+  // TODO: Replace with actual API call when backend is ready
+  Future<void> getMeetingsList() async {
+    _isLoading = true;
+    update();
+
+    Response response = await referralRepo.getMeetings(0, 1000, "updatedAt", "DESC");
+
+    _isLoading = false;
+    if (response.statusCode == 200) {
+      _meetingsList = [];
+      _meetingDataList = [];
+      _meetingDataList.add(MeetingListResponseModel(uuid: "", title: "Select Meeting (Optional)"));
+      // Add default option
+      _meetingsList.add({
+        "uuid": "",
+        "title": "Select Meeting (Optional)",
+      });
+
+      // Parse meetings data
+      if (response.body['data'] != null) {
+        response.body['data']['data'].forEach((order) {
+          MeetingListResponseModel meetingRecord = MeetingListResponseModel.fromJson(order);
+          _meetingsList.add({
+            "uuid": meetingRecord.uuid ?? "",
+            "title": meetingRecord.title ?? "",
+          });
+          _meetingDataList.add(meetingRecord);
+        });
+      }
+    } else {
+      ApiChecker.checkApi(response);
+    }
+    update();
+  }
+
+  List<TeamUser> getMeetingWiseUsers(String meetingId) {
+    _meetingDataList.length;
+    return _meetingDataList.firstWhere((element) => element.uuid == meetingId).team?.users  ?? [];
+  }
+
+  List<String> getMeetingWiseUsersName(String meetingId) {
+    return getMeetingWiseUsers(meetingId)?.map((toElement) => ((toElement.firstName ?? "") + " " + (toElement.lastName ?? ""))).toList()  ?? [];
+  }
+
+  TeamUser getMeetingWiseSelectedUsers(String meetingId, String userName) {
+    return getMeetingWiseUsers(meetingId).firstWhere((element) => (element.firstName ?? "") + " " + (element.lastName ?? "") == userName);
+  }
+
+  // TODO: Replace with actual API call when backend is ready
+  Future<void> getMeetingUsers(String meetingId) async {
+    if (meetingId.isEmpty) {
+      _meetingUsersList = [];
+      update();
+      return;
+    }
+
+    _isLoading = true;
+    update();
+
+    Response response = await referralRepo.getMeetingAttendees(meetingId);
+
+    _isLoading = false;
+    if (response.statusCode == 200) {
+      _meetingUsersList = [];
+      if (response.body['data'] != null) {
+        for (var user in response.body['data']) {
+          MembersChildData memberData = MembersChildData.fromJson(user);
+          _meetingUsersList.add(memberData);
+        }
+      }
     } else {
       ApiChecker.checkApi(response);
     }

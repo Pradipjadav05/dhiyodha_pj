@@ -77,6 +77,10 @@ const String addReferralsUrl = baseUrl + 'api/referrals/';
 const String getReferralsByIdUrl = baseUrl + 'api/referrals/';
 const String getMyReferralsUrl = baseUrl + 'api/my-referrals/';
 
+/** MEETINGS APIs - TODO: Replace with actual endpoints when backend is ready*/
+const String getMeetingsListUrl = baseUrl + 'api/meetings/';
+const String getMeetingAttendeesUrl = baseUrl + 'api/meetings/attendees/';
+
 /** ONE TO ONE APIs*/
 const String addOneToOneUrl = baseUrl + 'api/one-to-one/';
 const String oneToOneDetailsUrl = baseUrl + 'api/one-to-one/';
