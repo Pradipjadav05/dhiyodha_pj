@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dhiyodha/data/api/api_checker.dart';
 import 'package:dhiyodha/data/repository/visitors_repo.dart';
 import 'package:dhiyodha/model/response_model/add_upload_operation_response_model.dart';
@@ -10,10 +12,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../data/repository/referral_repo.dart';
+import '../model/dummy_model/teams_api_response.dart';
+import '../model/response_model/meeting_lis_response_model.dart';
+
 class VisitorsViewModel extends GetxController implements GetxService {
   final VisitorsRepo visitorsRepo;
+  final ReferralRepo referralRepo;
 
-  VisitorsViewModel({required this.visitorsRepo}) {}
+  VisitorsViewModel({required this.visitorsRepo, required this.referralRepo}) {}
 
   bool _isLoading = false;
   RxBool _isExpanded = false.obs;
@@ -29,6 +36,8 @@ class VisitorsViewModel extends GetxController implements GetxService {
       _selectedState = "",
       _selectedCity = "",
       _selectedChapter = "",
+      _selectedMeeting = "",
+      _selectedMeetingCode = "",
       _selectedBusinessCategory = "";
   List<String> _countryList = [];
   List<String> unSortedList = [];
@@ -37,6 +46,9 @@ class VisitorsViewModel extends GetxController implements GetxService {
   List<String> _chapterList = [];
   List<String> _businessCatList = [];
   List<GroupChildData> _groupChildData = [];
+  String _selectedMeetingName = "Select Meeting (Optional)";
+  List<Map<String, String>> _meetingsList = [];
+  List<String> _teamWiseMeetingList = [];
   RxInt _page = 0.obs;
   RxInt _size = 10.obs;
   RxInt _totalPages = 0.obs;
@@ -185,6 +197,24 @@ class VisitorsViewModel extends GetxController implements GetxService {
     _groupChildData = value;
   }
 
+  String get selectedMeeting => _selectedMeeting;
+
+  set selectedMeeting(String value) {
+    _selectedMeeting = value;
+  }
+
+  String get selectedMeetingName => _selectedMeetingName;
+
+  set selectedMeetingName(String value) {
+    _selectedMeetingName = value;
+  }
+
+  List<String> get teamWiseMeetingList => _teamWiseMeetingList;
+
+  set teamWiseMeetingList(List<String> value) {
+    _teamWiseMeetingList = value;
+  }
+
   RxInt get size => _size;
 
   set size(RxInt value) {
@@ -244,6 +274,9 @@ class VisitorsViewModel extends GetxController implements GetxService {
     _stateList = [];
     _cityList = [];
     _chapterList = [];
+    _selectedMeeting = "";
+    _selectedMeetingName = "Select Meeting (Optional)";
+    _meetingsList = [];
     _selectedCountry = "Select Country";
     _selectedState = "Select State";
     _selectedCity = "Select City";
@@ -256,6 +289,60 @@ class VisitorsViewModel extends GetxController implements GetxService {
     ///await getVisitors(page.value, size.value, "", "", "");
   }
 
+  Future<void> getMeetingsList() async {
+    _isLoading = true;
+    update();
+
+    Response response = await referralRepo.getMeetings(0, 1000, "updatedAt", "DESC");
+    Map<String, dynamic> dummyResponse = jsonDecode(meetingsApiResponse);
+
+    _isLoading = false;
+    if (response.statusCode == 200) {
+      _meetingsList = [];
+      _teamWiseMeetingList = [];
+
+      // Parse meetings data
+      if (dummyResponse['data'] != null) {
+        dummyResponse['data']['data'].forEach((order) {
+          MeetingListResponseModel meetingRecord = MeetingListResponseModel.fromJson(order);
+          print("Meeting Meet -> ${meetingRecord.team?.uuid}");
+          _meetingsList.add({
+            "uuid": meetingRecord.team?.uuid ?? "",
+            "title": meetingRecord.title ?? "",
+            "meetingDate": meetingRecord.meetingDate ?? "",
+            "groupName": meetingRecord.team?.groupName ?? "",
+          });
+        });
+      }
+    } else {
+      ApiChecker.checkApi(response);
+    }
+    update();
+  }
+
+  void teamWiseFillMeeting(String selectedTeamName) {
+    _chapterList;
+    _teamWiseMeetingList = [];
+    _teamWiseMeetingList.add("Select Meeting (Optional)");
+    List<String> groupNames = _meetingsList.where((item) => item["groupName"].toString().toLowerCase() == (selectedTeamName.toLowerCase()))
+        .map((item) => item["title"].toString()).toList();
+    _teamWiseMeetingList.addAll(groupNames);
+    _selectedMeeting =  _teamWiseMeetingList[0].toString();
+    _teamWiseMeetingList.length;
+  }
+
+  void autoFillSelectedMeetingDate(String selectedMeetingName) {
+   var selectedMeeting = _meetingsList.firstWhere(
+         (item) => item["title"].toString().toLowerCase() == selectedMeetingName.toLowerCase(),
+     orElse: () => <String, String>{},
+   );
+   if (selectedMeeting.isNotEmpty) {
+     DateTime dateTime = DateTime.parse(selectedMeeting["meetingDate"].toString());
+     setMeetingOrSelectedDate(dateTime);
+     _selectedMeetingCode = selectedMeeting["uuid"].toString();
+   }
+  }
+
   Future<void> selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
         context: context,
@@ -263,9 +350,13 @@ class VisitorsViewModel extends GetxController implements GetxService {
         firstDate: DateTime(2000, 8),
         lastDate: DateTime.now());
     if (picked != null && picked != selectedDate) {
-      selectedDate = picked;
-      _dateController.text = DateConverter.convertDateToNumMonth(selectedDate);
+      setMeetingOrSelectedDate(picked);
     }
+  }
+
+  void setMeetingOrSelectedDate(DateTime picked) {
+    selectedDate = picked;
+    _dateController.text = DateConverter.convertDateToNumMonth(selectedDate);
   }
 
   Future<void> pickImage(String documentType) async {
@@ -412,10 +503,12 @@ class VisitorsViewModel extends GetxController implements GetxService {
     Response response =
         await visitorsRepo.getGroups(page, size, sort, orderBy, search);
     _isLoading = false;
+    Map<String, dynamic> dummyResponse = jsonDecode(teamsApiResponse);
     if (response.statusCode == 200) {
       _groupChildData = [];
-      response.body['data']['data'].forEach((order) {
+      dummyResponse['data']['data'].forEach((order) {
         GroupChildData groups = GroupChildData.fromJson(order);
+        print("Chapter Meet -> ${order["uuid"]}");
         _groupChildData.add(groups);
       });
       if (groupChildData.isNotEmpty) {

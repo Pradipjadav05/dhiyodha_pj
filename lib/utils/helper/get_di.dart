@@ -114,7 +114,7 @@ Future<Map<String, Map<String, String>>> init() async {
   Get.lazyPut(() => AsksViewModel(asksRepo: Get.find()));
   Get.lazyPut(() => MyNetworkViewModel(myNetworkRepo: Get.find()));
   Get.lazyPut(() => MyBusinessViewModel(myBusinessRepo: Get.find()));
-  Get.lazyPut(() => VisitorsViewModel(visitorsRepo: Get.find()));
+  Get.lazyPut(() => VisitorsViewModel(visitorsRepo: Get.find(), referralRepo: Get.find()));
   Get.lazyPut(() => AddressViewmodel(addressRepo: Get.find()));
   Get.lazyPut(() => ContactViewmodel(contactRepo: Get.find()));
   Get.lazyPut(() => TestimonialViewModel(testimonialRepo: Get.find()));

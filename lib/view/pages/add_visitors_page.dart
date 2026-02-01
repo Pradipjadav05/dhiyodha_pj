@@ -16,6 +16,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/components/checkbox/gf_checkbox.dart';
 
+import '../widgets/searchable_dropdown.dart';
+
 class AddVisitorsPage extends StatefulWidget {
   AddVisitorsPageState createState() => AddVisitorsPageState();
 }
@@ -31,6 +33,7 @@ class AddVisitorsPageState extends State<AddVisitorsPage> {
     VisitorsViewModel vvm = Get.find<VisitorsViewModel>();
     await vvm.initData();
     await vvm.getCountries();
+    await vvm.getMeetingsList();
     await vvm.getGroups(vvm.page.value, vvm.size.value, "", "", "");
     await vvm.getVisitors(vvm.page.value, vvm.size.value, "", "", "");
   }
@@ -64,179 +67,92 @@ class AddVisitorsPageState extends State<AddVisitorsPage> {
                       ),
                     ),
                     SizedBox(height: paddingSize25),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: paddingSize20, vertical: paddingSize5),
-                      decoration: BoxDecoration(
-                        color: lavenderMist,
-                        borderRadius: BorderRadius.circular(radius10),
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.grey,
-                              spreadRadius: 0,
-                              blurRadius: 0,
-                              offset: const Offset(0, 0))
-                        ],
+                    SearchableDropdown(
+                      value: vvm.selectedCountry,
+                      items: vvm.countryList,
+                      hintText: 'Select Country',
+                      icon: Image.asset(
+                        dropDownArrow,
+                        width: 18.0,
+                        height: 18.0,
                       ),
-                      child: DropdownButton(
-                          icon: Image.asset(
-                            dropDownArrow,
-                            width: 18.0,
-                            height: 18.0,
-                          ),
-                          underline: const SizedBox(),
-                          style: fontRegular.copyWith(
-                              color: midnightBlue, fontSize: fontSize14),
-                          value: vvm.selectedCountry,
-                          isExpanded: true,
-                          items: vvm.countryList.map((String val) {
-                            return DropdownMenuItem(
-                                child: Text(
-                                  val,
-                                  style: fontRegular.copyWith(
-                                      color: midnightBlue,
-                                      fontSize: fontSize14),
-                                ),
-                                value: val);
-                          }).toList(),
-                          onChanged: (val) async {
-                            vvm.selectedCountry = val ?? "";
-                            if (vvm.selectedCountry != vvm.countryList[0]) {
-                              await vvm.getStates(vvm.selectedCountry);
-                            }
-                            setState(() {});
-                          }),
+                      onChanged: (val) async {
+                        vvm.selectedCountry = val ?? "";
+                        if (vvm.selectedCountry != vvm.countryList[0]) {
+                          await vvm.getStates(vvm.selectedCountry);
+                        }
+                        setState(() {});
+                      },
                     ),
                     SizedBox(height: paddingSize25),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: paddingSize20, vertical: paddingSize5),
-                      decoration: BoxDecoration(
-                        color: lavenderMist,
-                        borderRadius: BorderRadius.circular(radius10),
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.grey,
-                              spreadRadius: 0,
-                              blurRadius: 0,
-                              offset: const Offset(0, 0))
-                        ],
+                    SearchableDropdown(
+                      value: vvm.selectedState,
+                      items: vvm.stateList,
+                      hintText: 'Select State',
+                      icon: Image.asset(
+                        dropDownArrow,
+                        width: 18.0,
+                        height: 18.0,
                       ),
-                      child: DropdownButton(
-                          icon: Image.asset(
-                            dropDownArrow,
-                            width: 18.0,
-                            height: 18.0,
-                          ),
-                          underline: const SizedBox(),
-                          style: fontRegular.copyWith(
-                              color: midnightBlue, fontSize: fontSize14),
-                          value: vvm.selectedState,
-                          isExpanded: true,
-                          items: vvm.stateList.map((String val) {
-                            return DropdownMenuItem(
-                                child: Text(
-                                  val,
-                                  style: fontRegular.copyWith(
-                                      color: midnightBlue,
-                                      fontSize: fontSize14),
-                                ),
-                                value: val);
-                          }).toList(),
-                          onChanged: (val) async {
-                            vvm.selectedState = val.toString() ?? "";
-                            if (vvm.selectedState != vvm.stateList[0]) {
-                              await vvm.getCities(vvm.selectedState);
-                            }
-                            setState(() {});
-                          }),
+                      onChanged: (val) async {
+                        vvm.selectedState = val ?? "";
+                        if (vvm.selectedState != vvm.stateList[0]) {
+                          await vvm.getCities(vvm.selectedState);
+                        }
+                        setState(() {});
+                      },
                     ),
                     SizedBox(height: paddingSize25),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: paddingSize20, vertical: paddingSize5),
-                      decoration: BoxDecoration(
-                        color: lavenderMist,
-                        borderRadius: BorderRadius.circular(radius10),
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.grey,
-                              spreadRadius: 0,
-                              blurRadius: 0,
-                              offset: const Offset(0, 0))
-                        ],
+                    SearchableDropdown(
+                      value: vvm.selectedCity,
+                      items: vvm.cityList,
+                      hintText: 'Select City',
+                      icon: Image.asset(
+                        dropDownArrow,
+                        width: 18.0,
+                        height: 18.0,
                       ),
-                      child: DropdownButton(
-                          icon: Image.asset(
-                            dropDownArrow,
-                            width: 18.0,
-                            height: 18.0,
-                          ),
-                          underline: const SizedBox(),
-                          style: fontRegular.copyWith(
-                              color: midnightBlue, fontSize: fontSize14),
-                          value: vvm.selectedCity,
-                          isExpanded: true,
-                          items: vvm.cityList.map((String val) {
-                            return DropdownMenuItem(
-                                child: Text(
-                                  val,
-                                  style: fontRegular.copyWith(
-                                      color: midnightBlue,
-                                      fontSize: fontSize14),
-                                ),
-                                value: val);
-                          }).toList(),
-                          onChanged: (val) {
-                            vvm.selectedCity = val.toString();
-                            setState(() {});
-                          }),
+                      onChanged: (val) {
+                        vvm.selectedCity = val ?? "";
+                        setState(() {});
+                      },
                     ),
                     SizedBox(height: paddingSize25),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: paddingSize20, vertical: paddingSize5),
-                      decoration: BoxDecoration(
-                        color: lavenderMist,
-                        borderRadius: BorderRadius.circular(radius10),
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.grey,
-                              spreadRadius: 0,
-                              blurRadius: 0,
-                              offset: const Offset(0, 0))
-                        ],
+                    SearchableDropdown(
+                      value: vvm.selectedChapter,
+                      items: vvm.chapterList,
+                      hintText: 'Select Chapter',
+                      icon: Image.asset(
+                        dropDownArrow,
+                        width: 18.0,
+                        height: 18.0,
                       ),
-                      child: DropdownButton(
-                          icon: Image.asset(
-                            dropDownArrow,
-                            width: 18.0,
-                            height: 18.0,
-                          ),
-                          underline: const SizedBox(),
-                          style: fontRegular.copyWith(
-                              color: midnightBlue, fontSize: fontSize14),
-                          value: vvm.selectedChapter,
-                          isExpanded: true,
-                          items: vvm.chapterList.map((String val) {
-                            return DropdownMenuItem(
-                                child: Text(
-                                  val,
-                                  style: fontRegular.copyWith(
-                                      color: midnightBlue,
-                                      fontSize: fontSize14),
-                                ),
-                                value: val);
-                          }).toList(),
-                          onChanged: (val) {
-                            vvm.selectedChapter = val.toString();
-                            setState(() {});
-                          }),
+                      onChanged: (val) {
+                        vvm.selectedChapter = val ?? "";
+                        vvm.teamWiseFillMeeting(vvm.selectedChapter);
+                        setState(() {});
+                      },
+                    ),
+                    SizedBox(height: paddingSize25),
+                    SearchableDropdown(
+                      value: vvm.selectedMeeting,
+                      items: vvm.teamWiseMeetingList,
+                      hintText: 'Select Meeting',
+                      icon: Image.asset(
+                        dropDownArrow,
+                        width: 18.0,
+                        height: 18.0,
+                      ),
+                      onChanged: (val) {
+                        vvm.selectedMeeting = val ?? "";
+                        vvm.autoFillSelectedMeetingDate(vvm.selectedMeeting);
+                        setState(() {});
+                      },
                     ),
                     SizedBox(height: paddingSize45),
                     InkWell(
                       onTap: () async {
-                        await vvm.selectDate(context);
+                        // await vvm.selectDate(context);
                       },
                       child: CommonTextFormField(
                         isEnabled: false,
@@ -251,45 +167,19 @@ class AddVisitorsPageState extends State<AddVisitorsPage> {
                       ),
                     ),
                     SizedBox(height: paddingSize25),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: paddingSize20, vertical: paddingSize5),
-                      decoration: BoxDecoration(
-                        color: lavenderMist,
-                        borderRadius: BorderRadius.circular(radius10),
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.grey,
-                              spreadRadius: 0,
-                              blurRadius: 0,
-                              offset: const Offset(0, 0))
-                        ],
+                    SearchableDropdown(
+                      value: vvm.selectedBusinessCategory,
+                      items: vvm.businessCatList,
+                      hintText: 'Select Business Category',
+                      icon: Image.asset(
+                        dropDownArrow,
+                        width: 18.0,
+                        height: 18.0,
                       ),
-                      child: DropdownButton(
-                          icon: Image.asset(
-                            dropDownArrow,
-                            width: 18.0,
-                            height: 18.0,
-                          ),
-                          underline: const SizedBox(),
-                          style: fontRegular.copyWith(
-                              color: midnightBlue, fontSize: fontSize14),
-                          value: vvm.selectedBusinessCategory,
-                          isExpanded: true,
-                          items: vvm.businessCatList.map((String val) {
-                            return DropdownMenuItem(
-                                child: Text(
-                                  val,
-                                  style: fontRegular.copyWith(
-                                      color: midnightBlue,
-                                      fontSize: fontSize14),
-                                ),
-                                value: val);
-                          }).toList(),
-                          onChanged: (val) {
-                            vvm.selectedBusinessCategory = val.toString();
-                            setState(() {});
-                          }),
+                      onChanged: (val) {
+                        vvm.selectedBusinessCategory = val ?? "";
+                        setState(() {});
+                      },
                     ),
                     SizedBox(height: paddingSize25),
                     Row(
