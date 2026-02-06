@@ -39,48 +39,41 @@ class VisitorsRepo {
   }
 
   Future<Response> addVisitors(
-      String? uuId,
       String? country,
       String? state,
       String? city,
-      String? chapter,
+      String? groupName,
+      String? meetingCode,
+      String? meetingTitle,
       String? date,
       String? businessCategory,
       String? name,
+      String? email,
       String? contactNumber,
       String? companyName,
-      String? addedBy,
-      String? groupName,
-      String? title,
-      String? meetingCode,
-      String? meetingDate,
-      String? referral,
-      String? email,
-      UploadedDocRespModel? uploadedDoc) async {
+      String? profileUrl,
+      String? uploadFrontVisitingCard,
+      String? uploadBackVisitingCard) async {
     return await apiClient.postData(addVisitorsUrl, {
       "country": country,
       "state": state,
       "city": city,
-      "chapter": chapter,
+      "groupName": groupName,
+      "chapter": groupName, // extra
+      "meetingCode": meetingCode,
+      "meetingTitle": meetingTitle,
+      "title": meetingTitle,
       "date": date,
+      "referral": "INSIDE",
+      "status": true,
       "businessCategory": businessCategory,
       "name": name,
       "email": email,
       "contactNumber": contactNumber,
       "companyName": companyName,
-      "addedBy": addedBy,
-      "groupName": groupName,
-      "meetingCode": meetingCode,
-      "title": title ?? "Team Meeting",
-      // "meetingDate": '${meetingDate}T00:00:00.000Z',
-      "meetingDate": '',
-      // "uuId": uuId,
-      // "referral": referral,
-      "documents": uploadedDoc != null &&
-              uploadedDoc.documentUuid != null &&
-              uploadedDoc.documentUuid!.isNotEmpty
-          ? uploadedDoc.getOnlyDocUuid() ?? ""
-          : null,
+      "profileUrl": profileUrl,
+      "uploadFrontVisitingCard": uploadFrontVisitingCard,
+      "uploadBackVisitingCard": uploadBackVisitingCard,
     });
   }
 

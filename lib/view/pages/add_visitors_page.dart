@@ -181,7 +181,7 @@ class AddVisitorsPageState extends State<AddVisitorsPage> {
                         setState(() {});
                       },
                     ),
-                    SizedBox(height: paddingSize25),
+                    /*SizedBox(height: paddingSize25),
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -261,11 +261,21 @@ class AddVisitorsPageState extends State<AddVisitorsPage> {
                           ),
                         ],
                       ),
-                    ),
+                    ),*/
                     SizedBox(height: paddingSize25),
                     CommonTextFormField(
                       controller: vvm.nameController,
                       hintText: "enter_name".tr,
+                      hintColor: midnightBlue,
+                      textStyle: fontRegular.copyWith(
+                          color: midnightBlue, fontSize: fontSize14),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: paddingSize20, vertical: paddingSize20),
+                    ),
+                    SizedBox(height: paddingSize25),
+                    CommonTextFormField(
+                      controller: vvm.emailController,
+                      hintText: "enter_email".tr,
                       hintColor: midnightBlue,
                       textStyle: fontRegular.copyWith(
                           color: midnightBlue, fontSize: fontSize14),
@@ -297,11 +307,46 @@ class AddVisitorsPageState extends State<AddVisitorsPage> {
                     SizedBox(height: paddingSize25),
                     InkWell(
                       onTap: () async {
+                        vvm.imageUploadType = ImageUploadType.profileImage;
                         await _showImageSelectionDialog(vvm);
                       },
                       child: CommonTextFormField(
                         isEnabled: false,
-                        hintText: "upload_visiting_card".tr,
+                        hintText: "profile_upload".tr,
+                        hintColor: midnightBlue,
+                        textStyle: fontRegular.copyWith(
+                            color: midnightBlue, fontSize: fontSize14),
+                        suffixIcon: Image.asset(uploadCard),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: paddingSize20, vertical: paddingSize20),
+                      ),
+                    ),
+                    SizedBox(height: paddingSize25),
+                    InkWell(
+                      onTap: () async {
+                        vvm.imageUploadType = ImageUploadType.frontVisitingCard;
+                        await _showImageSelectionDialog(vvm);
+                      },
+                      child: CommonTextFormField(
+                        isEnabled: false,
+                        hintText: "upload_visiting_card".tr + " Front",
+                        hintColor: midnightBlue,
+                        textStyle: fontRegular.copyWith(
+                            color: midnightBlue, fontSize: fontSize14),
+                        suffixIcon: Image.asset(uploadCard),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: paddingSize20, vertical: paddingSize20),
+                      ),
+                    ),
+                    SizedBox(height: paddingSize25),
+                    InkWell(
+                      onTap: () async {
+                        vvm.imageUploadType = ImageUploadType.backVisitingCard;
+                        await _showImageSelectionDialog(vvm);
+                      },
+                      child: CommonTextFormField(
+                        isEnabled: false,
+                        hintText: "upload_visiting_card".tr + " Back",
                         hintColor: midnightBlue,
                         textStyle: fontRegular.copyWith(
                             color: midnightBlue, fontSize: fontSize14),
@@ -471,6 +516,8 @@ class AddVisitorsPageState extends State<AddVisitorsPage> {
       showSnackBar("select_business_category".tr);
     } else if (vvm.nameController.text.isEmpty) {
       showSnackBar("enter_name".tr);
+    } else if (vvm.emailController.text.isEmpty) {
+      showSnackBar("enter_email".tr);
     } else if (vvm.contactNumberController.text.isEmpty) {
       showSnackBar("enter_contact_no".tr);
     } else if (vvm.companyNameController.text.isEmpty) {
@@ -482,24 +529,22 @@ class AddVisitorsPageState extends State<AddVisitorsPage> {
     } else {
       String type = vvm.referralTypeOutside.value ? "OUTSIDE" : "INSIDE";
       bool isSuccess = await vvm.addVisitors(
-          "",
           vvm.selectedCountry.toString(),
           vvm.selectedState.toString(),
           vvm.selectedCity.toString(),
           vvm.selectedChapter.toString(),
+          vvm.selectedMeetingCode.toString(),
+          vvm.selectedMeeting.toString(),
+          // vvm.selectedDate.toString(),
           vvm.dateController.text.toString(),
           vvm.selectedBusinessCategory.toString(),
           vvm.nameController.text.toString(),
+          vvm.emailController.text.toString(),
           vvm.contactNumberController.text.toString(),
           vvm.companyNameController.text.toString(),
-          globalCurrentUserData.uuid,
-          vvm.selectedChapter.toString(),
-          "Team Meeting",
-          globalNextMeeting.uuid,
-          globalNextMeeting.date,
-          type,
-          globalCurrentUserData.email ?? "",
-          vvm.uploadedDocRespModel);
+          vvm.profileUrl.toString(),
+          vvm.uploadFrontVisitingCard.toString(),
+          vvm.uploadBackVisitingCard.toString());
       if (isSuccess) {
         Get.back(closeOverlays: true, canPop: true);
         showSnackBar("visitor_added".tr, isError: false);

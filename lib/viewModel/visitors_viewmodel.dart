@@ -16,6 +16,13 @@ import '../data/repository/referral_repo.dart';
 import '../model/dummy_model/teams_api_response.dart';
 import '../model/response_model/meeting_lis_response_model.dart';
 
+// declare an enum for image upload type
+enum ImageUploadType {
+  profileImage,
+  frontVisitingCard,
+  backVisitingCard,
+}
+
 class VisitorsViewModel extends GetxController implements GetxService {
   final VisitorsRepo visitorsRepo;
   final ReferralRepo referralRepo;
@@ -30,6 +37,7 @@ class VisitorsViewModel extends GetxController implements GetxService {
   RxBool _referralTypeOutside = true.obs;
   TextEditingController _dateController = TextEditingController();
   TextEditingController _nameController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
   TextEditingController _contactNumberController = TextEditingController();
   TextEditingController _companyNameController = TextEditingController();
   String _selectedCountry = "",
@@ -39,6 +47,10 @@ class VisitorsViewModel extends GetxController implements GetxService {
       _selectedMeeting = "",
       _selectedMeetingCode = "",
       _selectedBusinessCategory = "";
+  var profileUrl = "",
+      uploadFrontVisitingCard = "",
+      uploadBackVisitingCard = "";
+  ImageUploadType imageUploadType = ImageUploadType.profileImage;
   List<String> _countryList = [];
   List<String> unSortedList = [];
   List<String> _stateList = [];
@@ -46,7 +58,6 @@ class VisitorsViewModel extends GetxController implements GetxService {
   List<String> _chapterList = [];
   List<String> _businessCatList = [];
   List<GroupChildData> _groupChildData = [];
-  String _selectedMeetingName = "Select Meeting (Optional)";
   List<Map<String, String>> _meetingsList = [];
   List<String> _teamWiseMeetingList = [];
   RxInt _page = 0.obs;
@@ -117,6 +128,11 @@ class VisitorsViewModel extends GetxController implements GetxService {
 
   set nameController(TextEditingController value) {
     _nameController = value;
+  }
+  TextEditingController get emailController => _emailController;
+
+  set emailController(TextEditingController value) {
+    _emailController = value;
   }
 
   TextEditingController get contactNumberController => _contactNumberController;
@@ -203,10 +219,10 @@ class VisitorsViewModel extends GetxController implements GetxService {
     _selectedMeeting = value;
   }
 
-  String get selectedMeetingName => _selectedMeetingName;
+  String get selectedMeetingCode => _selectedMeetingCode;
 
-  set selectedMeetingName(String value) {
-    _selectedMeetingName = value;
+  set selectedMeetingCode(String value) {
+    _selectedMeetingCode = value;
   }
 
   List<String> get teamWiseMeetingList => _teamWiseMeetingList;
@@ -275,7 +291,6 @@ class VisitorsViewModel extends GetxController implements GetxService {
     _cityList = [];
     _chapterList = [];
     _selectedMeeting = "";
-    _selectedMeetingName = "Select Meeting (Optional)";
     _meetingsList = [];
     _selectedCountry = "Select Country";
     _selectedState = "Select State";
@@ -294,7 +309,6 @@ class VisitorsViewModel extends GetxController implements GetxService {
     update();
 
     Response response = await referralRepo.getMeetings(0, 1000, "updatedAt", "DESC");
-    Map<String, dynamic> dummyResponse = jsonDecode(meetingsApiResponse);
 
     _isLoading = false;
     if (response.statusCode == 200) {
@@ -302,12 +316,13 @@ class VisitorsViewModel extends GetxController implements GetxService {
       _teamWiseMeetingList = [];
 
       // Parse meetings data
-      if (dummyResponse['data'] != null) {
-        dummyResponse['data']['data'].forEach((order) {
+      if (response.body['data'] != null) {
+        response.body['data']['data'].forEach((order) {
           MeetingListResponseModel meetingRecord = MeetingListResponseModel.fromJson(order);
           print("Meeting Meet -> ${meetingRecord.team?.uuid}");
           _meetingsList.add({
             "uuid": meetingRecord.team?.uuid ?? "",
+            "meetingUuid": meetingRecord?.uuid ?? "",
             "title": meetingRecord.title ?? "",
             "meetingDate": meetingRecord.meetingDate ?? "",
             "groupName": meetingRecord.team?.groupName ?? "",
@@ -339,7 +354,7 @@ class VisitorsViewModel extends GetxController implements GetxService {
    if (selectedMeeting.isNotEmpty) {
      DateTime dateTime = DateTime.parse(selectedMeeting["meetingDate"].toString());
      setMeetingOrSelectedDate(dateTime);
-     _selectedMeetingCode = selectedMeeting["uuid"].toString();
+     _selectedMeetingCode = selectedMeeting["meetingUuid"].toString();
    }
   }
 
@@ -414,6 +429,13 @@ class VisitorsViewModel extends GetxController implements GetxService {
           status: response.body['status'],
           message: response.body['message'],
           data: response.body['data'] as Map<String, dynamic>);
+      if(imageUploadType == ImageUploadType.profileImage) {
+        profileUrl = response.body['data']['url'];
+      } else if(imageUploadType == ImageUploadType.frontVisitingCard) {
+        uploadFrontVisitingCard = response.body['data']['url'];
+      } else {
+        uploadBackVisitingCard = response.body['data']['url'];
+      }
     } else {
       responseModel = AddUploadOperationResponseModel(
           timestamp: response.body['timestamp'],
@@ -445,46 +467,40 @@ class VisitorsViewModel extends GetxController implements GetxService {
   }
 
   Future<bool> addVisitors(
-      String? uuId,
       String? country,
       String? state,
       String? city,
-      String? chapter,
+      String? groupName, // chapterName
+      String? meetingCode,
+      String? meetingTitle,
       String? date,
       String? businessCategory,
       String? name,
+      String? email,
       String? contactNumber,
       String? companyName,
-      String? addedBy,
-      String? groupName,
-      String? title,
-      String? meetingCode,
-      String? meetingDate,
-      String? referral,
-      String? email,
-      UploadedDocRespModel? uploadedDoc) async {
+      String? profileUrl,
+      String? uploadFrontVisitingCard,
+      String? uploadBackVisitingCard) async {
     _isLoading = true;
     bool isSuccess = false;
     update();
     Response response = await visitorsRepo.addVisitors(
-        uuId,
         country,
         state,
         city,
-        chapter,
+        groupName, // chapterName
+        meetingCode,
+        meetingTitle,
         date,
         businessCategory,
         name,
+        email,
         contactNumber,
         companyName,
-        addedBy,
-        groupName,
-        title,
-        meetingCode,
-        meetingDate,
-        referral,
-        email,
-        uploadedDoc);
+        profileUrl,
+        uploadFrontVisitingCard,
+        uploadBackVisitingCard);
     _isLoading = false;
     if (response.statusCode == 201) {
       isSuccess = true;
@@ -503,10 +519,9 @@ class VisitorsViewModel extends GetxController implements GetxService {
     Response response =
         await visitorsRepo.getGroups(page, size, sort, orderBy, search);
     _isLoading = false;
-    Map<String, dynamic> dummyResponse = jsonDecode(teamsApiResponse);
     if (response.statusCode == 200) {
       _groupChildData = [];
-      dummyResponse['data']['data'].forEach((order) {
+      response.body['data']['data'].forEach((order) {
         GroupChildData groups = GroupChildData.fromJson(order);
         print("Chapter Meet -> ${order["uuid"]}");
         _groupChildData.add(groups);
