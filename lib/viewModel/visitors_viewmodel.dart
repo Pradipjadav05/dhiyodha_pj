@@ -32,7 +32,9 @@ class VisitorsViewModel extends GetxController implements GetxService {
   bool _isLoading = false;
   RxBool _isExpanded = false.obs;
   RxBool _isAgreeTerms = false.obs;
-  RxBool _isImageUploadSuccess = false.obs;
+  RxBool _isProfileImageUploadSuccess = false.obs;
+  RxBool _isVCardFrontSuccess = false.obs;
+  RxBool _isVCardBackSuccess = false.obs;
   RxBool _referralTypeInside = false.obs;
   RxBool _referralTypeOutside = true.obs;
   TextEditingController _dateController = TextEditingController();
@@ -66,7 +68,9 @@ class VisitorsViewModel extends GetxController implements GetxService {
 
   UploadedDocRespModel _uploadedDocRespModel = new UploadedDocRespModel();
 
-  XFile? _uploadedDocumentFile;
+  XFile? _uploadedProfilePictureFile;
+  XFile? _uploadedVCardFrontFile;
+  XFile? _uploadedVCardBackFile;
   List<VisitorChildData> _visitorData = [];
   DateTime _selectedDate = DateTime.now();
 
@@ -88,10 +92,22 @@ class VisitorsViewModel extends GetxController implements GetxService {
     _isLoading = value;
   }
 
-  RxBool get isImageUploadSuccess => _isImageUploadSuccess;
+  RxBool get isImageUploadSuccess => _isProfileImageUploadSuccess;
 
   set isImageUploadSuccess(RxBool value) {
-    _isImageUploadSuccess = value;
+    _isProfileImageUploadSuccess = value;
+  }
+
+  RxBool get isVCardFrontSuccess => _isVCardFrontSuccess;
+
+  set isVCardFrontSuccess(RxBool value) {
+    _isVCardFrontSuccess = value;
+  }
+
+  RxBool get isVCardBackSuccess => _isVCardBackSuccess;
+
+  set isVCardBackSuccess(RxBool value) {
+    _isVCardBackSuccess = value;
   }
 
   get referralTypeOutside => _referralTypeOutside;
@@ -237,10 +253,22 @@ class VisitorsViewModel extends GetxController implements GetxService {
     _size = value;
   }
 
-  XFile? get uploadedDocumentFile => _uploadedDocumentFile;
+  XFile? get uploadedProfilePictureFile => _uploadedProfilePictureFile;
 
-  set uploadedDocumentFile(XFile? value) {
-    _uploadedDocumentFile = value;
+  set uploadedProfilePictureFile(XFile? value) {
+    _uploadedProfilePictureFile = value;
+  }
+
+  XFile? get uploadedVCardFrontFile => _uploadedVCardFrontFile;
+
+  set uploadedVCardFrontFile(XFile? value) {
+    _uploadedVCardFrontFile = value;
+  }
+
+  XFile? get uploadedVCardBackFile => _uploadedVCardBackFile;
+
+  set uploadedVCardBackFile(XFile? value) {
+    _uploadedVCardBackFile = value;
   }
 
   List<VisitorChildData> get visitorData => _visitorData;
@@ -274,7 +302,7 @@ class VisitorsViewModel extends GetxController implements GetxService {
   Future<void> initData() async {
     _isLoading = false;
     _isExpanded = false.obs;
-    _isImageUploadSuccess = false.obs;
+    _isProfileImageUploadSuccess = false.obs;
     _isAgreeTerms = false.obs;
     _referralTypeInside = false.obs;
     _referralTypeOutside = true.obs;
@@ -299,7 +327,9 @@ class VisitorsViewModel extends GetxController implements GetxService {
     _businessCatList = globalBusinessCategoryForMemberList;
     _selectedBusinessCategory = _businessCatList[0];
     _uploadedDocRespModel = new UploadedDocRespModel();
-    _uploadedDocumentFile = null;
+    _uploadedProfilePictureFile = null;
+    _uploadedVCardFrontFile = null;
+    _uploadedVCardBackFile = null;
 
     ///await getVisitors(page.value, size.value, "", "", "");
   }
@@ -377,20 +407,32 @@ class VisitorsViewModel extends GetxController implements GetxService {
   Future<void> pickImage(String documentType) async {
     XFile? picked = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (picked != null) {
-      _uploadedDocumentFile = picked;
+      if(imageUploadType == ImageUploadType.profileImage) {
+        _uploadedProfilePictureFile = picked;
+      } else if(imageUploadType == ImageUploadType.frontVisitingCard) {
+        _uploadedVCardFrontFile = picked;
+      } else {
+        _uploadedVCardBackFile = picked;
+      }
       update();
       AddUploadOperationResponseModel responseModel =
-          await uploadImageDocument(documentType, _uploadedDocumentFile!);
+          await uploadImageDocument(documentType, picked!);
       if (responseModel.status == "CREATED") {
         uploadedDocRespModel =
             UploadedDocRespModel.fromJson(responseModel.data);
         showSnackBar(responseModel.message, isError: false);
-        isImageUploadSuccess = true.obs;
+        manageIsImageUploadSuccess(true);
         // _uploadedDocumentUuid = responseModel.data['documentUuid'];
       } else {
         showSnackBar(responseModel.message);
-        isImageUploadSuccess = false.obs;
-        _uploadedDocumentFile = null;
+        manageIsImageUploadSuccess(false);
+        if(imageUploadType == ImageUploadType.profileImage) {
+          _uploadedProfilePictureFile = null;
+        } else if(imageUploadType == ImageUploadType.frontVisitingCard) {
+          _uploadedVCardFrontFile = null;
+        } else {
+          _uploadedVCardBackFile = null;
+        }
       }
     }
   }
@@ -398,10 +440,16 @@ class VisitorsViewModel extends GetxController implements GetxService {
   Future<void> clickCameraImage(String documentType) async {
     XFile? picked = await ImagePicker().pickImage(source: ImageSource.camera);
     if (picked != null) {
-      _uploadedDocumentFile = picked;
+      if(imageUploadType == ImageUploadType.profileImage) {
+        _uploadedProfilePictureFile = picked;
+      } else if(imageUploadType == ImageUploadType.frontVisitingCard) {
+        _uploadedVCardFrontFile = picked;
+      } else {
+        _uploadedVCardBackFile = picked;
+      }
       update();
       AddUploadOperationResponseModel responseModel =
-          await uploadImageDocument(documentType, _uploadedDocumentFile!);
+          await uploadImageDocument(documentType, picked!);
       if (responseModel.status == "CREATED") {
         uploadedDocRespModel =
             UploadedDocRespModel.fromJson(responseModel.data);
@@ -411,8 +459,24 @@ class VisitorsViewModel extends GetxController implements GetxService {
       } else {
         showSnackBar(responseModel.message);
         isImageUploadSuccess = false.obs;
-        _uploadedDocumentFile = null;
+        if(imageUploadType == ImageUploadType.profileImage) {
+          _uploadedProfilePictureFile = null;
+        } else if(imageUploadType == ImageUploadType.frontVisitingCard) {
+          _uploadedVCardFrontFile = null;
+        } else {
+          _uploadedVCardBackFile = null;
+        }
       }
+    }
+  }
+
+  void manageIsImageUploadSuccess(bool isSuccess) {
+    if(imageUploadType == ImageUploadType.profileImage) {
+      isImageUploadSuccess = isSuccess.obs;
+    } else if(imageUploadType == ImageUploadType.frontVisitingCard) {
+      isVCardFrontSuccess = isSuccess.obs;
+    } else {
+      isVCardBackSuccess = isSuccess.obs;
     }
   }
 
@@ -451,6 +515,7 @@ class VisitorsViewModel extends GetxController implements GetxService {
       int page, int size, String? sort, String? orderBy, String? search) async {
     _isLoading = true;
     update();
+    _visitorData = [];
     Response response =
         await visitorsRepo.getVisitors(page, size, sort, orderBy, search);
     _isLoading = false;
@@ -479,6 +544,7 @@ class VisitorsViewModel extends GetxController implements GetxService {
       String? email,
       String? contactNumber,
       String? companyName,
+      String? addedBy,
       String? profileUrl,
       String? uploadFrontVisitingCard,
       String? uploadBackVisitingCard) async {
@@ -498,6 +564,7 @@ class VisitorsViewModel extends GetxController implements GetxService {
         email,
         contactNumber,
         companyName,
+        addedBy,
         profileUrl,
         uploadFrontVisitingCard,
         uploadBackVisitingCard);

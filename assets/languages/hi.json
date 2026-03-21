@@ -104,6 +104,7 @@
   "enter_amount": "कृपया राशि दर्ज करें",
   "please_enter_comment": "कृपया टिप्पणी दर्ज करें",
   "add_visitor": "विज़िटर जोड़ें",
+  "meeting_visitor": "आगंतुक से मुलाकात",
   "select_date": "तारीख़ चुनें",
   "enter_name": "नाम दर्ज करें",
   "contact_number": "संपर्क संख्या",
@@ -243,7 +244,8 @@
   "post_deleted": "सफलतापूर्वक हटा दिया गया हैं",
   "delete_data": "डेटा हटाएँ",
   "coming_soon": "जल्द आ रहा है...",
-  "select_meeting_location": "मीटिंग स्थान चुनें"
+  "select_meeting_location": "मीटिंग स्थान चुनें",
+  "profile_upload": "प्रोफ़ाइल अपलोड करें"
 
 
 }

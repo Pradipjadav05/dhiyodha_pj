@@ -13,7 +13,7 @@ import 'package:dhiyodha/view/pages/add_post_page.dart';
 import 'package:dhiyodha/view/pages/add_referral_slip_page.dart';
 import 'package:dhiyodha/view/pages/add_testimonial_page.dart';
 import 'package:dhiyodha/view/pages/add_tyfcb_page.dart';
-import 'package:dhiyodha/view/pages/add_visitors_page.dart';
+import 'package:dhiyodha/view/pages/visitor/visitor_module_page.dart';
 import 'package:dhiyodha/view/pages/address_page.dart';
 import 'package:dhiyodha/view/pages/asks_answer_list_page.dart';
 import 'package:dhiyodha/view/pages/asks_list_page.dart';
@@ -55,7 +55,7 @@ import 'package:dhiyodha/view/pages/tyfcb_page.dart';
 import 'package:dhiyodha/view/pages/update_password_page.dart';
 import 'package:dhiyodha/view/pages/update_username_page.dart';
 import 'package:dhiyodha/view/pages/visiting_e_card_page.dart';
-import 'package:dhiyodha/view/pages/visitor_page.dart';
+import 'package:dhiyodha/view/pages/visitor/visitor_page.dart';
 import 'package:dhiyodha/view/pages/webview_page.dart';
 import 'package:get/get.dart';
 
@@ -364,7 +364,9 @@ class Routes {
           return ConnectWithAskPage(askChild: askChild);
         }),
     GetPage(name: notification, page: () => NotificationPage()),
-    GetPage(name: visitor, page: () => VisitorPage()),
+    GetPage(name: visitor, page: () => VisitorPage(isAppBarRequired: true,
+      onStateChanged: () {
+      },)),
     GetPage(name: training, page: () => TrainingPage()),
     GetPage(name: addVisitor, page: () => AddVisitorsPage()),
     GetPage(name: tyfcbPage, page: () => TyfcbPage()),

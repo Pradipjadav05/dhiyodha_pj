@@ -104,32 +104,56 @@ class ProfilePageState extends State<ProfilePage> {
                             },
                             child: Stack(
                               children: [
-                                _currentUserData.profileUrl != null &&
-                                        _currentUserData
-                                            .profileUrl!.isNotEmpty &&
-                                        postVM.postImageFile == null
-                                    ? CachedNetworkImage(
-                                        imageUrl:
-                                            _currentUserData.profileUrl ?? "",
+                                postVM.postImageFile != null
+                                    ? Image.file(
+                                        File(postVM.postImageFile!.path),
                                         height: 68.0,
                                         width: 68.0,
+                                        fit: BoxFit.cover,
                                       )
-                                    : postVM.postImageFile == null
-                                        ? Image.asset(
+                                    : (_currentUserData.profileUrl != null &&
+                                            _currentUserData
+                                                .profileUrl!.isNotEmpty)
+                                        ? CachedNetworkImage(
+                                            imageUrl:
+                                                _currentUserData.profileUrl!,
+                                            height: 68.0,
+                                            width: 68.0,
+                                            fit: BoxFit.cover,
+                                            placeholder: (context, url) =>
+                                                const SizedBox(
+                                              height: 68,
+                                              width: 68,
+                                              child: Center(
+                                                child:
+                                                    CircularProgressIndicator(
+                                                        strokeWidth: 2),
+                                              ),
+                                            ),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    Image.asset(
+                                              logoRound,
+                                              height: 68.0,
+                                              width: 68.0,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          )
+                                        : Image.asset(
                                             logoRound,
                                             height: 68.0,
                                             width: 68.0,
-                                          )
-                                        : Image.file(
-                                            height: 68.0,
-                                            width: 68.0,
-                                            File(postVM.postImageFile!.path),
-                                            fit: BoxFit.fitWidth,
+                                            fit: BoxFit.cover,
                                           ),
                                 Positioned(
-                                    left: 44,
-                                    top: 42,
-                                    child: Image.asset(roundCamera)),
+                                  left: 44,
+                                  top: 42,
+                                  child: Image.asset(
+                                    roundCamera,
+                                    height: 24,
+                                    width: 24,
+                                  ),
+                                ),
                               ],
                             ),
                           ),

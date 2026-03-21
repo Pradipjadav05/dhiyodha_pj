@@ -51,6 +51,7 @@ class VisitorsRepo {
       String? email,
       String? contactNumber,
       String? companyName,
+      String? addedBy,
       String? profileUrl,
       String? uploadFrontVisitingCard,
       String? uploadBackVisitingCard) async {
@@ -71,6 +72,7 @@ class VisitorsRepo {
       "email": email,
       "contactNumber": contactNumber,
       "companyName": companyName,
+      "addedBy": addedBy,
       "profileUrl": profileUrl,
       "uploadFrontVisitingCard": uploadFrontVisitingCard,
       "uploadBackVisitingCard": uploadBackVisitingCard,

@@ -8,12 +8,14 @@ class LoginResponse {
       {this.timestamp, this.status, this.message, this.loginAuthData});
 
   LoginResponse.fromJson(Map<String, dynamic> json) {
-    timestamp = json['timestamp'];
-    status = json['status'];
-    message = json['message'];
-    loginAuthData = json['loginAuthData'] != null
-        ? new LoginAuthData.fromJson(json['loginAuthData'])
-        : null;
+    timestamp = json['timestamp']?.toString();
+    status = json['status']?.toString();
+    message = json['message']?.toString();
+    loginAuthData = json['data'] != null
+        ? new LoginAuthData.fromJson(json['data'])
+        : json['loginAuthData'] != null
+            ? new LoginAuthData.fromJson(json['loginAuthData'])
+            : null;
   }
 
   Map<String, dynamic> toJson() {

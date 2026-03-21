@@ -56,38 +56,6 @@ class ReferralRepo {
   Future<Response> getMeetings(int page, int size, String? sort, String? sortDirection) async {
     return await apiClient.getData(
         '$getMeetingsListUrl?page=$page&size=$size&sort=$sort&sortDirection=$sortDirection');
-    // Mock response - simulating API call
-    await Future.delayed(Duration(milliseconds: 500));
-
-    // Mock meetings data
-    return Response(
-      statusCode: 200,
-      body: {
-        "timestamp": DateTime.now().toIso8601String(),
-        "status": "OK",
-        "message": "Meetings retrieved successfully",
-        "data": [
-          {
-            "uuid": "meeting-001",
-            "title": "Weekly Chapter Meeting - Jan 2026",
-            "date": "2026-01-15",
-            "meetingType": "CHAPTER"
-          },
-          {
-            "uuid": "meeting-002",
-            "title": "Monthly Networking Event",
-            "date": "2026-01-20",
-            "meetingType": "NETWORKING"
-          },
-          {
-            "uuid": "meeting-003",
-            "title": "Business Development Workshop",
-            "date": "2026-01-25",
-            "meetingType": "WORKSHOP"
-          },
-        ]
-      }
-    );
   }
 
   // TODO: Replace with actual API call when backend is ready

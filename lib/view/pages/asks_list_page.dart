@@ -233,11 +233,26 @@ class AsksListPageState extends State<AsksListPage> {
                           imageUrl: item.profileUrl!,
                           width: 42.0,
                           height: 42.0,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) => const SizedBox(
+                            width: 42,
+                            height: 42,
+                            child: Center(
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            ),
+                          ),
+                          errorWidget: (context, url, error) => Image.asset(
+                            profileImage,
+                            width: 42.0,
+                            height: 42.0,
+                            fit: BoxFit.cover,
+                          ),
                         )
                       : Image.asset(
                           profileImage,
                           width: 42.0,
                           height: 42.0,
+                          fit: BoxFit.cover,
                         ),
                   SizedBox(width: paddingSize10),
                   Expanded(

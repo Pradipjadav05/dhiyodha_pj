@@ -135,11 +135,26 @@ class HomePageState extends State<HomePage> {
                                             imageUrl: homeVM
                                                 .currentUserData.profileUrl!,
                                             fit: BoxFit.fill,
+                                            placeholder: (context, url) =>
+                                                const Center(
+                                              child: CircularProgressIndicator(
+                                                  strokeWidth: 2),
+                                            ),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    Image.asset(
+                                              logoRound,
+                                              height: 68.0,
+                                              width: 68.0,
+                                              fit: BoxFit.fill,
+                                            ),
                                           )
-                                        : Image.asset(logoRound,
+                                        : Image.asset(
+                                            logoRound,
                                             height: 68.0,
                                             width: 68.0,
-                                            fit: BoxFit.fill),
+                                            fit: BoxFit.fill,
+                                          ),
                                     Text(
                                       '${homeVM.currentUserData.firstName} ${homeVM.currentUserData.lastName}',
                                       style: fontBold.copyWith(
@@ -1885,8 +1900,25 @@ class HomePageState extends State<HomePage> {
                           imageUrl: data.profileUrl!,
                           width: 42.0,
                           height: 42.0,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) => SizedBox(
+                            width: 42.0,
+                            height: 42.0,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          ),
+                          errorWidget: (context, url, error) => Image.asset(
+                            profileImage,
+                            width: 42.0,
+                            height: 42.0,
+                            fit: BoxFit.cover,
+                          ),
                         )
-                      : Image.asset(profileImage, width: 42.0, height: 42.0),
+                      : Image.asset(
+                          profileImage,
+                          width: 42.0,
+                          height: 42.0,
+                          fit: BoxFit.cover,
+                        ),
                   SizedBox(width: paddingSize10),
                   Expanded(
                     child: Column(
@@ -2014,8 +2046,21 @@ class HomePageState extends State<HomePage> {
               ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(radius10)),
                 child: data.imageUrl != null && data.imageUrl!.isNotEmpty
-                    ? CachedNetworkImage(imageUrl: data.imageUrl!)
-                    : Image.asset(profileImage),
+                    ? CachedNetworkImage(
+                  imageUrl: data.imageUrl!,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => const Center(
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                  errorWidget: (context, url, error) => Image.asset(
+                    profileImage,
+                    fit: BoxFit.cover,
+                  ),
+                )
+                    : Image.asset(
+                  profileImage,
+                  fit: BoxFit.cover,
+                ),
               ),
               SizedBox(height: paddingSize5),
               Row(
