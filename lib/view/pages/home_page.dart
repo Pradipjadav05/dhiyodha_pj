@@ -917,7 +917,8 @@ class HomePageState extends State<HomePage> {
                 bool result = await Get.toNamed(
                     Routes.getAddPostPageRoute(homeVM.currentUserData));
                 if (result ?? false) {
-                  showSnackBar(homeVM.isAllPost.value.toString(), isError: false);
+                  // showSnackBar(homeVM.isAllPost.value.toString(),
+                  //     isError: false);
                   await callPostOrMyPostAPI(homeVM);
                 }
               },
@@ -963,13 +964,12 @@ class HomePageState extends State<HomePage> {
   }
 
   Future<void> callPostOrMyPostAPI(HomeViewModel homeVM) async {
-    if(homeVM.isAllPost.value == false) {
+    if (homeVM.isAllPost.value == false) {
       homeVM.postData = [];
       await homeVM.getMyPosts();
     } else {
       homeVM.postData = [];
-      await getPosts(
-          homeVM.page.value, homeVM.size.value, "", "", "");
+      await getPosts(homeVM.page.value, homeVM.size.value, "", "", "");
     }
   }
 
@@ -2047,13 +2047,13 @@ class HomePageState extends State<HomePage> {
                 borderRadius: BorderRadius.all(Radius.circular(radius10)),
                 child: data.imageUrl != null && data.imageUrl!.isNotEmpty
                     ? CachedNetworkImage(
-                  imageUrl: data.imageUrl!,
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) => const Center(
-                    child: SizedBox.shrink(),
-                  ),
-                  errorWidget: (context, url, error) => SizedBox.shrink(),
-                )
+                        imageUrl: data.imageUrl!,
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => const Center(
+                          child: SizedBox.shrink(),
+                        ),
+                        errorWidget: (context, url, error) => SizedBox.shrink(),
+                      )
                     : SizedBox.shrink(),
               ),
               SizedBox(height: paddingSize5),
@@ -2267,11 +2267,33 @@ class HomePageState extends State<HomePage> {
                                                                     .profileUrl!,
                                                             height: 40.0,
                                                             width: 40.0,
+                                                            fit: BoxFit.cover,
+                                                            placeholder: (context,
+                                                                    url) =>
+                                                                const SizedBox(
+                                                              height: 40.0,
+                                                              width: 40.0,
+                                                              child: Center(
+                                                                child: CircularProgressIndicator(
+                                                                    strokeWidth:
+                                                                        2),
+                                                              ),
+                                                            ),
+                                                            errorWidget:
+                                                                (context, url,
+                                                                        error) =>
+                                                                    Image.asset(
+                                                              profileImage,
+                                                              height: 40.0,
+                                                              width: 40.0,
+                                                              fit: BoxFit.cover,
+                                                            ),
                                                           )
                                                         : Image.asset(
                                                             profileImage,
-                                                            width: 40.0,
                                                             height: 40.0,
+                                                            width: 40.0,
+                                                            fit: BoxFit.cover,
                                                           ),
                                                     SizedBox(
                                                         width: paddingSize10),
@@ -2390,11 +2412,29 @@ class HomePageState extends State<HomePage> {
                                             globalCurrentUserData.profileUrl!,
                                         height: 40.0,
                                         width: 40.0,
+                                        fit: BoxFit.cover,
+                                        placeholder: (context, url) =>
+                                            const SizedBox(
+                                          height: 40.0,
+                                          width: 40.0,
+                                          child: Center(
+                                            child: CircularProgressIndicator(
+                                                strokeWidth: 2),
+                                          ),
+                                        ),
+                                        errorWidget: (context, url, error) =>
+                                            Image.asset(
+                                          profileImage,
+                                          height: 40.0,
+                                          width: 40.0,
+                                          fit: BoxFit.cover,
+                                        ),
                                       )
                                     : Image.asset(
                                         profileImage,
-                                        width: 40.0,
                                         height: 40.0,
+                                        width: 40.0,
+                                        fit: BoxFit.cover,
                                       ),
                                 SizedBox(width: 5.0),
                                 Expanded(

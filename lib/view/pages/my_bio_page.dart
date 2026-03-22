@@ -12,52 +12,58 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class MyBioPage extends StatefulWidget {
-  CurrentUserData currentUserData;
+  final CurrentUserData currentUserData;
 
+  const MyBioPage({Key? key, required this.currentUserData}) : super(key: key);
+
+  @override
   MyBioPagePageState createState() => MyBioPagePageState();
-
-  MyBioPage({required this.currentUserData});
 }
 
 class MyBioPagePageState extends State<MyBioPage> {
   @override
   void initState() {
     super.initState();
-    initData();
+    _initData();
   }
 
-  Future<void> initData() async {
-    VisitingCardViewModel vvm = Get.find<VisitingCardViewModel>();
+  Future<void> _initData() async {
+    final VisitingCardViewModel vvm = Get.find<VisitingCardViewModel>();
     await vvm.initData();
-    vvm.currentUserData = widget.currentUserData;
-    vvm.designationController.text =
-        vvm.currentUserData.currentUserOrganization?.designation ?? "";
-    vvm.contactController.text = vvm.currentUserData.mobileNo ?? "";
-    vvm.companyNameController.text =
-        vvm.currentUserData.currentUserOrganization?.companyName ?? "";
-    vvm.businessCategoryController.text =
-        vvm.currentUserData.currentUserOrganization?.businessCategory ?? "";
-    vvm.locationController.text =
-        vvm.currentUserData.currentUserAddress?.city ?? "";
-    vvm.yearOfBusinessController.text =
-        vvm.currentUserData.currentUserOrganization?.companyEstablishment ?? "";
-    vvm.previousTypesOfJobsController.text =
-        vvm.currentUserData.previousTypesOfJobs ?? "";
-    vvm.partnerController.text = vvm.currentUserData.partner ?? "";
-    vvm.childrenController.text = vvm.currentUserData.children.toString() ?? "";
-    vvm.petsController.text = vvm.currentUserData.pet ?? "";
-    vvm.hobbiesController.text = vvm.currentUserData.hobbiesAndInterest ?? "";
-    vvm.cityResidenceController.text =
-        vvm.currentUserData.currentUserAddress?.city?.toString() ?? "";
-    vvm.yearInTheCityController.text =
-        vvm.currentUserData.cityResidingYears.toString() ?? "";
-    vvm.burningDesireController.text = vvm.currentUserData.burningDesire ?? "";
-    vvm.knowAboutMeController.text =
-        vvm.currentUserData.somethingNoOneKnowsAboutMe ?? "";
-    vvm.keyToSuccessController.text = vvm.currentUserData.keyToSuccess ?? "";
-    setState(() {
 
-    });
+    // ── Set currentUserData — triggers _refreshControllers() internally ──
+    vvm.currentUserData = widget.currentUserData;
+
+    // ── Bio-specific fields not covered by _refreshControllers ──
+    vvm.yearOfBusinessController.text =
+        widget.currentUserData.currentUserOrganization?.companyEstablishment ?? '';
+    vvm.previousTypesOfJobsController.text =
+        widget.currentUserData.previousTypesOfJobs ?? '';
+    vvm.partnerController.text =
+        widget.currentUserData.partner ?? '';
+    vvm.childrenController.text =
+        (widget.currentUserData.children ?? 0).toString();
+    vvm.petsController.text =
+        widget.currentUserData.pet ?? '';
+    vvm.hobbiesController.text =
+        widget.currentUserData.hobbiesAndInterest ?? '';
+    vvm.cityResidenceController.text =
+        widget.currentUserData.currentUserAddress?.city ?? '';
+    vvm.yearInTheCityController.text =
+        (widget.currentUserData.cityResidingYears ?? 0).toString();
+    vvm.burningDesireController.text =
+        widget.currentUserData.burningDesire ?? '';
+    vvm.knowAboutMeController.text =
+        widget.currentUserData.somethingNoOneKnowsAboutMe ?? '';
+    vvm.keyToSuccessController.text =
+        widget.currentUserData.keyToSuccess ?? '';
+
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -66,12 +72,16 @@ class MyBioPagePageState extends State<MyBioPage> {
       child: Scaffold(
         backgroundColor: ghostWhite,
         appBar: CommonAppBar(
-          title: Text("my_bio".tr,
-              style: fontBold.copyWith(
-                  fontSize: fontSize18,
-                  color: Theme.of(context).textTheme.bodyLarge!.color)),
+          title: Text(
+            'my_bio'.tr,
+            style: fontBold.copyWith(
+              fontSize: fontSize18,
+              color: Theme.of(context).textTheme.bodyLarge!.color,
+            ),
+          ),
         ),
         body: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           child: GetBuilder<VisitingCardViewModel>(
             builder: (vvm) {
               return Padding(
@@ -82,194 +92,83 @@ class MyBioPagePageState extends State<MyBioPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    SizedBox(height: paddingSize15),
-                    Text(
-                      "year_of_business".tr,
-                      style: fontMedium.copyWith(
-                          fontSize: fontSize14, color: bluishPurple),
-                    ),
-                    SizedBox(height: paddingSize8),
-                    CommonTextFormField(
+                    const SizedBox(height: paddingSize15),
+
+                    _buildField(
+                      label: 'year_of_business'.tr,
                       controller: vvm.yearOfBusinessController,
-                      bgColor: lavenderMist,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: paddingSize15, horizontal: paddingSize15),
-                      textStyle: fontMedium.copyWith(
-                          color: midnightBlue, fontSize: fontSize14),
-                      hintText: "year_of_business".tr,
+                      hintText: 'year_of_business'.tr,
                     ),
-                    SizedBox(height: paddingSize20),
-                    Text(
-                      "prev_jobs".tr,
-                      style: fontMedium.copyWith(
-                          fontSize: fontSize14, color: bluishPurple),
-                    ),
-                    SizedBox(height: paddingSize8),
-                    CommonTextFormField(
+                    _buildField(
+                      label: 'prev_jobs'.tr,
                       controller: vvm.previousTypesOfJobsController,
-                      bgColor: lavenderMist,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: paddingSize15, horizontal: paddingSize15),
-                      textStyle: fontMedium.copyWith(
-                          color: midnightBlue, fontSize: fontSize14),
-                      hintText: "prev_jobs".tr,
+                      hintText: 'prev_jobs'.tr,
                     ),
-                    SizedBox(height: paddingSize20),
-                    Text(
-                      "partner".tr,
-                      style: fontMedium.copyWith(
-                          fontSize: fontSize14, color: bluishPurple),
-                    ),
-                    SizedBox(height: paddingSize8),
-                    CommonTextFormField(
+                    _buildField(
+                      label: 'partner'.tr,
                       controller: vvm.partnerController,
-                      bgColor: lavenderMist,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: paddingSize15, horizontal: paddingSize15),
-                      textStyle: fontMedium.copyWith(
-                          color: midnightBlue, fontSize: fontSize14),
-                      hintText: "partner".tr,
+                      hintText: 'partner'.tr,
                     ),
-                    SizedBox(height: paddingSize20),
-                    Text(
-                      "child".tr,
-                      style: fontMedium.copyWith(
-                          fontSize: fontSize14, color: bluishPurple),
-                    ),
-                    SizedBox(height: paddingSize8),
-                    CommonTextFormField(
+                    _buildField(
+                      label: 'child'.tr,
                       controller: vvm.childrenController,
-                      bgColor: lavenderMist,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: paddingSize15, horizontal: paddingSize15),
-                      textStyle: fontMedium.copyWith(
-                          color: midnightBlue, fontSize: fontSize14),
-                      hintText: "child".tr,
+                      hintText: 'child'.tr,
+                      inputType: TextInputType.number,
                     ),
-                    SizedBox(height: paddingSize20),
-                    Text(
-                      "pets".tr,
-                      style: fontMedium.copyWith(
-                          fontSize: fontSize14, color: bluishPurple),
-                    ),
-                    SizedBox(height: paddingSize8),
-                    CommonTextFormField(
+                    _buildField(
+                      label: 'pets'.tr,
                       controller: vvm.petsController,
-                      bgColor: lavenderMist,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: paddingSize15, horizontal: paddingSize15),
-                      textStyle: fontMedium.copyWith(
-                          color: midnightBlue, fontSize: fontSize14),
-                      hintText: "pets".tr,
+                      hintText: 'pets'.tr,
                     ),
-                    SizedBox(height: paddingSize20),
-                    Text(
-                      "hobby".tr,
-                      style: fontMedium.copyWith(
-                          fontSize: fontSize14, color: bluishPurple),
-                    ),
-                    SizedBox(height: paddingSize8),
-                    CommonTextFormField(
+                    _buildField(
+                      label: 'hobby'.tr,
                       controller: vvm.hobbiesController,
-                      bgColor: lavenderMist,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: paddingSize15, horizontal: paddingSize15),
-                      textStyle: fontMedium.copyWith(
-                          color: midnightBlue, fontSize: fontSize14),
-                      hintText: "hobby".tr,
+                      hintText: 'hobby'.tr,
                     ),
-                    SizedBox(height: paddingSize20),
-                    Text(
-                      "city_residence".tr,
-                      style: fontMedium.copyWith(
-                          fontSize: fontSize14, color: bluishPurple),
-                    ),
-                    SizedBox(height: paddingSize8),
-                    CommonTextFormField(
+                    _buildField(
+                      label: 'city_residence'.tr,
                       controller: vvm.cityResidenceController,
-                      bgColor: lavenderMist,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: paddingSize15, horizontal: paddingSize15),
-                      textStyle: fontMedium.copyWith(
-                          color: midnightBlue, fontSize: fontSize14),
-                      hintText: "city_residence".tr,
+                      hintText: 'city_residence'.tr,
                     ),
-                    SizedBox(height: paddingSize20),
-                    Text(
-                      "year_in_city".tr,
-                      style: fontMedium.copyWith(
-                          fontSize: fontSize14, color: bluishPurple),
-                    ),
-                    SizedBox(height: paddingSize8),
-                    CommonTextFormField(
+                    _buildField(
+                      label: 'year_in_city'.tr,
                       controller: vvm.yearInTheCityController,
-                      bgColor: lavenderMist,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: paddingSize15, horizontal: paddingSize15),
-                      textStyle: fontMedium.copyWith(
-                          color: midnightBlue, fontSize: fontSize14),
-                      hintText: "year_in_city".tr,
+                      hintText: 'year_in_city'.tr,
+                      inputType: TextInputType.number,
                     ),
-                    SizedBox(height: paddingSize20),
-                    Text(
-                      "burning_desire".tr,
-                      style: fontMedium.copyWith(
-                          fontSize: fontSize14, color: bluishPurple),
-                    ),
-                    SizedBox(height: paddingSize8),
-                    CommonTextFormField(
+                    _buildField(
+                      label: 'burning_desire'.tr,
                       controller: vvm.burningDesireController,
-                      bgColor: lavenderMist,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: paddingSize15, horizontal: paddingSize15),
-                      textStyle: fontMedium.copyWith(
-                          color: midnightBlue, fontSize: fontSize14),
-                      hintText: "burning_desire".tr,
+                      hintText: 'burning_desire'.tr,
                       maxLines: 3,
                     ),
-                    SizedBox(height: paddingSize20),
-                    Text(
-                      "know_about_me".tr,
-                      style: fontMedium.copyWith(
-                          fontSize: fontSize14, color: bluishPurple),
-                    ),
-                    SizedBox(height: paddingSize8),
-                    CommonTextFormField(
+                    _buildField(
+                      label: 'know_about_me'.tr,
                       controller: vvm.knowAboutMeController,
-                      bgColor: lavenderMist,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: paddingSize15, horizontal: paddingSize15),
-                      textStyle: fontMedium.copyWith(
-                          color: midnightBlue, fontSize: fontSize14),
-                      hintText: "know_about_me".tr,
+                      hintText: 'know_about_me'.tr,
                       maxLines: 4,
                     ),
-                    SizedBox(height: paddingSize20),
-                    Text(
-                      "success_key".tr,
-                      style: fontMedium.copyWith(
-                          fontSize: fontSize14, color: bluishPurple),
-                    ),
-                    SizedBox(height: paddingSize8),
-                    CommonTextFormField(
+                    _buildField(
+                      label: 'success_key'.tr,
                       controller: vvm.keyToSuccessController,
-                      bgColor: lavenderMist,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: paddingSize15, horizontal: paddingSize15),
-                      textStyle: fontMedium.copyWith(
-                          color: midnightBlue, fontSize: fontSize14),
-                      hintText: "success_key".tr,
+                      hintText: 'success_key'.tr,
                       maxLines: 4,
                     ),
-                    SizedBox(height: paddingSize25),
-                    CommonButton(
-                      buttonText: "confirm".tr,
+
+                    const SizedBox(height: paddingSize25),
+
+                    vvm.isLoading
+                        ? const Center(child: CircularProgressIndicator())
+                        : CommonButton(
+                      buttonText: 'confirm'.tr,
                       bgColor: midnightBlue,
                       textColor: periwinkle,
                       onPressed: () async {
-                        await collectDataAndSaveProfile(vvm);
+                        await _collectDataAndSaveProfile(vvm);
                       },
-                    )
+                    ),
+
+                    const SizedBox(height: paddingSize20),
                   ],
                 ),
               );
@@ -280,166 +179,157 @@ class MyBioPagePageState extends State<MyBioPage> {
     );
   }
 
-  @override
-  void dispose() {
-    super.dispose();
+  // ── Reusable labeled field ──
+  Widget _buildField({
+    required String label,
+    required TextEditingController controller,
+    required String hintText,
+    TextInputType inputType = TextInputType.text,
+    int maxLines = 1,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: fontMedium.copyWith(fontSize: fontSize14, color: bluishPurple),
+        ),
+        const SizedBox(height: paddingSize8),
+        CommonTextFormField(
+          controller: controller,
+          bgColor: lavenderMist,
+          inputType: inputType,
+          maxLines: maxLines,
+          padding: const EdgeInsets.symmetric(
+              vertical: paddingSize15, horizontal: paddingSize15),
+          textStyle:
+          fontMedium.copyWith(color: midnightBlue, fontSize: fontSize14),
+          hintText: hintText,
+        ),
+        const SizedBox(height: paddingSize20),
+      ],
+    );
   }
 
-  Future<void> collectDataAndSaveProfile(VisitingCardViewModel vvm) async {
-    UpdateProfileRequestModel userProfileRequestModel =
-        new UpdateProfileRequestModel(
-      firstName: widget.currentUserData.firstName ?? "",
-      lastName: widget.currentUserData.lastName ?? "",
-      dob: widget.currentUserData.dob ?? "",
-      countryCode: widget.currentUserData.countryCode ?? "",
-      mobileNo: widget?.currentUserData?.mobileNo ?? "",
-      uploadDocumentId: widget.currentUserData.uploadDocumentId ?? "",
-      education: widget.currentUserData.education ?? "",
-      children: int.parse(vvm.childrenController.text) ??
+  // ────────────────────────────────────────────────────────────
+  // _collectDataAndSaveProfile
+  //
+  // Fixes from original:
+  //   1. int.parse() crashes if field is empty — wrapped in
+  //      int.tryParse() with fallback to 0
+  //   2. locationController no longer exists — address fields
+  //      (pinCode, city, state, country) now come from separate
+  //      controllers in VisitingCardViewModel
+  //   3. cityResidenceController used for AddressRequest.city
+  //      (same as before — user edits city here in bio page)
+  //   4. Removed all unnecessary ?? after non-nullable .text
+  // ────────────────────────────────────────────────────────────
+  Future<void> _collectDataAndSaveProfile(VisitingCardViewModel vvm) async {
+    final UpdateProfileRequestModel request = UpdateProfileRequestModel(
+      firstName: widget.currentUserData.firstName ?? '',
+      lastName: widget.currentUserData.lastName ?? '',
+      dob: widget.currentUserData.dob ?? '',
+      countryCode: widget.currentUserData.countryCode ?? '',
+      mobileNo: widget.currentUserData.mobileNo ?? '',
+      uploadDocumentId: widget.currentUserData.uploadDocumentId ?? '',
+      education: widget.currentUserData.education ?? '',
+
+      // ── FIX: int.tryParse avoids crash on empty field ──
+      children: int.tryParse(vvm.childrenController.text) ??
           widget.currentUserData.children ??
           0,
-      pet: vvm.petsController.text ?? widget.currentUserData.pet ?? "",
-      hobbiesAndInterest: vvm.hobbiesController.text ??
-          widget.currentUserData.hobbiesAndInterest ??
-          "",
-      cityResidingYears: int.parse(vvm.yearInTheCityController.text) ?? 0,
-      //int.parse(vvm.cityResidenceController.text) ??
-      burningDesire: vvm.burningDesireController.text ??
-          widget.currentUserData.burningDesire ??
-          "",
-      somethingNoOneKnowsAboutMe: vvm.knowAboutMeController.text ??
-          widget.currentUserData.somethingNoOneKnowsAboutMe ??
-          "",
-      keyToSuccess: vvm.keyToSuccessController.text ??
-          widget.currentUserData.keyToSuccess ??
-          "",
-      residentAddress: widget.currentUserData.permanentAddress ?? "",
-      permanentAddress: widget.currentUserData.permanentAddress ?? "",
-      maritalStatus: widget.currentUserData.maritalStatus ?? "",
-      previousTypesOfJobs: vvm.previousTypesOfJobsController.text ??
-          widget.currentUserData.previousTypesOfJobs ??
-          "",
-      partner:
-          vvm.partnerController.text ?? widget.currentUserData.partner ?? "",
+      pet: vvm.petsController.text.isNotEmpty
+          ? vvm.petsController.text
+          : widget.currentUserData.pet ?? '',
+      hobbiesAndInterest: vvm.hobbiesController.text.isNotEmpty
+          ? vvm.hobbiesController.text
+          : widget.currentUserData.hobbiesAndInterest ?? '',
+
+      // ── FIX: int.tryParse avoids crash on empty field ──
+      cityResidingYears: int.tryParse(vvm.yearInTheCityController.text) ?? 0,
+
+      burningDesire: vvm.burningDesireController.text.isNotEmpty
+          ? vvm.burningDesireController.text
+          : widget.currentUserData.burningDesire ?? '',
+      somethingNoOneKnowsAboutMe: vvm.knowAboutMeController.text.isNotEmpty
+          ? vvm.knowAboutMeController.text
+          : widget.currentUserData.somethingNoOneKnowsAboutMe ?? '',
+      keyToSuccess: vvm.keyToSuccessController.text.isNotEmpty
+          ? vvm.keyToSuccessController.text
+          : widget.currentUserData.keyToSuccess ?? '',
+      residentAddress: widget.currentUserData.permanentAddress ?? '',
+      permanentAddress: widget.currentUserData.permanentAddress ?? '',
+      maritalStatus: widget.currentUserData.maritalStatus ?? '',
+      previousTypesOfJobs: vvm.previousTypesOfJobsController.text.isNotEmpty
+          ? vvm.previousTypesOfJobsController.text
+          : widget.currentUserData.previousTypesOfJobs ?? '',
+      partner: vvm.partnerController.text.isNotEmpty
+          ? vvm.partnerController.text
+          : widget.currentUserData.partner ?? '',
+
       businessDetailsResponse: CompanyDetailsRequest(
-          uuid: widget.currentUserData.uuid ?? "",
-          companyName:
-              widget.currentUserData?.currentUserOrganization?.companyName ??
-                  "",
-          companyEstablishment: vvm.yearOfBusinessController.text ??
-              "",
-          companyAddress:
-              widget.currentUserData?.currentUserOrganization?.companyAddress ??
-                  "",
-          registeredType:
-              widget.currentUserData?.currentUserOrganization?.registeredType ??
-                  "",
-          numberOfEmployees: widget
-              .currentUserData?.currentUserOrganization?.numberOfEmployees,
-          yearlyTurnover:
-              widget.currentUserData?.currentUserOrganization?.yearlyTurnover ??
-                  "",
-          companyEmail:
-              widget.currentUserData?.currentUserOrganization?.companyEmail ??
-                  "",
-          companyWebsite:
-              widget.currentUserData?.currentUserOrganization?.companyWebsite ??
-                  "",
-          designation:
-              widget.currentUserData?.currentUserOrganization?.designation ??
-                  "",
-          companyContact:
-              widget.currentUserData?.currentUserOrganization?.companyContact ??
-                  "",
-          businessCategory:
-              widget.currentUserData?.currentUserOrganization?.businessCategory ?? "",
-          businessDescription: widget.currentUserData?.currentUserOrganization?.businessDescription ?? "",
-          yearlyProfit: widget.currentUserData?.currentUserOrganization?.yearlyProfit ?? 0.0,
-          gstNumber: widget.currentUserData?.currentUserOrganization?.gstNumber ?? "",
-          uploadGst: widget.currentUserData?.currentUserOrganization?.uploadGst ?? "",
-          panNumber: widget.currentUserData?.currentUserOrganization?.panNumber ?? "",
-          uploadPan: widget.currentUserData?.currentUserOrganization?.uploadPan ?? ""),
+        uuid: widget.currentUserData.uuid ?? '',
+        companyName:
+        widget.currentUserData.currentUserOrganization?.companyName ?? '',
+        companyEstablishment: vvm.yearOfBusinessController.text.isNotEmpty
+            ? vvm.yearOfBusinessController.text
+            : widget.currentUserData.currentUserOrganization
+            ?.companyEstablishment ??
+            '',
+        companyAddress:
+        widget.currentUserData.currentUserOrganization?.companyAddress ?? '',
+        registeredType:
+        widget.currentUserData.currentUserOrganization?.registeredType ?? '',
+        numberOfEmployees:
+        widget.currentUserData.currentUserOrganization?.numberOfEmployees,
+        yearlyTurnover:
+        widget.currentUserData.currentUserOrganization?.yearlyTurnover ?? '',
+        companyEmail:
+        widget.currentUserData.currentUserOrganization?.companyEmail ?? '',
+        companyWebsite:
+        widget.currentUserData.currentUserOrganization?.companyWebsite ?? '',
+        designation:
+        widget.currentUserData.currentUserOrganization?.designation ?? '',
+        companyContact:
+        widget.currentUserData.currentUserOrganization?.companyContact ?? '',
+        businessCategory:
+        widget.currentUserData.currentUserOrganization?.businessCategory ?? '',
+        businessDescription:
+        widget.currentUserData.currentUserOrganization?.businessDescription ?? '',
+        yearlyProfit:
+        widget.currentUserData.currentUserOrganization?.yearlyProfit ?? 0.0,
+        gstNumber:
+        widget.currentUserData.currentUserOrganization?.gstNumber ?? '',
+        uploadGst:
+        widget.currentUserData.currentUserOrganization?.uploadGst ?? '',
+        panNumber:
+        widget.currentUserData.currentUserOrganization?.panNumber ?? '',
+        uploadPan:
+        widget.currentUserData.currentUserOrganization?.uploadPan ?? '',
+      ),
+
+      // ── FIX: use separate address controllers (locationController removed) ──
       addressRequest: AddressRequest(
-        city: vvm.cityResidenceController.text ?? "",
-        state: widget.currentUserData.currentUserAddress?.state ?? "",
-        country: widget.currentUserData.currentUserAddress?.country ?? "",
-        pinCode: widget.currentUserData.currentUserAddress?.pinCode ?? "",
+        city: vvm.cityResidenceController.text.isNotEmpty
+            ? vvm.cityResidenceController.text
+            : widget.currentUserData.currentUserAddress?.city ?? '',
+        state: vvm.stateController.text.isNotEmpty
+            ? vvm.stateController.text
+            : widget.currentUserData.currentUserAddress?.state ?? '',
+        country: vvm.countryController.text.isNotEmpty
+            ? vvm.countryController.text
+            : widget.currentUserData.currentUserAddress?.country ?? '',
+        pinCode: vvm.pinCodeController.text.isNotEmpty
+            ? vvm.pinCodeController.text
+            : widget.currentUserData.currentUserAddress?.pinCode ?? '',
       ),
     );
-    bool resp = await vvm.updateProfile(userProfileRequestModel);
+
+    final bool resp = await vvm.updateProfile(request);
     if (resp) {
       Get.back(result: true, canPop: true, closeOverlays: true);
     } else {
       showSnackBar('errorMessage'.tr);
     }
-
-    // if (vvm.yearOfBusinessController.text.isEmpty) {
-    //   showSnackBar("Please enter years of business");
-    // } else if (vvm.previousTypesOfJobsController.text.isEmpty) {
-    //   showSnackBar("Please enter previous types of job");
-    // } else if (vvm.partnerController.text.isEmpty) {
-    //   showSnackBar("Please enter your partner name");
-    // } else if (vvm.childrenController.text.isEmpty) {
-    //   showSnackBar("Please enter children count");
-    // } else if (vvm.petsController.text.isEmpty) {
-    //   showSnackBar("Please enter pet");
-    // } else if (vvm.hobbiesController.text.isEmpty) {
-    //   showSnackBar("Please enter hobbies");
-    // } else if (vvm.cityResidenceController.text.isEmpty) {
-    //   showSnackBar("Please enter city of your residence");
-    // } else if (vvm.yearInTheCityController.text.isEmpty) {
-    //   showSnackBar("Please enter years in the city");
-    // } else if (vvm.knowAboutMeController.text.isEmpty) {
-    //   showSnackBar("Please enter your know about me");
-    // } else if (vvm.keyToSuccessController.text.isEmpty) {
-    //   showSnackBar("Please enter your success key");
-    // } else {
-    //   bool resp = await vvm.updateProfile(
-    //     new UpdateProfileRequestModel(
-    //         firstName: widget.currentUserData.firstName,
-    //         lastName: widget.currentUserData.lastName,
-    //         dob: widget.currentUserData.dob,
-    //         countryCode: widget.currentUserData.countryCode,
-    //         mobileNo: widget.currentUserData.mobileNo,
-    //         uploadDocumentId: widget.currentUserData.uploadDocumentId,
-    //         education: widget.currentUserData.education,
-    //         children: int.parse(vvm.childrenController.text),
-    //         pet: vvm.petsController.text,
-    //         hobbiesAndInterest: vvm.hobbiesController.text,
-    //         cityResidingYears: int.parse(vvm.cityResidenceController.text),
-    //         burningDesire: vvm.burningDesireController.text,
-    //         somethingNoOneKnowsAboutMe: vvm.knowAboutMeController.text,
-    //         keyToSuccess: vvm.keyToSuccessController.text,
-    //         maritalStatus: widget.currentUserData.maritalStatus,
-    //         companyDetailsRequest: CompanyDetailsRequest(
-    //           businessCategory: widget
-    //               .currentUserData.currentUserOrganization?.businessCategory,
-    //           companyName:
-    //               widget.currentUserData.currentUserOrganization?.companyName,
-    //           companyRegistration: widget
-    //               .currentUserData.currentUserOrganization?.companyRegistration,
-    //           establishedYear: widget
-    //               .currentUserData.currentUserOrganization?.establishedYear,
-    //           numberOfStaff:
-    //               widget.currentUserData.currentUserOrganization?.numberOfStaff,
-    //           gstNumber:
-    //               widget.currentUserData.currentUserOrganization?.gstNumber,
-    //           officeNumber:
-    //               widget.currentUserData.currentUserOrganization?.officeNumber,
-    //           officeEmail:
-    //               widget.currentUserData.currentUserOrganization?.officeEmail,
-    //         ),
-    //         addressRequest: AddressRequest(
-    //           city: widget.currentUserData.currentUserAddress?.city,
-    //           state: widget.currentUserData.currentUserAddress?.state,
-    //           pinCode: widget.currentUserData.currentUserAddress?.pinCode,
-    //         )),
-    //   );
-    //   if (resp) {
-    //     Get.back(result: true, canPop: true, closeOverlays: true);
-    //   } else {
-    //     showSnackBar('errorMessage'.tr);
-    //   }
-    // }
   }
 }

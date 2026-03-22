@@ -463,18 +463,36 @@ class MemberProfilePageState extends State<MemberProfilePage> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            i.reviewerPofileUrl != null &&
-                                    i.reviewerPofileUrl!.isNotEmpty
-                                ? CachedNetworkImage(
-                                    imageUrl: i.reviewerPofileUrl ?? " ",
-                                    height: 40.0,
-                                    width: 40.0,
-                                  )
-                                : Image.asset(
-                                    profileImage,
-                                    height: 40.0,
-                                    width: 40.0,
+                            if (i.reviewerPofileUrl != null &&
+                                i.reviewerPofileUrl!.isNotEmpty)
+                              CachedNetworkImage(
+                                imageUrl: i.reviewerPofileUrl!,
+                                width: 42.0,
+                                height: 42.0,
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) => const SizedBox(
+                                  width: 42,
+                                  height: 42,
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                        strokeWidth: 2),
                                   ),
+                                ),
+                                errorWidget: (context, url, error) =>
+                                    Image.asset(
+                                  profileImage,
+                                  width: 42.0,
+                                  height: 42.0,
+                                  fit: BoxFit.cover,
+                                ),
+                              )
+                            else
+                              Image.asset(
+                                profileImage,
+                                width: 42.0,
+                                height: 42.0,
+                                fit: BoxFit.cover,
+                              ),
                             SizedBox(width: paddingSize15),
                             Column(
                               mainAxisAlignment: MainAxisAlignment.start,
