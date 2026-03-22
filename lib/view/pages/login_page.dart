@@ -9,6 +9,7 @@ import 'package:dhiyodha/view/widgets/common_button.dart';
 import 'package:dhiyodha/view/widgets/common_snackbar.dart';
 import 'package:dhiyodha/view/widgets/common_text_form_field.dart';
 import 'package:dhiyodha/viewModel/login_viewmodel.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/components/checkbox/gf_checkbox.dart';
@@ -74,9 +75,9 @@ class LoginPageState extends State<LoginPage> {
                   ),
                   SizedBox(height: paddingSize40),
                   Obx(
-                    () => Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                        () => Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         GFCheckbox(
                           inactiveBgColor: lavenderMist,
@@ -89,25 +90,28 @@ class LoginPageState extends State<LoginPage> {
                             loginVM.isAgreeTerms.value = value;
                           },
                         ),
-                        Text(
-                          "i_accept".tr,
-                          style: fontRegular.copyWith(
-                              color: black, fontSize: fontSize14),
-                        ),
-                        SizedBox(width: 2.0),
-                        Expanded(
-                          child: InkWell(
-                            onTap: () {
-                              Get.toNamed(
-                                  Routes.getWebViewPageRoute(queryWebUrl));
-                            },
-                            child: Text(
-                              "terms".tr,
-                              overflow: TextOverflow.ellipsis,
-                              style: fontRegular.copyWith(
-                                  color: bluishPurple,
-                                  fontSize: fontSize14,
-                                  decoration: TextDecoration.underline),
+                        Flexible(
+                          child: RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: "${"i_accept".tr} ",
+                                  style: fontRegular.copyWith(
+                                      color: black, fontSize: fontSize14),
+                                ),
+                                TextSpan(
+                                  text: "terms".tr,
+                                  style: fontRegular.copyWith(
+                                      color: bluishPurple,
+                                      fontSize: fontSize14,
+                                      decoration: TextDecoration.underline),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      Get.toNamed(
+                                          Routes.getWebViewPageRoute(queryWebUrl));
+                                    },
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -150,6 +154,7 @@ class LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _login(LoginViewModel loginVM) async {
+    FocusManager.instance.primaryFocus?.unfocus();
     String email = loginVM.emailController.value.text.trim();
     String password = loginVM.passwordController.value.text.trim();
     if (email.isEmpty) {
@@ -163,19 +168,17 @@ class LoginPageState extends State<LoginPage> {
     } else if (loginVM.isAgreeTerms.value == false) {
       showSnackBar("accept_terms".tr);
     } else {
-      await loginVM.login(email, password).then((status) async {
-        if (status.status == "OK") {
-          // if (authController.isActiveRememberMe) {
-          //   authController.saveUserNumberAndPassword(email, password, type);
-          // } else {
-          //   authController.clearUserNumberAndPassword();
-          // }
-          // await Get.find<AuthController>().getProfile();
-          Get.toNamed(Routes.getHomePageRoute());
-        } else {
-          showSnackBar(status.message);
-        }
-      });
+      final status = await loginVM.login(email, password);
+
+      if (status.status == "OK") {
+        Get.offAllNamed(Routes.getHomePageRoute());
+      } else {
+        if (!mounted) return;
+
+        showSnackBar(
+          status.message ?? "Invalid credentials. Please try again.",
+        );
+      }
     }
   }
 

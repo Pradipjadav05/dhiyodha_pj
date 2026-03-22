@@ -1904,7 +1904,7 @@ class HomePageState extends State<HomePage> {
                           placeholder: (context, url) => SizedBox(
                             width: 42.0,
                             height: 42.0,
-                            child: CircularProgressIndicator(strokeWidth: 2),
+                            child: SizedBox.shrink(),
                           ),
                           errorWidget: (context, url, error) => Image.asset(
                             profileImage,
@@ -2050,17 +2050,11 @@ class HomePageState extends State<HomePage> {
                   imageUrl: data.imageUrl!,
                   fit: BoxFit.cover,
                   placeholder: (context, url) => const Center(
-                    child: CircularProgressIndicator(strokeWidth: 2),
+                    child: SizedBox.shrink(),
                   ),
-                  errorWidget: (context, url, error) => Image.asset(
-                    profileImage,
-                    fit: BoxFit.cover,
-                  ),
+                  errorWidget: (context, url, error) => SizedBox.shrink(),
                 )
-                    : Image.asset(
-                  profileImage,
-                  fit: BoxFit.cover,
-                ),
+                    : SizedBox.shrink(),
               ),
               SizedBox(height: paddingSize5),
               Row(

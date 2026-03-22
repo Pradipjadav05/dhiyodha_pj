@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../view/widgets/common_snackbar.dart';
+
 class LoginViewModel extends GetxController implements GetxService {
   final LoginRepo loginRepo;
 
@@ -22,6 +24,8 @@ class LoginViewModel extends GetxController implements GetxService {
   TextEditingController _otp2Controller = TextEditingController();
   TextEditingController _otp3Controller = TextEditingController();
   TextEditingController _otp4Controller = TextEditingController();
+  TextEditingController _otp5Controller = TextEditingController();
+  TextEditingController _otp6Controller = TextEditingController();
   bool _isLoading = false;
   bool _notification = true;
   XFile? _pickedFile;
@@ -44,6 +48,8 @@ class LoginViewModel extends GetxController implements GetxService {
     _otp2Controller = TextEditingController();
     _otp3Controller = TextEditingController();
     _otp4Controller = TextEditingController();
+    _otp5Controller = TextEditingController();
+    _otp6Controller = TextEditingController();
     _isLoading = false;
     _notification = true;
     _pickedFile = null;
@@ -179,6 +185,7 @@ class LoginViewModel extends GetxController implements GetxService {
     _isLoading = false;
     if (response.statusCode == 200) {
       isSuccess = true;
+      showSnackBar("${response.body["message"]}", isError: false);
     } else {
       ApiChecker.checkApi(response);
     }
@@ -412,5 +419,17 @@ class LoginViewModel extends GetxController implements GetxService {
 
   set otp4Controller(TextEditingController value) {
     _otp4Controller = value;
+  }
+
+  TextEditingController get otp5Controller => _otp5Controller;
+
+  set otp5Controller(TextEditingController value) {
+    _otp5Controller = value;
+  }
+
+  TextEditingController get otp6Controller => _otp6Controller;
+
+  set otp6Controller(TextEditingController value) {
+    _otp6Controller = value;
   }
 }

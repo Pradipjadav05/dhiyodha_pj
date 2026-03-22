@@ -5,6 +5,7 @@ import 'package:dhiyodha/view/widgets/common_snackbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 class PostsViewModel extends GetxController implements GetxService {
   final PostsRepo postsRepo;
@@ -18,7 +19,10 @@ class PostsViewModel extends GetxController implements GetxService {
   RxInt selectedRegionVal = 1.obs;
   RxString regionValue = "".obs;
 
-  PostsViewModel({required this.postsRepo}) {}
+  // ── 1 MB size limit ──
+  static const int _maxFileSizeBytes = 1 * 1024 * 1024; // 1 MB
+
+  PostsViewModel({required this.postsRepo});
 
   TextEditingController get titleController => _titleController;
 
@@ -61,18 +65,31 @@ class PostsViewModel extends GetxController implements GetxService {
     regionValue = "Chapter".toUpperCase().obs;
   }
 
+  // ── Validate file size (max 1 MB) ──
+  Future<bool> _isFileSizeValid(XFile file) async {
+    final int fileSizeBytes = await File(file.path).length();
+    return fileSizeBytes <= _maxFileSizeBytes;
+  }
+
   Future<void> pickImage(String documentType) async {
     XFile? picked = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (picked != null) {
+      // ── Size validation ──
+      final bool isSizeValid = await _isFileSizeValid(picked);
+      if (!isSizeValid) {
+        showSnackBar('Image size must be under 1 MB'); // "Image size must be under 1 MB"
+        return;
+      }
+
       _postImageFile = picked;
       update();
+
       AddUploadOperationResponseModel responseModel =
-          await uploadImageDocument(documentType, _postImageFile!);
+      await uploadImageDocument(documentType, _postImageFile!);
+
       if (responseModel.status == "CREATED") {
         showSnackBar(responseModel.message, isError: false);
         _uploadedDocumentUuid = responseModel.data['documentUuid'];
-        // UploadedDocRespModel? uploadedDocRespModel = responseModel.data;
-        // _uploadedDocumentUuid = uploadedDocRespModel?.documentUuid ?? "";
         isImageUploadSuccess = true.obs;
       } else {
         showSnackBar(responseModel.message);
@@ -85,15 +102,22 @@ class PostsViewModel extends GetxController implements GetxService {
   Future<void> clickCameraImage(String documentType) async {
     XFile? picked = await ImagePicker().pickImage(source: ImageSource.camera);
     if (picked != null) {
+      // ── Size validation ──
+      final bool isSizeValid = await _isFileSizeValid(picked);
+      if (!isSizeValid) {
+        showSnackBar('Image size must be under 1 MB'); // "Image size must be under 1 MB"
+        return;
+      }
+
       _postImageFile = picked;
       update();
+
       AddUploadOperationResponseModel responseModel =
-          await uploadImageDocument(documentType, _postImageFile!);
+      await uploadImageDocument(documentType, _postImageFile!);
+
       if (responseModel.status == "CREATED") {
         showSnackBar(responseModel.message, isError: false);
         _uploadedDocumentUuid = responseModel.data['documentUuid'];
-        // UploadedDocRespModel? uploadedDocRespModel = responseModel.data;
-        // _uploadedDocumentUuid = uploadedDocRespModel?.documentUuid ?? "";
         isImageUploadSuccess = true.obs;
       } else {
         showSnackBar(responseModel.message);
@@ -108,7 +132,7 @@ class PostsViewModel extends GetxController implements GetxService {
     _isLoading = true;
     update();
     Response response =
-        await postsRepo.uploadImageDocument(documentType, selectedImage);
+    await postsRepo.uploadImageDocument(documentType, selectedImage);
     AddUploadOperationResponseModel responseModel;
     if (response.statusCode == 201) {
       responseModel = AddUploadOperationResponseModel(

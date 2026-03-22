@@ -9,19 +9,17 @@ import 'package:dhiyodha/utils/resource/app_media_assets.dart';
 import 'package:dhiyodha/view/widgets/common_app_bar.dart';
 import 'package:dhiyodha/view/widgets/common_button.dart';
 import 'package:dhiyodha/view/widgets/common_snackbar.dart';
-import 'package:dhiyodha/view/widgets/markdown_editor_plus/widgets/markdown_auto_preview.dart';
 import 'package:dhiyodha/viewModel/posts_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AddPostPage extends StatefulWidget {
-  CurrentUserData currentUserData;
+  final CurrentUserData currentUserData;
 
+  const AddPostPage({Key? key, required this.currentUserData}) : super(key: key);
+
+  @override
   AddPostPageState createState() => AddPostPageState();
-
-  AddPostPage({
-    required this.currentUserData,
-  });
 }
 
 class AddPostPageState extends State<AddPostPage> {
@@ -32,397 +30,333 @@ class AddPostPageState extends State<AddPostPage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: Scaffold(
-      backgroundColor: ghostWhite,
-      appBar: CommonAppBar(
-        title: Text("add_post".tr,
+      child: Scaffold(
+        backgroundColor: ghostWhite,
+        appBar: CommonAppBar(
+          title: Text(
+            'add_post'.tr,
             style: fontBold.copyWith(
-                fontSize: fontSize18,
-                color: Theme.of(context).textTheme.bodyLarge!.color)),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(14.0),
-          child: GetBuilder<PostsViewModel>(
-            builder: (postVM) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        profileImage,
-                        width: 42.0,
-                        height: 42.0,
-                      ),
-                      SizedBox(width: paddingSize10),
-                      Expanded(
-                        child: Text(
-                          '${widget.currentUserData.firstName} ${widget.currentUserData.lastName}',
-                          style: fontMedium.copyWith(
-                              fontSize: fontSize14, color: midnightBlue),
+              fontSize: fontSize18,
+              color: Theme.of(context).textTheme.bodyLarge!.color,
+            ),
+          ),
+        ),
+        body: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Padding(
+            padding: const EdgeInsets.all(14.0),
+            child: GetBuilder<PostsViewModel>(
+              builder: (postVM) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // ── User row ──
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Image.asset(profileImage, width: 42.0, height: 42.0),
+                        const SizedBox(width: paddingSize10),
+                        Expanded(
+                          child: Text(
+                            '${widget.currentUserData.firstName} ${widget.currentUserData.lastName}',
+                            style: fontMedium.copyWith(
+                                fontSize: fontSize14, color: midnightBlue),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: paddingSize25),
-                  Text(
-                    "select_region".tr,
-                    style: fontMedium.copyWith(
-                        color: bluishPurple, fontSize: fontSize14),
-                  ),
-                  SizedBox(height: paddingSize5),
-                  Obx(
-                    () => Row(
+                      ],
+                    ),
+
+                    const SizedBox(height: paddingSize20),
+
+                    // ── Region selection ──
+                    Text(
+                      'select_region'.tr,
+                      style: fontMedium.copyWith(
+                          color: bluishPurple, fontSize: fontSize14),
+                    ),
+                    const SizedBox(height: paddingSize5),
+
+                    Obx(() => Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Radio(
                           materialTapTargetSize:
-                              MaterialTapTargetSize.shrinkWrap,
+                          MaterialTapTargetSize.shrinkWrap,
                           value: 1,
                           groupValue: postVM.selectedRegionVal.value,
                           onChanged: (int? value) {
                             postVM.setSelectedRegionVal(value!);
-                            postVM.regionValue.value = "Chapter".toUpperCase();
+                            postVM.regionValue.value =
+                                'Chapter'.toUpperCase();
                           },
                           activeColor: bluishPurple,
                         ),
                         Text(
-                          "chapter".tr,
+                          'chapter'.tr,
                           style: fontBold.copyWith(
                               color: midnightBlue, fontSize: fontSize14),
-                        )
+                        ),
                       ],
-                    ),
-                  ),
-                  Obx(
-                    () => Row(
+                    )),
+
+                    Obx(() => Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Radio(
                           materialTapTargetSize:
-                              MaterialTapTargetSize.shrinkWrap,
+                          MaterialTapTargetSize.shrinkWrap,
                           value: 2,
                           groupValue: postVM.selectedRegionVal.value,
                           onChanged: (int? value) {
                             postVM.setSelectedRegionVal(value!);
                             postVM.regionValue.value =
-                                "City_region".toUpperCase();
+                                'City_region'.toUpperCase();
                           },
                           activeColor: bluishPurple,
                         ),
                         Text(
-                          "city".tr,
+                          'city'.tr,
                           style: fontBold.copyWith(
                               color: midnightBlue, fontSize: fontSize14),
-                        )
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: paddingSize20),
-                  MarkDownWidget(
-                      postVM.contentController,
-                      "say_something_photo".tr,
-                      fontMedium.copyWith(
-                          color: greyText, fontSize: fontSize14),
-                      greyText),
-
-                  // CommonTextFormField(
-                  //   controller: postVM.contentController,
-                  //   bgColor: Colors.transparent,
-                  //   padding: EdgeInsets.all(paddingSize8),
-                  //   hintText: "say_something_photo".tr,
-                  //   hintColor: greyText,
-                  //   textStyle: fontMedium.copyWith(
-                  //       color: greyText, fontSize: fontSize14),
-                  // ),
-
-                  SizedBox(height: paddingSize25),
-                  ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(radius10)),
-                    child: postVM.postImageFile == null &&
-                            postVM.isImageUploadSuccess.isFalse
-                        ? Container()
-                        : Image.file(
-                            height: 250.0,
-                            width: double.infinity,
-                            File(postVM.postImageFile!.path),
-                            fit: BoxFit.fitWidth,
-                          ),
-                  ),
-                  SizedBox(height: paddingSize25),
-                  Row(
-                    children: [
-                      InkWell(
-                        onTap: () async {
-                          await _showImageSelectionDialog(postVM);
-                        },
-                        child: Row(
-                          children: [
-                            Image.asset(
-                              postUpload,
-                              height: iconSize24,
-                              width: iconSize24,
-                            ),
-                            SizedBox(
-                              width: paddingSize20,
-                            ),
-                            Text(
-                              "photo".tr,
-                              style: fontBold.copyWith(
-                                  fontSize: fontSize14, color: midnightBlue),
-                            ),
-                          ],
                         ),
+                      ],
+                    )),
+
+                    const SizedBox(height: paddingSize20),
+
+                    // ── Content box: TextField on top + Image below ──
+                    _buildContentBox(postVM),
+
+                    const SizedBox(height: paddingSize20),
+
+                    // ── Photo picker row ──
+                    InkWell(
+                      onTap: () async {
+                        await _showImageSelectionDialog(postVM);
+                      },
+                      child: Row(
+                        children: [
+                          Image.asset(
+                            postUpload,
+                            height: iconSize24,
+                            width: iconSize24,
+                          ),
+                          const SizedBox(width: paddingSize10),
+                          Text(
+                            'photo'.tr,
+                            style: fontBold.copyWith(
+                                fontSize: fontSize14, color: midnightBlue),
+                          ),
+                        ],
                       ),
-                      // Spacer(),
-                      // InkWell(
-                      //   child: Row(
-                      //     children: [
-                      //       Image.asset(
-                      //         feelings,
-                      //         height: iconSize24,
-                      //         width: iconSize24,
-                      //       ),
-                      //       SizedBox(
-                      //         width: paddingSize20,
-                      //       ),
-                      //       Text(
-                      //         "Feeling/Activity",
-                      //         style: fontBold.copyWith(
-                      //             fontSize: fontSize14, color: midnightBlue),
-                      //       )
-                      //     ],
-                      //   ),
-                      // ),
-                    ],
-                  ),
-                  // SizedBox(height: paddingSize25),
-                  // Row(
-                  //   children: [
-                  //     InkWell(
-                  //       child: Row(
-                  //         children: [
-                  //           Image.asset(
-                  //             tagPeople,
-                  //             height: iconSize24,
-                  //             width: iconSize24,
-                  //           ),
-                  //           SizedBox(
-                  //             width: paddingSize20,
-                  //           ),
-                  //           Text(
-                  //             "Tag People",
-                  //             style: fontBold.copyWith(
-                  //                 fontSize: fontSize14, color: midnightBlue),
-                  //           ),
-                  //         ],
-                  //       ),
-                  //     ),
-                  //     Spacer(),
-                  //     InkWell(
-                  //       child: Row(
-                  //         children: [
-                  //           Image.asset(
-                  //             postUpload,
-                  //             height: iconSize24,
-                  //             width: iconSize24,
-                  //           ),
-                  //           SizedBox(
-                  //             width: paddingSize20,
-                  //           ),
-                  //           Text(
-                  //             "Photo",
-                  //             style: fontBold.copyWith(
-                  //                 fontSize: fontSize14, color: midnightBlue),
-                  //           )
-                  //         ],
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
-                  SizedBox(height: paddingSize25),
-                  CommonButton(
-                    buttonText: "upload".tr,
-                    bgColor: midnightBlue,
-                    textColor: periwinkle,
-                    onPressed: () async {
-                      if (postVM.contentController.text.isEmpty) {
-                        showSnackBar("enter_post_content".tr);
-                      } else {
-                        ResponseModel resp = await postVM.addPost(
-                            postVM.contentController.text.contains("hashtag")
-                                ? postVM.contentController.text
-                                    .replaceAll("hashtag", "")
-                                : postVM.contentController.text,
-                            postVM.regionValue.value,
-                            true);
-                        if (resp.isSuccess) {
-                          showSnackBar(resp.message, isError: false);
-                          Get.back(
-                              result: true, canPop: true, closeOverlays: true);
+                    ),
+
+                    const SizedBox(height: paddingSize25),
+
+                    // ── Upload button ──
+                    postVM.isLoading
+                        ? const Center(child: CircularProgressIndicator())
+                        : CommonButton(
+                      buttonText: 'upload'.tr,
+                      bgColor: midnightBlue,
+                      textColor: periwinkle,
+                      onPressed: () async {
+                        if (postVM.contentController.text.trim().isEmpty) {
+                          showSnackBar('enter_post_content'.tr);
                         } else {
-                          showSnackBar('errorMessage'.tr);
+                          ResponseModel resp = await postVM.addPost(
+                            postVM.contentController.text,
+                            postVM.regionValue.value,
+                            true,
+                          );
+                          if (resp.isSuccess) {
+                            showSnackBar(resp.message, isError: false);
+                            Get.back(
+                                result: true,
+                                canPop: true,
+                                closeOverlays: true);
+                          } else {
+                            showSnackBar('errorMessage'.tr);
+                          }
                         }
-                      }
-                    },
-                  )
-                ],
-              );
-            },
+                      },
+                    ),
+
+                    const SizedBox(height: paddingSize20),
+                  ],
+                );
+              },
+            ),
           ),
         ),
       ),
-    ));
+    );
   }
 
-  MarkDownWidget(controllerMarkdown, hintText, textStyle, hintColor) {
-    // _controllerMarkdown.text = q.description!;
-    FocusNode focus = FocusNode();
-    GlobalKey key = GlobalKey();
-    MarkdownAutoPreview? markdown = MarkdownAutoPreview(
-      key: key,
-      controller: controllerMarkdown,
-      onChanged: (value) {},
-      emojiConvert: true,
-      enableToolBar: true,
-      expands: true,
-      // maxLines: 6,
-    );
+  // ────────────────────────────────────────────────────────────
+  // Content box — multiline TextField at top, image preview below
+  // Matches design: text flows above the selected image inside
+  // a single rounded white card.
+  // ────────────────────────────────────────────────────────────
+  Widget _buildContentBox(PostsViewModel postVM) {
+    final bool hasImage = postVM.postImageFile != null &&
+        postVM.isImageUploadSuccess.isTrue;
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        // color: white,
+        // borderRadius: BorderRadius.circular(radius10),
+        // border: Border.all(color: greyText.withOpacity(0.25)),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // ── Multiline TextField ──
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Row(
-              children: [
-                Text(hintText, style: textStyle),
-              ],
+            padding: EdgeInsets.only(bottom: 4),
+            child: TextField(
+              controller: postVM.contentController,
+              minLines: 1,
+              maxLines: null, // grows with content, no scroll cap
+              keyboardType: TextInputType.multiline,
+              textInputAction: TextInputAction.newline,
+              style: fontMedium.copyWith(
+                  fontSize: fontSize14, color: midnightBlue),
+              decoration: InputDecoration(
+                hintText: 'say_something_photo'.tr,
+                hintStyle: fontRegular.copyWith(
+                    fontSize: fontSize14, color: greyText),
+                border: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                isDense: true,
+                contentPadding: EdgeInsets.zero,
+              ),
             ),
           ),
-          Container(
-            decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
-            width: Get.width,
-            child: Focus(
-              canRequestFocus: true,
-              descendantsAreFocusable: true,
-              descendantsAreTraversable: true,
-              focusNode: focus,
-              child: markdown,
+
+          // ── Selected image preview below text ──
+          if (hasImage) ...[
+            Divider(
+              height: 1,
+              thickness: 1,
+              color: greyText.withOpacity(0.15),
             ),
-          ),
+            // Image fills width, rounded bottom corners
+            ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(radius10),
+                topRight: Radius.circular(radius10),
+                bottomLeft: Radius.circular(radius10),
+                bottomRight: Radius.circular(radius10),
+              ),
+              child: Image.file(
+                File(postVM.postImageFile!.path),
+                width: double.infinity,
+                height: 250.0,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ],
         ],
       ),
     );
   }
 
+  // ── Image source dialog ──
   Future<void> _showImageSelectionDialog(PostsViewModel postVM) async {
     showDialog(
       context: context,
       builder: (context) {
         return Dialog(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(radius10)),
-            elevation: 0,
-            child: Container(
-              height: Get.width * 0.6,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(radius10)),
+          elevation: 0,
+          child: Container(
+            height: Get.width * 0.6,
+            decoration: BoxDecoration(
               color: lavenderMist,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(14.0),
-                    child: Text(
-                      "select_image_source".tr,
-                      style: fontMedium.copyWith(
-                          color: midnightBlue, fontSize: fontSize16),
-                    ),
+              borderRadius: BorderRadius.circular(radius10),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(14.0),
+                  child: Text(
+                    'select_image_source'.tr,
+                    style: fontMedium.copyWith(
+                        color: midnightBlue, fontSize: fontSize16),
                   ),
-                  Divider(
-                    color: midnightBlue,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 8.0, vertical: 8.0),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 14.0, vertical: 14.0),
-                      decoration: BoxDecoration(
-                          border: Border.all(color: midnightBlue),
-                          borderRadius: BorderRadius.circular(8.0)),
-                      child: InkWell(
-                        child: Row(
-                          children: [
-                            Image.asset(
-                              postUpload,
-                              width: iconSize24,
-                              height: iconSize24,
-                            ),
-                            SizedBox(
-                              width: paddingSize10,
-                            ),
-                            Text("gallery".tr,
-                                style: fontBold.copyWith(
-                                    color: midnightBlue, fontSize: fontSize16)),
-                          ],
-                        ),
-                        onTap: () async {
-                          Get.back();
-                          await postVM.pickImage("SOCIAL_IMAGE");
-                        },
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 8.0, vertical: 8.0),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 14.0, vertical: 14.0),
-                      decoration: BoxDecoration(
-                          border: Border.all(color: midnightBlue),
-                          borderRadius: BorderRadius.circular(8.0)),
-                      child: InkWell(
-                        child: Row(
-                          children: [
-                            Image.asset(
-                              camera,
-                              color: bluishPurple,
-                              height: iconSize24,
-                              width: iconSize24,
-                            ),
-                            SizedBox(
-                              width: paddingSize10,
-                            ),
-                            Text("camera".tr,
-                                style: fontBold.copyWith(
-                                    color: midnightBlue, fontSize: fontSize16)),
-                          ],
-                        ),
-                        onTap: () async {
-                          Get.back();
-                          await postVM.clickCameraImage("SOCIAL_IMAGE");
-                        },
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ));
+                ),
+                const Divider(color: midnightBlue),
+                _dialogOption(
+                  assetPath: postUpload,
+                  assetColor: null,
+                  label: 'gallery'.tr,
+                  onTap: () async {
+                    Get.back();
+                    await postVM.pickImage('SOCIAL_IMAGE');
+                  },
+                ),
+                _dialogOption(
+                  assetPath: camera,
+                  assetColor: bluishPurple,
+                  label: 'camera'.tr,
+                  onTap: () async {
+                    Get.back();
+                    await postVM.clickCameraImage('SOCIAL_IMAGE');
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
       },
     );
   }
 
-  @override
-  void dispose() {
-    super.dispose();
+  Widget _dialogOption({
+    required String assetPath,
+    required String label,
+    required VoidCallback onTap,
+    Color? assetColor,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(8.0),
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(
+              horizontal: 14.0, vertical: 14.0),
+          decoration: BoxDecoration(
+            border: Border.all(color: midnightBlue),
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          child: Row(
+            children: [
+              Image.asset(assetPath,
+                  color: assetColor, width: iconSize24, height: iconSize24),
+              const SizedBox(width: paddingSize10),
+              Text(label,
+                  style: fontBold.copyWith(
+                      color: midnightBlue, fontSize: fontSize16)),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
