@@ -29,6 +29,13 @@ class MembersPage extends StatefulWidget {
 }
 
 class MembersPageState extends State<MembersPage> {
+  // ── Autocomplete text controllers (for display text in the field) ──
+  final TextEditingController _countryController = TextEditingController();
+  final TextEditingController _stateController = TextEditingController();
+  final TextEditingController _cityController = TextEditingController();
+  final TextEditingController _chapterController = TextEditingController();
+  final TextEditingController _businessCatController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -37,26 +44,29 @@ class MembersPageState extends State<MembersPage> {
 
   Future<void> _initData() async {
     await Get.find<MembersViewmodel>().initData();
+    _resetAutocompleteControllers();
+  }
+
+  // Reset autocomplete display text when tab switches or form resets
+  void _resetAutocompleteControllers() {
+    _countryController.text = '';
+    _stateController.text = '';
+    _cityController.text = '';
+    _chapterController.text = '';
+    _businessCatController.text = '';
   }
 
   @override
   void dispose() {
+    _countryController.dispose();
+    _stateController.dispose();
+    _cityController.dispose();
+    _chapterController.dispose();
+    _businessCatController.dispose();
     super.dispose();
   }
 
-  // ────────────────────────────────────────────────────────────
-  // Convert WorldWideMembers → MembersChildData via JSON
-  //
-  // WorldWideMembers.toJson() produces:
-  //   { firstName, lastName, uuid, profileUrl, mobileNo,
-  //     businessDetails: { companyName, businessCategory,
-  //                        officeNumber, officeEmail },
-  //     address: { city, state, country, pinCode } }
-  //
-  // MembersChildData.fromJson() reads 'businessDetails' key for
-  // organization — so the JSON round-trip works perfectly without
-  // any manual field mapping. No type mismatch, no missing fields.
-  // ────────────────────────────────────────────────────────────
+  // ── Convert WorldWideMembers → MembersChildData via JSON round-trip ──
   MembersChildData _toMembersChildData(WorldWideMembers w) {
     return MembersChildData.fromJson(w.toJson());
   }
@@ -79,7 +89,7 @@ class MembersPageState extends State<MembersPage> {
           body: Obx(
                 () => Column(
               children: [
-                // ── Loading bar ──
+                // Loading bar
                 Visibility(
                   visible: membersVM.isLoading,
                   child: LinearProgressIndicator(
@@ -134,6 +144,7 @@ class MembersPageState extends State<MembersPage> {
                           membersVM.isWorldWide.value = true;
                           membersVM.isWorldWideListShow.value = false;
                           membersVM.worldWiseMembersData = [];
+                          _resetAutocompleteControllers();
                           await membersVM.getGroups(
                               0, membersVM.size.value, '', '', '');
                           await membersVM.getCountries();
@@ -175,8 +186,7 @@ class MembersPageState extends State<MembersPage> {
                                 child: CommonTextFormField(
                                   padding: EdgeInsets.all(paddingSize8),
                                   hintText: 'search_member'.tr,
-                                  controller:
-                                  membersVM.memberSearchController,
+                                  controller: membersVM.memberSearchController,
                                   textStyle: fontMedium.copyWith(
                                       color: midnightBlue,
                                       fontSize: fontSize14),
@@ -296,10 +306,7 @@ class MembersPageState extends State<MembersPage> {
   // ── Worldwide Member item ──
   Widget _worldWideMemberItem(int index, MembersViewmodel membersVM) {
     final WorldWideMembers wwMember = membersVM.worldWiseMembersData[index];
-
-    // Convert once — used for both onTap and trailing tap
     final MembersChildData member = _toMembersChildData(wwMember);
-
     return Padding(
       padding: const EdgeInsets.all(paddingSize5),
       child: ListTile(
@@ -327,7 +334,6 @@ class MembersPageState extends State<MembersPage> {
     );
   }
 
-  // ── Shared avatar ──
   Widget _memberAvatar(String? profileUrl) {
     if (profileUrl != null && profileUrl.isNotEmpty) {
       return CachedNetworkImage(
@@ -341,7 +347,6 @@ class MembersPageState extends State<MembersPage> {
     return Image.asset(profileImage, height: 62.0, width: 62.0);
   }
 
-  // ── Shared title ──
   Widget _memberTitle({
     required String name,
     required String businessCategory,
@@ -364,7 +369,11 @@ class MembersPageState extends State<MembersPage> {
     );
   }
 
-  // ── Worldwide search form ──
+  // ────────────────────────────────────────────────────────────
+  // Worldwide search form — all dropdowns replaced with
+  // Autocomplete widgets. Same lavenderMist container style,
+  // same arrow icon, same onChanged behaviour (loads sub-lists).
+  // ────────────────────────────────────────────────────────────
   Widget _worldWideSearchForm(MembersViewmodel membersVM) {
     return SingleChildScrollView(
       child: Padding(
@@ -372,52 +381,85 @@ class MembersPageState extends State<MembersPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // ── Location ──
             _sectionHeader('location'.tr),
             const SizedBox(height: paddingSize15),
-            _dropdownField(
-              value: membersVM.selectedCountry,
-              items: membersVM.countryList,
-              onChanged: (val) async {
-                membersVM.selectedCountry = val ?? '';
-                if (membersVM.selectedCountry != membersVM.countryList[0]) {
-                  await membersVM.getStates(membersVM.selectedCountry);
-                }
+
+            // Country autocomplete
+            _autocompleteField(
+              label: 'select_country'.tr,
+              controller: _countryController,
+              options: membersVM.countryList
+                  .where((c) => c != 'Select Country')
+                  .toList(),
+              onSelected: (val) async {
+                membersVM.selectedCountry = val;
+                _stateController.clear();
+                _cityController.clear();
+                membersVM.selectedState = membersVM.stateList.isNotEmpty
+                    ? membersVM.stateList[0]
+                    : 'Select State';
+                membersVM.selectedCity = membersVM.cityList.isNotEmpty
+                    ? membersVM.cityList[0]
+                    : 'Select City';
+                await membersVM.getStates(val);
                 setState(() {});
               },
             ),
             const SizedBox(height: paddingSize25),
-            _dropdownField(
-              value: membersVM.selectedState,
-              items: membersVM.stateList,
-              onChanged: (val) async {
-                membersVM.selectedState = val ?? '';
-                if (membersVM.selectedState != membersVM.stateList[0]) {
-                  await membersVM.getCities(membersVM.selectedState);
-                }
+
+            // State autocomplete
+            _autocompleteField(
+              label: 'select_state'.tr,
+              controller: _stateController,
+              options: membersVM.stateList
+                  .where((s) => s != 'Select State')
+                  .toList(),
+              onSelected: (val) async {
+                membersVM.selectedState = val;
+                _cityController.clear();
+                membersVM.selectedCity = membersVM.cityList.isNotEmpty
+                    ? membersVM.cityList[0]
+                    : 'Select City';
+                await membersVM.getCities(val);
                 setState(() {});
               },
             ),
             const SizedBox(height: paddingSize25),
-            _dropdownField(
-              value: membersVM.selectedCity,
-              items: membersVM.cityList,
-              onChanged: (val) {
-                membersVM.selectedCity = val ?? '';
+
+            // City autocomplete
+            _autocompleteField(
+              label: 'select_city'.tr,
+              controller: _cityController,
+              options: membersVM.cityList
+                  .where((c) => c != 'Select City')
+                  .toList(),
+              onSelected: (val) {
+                membersVM.selectedCity = val;
                 setState(() {});
               },
             ),
             const SizedBox(height: paddingSize25),
-            _dropdownField(
-              value: membersVM.selectedChapter,
-              items: membersVM.chapterList,
-              onChanged: (val) {
-                membersVM.selectedChapter = val ?? '';
+
+            // Chapter autocomplete
+            _autocompleteField(
+              label: 'select_chapter'.tr,
+              controller: _chapterController,
+              options: membersVM.chapterList
+                  .where((c) => c != 'Select Chapter')
+                  .toList(),
+              onSelected: (val) {
+                membersVM.selectedChapter = val;
                 setState(() {});
               },
             ),
             const SizedBox(height: paddingSize25),
+
+            // ── Member Details ──
             _sectionHeader('member_details'.tr),
             const SizedBox(height: paddingSize25),
+
+            // Member name text field (unchanged)
             CommonTextFormField(
               controller: membersVM.memberNameController,
               hintText: 'member_name'.tr,
@@ -428,15 +470,21 @@ class MembersPageState extends State<MembersPage> {
                   horizontal: paddingSize20, vertical: paddingSize20),
             ),
             const SizedBox(height: paddingSize25),
-            _dropdownField(
-              value: membersVM.selectedBusinessCategory,
-              items: membersVM.businessCatList,
-              onChanged: (val) {
-                membersVM.selectedBusinessCategory = val ?? '';
+
+            // Business category autocomplete
+            _autocompleteField(
+              label: 'select_business_category'.tr,
+              controller: _businessCatController,
+              options: membersVM.businessCatList
+                  .where((b) => b != membersVM.businessCatList[0])
+                  .toList(),
+              onSelected: (val) {
+                membersVM.selectedBusinessCategory = val;
                 setState(() {});
               },
             ),
             const SizedBox(height: paddingSize45),
+
             CommonButton(
               buttonText: 'confirm'.tr,
               bgColor: midnightBlue,
@@ -448,6 +496,130 @@ class MembersPageState extends State<MembersPage> {
           ],
         ),
       ),
+    );
+  }
+
+  // ────────────────────────────────────────────────────────────
+  // _autocompleteField
+  //
+  // Matches the original dropdown visual exactly:
+  //   - lavenderMist background
+  //   - radius10 rounded corners
+  //   - dropDownArrow icon on the right
+  //   - midnightBlue text, fontSize14, fontRegular
+  //
+  // Extra behaviour from autocomplete:
+  //   - User can type to filter the list instantly
+  //   - Matching is case-insensitive substring
+  //   - Selecting an item fills the field and closes the overlay
+  //   - Unfocusing without selecting clears the field and
+  //     resets the VM value (prevents stale partial text)
+  // ────────────────────────────────────────────────────────────
+  Widget _autocompleteField({
+    required String label,
+    required TextEditingController controller,
+    required List<String> options,
+    required void Function(String) onSelected,
+  }) {
+    return Autocomplete<String>(
+      optionsBuilder: (TextEditingValue textEditingValue) {
+        if (textEditingValue.text.isEmpty) {
+          // Show all options when field is empty/tapped
+          return options;
+        }
+        // Filter case-insensitively
+        return options.where((option) => option
+            .toLowerCase()
+            .contains(textEditingValue.text.toLowerCase()));
+      },
+      displayStringForOption: (String option) => option,
+      onSelected: (String selection) {
+        controller.text = selection;
+        onSelected(selection);
+      },
+      fieldViewBuilder: (
+          BuildContext context,
+          TextEditingController fieldController,
+          FocusNode focusNode,
+          VoidCallback onFieldSubmitted,
+          ) {
+        // Sync external controller → internal autocomplete controller
+        // so we can reset it from outside (e.g. tab switch)
+        if (controller.text.isEmpty && fieldController.text.isNotEmpty) {
+          fieldController.clear();
+        }
+
+        return Container(
+          padding: const EdgeInsets.symmetric(
+              horizontal: paddingSize20, vertical: paddingSize5),
+          decoration: BoxDecoration(
+            color: lavenderMist,
+            borderRadius: BorderRadius.circular(radius10),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: fieldController,
+                  focusNode: focusNode,
+                  style: fontRegular.copyWith(
+                      color: midnightBlue, fontSize: fontSize14),
+                  decoration: InputDecoration(
+                    hintText: label,
+                    hintStyle: fontRegular.copyWith(
+                        color: midnightBlue.withOpacity(0.5),
+                        fontSize: fontSize14),
+                    border: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    isDense: true,
+                    contentPadding:
+                    const EdgeInsets.symmetric(vertical: paddingSize10),
+                  ),
+                ),
+              ),
+              Image.asset(dropDownArrow, width: 18.0, height: 18.0),
+            ],
+          ),
+        );
+      },
+      optionsViewBuilder: (
+          BuildContext context,
+          AutocompleteOnSelected<String> onSelected,
+          Iterable<String> options,
+          ) {
+        return Align(
+          alignment: Alignment.topLeft,
+          child: Material(
+            elevation: 4.0,
+            borderRadius: BorderRadius.circular(radius10),
+            color: lavenderMist,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxHeight: 200),
+              child: ListView.builder(
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+                itemCount: options.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final String option = options.elementAt(index);
+                  return InkWell(
+                    onTap: () => onSelected(option),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: paddingSize20, vertical: paddingSize14),
+                      child: Text(
+                        option,
+                        style: fontRegular.copyWith(
+                            color: midnightBlue, fontSize: fontSize14),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -467,55 +639,29 @@ class MembersPageState extends State<MembersPage> {
     );
   }
 
-  Widget _dropdownField({
-    required dynamic value,
-    required List<String> items,
-    required void Function(dynamic) onChanged,
-  }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-          horizontal: paddingSize20, vertical: paddingSize5),
-      decoration: BoxDecoration(
-        color: lavenderMist,
-        borderRadius: BorderRadius.circular(radius10),
-      ),
-      child: DropdownButton<String>(
-        icon: Image.asset(dropDownArrow, width: 18.0, height: 18.0),
-        underline: const SizedBox(),
-        style:
-        fontRegular.copyWith(color: midnightBlue, fontSize: fontSize14),
-        value: value,
-        isExpanded: true,
-        items: items.map((String val) {
-          return DropdownMenuItem<String>(
-            value: val,
-            child: Text(val,
-                style: fontRegular.copyWith(
-                    color: midnightBlue, fontSize: fontSize14)),
-          );
-        }).toList(),
-        onChanged: onChanged,
-      ),
-    );
-  }
-
   Future<void> _collectDataAndSearchMember(
       MembersViewmodel membersVM) async {
     await membersVM.getWorldWideSearchedUsersOrMembers(
-      membersVM.selectedCity != membersVM.cityList[0]
+      membersVM.selectedCity != 'Select City' &&
+          membersVM.selectedCity.toString().isNotEmpty
           ? membersVM.selectedCity
           : '',
-      membersVM.selectedState != membersVM.stateList[0]
+      membersVM.selectedState != 'Select State' &&
+          membersVM.selectedState.toString().isNotEmpty
           ? membersVM.selectedState
           : '',
-      membersVM.selectedCountry != membersVM.countryList[0]
+      membersVM.selectedCountry != 'Select Country' &&
+          membersVM.selectedCountry.toString().isNotEmpty
           ? membersVM.selectedCountry
           : '',
       membersVM.memberNameController.text,
-      membersVM.selectedBusinessCategory != membersVM.businessCatList[0]
+      membersVM.selectedBusinessCategory.toString().isNotEmpty &&
+          membersVM.selectedBusinessCategory !=
+              membersVM.businessCatList[0]
           ? membersVM.selectedBusinessCategory.toString().toUpperCase()
           : '',
-      membersVM.selectedChapter != membersVM.chapterList[0]
+      membersVM.selectedChapter != 'Select Chapter' &&
+          membersVM.selectedChapter.toString().isNotEmpty
           ? membersVM.selectedChapter
           : '',
     );
