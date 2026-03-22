@@ -98,9 +98,7 @@ class TestimonialPageState extends State<TestimonialPage> {
       testimonialVM.totalPages.value = 0;
       await testimonialVM.getMyTestimonial(
           testimonialVM.page.value, testimonialVM.size.value, "", "", "");
-      setState(() {
-
-      });
+      setState(() {});
     } catch (e) {
       print("Error refreshing user data: $e");
     }
@@ -113,20 +111,44 @@ class TestimonialPageState extends State<TestimonialPage> {
         contentPadding: EdgeInsets.all(paddingSize10),
         onTap: () async {
           Get.toNamed(Routes.getTestimonialDetailsPageRoute(
-              testimonialVM.myTestimonialList[index]))?.then((result) {
+                  testimonialVM.myTestimonialList[index]))
+              ?.then((result) {
             if (result == true) {
               _refreshUserData(testimonialVM);
               showSnackBar("testimonials_deleted".tr, isError: false);
             }
           });
         },
-        leading: CachedNetworkImage(
-          imageUrl:
-              '${testimonialVM.myTestimonialList[index].reviewerPofileUrl}',
-          width: 62.0,
-          height: 62.0,
-          fit: BoxFit.fill,
-        ),
+        leading: testimonialVM.myTestimonialList[index].reviewerPofileUrl !=
+                    null &&
+                testimonialVM
+                    .myTestimonialList[index].reviewerPofileUrl!.isNotEmpty
+            ? CachedNetworkImage(
+                imageUrl:
+                    testimonialVM.myTestimonialList[index].reviewerPofileUrl!,
+                width: 62.0,
+                height: 62.0,
+                fit: BoxFit.cover,
+                placeholder: (context, url) => const SizedBox(
+                  width: 62.0,
+                  height: 62.0,
+                  child: Center(
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                ),
+                errorWidget: (context, url, error) => Image.asset(
+                  profileImage,
+                  width: 62.0,
+                  height: 62.0,
+                  fit: BoxFit.cover,
+                ),
+              )
+            : Image.asset(
+                profileImage,
+                width: 62.0,
+                height: 62.0,
+                fit: BoxFit.cover,
+              ),
         title: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,

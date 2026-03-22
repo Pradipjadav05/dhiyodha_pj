@@ -53,12 +53,38 @@ class TestimonialDetailsPageState extends State<TestimonialDetailsPage> {
                       mainAxisSize: MainAxisSize.max,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        CachedNetworkImage(
-                          imageUrl:
-                              '${widget.myTestimonialChildData.reviewerPofileUrl}',
-                          width: 42.0,
-                          height: 42.0,
-                        ),
+                        widget.myTestimonialChildData.reviewerPofileUrl !=
+                                    null &&
+                                widget.myTestimonialChildData.reviewerPofileUrl!
+                                    .isNotEmpty
+                            ? CachedNetworkImage(
+                                imageUrl: widget
+                                    .myTestimonialChildData.reviewerPofileUrl!,
+                                width: 42.0,
+                                height: 42.0,
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) => const SizedBox(
+                                  width: 42,
+                                  height: 42,
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                        strokeWidth: 2),
+                                  ),
+                                ),
+                                errorWidget: (context, url, error) =>
+                                    Image.asset(
+                                  profileImage,
+                                  width: 42.0,
+                                  height: 42.0,
+                                  fit: BoxFit.cover,
+                                ),
+                              )
+                            : Image.asset(
+                                profileImage,
+                                width: 42.0,
+                                height: 42.0,
+                                fit: BoxFit.cover,
+                              ),
                         SizedBox(width: paddingSize10),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -209,9 +235,8 @@ class TestimonialDetailsPageState extends State<TestimonialDetailsPage> {
                                     color: midnightBlue, fontSize: fontSize14)),
                             onTap: () async {
                               Get.back();
-                              bool isDelete =
-                                  await testimonialVM.deleteTestimonial(
-                                      myTestimonialChildData.id);
+                              bool isDelete = await testimonialVM
+                                  .deleteTestimonial(myTestimonialChildData.id);
                               if (isDelete) {
                                 Get.back(result: true);
                                 /*showSnackBar("testimonials_deleted".tr,
