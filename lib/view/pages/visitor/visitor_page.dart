@@ -274,7 +274,7 @@ class VisitorPageState extends State<VisitorPage> {
             ),
           ],
           subtitle: Text(
-            "${data.title}",
+            "${data.title ?? ""}",
             style: fontRegular.copyWith(fontSize: fontSize12, color: greyText),
           ),
           shape: Border(),

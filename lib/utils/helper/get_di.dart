@@ -123,6 +123,7 @@ Future<Map<String, Map<String, String>>> init() async {
   Get.lazyPut(() => ActivityFeedsViewmodel(activityFeedsRepo: Get.find()));
   Get.lazyPut(() => ReferralSlipViewModel(referralRepo: Get.find()));
   Get.lazyPut(() => VisitingCardViewModel(visitingCardRepo: Get.find()));
+  Get.lazyPut(() => ReferralRepo(apiClient: Get.find(), sharedPreferences: sharedPreferences));
 
   /** Retrieving localized data **/
   Map<String, Map<String, String>> languages = {};
