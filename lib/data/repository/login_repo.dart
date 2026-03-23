@@ -106,7 +106,7 @@ class LoginRepo {
     required String setPassword,
     required String reTypePassword,
   }) async {
-    return await apiClient.putData(
+    return await apiClient.patchData(
       forgotPasswordUrl,
       {
         'email': email,

@@ -75,6 +75,26 @@ class ApiClient extends GetxService {
     }
   }
 
+  Future<Response> patchData(String uri, dynamic body,
+      {Map<String, String>? headers}) async {
+    try {
+      debugPrint('====> API Call: $uri\nHeader: $_mainHeaders');
+      debugPrint('====> API Body: $body');
+
+      http.Response response = await http
+          .patch(
+        Uri.parse(uri),
+        body: jsonEncode(body),
+        headers: headers ?? _mainHeaders,
+      )
+          .timeout(Duration(seconds: timeoutInSeconds));
+
+      return handleResponse(response, uri);
+    } catch (e) {
+      return const Response(statusCode: 1, statusText: noInternetMessage);
+    }
+  }
+
   Future<Response> postMultipartData(
       String uri, Map<String, String> body, List<MultipartBody> multipartBody,
       {Map<String, String>? headers}) async {
