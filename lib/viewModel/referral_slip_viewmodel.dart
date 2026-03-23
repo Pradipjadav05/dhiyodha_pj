@@ -221,10 +221,10 @@ class ReferralSlipViewModel extends GetxController implements GetxService {
         await referralRepo.getReferralData(page, size, sort, orderBy, search);
     _isLoading = false;
     if (response.statusCode == 200) {
-      _referralDataList = [];
-      response.body['data']['data'].forEach((order) {
-        _referralDataList.add(ReferralChildData.fromJson(order));
-      });
+      ReferralResponseModel model =
+      ReferralResponseModel.fromJson(response.body);
+
+      _referralDataList = model.referralData?.referralChildData ?? [];
     } else {
       ApiChecker.checkApi(response);
     }

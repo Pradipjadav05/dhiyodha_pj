@@ -11,17 +11,16 @@ class TyfcbResponseModel {
     timestamp = json['timestamp'];
     status = json['status'];
     message = json['message'];
-    tyfcbData =
-        json['data'] != null ? new TyfcbData.fromJson(json['data']) : null;
+    tyfcbData = json['data'] != null ? TyfcbData.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['timestamp'] = this.timestamp;
-    data['status'] = this.status;
-    data['message'] = this.message;
-    if (this.tyfcbData != null) {
-      data['data'] = this.tyfcbData!.toJson();
+    final data = <String, dynamic>{};
+    data['timestamp'] = timestamp;
+    data['status'] = status;
+    data['message'] = message;
+    if (tyfcbData != null) {
+      data['data'] = tyfcbData!.toJson();
     }
     return data;
   }
@@ -37,10 +36,9 @@ class TyfcbData {
 
   TyfcbData.fromJson(Map<String, dynamic> json) {
     if (json['data'] != null) {
-      tyfcbChildData = <TyfcbChildData>[];
-      json['data'].forEach((v) {
-        tyfcbChildData!.add(new TyfcbChildData.fromJson(v));
-      });
+      tyfcbChildData = (json['data'] as List)
+          .map((e) => TyfcbChildData.fromJson(e))
+          .toList();
     }
     page = json['page'];
     size = json['size'];
@@ -48,20 +46,18 @@ class TyfcbData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.tyfcbChildData != null) {
-      data['data'] = this.tyfcbChildData!.map((v) => v.toJson()).toList();
-    }
-    data['page'] = this.page;
-    data['size'] = this.size;
-    data['total'] = this.total;
-    return data;
+    return {
+      'data': tyfcbChildData?.map((e) => e.toJson()).toList(),
+      'page': page,
+      'size': size,
+      'total': total,
+    };
   }
 }
 
 class TyfcbChildData {
   String? uuid;
-  String? recipientId;
+  Recipient? recipient; // ✅ FIXED
   double? giftAmount;
   String? businessType;
   String? referralType;
@@ -70,45 +66,93 @@ class TyfcbChildData {
   String? createdBy;
   String? createdAt;
 
-  TyfcbChildData(
-      {this.uuid,
-      this.recipientId,
-      this.giftAmount,
-      this.businessType,
-      this.referralType,
-      this.comments,
-      this.meetingDetails,
-      this.createdBy,
-      this.createdAt});
+  TyfcbChildData({
+    this.uuid,
+    this.recipient,
+    this.giftAmount,
+    this.businessType,
+    this.referralType,
+    this.comments,
+    this.meetingDetails,
+    this.createdBy,
+    this.createdAt,
+  });
 
   TyfcbChildData.fromJson(Map<String, dynamic> json) {
     uuid = json['uuid'];
-    recipientId = json['recipientId'];
-    giftAmount = json['giftAmount'];
+
+    recipient = json['recipientId'] != null
+        ? Recipient.fromJson(json['recipientId'])
+        : null;
+
+    giftAmount = (json['giftAmount'] as num?)?.toDouble();
+
     businessType = json['businessType'];
     referralType = json['referralType'];
     comments = json['comments'];
+
     meetingDetails = json['meetingDetails'] != null
-        ? new MeetingDetails.fromJson(json['meetingDetails'])
+        ? MeetingDetails.fromJson(json['meetingDetails'])
         : null;
+
     createdBy = json['createdBy'];
     createdAt = json['createdAt'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['uuid'] = this.uuid;
-    data['recipientId'] = this.recipientId;
-    data['giftAmount'] = this.giftAmount;
-    data['businessType'] = this.businessType;
-    data['referralType'] = this.referralType;
-    data['comments'] = this.comments;
-    if (this.meetingDetails != null) {
-      data['meetingDetails'] = this.meetingDetails!.toJson();
-    }
-    data['createdBy'] = this.createdBy;
-    data['createdAt'] = this.createdAt;
-    return data;
+    return {
+      'uuid': uuid,
+      'recipientId': recipient?.toJson(),
+      'giftAmount': giftAmount,
+      'businessType': businessType,
+      'referralType': referralType,
+      'comments': comments,
+      'meetingDetails': meetingDetails?.toJson(),
+      'createdBy': createdBy,
+      'createdAt': createdAt,
+    };
+  }
+}
+
+class Recipient {
+  String? id;
+  String? uuid;
+  String? firstName;
+  String? lastName;
+  String? email;
+  String? mobileNo;
+  String? profileUrl;
+
+  Recipient({
+    this.id,
+    this.uuid,
+    this.firstName,
+    this.lastName,
+    this.email,
+    this.mobileNo,
+    this.profileUrl,
+  });
+
+  Recipient.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    uuid = json['uuid'];
+    firstName = json['firstName'];
+    lastName = json['lastName'];
+    email = json['email'];
+    mobileNo = json['mobileNo'];
+    profileUrl = json['profileUrl'];
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'uuid': uuid,
+      'firstName': firstName,
+      'lastName': lastName,
+      'email': email,
+      'mobileNo': mobileNo,
+      'profileUrl': profileUrl,
+    };
   }
 }
 
@@ -121,39 +165,37 @@ class MeetingDetails {
   String? createdAt;
   String? createdBy;
 
-  MeetingDetails(
-      {this.uuid,
-      this.title,
-      this.meetingDate,
-      this.location,
-      this.status,
-      this.createdAt,
-      this.createdBy});
+  MeetingDetails({
+    this.uuid,
+    this.title,
+    this.meetingDate,
+    this.location,
+    this.status,
+    this.createdAt,
+    this.createdBy,
+  });
 
   MeetingDetails.fromJson(Map<String, dynamic> json) {
     uuid = json['uuid'];
     title = json['title'];
     meetingDate = json['meetingDate'];
-    location = json['location'] != null
-        ? new Location.fromJson(json['location'])
-        : null;
+    location =
+        json['location'] != null ? Location.fromJson(json['location']) : null;
     status = json['status'];
     createdAt = json['createdAt'];
     createdBy = json['createdBy'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['uuid'] = this.uuid;
-    data['title'] = this.title;
-    data['meetingDate'] = this.meetingDate;
-    if (this.location != null) {
-      data['location'] = this.location!.toJson();
-    }
-    data['status'] = this.status;
-    data['createdAt'] = this.createdAt;
-    data['createdBy'] = this.createdBy;
-    return data;
+    return {
+      'uuid': uuid,
+      'title': title,
+      'meetingDate': meetingDate,
+      'location': location?.toJson(),
+      'status': status,
+      'createdAt': createdAt,
+      'createdBy': createdBy,
+    };
   }
 }
 
@@ -164,14 +206,14 @@ class Location {
   Location({this.latitude, this.longitude});
 
   Location.fromJson(Map<String, dynamic> json) {
-    latitude = json['latitude'];
-    longitude = json['longitude'];
+    latitude = (json['latitude'] as num?)?.toDouble();
+    longitude = (json['longitude'] as num?)?.toDouble();
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['latitude'] = this.latitude;
-    data['longitude'] = this.longitude;
-    return data;
+    return {
+      'latitude': latitude,
+      'longitude': longitude,
+    };
   }
 }

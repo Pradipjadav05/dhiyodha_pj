@@ -240,7 +240,7 @@ class TyfcbPageState extends State<TyfcbPage> {
           ),
           shape: Border(),
           title: Text(
-            tyfcbData.meetingDetails?.title ?? "",
+            "${tyfcbData.recipient?.firstName ?? ""} ${tyfcbData.recipient?.lastName ?? ""}",
             style: fontBold.copyWith(fontSize: fontSize16, color: midnightBlue),
           ),
           onExpansionChanged: (isExpandedItem) {

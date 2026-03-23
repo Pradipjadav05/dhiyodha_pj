@@ -1330,8 +1330,7 @@ class HomePageState extends State<HomePage> {
                 elevation: 0.0,
                 bgColor: lavenderMist,
                 onTap: () {
-                  // Get.toNamed(Routes.getTYFCBsPageRoute());
-                  Get.toNamed(Routes.getAddTyPageRoute());
+                  Get.toNamed(Routes.getTYFCBsPageRoute());
                 },
                 cardChild: Padding(
                   padding: const EdgeInsets.only(
@@ -1365,8 +1364,7 @@ class HomePageState extends State<HomePage> {
                 elevation: 0.0,
                 bgColor: lavenderMist,
                 onTap: () {
-                  // Get.toNamed(Routes.getReferralsPageRoute());
-                  Get.toNamed(Routes.getAddSlipPageRoute());
+                  Get.toNamed(Routes.getReferralsPageRoute());
                 },
                 cardChild: Padding(
                   padding: const EdgeInsets.only(
@@ -1407,8 +1405,7 @@ class HomePageState extends State<HomePage> {
                 elevation: 0.0,
                 bgColor: lavenderMist,
                 onTap: () {
-                  // Get.toNamed(Routes.getVisitorPageRoute());
-                  Get.toNamed(Routes.getAddVisitorPageRoute());
+                  Get.toNamed(Routes.getVisitorPageRoute());
                 },
                 cardChild: Padding(
                   padding: const EdgeInsets.only(
@@ -1445,8 +1442,7 @@ class HomePageState extends State<HomePage> {
                 elevation: 0.0,
                 bgColor: lavenderMist,
                 onTap: () {
-                  // Get.toNamed(Routes.getOneToOnePageRoute());
-                  Get.toNamed(Routes.getAddOneToOnePageRoute());
+                  Get.toNamed(Routes.getOneToOnePageRoute());
                 },
                 cardChild: Padding(
                   padding: const EdgeInsets.only(
@@ -1527,7 +1523,6 @@ class HomePageState extends State<HomePage> {
                 bgColor: lavenderMist,
                 onTap: () {
                   Get.toNamed(Routes.getTestimonialPageRoute());
-                  // Get.toNamed(Routes.getAddTestimonialPageRoute());
                 },
                 cardChild: Padding(
                   padding: const EdgeInsets.only(

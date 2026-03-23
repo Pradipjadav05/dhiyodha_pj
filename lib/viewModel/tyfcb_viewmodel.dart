@@ -142,19 +142,21 @@ class TyfcbViewModel extends GetxController implements GetxService {
       int page, int size, String? sort, String? orderBy, String? search) async {
     _isLoading = true;
     update();
+
     Response response =
-        await tyfcbRepo.getTyfcbData(page, size, sort, orderBy, search);
-    _isLoading = false;
+    await tyfcbRepo.getTyfcbData(page, size, sort, orderBy, search);
+
     if (response.statusCode == 200) {
-      _tyfcbList = [];
-      response.body['data']['data'].forEach((order) {
-        TyfcbChildData tyfcbData = TyfcbChildData.fromJson(order);
-        _tyfcbList.add(tyfcbData);
-      });
-      _totalDataSize.value = response.body['data']['total'];
+      TyfcbResponseModel model =
+      TyfcbResponseModel.fromJson(response.body);
+
+      _tyfcbList = model.tyfcbData?.tyfcbChildData ?? [];
+      _totalDataSize.value = model.tyfcbData?.total ?? 0;
     } else {
       ApiChecker.checkApi(response);
     }
+
+    _isLoading = false;
     update();
   }
 

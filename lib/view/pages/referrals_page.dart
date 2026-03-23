@@ -209,10 +209,9 @@ class ReferralsPageState extends State<ReferralsPage> {
                           ],
                         ),
                         Text(
-                          "Kevin Patel",
-                          style: fontMedium.copyWith(
-                              fontSize: fontSize14, color: midnightBlue),
-                        ),
+                            "${data.referralTo?.firstName ?? ""} ${data.referralTo?.lastName ?? ""}",
+                            style: fontMedium.copyWith(
+                                fontSize: fontSize14, color: midnightBlue)),
                       ],
                     ),
                   ),
@@ -224,12 +223,12 @@ class ReferralsPageState extends State<ReferralsPage> {
             ),
           ],
           subtitle: Text(
-            "Graphic Designer",
+            data.type ?? "",
             style: fontRegular.copyWith(fontSize: fontSize12, color: greyText),
           ),
           shape: Border(),
           title: Text(
-            "Kevin Patel",
+            "${data.referralTo?.firstName ?? ""} ${data.referralTo?.lastName ?? ""}",
             style: fontBold.copyWith(fontSize: fontSize16, color: midnightBlue),
           ),
           onExpansionChanged: (isExpandedItem) {

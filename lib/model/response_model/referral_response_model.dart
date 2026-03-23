@@ -61,7 +61,7 @@ class ReferralData {
 
 class ReferralChildData {
   String? uuid;
-  String? referralTo;
+  ReferralUser? referralTo; // ✅ FIXED
   String? type;
   List<String>? status;
   String? referral;
@@ -73,49 +73,102 @@ class ReferralChildData {
   String? createdAt;
   String? createdBy;
 
-  ReferralChildData(
-      {this.uuid,
-      this.referralTo,
-      this.type,
-      this.status,
-      this.referral,
-      this.telephone,
-      this.email,
-      this.address,
-      this.comment,
-      this.rate,
-      this.createdAt,
-      this.createdBy});
+  ReferralChildData({
+    this.uuid,
+    this.referralTo,
+    this.type,
+    this.status,
+    this.referral,
+    this.telephone,
+    this.email,
+    this.address,
+    this.comment,
+    this.rate,
+    this.createdAt,
+    this.createdBy,
+  });
 
   ReferralChildData.fromJson(Map<String, dynamic> json) {
     uuid = json['uuid'];
-    referralTo = json['referralTo'];
+
+    referralTo = json['referralTo'] != null
+        ? ReferralUser.fromJson(json['referralTo'])
+        : null;
+
     type = json['type'];
-    status = json['status'].cast<String>();
+
+    if (json['status'] != null) {
+      status = List<String>.from(json['status']);
+    }
+
     referral = json['referral'];
     telephone = json['telephone'];
     email = json['email'];
     address = json['address'];
     comment = json['comment'];
-    rate = json['rate'];
+
+    rate = (json['rate'] as num?)?.toDouble();
+
     createdAt = json['createdAt'];
     createdBy = json['createdBy'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['uuid'] = this.uuid;
-    data['referralTo'] = this.referralTo;
-    data['type'] = this.type;
-    data['status'] = this.status;
-    data['referral'] = this.referral;
-    data['telephone'] = this.telephone;
-    data['email'] = this.email;
-    data['address'] = this.address;
-    data['comment'] = this.comment;
-    data['rate'] = this.rate;
-    data['createdAt'] = this.createdAt;
-    data['createdBy'] = this.createdBy;
-    return data;
+    return {
+      'uuid': uuid,
+      'referralTo': referralTo?.toJson(),
+      'type': type,
+      'status': status,
+      'referral': referral,
+      'telephone': telephone,
+      'email': email,
+      'address': address,
+      'comment': comment,
+      'rate': rate,
+      'createdAt': createdAt,
+      'createdBy': createdBy,
+    };
+  }
+}
+
+class ReferralUser {
+  String? id;
+  String? uuid;
+  String? firstName;
+  String? lastName;
+  String? email;
+  String? mobileNo;
+  String? profileUrl;
+
+  ReferralUser({
+    this.id,
+    this.uuid,
+    this.firstName,
+    this.lastName,
+    this.email,
+    this.mobileNo,
+    this.profileUrl,
+  });
+
+  ReferralUser.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    uuid = json['uuid'];
+    firstName = json['firstName'];
+    lastName = json['lastName'];
+    email = json['email'];
+    mobileNo = json['mobileNo'];
+    profileUrl = json['profileUrl'];
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'uuid': uuid,
+      'firstName': firstName,
+      'lastName': lastName,
+      'email': email,
+      'mobileNo': mobileNo,
+      'profileUrl': profileUrl,
+    };
   }
 }
