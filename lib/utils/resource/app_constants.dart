@@ -45,6 +45,9 @@ const String sendOtpUrl = baseUrl + 'api/socialAuth/sendOtp';
 const String verifyOtpUrl = baseUrl + 'api/socialAuth/verifyOtp';
 const String refreshTokenUrl = baseUrl + 'api/socialAuth/refreshToken';
 const String guestSignupUrl = baseUrl + 'api/socialAuth/guestSignup';
+const String sentOtp = baseUrl + 'api/users/forgot/send-otp';
+const String verifyOtp = baseUrl + 'api/users/forgot/verify-otp';
+const String forgotPasswordUrl = baseUrl + 'api/users/forgotPassword';
 
 /** POST APIS*/
 const String postsUrl = baseUrl + 'api/posts/';

@@ -59,12 +59,15 @@ import 'package:dhiyodha/view/pages/visitor/visitor_page.dart';
 import 'package:dhiyodha/view/pages/webview_page.dart';
 import 'package:get/get.dart';
 
+import '../../view/pages/forgot_password_page.dart';
+
 class Routes {
   static const String initial = '/';
   static const String splash = '/splashPage';
   static const String language = '/language';
   static const String authentication = '/authentication';
   static const String login = '/login';
+  static const String forgotPassword = '/forgotPassword';
   static const String addTyfcb = '/addTyfcb';
   static const String home = '/home';
   static const String addSlip = '/addSlip';
@@ -136,6 +139,8 @@ class Routes {
   static String getAuthenticationPageRoute() => authentication;
 
   static String getLoginPageRoute() => login;
+
+  static String getForgotPasswordPageRoute() => forgotPassword;
 
   static String getAddTyPageRoute() => addTyfcb;
 
@@ -313,6 +318,7 @@ class Routes {
     GetPage(name: language, page: () => LanguagePage()),
     GetPage(name: authentication, page: () => AuthenticationPage()),
     GetPage(name: login, page: () => LoginPage()),
+    GetPage(name: forgotPassword, page: () => const ForgotPasswordPage()),
     GetPage(name: addTyfcb, page: () => AddTyPage()),
     GetPage(name: home, page: () => HomePage()),
     GetPage(name: addSlip, page: () => AddReferralSlipPage()),

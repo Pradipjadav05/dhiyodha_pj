@@ -1,19 +1,15 @@
 import 'package:dhiyodha/data/api/api_checker.dart';
 import 'package:dhiyodha/data/repository/login_repo.dart';
 import 'package:dhiyodha/model/response_model/login_response.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:dhiyodha/view/widgets/common_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../view/widgets/common_snackbar.dart';
-
 class LoginViewModel extends GetxController implements GetxService {
   final LoginRepo loginRepo;
 
-  LoginViewModel({required this.loginRepo}) {
-    // _notification = loginRepo.isNotificationActive();
-  }
+  LoginViewModel({required this.loginRepo});
 
   RxBool _isAgreeTerms = false.obs;
   RxBool _isMobileNumberValid = false.obs;
@@ -38,9 +34,48 @@ class LoginViewModel extends GetxController implements GetxService {
   bool _lowercaseCheck = false;
   bool _spatialCheck = false;
 
+  // ── Getters ──
+  RxBool get isAgreeTerms => _isAgreeTerms;
+  RxBool get isMobileNumberValid => _isMobileNumberValid;
+  bool get isLoading => _isLoading;
+  bool get notification => _notification;
+  XFile? get pickedFile => _pickedFile;
+  XFile? get pickedLogo => _pickedLogo;
+  XFile? get pickedCover => _pickedCover;
+  bool get loading => _loading;
+  bool get lengthCheck => _lengthCheck;
+  bool get numberCheck => _numberCheck;
+  bool get uppercaseCheck => _uppercaseCheck;
+  bool get lowercaseCheck => _lowercaseCheck;
+  bool get spatialCheck => _spatialCheck;
+  TextEditingController get emailController => _emailController;
+  TextEditingController get passwordController => _passwordController;
+  TextEditingController get mobileNoController => _mobileNoController;
+  TextEditingController get otp1Controller => _otp1Controller;
+  TextEditingController get otp2Controller => _otp2Controller;
+  TextEditingController get otp3Controller => _otp3Controller;
+  TextEditingController get otp4Controller => _otp4Controller;
+  TextEditingController get otp5Controller => _otp5Controller;
+  TextEditingController get otp6Controller => _otp6Controller;
+  String get verificationCode => _verificationCode;
+  bool get isActiveRememberMe => _isActiveRememberMe;
+
+  // ── Setters ──
+  set isAgreeTerms(value) => _isAgreeTerms = value;
+  set isMobileNumberValid(RxBool v) => _isMobileNumberValid = v;
+  set emailController(TextEditingController v) => _emailController = v;
+  set passwordController(TextEditingController v) => _passwordController = v;
+  set mobileNoController(TextEditingController v) => _mobileNoController = v;
+  set otp1Controller(TextEditingController v) => _otp1Controller = v;
+  set otp2Controller(TextEditingController v) => _otp2Controller = v;
+  set otp3Controller(TextEditingController v) => _otp3Controller = v;
+  set otp4Controller(TextEditingController v) => _otp4Controller = v;
+  set otp5Controller(TextEditingController v) => _otp5Controller = v;
+  set otp6Controller(TextEditingController v) => _otp6Controller = v;
+
   Future<void> initData() async {
     _isAgreeTerms = false.obs;
-    isMobileNumberValid = false.obs;
+    _isMobileNumberValid = false.obs;
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
     _mobileNoController = TextEditingController();
@@ -63,88 +98,25 @@ class LoginViewModel extends GetxController implements GetxService {
     _spatialCheck = false;
   }
 
-  TextEditingController get otp1Controller => _otp1Controller;
-
-  set otp1Controller(TextEditingController value) {
-    _otp1Controller = value;
-  }
-
-  TextEditingController get mobileNoController => _mobileNoController;
-
-  set mobileNoController(TextEditingController value) {
-    _mobileNoController = value;
-  }
-
-  RxBool get isMobileNumberValid => _isMobileNumberValid;
-
-  set isMobileNumberValid(RxBool value) {
-    _isMobileNumberValid = value;
-  }
-
-  bool get isLoading => _isLoading;
-
-  bool get notification => _notification;
-
-  XFile? get pickedFile => _pickedFile;
-
-  XFile? get pickedLogo => _pickedLogo;
-
-  XFile? get pickedCover => _pickedCover;
-
-  bool get loading => _loading;
-
-  // List<ModuleModel>? get moduleList => _moduleList;
-  bool get lengthCheck => _lengthCheck;
-
-  bool get numberCheck => _numberCheck;
-
-  bool get uppercaseCheck => _uppercaseCheck;
-
-  bool get lowercaseCheck => _lowercaseCheck;
-
-  bool get spatialCheck => _spatialCheck;
-
-  set isAgreeTerms(value) {
-    _isAgreeTerms = value;
-  }
-
-  get isAgreeTerms => _isAgreeTerms;
-
   void validPassCheck(String pass, {bool isUpdate = true}) {
-    _lengthCheck = false;
-    _numberCheck = false;
-    _uppercaseCheck = false;
-    _lowercaseCheck = false;
-    _spatialCheck = false;
-
-    if (pass.length > 7) {
-      _lengthCheck = true;
-    }
-    if (pass.contains(RegExp(r'[a-z]'))) {
-      _lowercaseCheck = true;
-    }
-    if (pass.contains(RegExp(r'[A-Z]'))) {
-      _uppercaseCheck = true;
-    }
-    if (pass.contains(RegExp(r'[ .!@#$&*~^%]'))) {
-      _spatialCheck = true;
-    }
-    if (pass.contains(RegExp(r'[\d+]'))) {
-      _numberCheck = true;
-    }
-    if (isUpdate) {
-      update();
-    }
+    _lengthCheck = pass.length > 7;
+    _lowercaseCheck = pass.contains(RegExp(r'[a-z]'));
+    _uppercaseCheck = pass.contains(RegExp(r'[A-Z]'));
+    _spatialCheck = pass.contains(RegExp(r'[ .!@#$&*~^%]'));
+    _numberCheck = pass.contains(RegExp(r'[\d+]'));
+    if (isUpdate) update();
   }
 
+  // ────────────────────────────────────────────────────────────
+  // Login
+  // ────────────────────────────────────────────────────────────
   Future<LoginResponse> login(String? email, String password) async {
     _isLoading = true;
     update();
-    Response response = await loginRepo.login(email, password);
+    final Response response = await loginRepo.login(email, password);
     LoginResponse responseModel;
     if (response.statusCode == 200) {
-      // // getProfile();
-      responseModel = new LoginResponse(
+      responseModel = LoginResponse(
           timestamp: response.body['timestamp'],
           status: response.body['status'],
           message: response.body['message']);
@@ -161,15 +133,17 @@ class LoginViewModel extends GetxController implements GetxService {
     return responseModel;
   }
 
+  // ────────────────────────────────────────────────────────────
+  // Guest login
+  // ────────────────────────────────────────────────────────────
   Future<bool> guestLogin(String mobileNumber) async {
     _isLoading = true;
     update();
     bool isSuccess = false;
-    Response response = await loginRepo.guestLogin(mobileNumber);
+    final Response response = await loginRepo.guestLogin(mobileNumber);
     _isLoading = false;
     if (response.statusCode == 201) {
       isSuccess = true;
-      // // getProfile();
     } else {
       ApiChecker.checkApi(response);
     }
@@ -177,15 +151,19 @@ class LoginViewModel extends GetxController implements GetxService {
     return isSuccess;
   }
 
+  // ────────────────────────────────────────────────────────────
+  // Guest OTP (used by GuestLoginPage)
+  // ────────────────────────────────────────────────────────────
   Future<bool> sendOtp(String mobileNumber, String countryCode) async {
     _isLoading = true;
     update();
     bool isSuccess = false;
-    Response response = await loginRepo.sendOTP(mobileNumber, countryCode);
+    final Response response =
+    await loginRepo.sendOTP(mobileNumber, countryCode);
     _isLoading = false;
     if (response.statusCode == 200) {
       isSuccess = true;
-      showSnackBar("${response.body["message"]}", isError: false);
+      showSnackBar('${response.body["message"]}', isError: false);
     } else {
       ApiChecker.checkApi(response);
     }
@@ -194,12 +172,12 @@ class LoginViewModel extends GetxController implements GetxService {
   }
 
   Future<bool> verifyOTP(
-      String mobileNumber, String countryCode, String OTP) async {
+      String mobileNumber, String countryCode, String otp) async {
     _isLoading = true;
     update();
     bool isSuccess = false;
-    Response response =
-        await loginRepo.verifyOTP(mobileNumber, countryCode, OTP);
+    final Response response =
+    await loginRepo.verifyOTP(mobileNumber, countryCode, otp);
     _isLoading = false;
     if (response.statusCode == 200) {
       isSuccess = true;
@@ -210,42 +188,104 @@ class LoginViewModel extends GetxController implements GetxService {
     return isSuccess;
   }
 
-  // Future<void> getProfile() async {
-  //   Response response = await loginRepo.getProfileInfo();
-  //   if (response.statusCode == 200) {
-  //     _profileModel = ProfileModel.fromJson(response.body);
-  //     Get.find<SplashController>().setModule(_profileModel!.stores![0].module!.id, _profileModel!.stores![0].module!.moduleType);
-  //     loginRepo.updateHeader(_profileModel!.stores![0].module!.id);
-  //     allowModulePermission(_profileModel!.roles);
-  //   } else {
-  //     ApiChecker.checkApi(response);
-  //   }
-  //   update();
-  // }
+  // ────────────────────────────────────────────────────────────
+  // Forgot Password — Step 1
+  // POST /api/users/forgot/send-otp  →  { "email": "string" }
+  // ────────────────────────────────────────────────────────────
+  Future<bool> forgotSendOtp(String email) async {
+    _isLoading = true;
+    update();
+    bool isSuccess = false;
+    final Response response = await loginRepo.forgotSendOtp(email);
+    _isLoading = false;
+    if (response.statusCode == 200) {
+      isSuccess = true;
+      showSnackBar('${response.body["message"]}', isError: false);
+    } else {
+      ApiChecker.checkApi(response);
+    }
+    update();
+    return isSuccess;
+  }
 
-  // Future<bool> updateUserInfo(ProfileModel updateUserModel, String token) async {
-  //   _isLoading = true;
-  //   update();
-  //   Response response = await loginRepo.updateProfile(updateUserModel, _pickedFile, token);
-  //   _isLoading = false;
-  //   bool isSuccess;
-  //   if (response.statusCode == 200) {
-  //     _profileModel = updateUserModel;
-  //     showCustomSnackBar('profile_updated_successfully'.tr, isError: false);
-  //     isSuccess = true;
-  //   } else {
-  //     ApiChecker.checkApi(response);
-  //     isSuccess = false;
-  //   }
-  //   update();
-  //   return isSuccess;
-  // }
+  // ────────────────────────────────────────────────────────────
+  // Forgot Password — Step 2
+  // POST /api/users/forgot/verify-otp  →  { "email": "string", "otp": "string" }
+  // ────────────────────────────────────────────────────────────
+  Future<bool> forgotVerifyOtp(String email, String otp) async {
+    _isLoading = true;
+    update();
+    bool isSuccess = false;
+    final Response response = await loginRepo.forgotVerifyOtp(email, otp);
+    _isLoading = false;
+    if (response.statusCode == 200) {
+      isSuccess = true;
+    } else {
+      ApiChecker.checkApi(response);
+    }
+    update();
+    return isSuccess;
+  }
+
+  // ────────────────────────────────────────────────────────────
+  // Forgot Password — Step 3
+  // PATCH /api/users/forgotPassword
+  //   → { "email": "string", "setPassword": "string", "reTypePassword": "string" }
+  // ────────────────────────────────────────────────────────────
+  Future<bool> forgotResetPassword({
+    required String email,
+    required String setPassword,
+    required String reTypePassword,
+  }) async {
+    _isLoading = true;
+    update();
+    bool isSuccess = false;
+    final Response response = await loginRepo.forgotResetPassword(
+      email: email,
+      setPassword: setPassword,
+      reTypePassword: reTypePassword,
+    );
+    _isLoading = false;
+    if (response.statusCode == 200) {
+      isSuccess = true;
+    } else {
+      ApiChecker.checkApi(response);
+    }
+    update();
+    return isSuccess;
+  }
+
+  // ────────────────────────────────────────────────────────────
+  // Update Password (logged-in user)
+  // PUT /api/users/update-password
+  // Body: { "oldPassword", "newPassword", "retypePassword" }
+  // ────────────────────────────────────────────────────────────
+  Future<bool> updatePassword({
+    required String oldPassword,
+    required String newPassword,
+    required String retypePassword,
+  }) async {
+    _isLoading = true;
+    update();
+    bool isSuccess = false;
+    final Response response = await loginRepo.updatePassword(
+      oldPassword: oldPassword,
+      newPassword: newPassword,
+      retypePassword: retypePassword,
+    );
+    _isLoading = false;
+    if (response.statusCode == 200) {
+      isSuccess = true;
+    } else {
+      ApiChecker.checkApi(response);
+    }
+    update();
+    return isSuccess;
+  }
 
   void pickImage() async {
     XFile? picked = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (picked != null) {
-      _pickedFile = picked;
-    }
+    if (picked != null) _pickedFile = picked;
     update();
   }
 
@@ -256,180 +296,28 @@ class LoginViewModel extends GetxController implements GetxService {
     } else {
       if (isLogo) {
         _pickedLogo =
-            await ImagePicker().pickImage(source: ImageSource.gallery);
+        await ImagePicker().pickImage(source: ImageSource.gallery);
       } else {
         _pickedCover =
-            await ImagePicker().pickImage(source: ImageSource.gallery);
+        await ImagePicker().pickImage(source: ImageSource.gallery);
       }
       update();
     }
   }
 
-  // Future<bool> changePassword(ProfileModel updatedUserModel, String password) async {
-  //   _isLoading = true;
-  //   update();
-  //   bool isSuccess;
-  //   Response response = await loginRepo.changePassword(updatedUserModel, password);
-  //   _isLoading = false;
-  //   if (response.statusCode == 200) {
-  //     Get.back();
-  //     showCustomSnackBar('password_updated_successfully'.tr, isError: false);
-  //     isSuccess = true;
-  //   } else {
-  //     ApiChecker.checkApi(response);
-  //     isSuccess = false;
-  //   }
-  //   update();
-  //   return isSuccess;
-  // }
-
-  // Future<ResponseModel> forgetPassword(String? email) async {
-  //   _isLoading = true;
-  //   update();
-  //   Response response = await loginRepo.forgetPassword(email);
-  //
-  //   ResponseModel responseModel;
-  //   if (response.statusCode == 200) {
-  //     responseModel = ResponseModel(true, response.body["message"]);
-  //   } else {
-  //     responseModel = ResponseModel(false, response.statusText);
-  //   }
-  //   _isLoading = false;
-  //   update();
-  //   return responseModel;
-  // }
-  //
-  // Future<void> updateToken() async {
-  //   await loginRepo.updateToken();
-  // }
-
-  // Future<ResponseModel> verifyToken(String? email) async {
-  //   _isLoading = true;
-  //   update();
-  //   Response response = await loginRepo.verifyToken(email, _verificationCode);
-  //   ResponseModel responseModel;
-  //   if (response.statusCode == 200) {
-  //     responseModel = ResponseModel(true, response.body["message"]);
-  //   } else {
-  //     responseModel = ResponseModel(false, response.statusText);
-  //   }
-  //   _isLoading = false;
-  //   update();
-  //   return responseModel;
-  // }
-
-  // Future<ResponseModel> resetPassword(String? resetToken, String? email, String password, String confirmPassword) async {
-  //   _isLoading = true;
-  //   update();
-  //   Response response = await loginRepo.resetPassword(resetToken, email, password, confirmPassword);
-  //   ResponseModel responseModel;
-  //   if (response.statusCode == 200) {
-  //     responseModel = ResponseModel(true, response.body["message"]);
-  //   } else {
-  //     responseModel = ResponseModel(false, response.statusText);
-  //   }
-  //   _isLoading = false;
-  //   update();
-  //   return responseModel;
-  // }
-
   String _verificationCode = '';
-
-  String get verificationCode => _verificationCode;
+  bool _isActiveRememberMe = false;
 
   void updateVerificationCode(String query) {
     _verificationCode = query;
     update();
   }
 
-  bool _isActiveRememberMe = false;
-
-  bool get isActiveRememberMe => _isActiveRememberMe;
-
   void toggleRememberMe() {
     _isActiveRememberMe = !_isActiveRememberMe;
     update();
   }
 
-  bool isLoggedIn() {
-    return loginRepo.isLoggedIn();
-  }
-
-  Future<bool> clearSharedData() async {
-    // Get.find<SplashController>().setModule(null, null);
-    return await loginRepo.clearSharedData();
-  }
-
-  // void saveUserNumberAndPassword(String number, String password, String type) {
-  //   loginRepo.saveUserNumberAndPassword(number, password, type);
-  // }
-  //
-  // String getUserNumber() {
-  //   return loginRepo.getUserNumber();
-  // }
-  //
-  // String getUserPassword() {
-  //   return loginRepo.getUserPassword();
-  // }
-  //
-  // String getUserType() {
-  //   return loginRepo.getUserType();
-  // }
-  //
-  // Future<bool> clearUserNumberAndPassword() async {
-  //   return loginRepo.clearUserNumberAndPassword();
-  // }
-  //
-  // String getUserToken() {
-  //   return loginRepo.getUserToken();
-  // }
-  //
-  // bool setNotificationActive(bool isActive) {
-  //   _notification = isActive;
-  //   loginRepo.setNotificationActive(isActive);
-  //   update();
-  //   return _notification;
-  // }
-
-  TextEditingController get passwordController => _passwordController;
-
-  set passwordController(TextEditingController value) {
-    _passwordController = value;
-  }
-
-  TextEditingController get emailController => _emailController;
-
-  set emailController(TextEditingController value) {
-    _emailController = value;
-  }
-
-  TextEditingController get otp2Controller => _otp2Controller;
-
-  set otp2Controller(TextEditingController value) {
-    _otp2Controller = value;
-  }
-
-  TextEditingController get otp3Controller => _otp3Controller;
-
-  set otp3Controller(TextEditingController value) {
-    _otp3Controller = value;
-  }
-
-  TextEditingController get otp4Controller => _otp4Controller;
-
-  set otp4Controller(TextEditingController value) {
-    _otp4Controller = value;
-  }
-
-  TextEditingController get otp5Controller => _otp5Controller;
-
-  set otp5Controller(TextEditingController value) {
-    _otp5Controller = value;
-  }
-
-  TextEditingController get otp6Controller => _otp6Controller;
-
-  set otp6Controller(TextEditingController value) {
-    _otp6Controller = value;
-  }
+  bool isLoggedIn() => loginRepo.isLoggedIn();
+  Future<bool> clearSharedData() async => await loginRepo.clearSharedData();
 }

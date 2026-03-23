@@ -15,6 +15,9 @@ import 'package:get/get.dart';
 import 'package:getwidget/components/checkbox/gf_checkbox.dart';
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
+
+  @override
   LoginPageState createState() => LoginPageState();
 }
 
@@ -22,11 +25,12 @@ class LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    initAPIs();
+    Get.find<LoginViewModel>().initData();
   }
 
-  Future<void> initAPIs() async {
-    Get.find<LoginViewModel>().initData();
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -35,118 +39,138 @@ class LoginPageState extends State<LoginPage> {
       child: Scaffold(
         backgroundColor: ghostWhite,
         appBar: CommonAppBar(
-          title: Image.asset(
-            appLogoLong,
-            width: 120.0,
-          ),
+          title: Image.asset(appLogoLong, width: 120.0),
         ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(18.0),
-            child: GetBuilder<LoginViewModel>(builder: (loginVM) {
-              // loginVM.emailController.text = "soham@example.com";
-              // loginVM.passwordController.text = "Soham@04*";
-              // loginVM.emailController.text = "olivia.baker@example.com";
-              // loginVM.passwordController.text = "BakerOlivia@123";
-              // loginVM.emailController.text = "oli.bak@example.com";
-              // loginVM.passwordController.text = "BakOli@123";
-              return Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'the_strength_nation'.tr,
-                    style: fontBold.copyWith(
-                        color: midnightBlue, fontSize: fontSize18),
-                  ),
-                  SizedBox(height: paddingSize40),
-                  CommonTextFormField(
-                    controller: loginVM.emailController,
-                    hintText: "enter_email".tr,
-                    padding: EdgeInsets.all(paddingSize20),
-                  ),
-                  SizedBox(height: paddingSize25),
-                  CommonTextFormField(
-                    controller: loginVM.passwordController,
-                    hintText: "enter_password".tr,
-                    isPassword: true,
-                    padding: EdgeInsets.all(paddingSize20),
-                  ),
-                  SizedBox(height: paddingSize40),
-                  Obx(
-                        () => Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        GFCheckbox(
-                          inactiveBgColor: lavenderMist,
-                          inactiveBorderColor: bluishPurple,
-                          activeBorderColor: bluishPurple,
-                          value: loginVM.isAgreeTerms.value,
-                          activeBgColor: bluishPurple,
-                          size: 22.0,
-                          onChanged: (value) {
-                            loginVM.isAgreeTerms.value = value;
-                          },
-                        ),
-                        Flexible(
-                          child: RichText(
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: "${"i_accept".tr} ",
-                                  style: fontRegular.copyWith(
-                                      color: black, fontSize: fontSize14),
-                                ),
-                                TextSpan(
-                                  text: "terms".tr,
-                                  style: fontRegular.copyWith(
-                                      color: bluishPurple,
-                                      fontSize: fontSize14,
-                                      decoration: TextDecoration.underline),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () {
-                                      Get.toNamed(
-                                          Routes.getWebViewPageRoute(queryWebUrl));
-                                    },
-                                ),
-                              ],
+        body: GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(18.0),
+              child: GetBuilder<LoginViewModel>(builder: (loginVM) {
+                return Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'the_strength_nation'.tr,
+                      style: fontBold.copyWith(
+                          color: midnightBlue, fontSize: fontSize18),
+                    ),
+
+                    const SizedBox(height: paddingSize40),
+
+                    // ── Email ──
+                    CommonTextFormField(
+                      controller: loginVM.emailController,
+                      hintText: 'enter_email'.tr,
+                      inputType: TextInputType.emailAddress,
+                      padding: EdgeInsets.all(paddingSize20),
+                    ),
+
+                    const SizedBox(height: paddingSize25),
+
+                    // ── Password ──
+                    CommonTextFormField(
+                      controller: loginVM.passwordController,
+                      hintText: 'enter_password'.tr,
+                      isPassword: true,
+                      padding: EdgeInsets.all(paddingSize20),
+                    ),
+
+                    const SizedBox(height: paddingSize10),
+
+                    // ── Forgot Password link ──
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: GestureDetector(
+                        onTap: () {
+                          Get.toNamed(Routes.getForgotPasswordPageRoute());
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: paddingSize8),
+                          child: Text(
+                            'forgot_password'.tr,
+                            style: fontMedium.copyWith(
+                              color: bluishPurple,
+                              fontSize: fontSize13,
+                              decoration: TextDecoration.underline,
                             ),
                           ),
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                  SizedBox(height: paddingSize40),
-                  Obx(
-                    () => loginVM.isLoading
-                        ? const Center(child: CircularProgressIndicator())
-                        : CommonButton(
-                            bgColor: loginVM.isAgreeTerms.value == true
-                                ? bluishPurple
-                                : greyText,
-                            buttonText: "continue".tr,
-                            onPressed: () async {
-                              // Get.toNamed(Routes.getHomeRoute());
-                              await _login(loginVM);
+
+                    const SizedBox(height: paddingSize25),
+
+                    // ── Terms & Conditions ──
+                    Obx(
+                      () => Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GFCheckbox(
+                            inactiveBgColor: lavenderMist,
+                            inactiveBorderColor: bluishPurple,
+                            activeBorderColor: bluishPurple,
+                            value: loginVM.isAgreeTerms.value,
+                            activeBgColor: bluishPurple,
+                            size: 22.0,
+                            onChanged: (value) {
+                              loginVM.isAgreeTerms.value = value;
                             },
-                            textColor: white,
                           ),
-                  ),
-                  // SizedBox(height: paddingSize40),
-                  // Divider(),
-                  // SizedBox(height: paddingSize40),
-                  // Center(
-                  //   child: Text(
-                  //     "or".tr,
-                  //     style: fontBold.copyWith(
-                  //         color: bluishPurple, fontSize: fontSize18),
-                  //   ),
-                  // ),
-                ],
-              );
-            }),
+                          Flexible(
+                            child: RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: '${"i_accept".tr} ',
+                                    style: fontRegular.copyWith(
+                                        color: black, fontSize: fontSize14),
+                                  ),
+                                  TextSpan(
+                                    text: 'terms'.tr,
+                                    style: fontRegular.copyWith(
+                                        color: bluishPurple,
+                                        fontSize: fontSize14,
+                                        decoration: TextDecoration.underline),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {
+                                        Get.toNamed(Routes.getWebViewPageRoute(
+                                            queryWebUrl));
+                                      },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: paddingSize40),
+
+                    // ── Login button ──
+                    Obx(
+                      () => loginVM.isLoading
+                          ? const Center(child: CircularProgressIndicator())
+                          : CommonButton(
+                              bgColor: loginVM.isAgreeTerms.value == true
+                                  ? bluishPurple
+                                  : greyText,
+                              buttonText: 'continue'.tr,
+                              onPressed: () async {
+                                await _login(loginVM);
+                              },
+                              textColor: white,
+                            ),
+                    ),
+                  ],
+                );
+              }),
+            ),
           ),
         ),
       ),
@@ -180,10 +204,5 @@ class LoginPageState extends State<LoginPage> {
         );
       }
     }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 }

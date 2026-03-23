@@ -13,3 +13,4 @@ const Color divider = Color(0xFFAAA9BC);
 const Color greyText = Color(0xFF555555);
 const Color spunPearl = Color(0xFFAAA9BC);
 const Color requiredField = Color(0xFFFF0011);
+const Color successGreen = Color(0xFF2E7D32);
