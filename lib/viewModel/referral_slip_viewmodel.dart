@@ -158,7 +158,7 @@ class ReferralSlipViewModel extends GetxController implements GetxService {
     _referralStatusByHotness4 = false.obs;
     _referralStatusByHotness5 = false.obs;
     _referralHotnessRate = 0.obs;
-    _referralDataList = [];
+    // _referralDataList = [];
     _toController = TextEditingController();
     _referralsController = TextEditingController();
     _telephoneController = TextEditingController();

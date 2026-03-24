@@ -90,7 +90,7 @@ class TestimonialViewModel extends GetxController implements GetxService {
     _amountController = TextEditingController();
     _commentsController = TextEditingController();
     _testimonialController = TextEditingController();
-    _myTestimonialList = [];
+    // _myTestimonialList = [];
   }
 
   Future<bool> loadMore() async {

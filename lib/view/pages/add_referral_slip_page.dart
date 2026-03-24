@@ -17,6 +17,9 @@ import 'package:get/get.dart';
 import 'package:getwidget/components/checkbox/gf_checkbox.dart';
 
 class AddReferralSlipPage extends StatefulWidget {
+  const AddReferralSlipPage({Key? key}) : super(key: key);
+
+  @override
   AddReferralSlipPageState createState() => AddReferralSlipPageState();
 }
 
@@ -24,11 +27,31 @@ class AddReferralSlipPageState extends State<AddReferralSlipPage> {
   @override
   void initState() {
     super.initState();
-    initData();
+    // ────────────────────────────────────────────────────────
+    // FIX: "setState() called during build"
+    //
+    // Root cause: initData() → getMeetingsList() → update() was
+    // called synchronously inside initState(), while Flutter was
+    // still in the middle of mounting this widget's element tree.
+    // update() calls setState() on GetBuilder, which is not
+    // allowed during a build phase.
+    //
+    // Fix: defer initData() to run AFTER the first frame is fully
+    // built using addPostFrameCallback. This guarantees the widget
+    // tree is mounted before any setState/update() is called.
+    // ────────────────────────────────────────────────────────
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initData();
+    });
   }
 
-  Future<void> initData() async {
+  Future<void> _initData() async {
     await Get.find<ReferralSlipViewModel>().initData();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -37,10 +60,12 @@ class AddReferralSlipPageState extends State<AddReferralSlipPage> {
       child: Scaffold(
         backgroundColor: ghostWhite,
         appBar: CommonAppBar(
-          title: Text("referral_slip".tr,
-              style: fontBold.copyWith(
-                  fontSize: fontSize18,
-                  color: Theme.of(context).textTheme.bodyLarge!.color)),
+          title: Text(
+            'referral_slip'.tr,
+            style: fontBold.copyWith(
+                fontSize: fontSize18,
+                color: Theme.of(context).textTheme.bodyLarge!.color),
+          ),
         ),
         body: GetBuilder<ReferralSlipViewModel>(
           builder: (addReferralsVM) {
@@ -51,55 +76,53 @@ class AddReferralSlipPageState extends State<AddReferralSlipPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: paddingSize20),
-                    // Meeting Selection Dropdown
+                    const SizedBox(height: paddingSize20),
+
+                    // ── Meeting Selection Dropdown ──
                     SearchableDropdown(
                       value: addReferralsVM.selectedMeetingName,
                       items: addReferralsVM.meetingsList
                           .map((meeting) => meeting['title']!)
                           .toList(),
                       hintText: 'Select Meeting',
-                      icon: Image.asset(
-                        dropDownArrow,
-                        width: 18.0,
-                        height: 18.0,
-                      ),
+                      icon:
+                          Image.asset(dropDownArrow, width: 18.0, height: 18.0),
                       onChanged: (val) async {
-                        // Find selected meeting
-                        var selectedMeeting =
+                        final selectedMeeting =
                             addReferralsVM.meetingsList.firstWhere(
                           (meeting) => meeting['title'] == val,
-                          orElse: () => {"uuid": "", "title": ""},
+                          orElse: () => {'uuid': '', 'title': ''},
                         );
 
                         addReferralsVM.selectedMeetingId =
-                            selectedMeeting['uuid'] ?? "";
+                            selectedMeeting['uuid'] ?? '';
                         addReferralsVM.selectedMeetingName =
-                            selectedMeeting['title'] ?? "";
+                            selectedMeeting['title'] ?? '';
 
                         // Clear existing user selection
                         addReferralsVM.toController.clear();
-                        addReferralsVM.selectedMemberId = "";
+                        addReferralsVM.selectedMemberId = '';
                         addReferralsVM.telephoneController.clear();
                         addReferralsVM.emailController.clear();
                         addReferralsVM.addressController.clear();
 
-                        // Fetch meeting users if meeting is selected
-                        referralTypeInsideOrOutside(addReferralsVM, addReferralsVM.selectedMeetingId.isNotEmpty == true);
-
+                        referralTypeInsideOrOutside(addReferralsVM,
+                            addReferralsVM.selectedMeetingId.isNotEmpty);
                         setState(() {});
                       },
                     ),
-                    SizedBox(height: paddingSize25),
-                    // User Selection Field
+
+                    const SizedBox(height: paddingSize25),
+
+                    // ── User Selection: outside meeting → search, inside meeting → dropdown ──
                     Visibility(
                       visible: addReferralsVM.selectedMeetingId.isEmpty,
                       child: InkWell(
                         onTap: () async {
-                          MembersChildData childData = await Get.toNamed(
-                              Routes.getMembersPageRoute("true"));
+                          final MembersChildData childData = await Get.toNamed(
+                              Routes.getMembersPageRoute('true'));
                           addReferralsVM.selectedMemberId =
-                              childData.uuid ?? "";
+                              childData.uuid ?? '';
                           addReferralsVM.toController.text =
                               '${childData.firstName} ${childData.lastName}';
                           addReferralsVM.telephoneController.text =
@@ -107,22 +130,21 @@ class AddReferralSlipPageState extends State<AddReferralSlipPage> {
                           addReferralsVM.emailController.text =
                               childData.email.toString();
                           addReferralsVM.addressController.text =
-                              childData.address.toString() + " " +childData.address!.city!.toString();
+                              '${childData.address} ${childData.address?.city ?? ''}';
                         },
                         child: CommonTextFormField(
-                            isEnabled: false,
-                            controller: addReferralsVM.toController,
-                            hintText: "to".tr,
-                            hintColor: midnightBlue,
-                            suffixIcon: Image.asset(
-                              search,
-                              color: bluishPurple,
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: paddingSize20,
-                                vertical: paddingSize20)),
+                          isEnabled: false,
+                          controller: addReferralsVM.toController,
+                          hintText: 'to'.tr,
+                          hintColor: midnightBlue,
+                          suffixIcon: Image.asset(search, color: bluishPurple),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: paddingSize20,
+                              vertical: paddingSize20),
+                        ),
                       ),
                     ),
+
                     Visibility(
                       visible: addReferralsVM.selectedMeetingId.isNotEmpty,
                       child: SearchableDropdown(
@@ -130,506 +152,268 @@ class AddReferralSlipPageState extends State<AddReferralSlipPage> {
                         items: addReferralsVM.getMeetingWiseUsersName(
                             addReferralsVM.selectedMeetingId),
                         hintText: 'Select Meeting User',
-                        icon: Image.asset(
-                          dropDownArrow,
-                          width: 18.0,
-                          height: 18.0,
-                        ),
-                        onChanged: (val) async {
-                          var teamUser =
+                        icon: Image.asset(dropDownArrow,
+                            width: 18.0, height: 18.0),
+                        onChanged: (val) {
+                          final teamUser =
                               addReferralsVM.getMeetingWiseSelectedUsers(
-                                  addReferralsVM.selectedMeetingId, val ?? "");
-                          addReferralsVM.selectedMemberId = teamUser.uuid ?? "";
+                                  addReferralsVM.selectedMeetingId, val ?? '');
+                          addReferralsVM.selectedMemberId = teamUser.uuid ?? '';
                           addReferralsVM.toController.text =
                               '${teamUser.firstName} ${teamUser.lastName}';
-                          addReferralsVM.telephoneController.text = teamUser.mobileNo.toString();
-                          addReferralsVM.emailController.text = teamUser.email.toString();
-                          addReferralsVM.addressController.text = teamUser.address.toString() + " " + teamUser.address!.city!.toString();
-
+                          addReferralsVM.telephoneController.text =
+                              teamUser.mobileNo.toString();
+                          addReferralsVM.emailController.text =
+                              teamUser.email.toString();
+                          addReferralsVM.addressController.text =
+                              '${teamUser.address} ${teamUser.address?.city ?? ''}';
                           setState(() {});
-                          // Find selected meeting
-                          /*var selectedMeeting = addReferralsVM.meetingsList
-                              .firstWhere(
-                                (meeting) => meeting['title'] == val,
-                            orElse: () => {"uuid": "", "title": ""},
-                          );
-
-                          addReferralsVM.selectedMeetingId = selectedMeeting['uuid'] ?? "";
-                          addReferralsVM.selectedMeetingName = selectedMeeting['title'] ?? "";
-
-                          // Clear existing user selection
-                          addReferralsVM.toController.clear();
-                          addReferralsVM.selectedMemberId = "";
-                          addReferralsVM.telephoneController.clear();
-                          addReferralsVM.emailController.clear();
-                          addReferralsVM.addressController.clear();
-
-                          // Fetch meeting users if meeting is selected
-                          if (addReferralsVM.selectedMeetingId.isNotEmpty) {
-                            await addReferralsVM.getMeetingWiseUsers(
-                                addReferralsVM.selectedMeetingId);
-                          }
-
-                          setState(() {});*/
                         },
                       ),
                     ),
-                    SizedBox(height: paddingSize25),
+
+                    const SizedBox(height: paddingSize25),
+
+                    // ── Referral Type ──
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         CommonTextLabel(
-                          labelText: "referral_type".tr,
+                          labelText: 'referral_type'.tr,
                           padding: const EdgeInsets.symmetric(
                               horizontal: paddingSize25,
                               vertical: paddingSize8),
                         ),
-                        Expanded(
-                          child: Divider(
-                            height: 1.0,
-                            color: divider,
-                          ),
-                        )
+                        Expanded(child: Divider(height: 1.0, color: divider)),
                       ],
                     ),
-                    SizedBox(height: paddingSize15),
-                    Obx(
-                      () => Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: CommonCard(
-                              elevation: 2.0,
-                              bgColor: addReferralsVM.referralTypeInside.value
-                                  ? bluishPurple
-                                  : lavenderMist,
-                              onTap: () {
-                                // referralTypeInsideOrOutside(addReferralsVM, true);
-                              },
-                              cardChild: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: paddingSize15,
-                                    vertical: paddingSize10),
-                                child: Center(
-                                  child: Text(
-                                    "inside".tr,
-                                    style: fontRegular.copyWith(
-                                        color: addReferralsVM
-                                                .referralTypeInside.value
-                                            ? white
-                                            : midnightBlue,
-                                        fontSize: fontSize14),
+                    const SizedBox(height: paddingSize15),
+
+                    Obx(() => Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: CommonCard(
+                                elevation: 2.0,
+                                bgColor: addReferralsVM.referralTypeInside.value
+                                    ? bluishPurple
+                                    : lavenderMist,
+                                onTap: () {},
+                                cardChild: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: paddingSize15,
+                                      vertical: paddingSize10),
+                                  child: Center(
+                                    child: Text(
+                                      'inside'.tr,
+                                      style: fontRegular.copyWith(
+                                          color: addReferralsVM
+                                                  .referralTypeInside.value
+                                              ? white
+                                              : midnightBlue,
+                                          fontSize: fontSize14),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                          Expanded(
-                            child: CommonCard(
-                              elevation: 2.0,
-                              bgColor: addReferralsVM.referralTypeOutside.value
-                                  ? bluishPurple
-                                  : lavenderMist,
-                              onTap: () {
-                                // referralTypeInsideOrOutside(addReferralsVM, false);
-                              },
-                              cardChild: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: paddingSize15,
-                                    vertical: paddingSize10),
-                                child: Center(
-                                  child: Text(
-                                    "outside".tr,
-                                    style: fontRegular.copyWith(
-                                        color: addReferralsVM
-                                                .referralTypeOutside.value
-                                            ? white
-                                            : midnightBlue,
-                                        fontSize: fontSize14),
+                            Expanded(
+                              child: CommonCard(
+                                elevation: 2.0,
+                                bgColor:
+                                    addReferralsVM.referralTypeOutside.value
+                                        ? bluishPurple
+                                        : lavenderMist,
+                                onTap: () {},
+                                cardChild: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: paddingSize15,
+                                      vertical: paddingSize10),
+                                  child: Center(
+                                    child: Text(
+                                      'outside'.tr,
+                                      style: fontRegular.copyWith(
+                                          color: addReferralsVM
+                                                  .referralTypeOutside.value
+                                              ? white
+                                              : midnightBlue,
+                                          fontSize: fontSize14),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: paddingSize25),
+                          ],
+                        )),
+
+                    const SizedBox(height: paddingSize25),
+
+                    // ── Referral Status ──
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         CommonTextLabel(
-                            labelText: "referral_status".tr,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: paddingSize25,
-                                vertical: paddingSize8)),
-                        Expanded(
-                          child: Divider(
-                            height: 1.0,
-                            color: divider,
-                          ),
-                        )
+                          labelText: 'referral_status'.tr,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: paddingSize25,
+                              vertical: paddingSize8),
+                        ),
+                        Expanded(child: Divider(height: 1.0, color: divider)),
                       ],
                     ),
-                    SizedBox(height: paddingSize15),
-                    Obx(
-                      () => Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              GFCheckbox(
-                                inactiveBgColor: ghostWhite,
-                                activeBgColor: ghostWhite,
-                                activeIcon: Icon(
-                                  Icons.check,
-                                  size: iconSize18,
-                                  color: bluishPurple,
-                                ),
-                                size: iconSize20,
-                                inactiveBorderColor: bluishPurple,
-                                activeBorderColor: bluishPurple,
-                                value:
-                                    addReferralsVM.referralStatusByCall.value,
-                                onChanged: (bool? value) {
-                                  addReferralsVM.referralStatusByCall.value =
-                                      !addReferralsVM
-                                          .referralStatusByCall.value;
-                                },
-                              ),
-                              Text(
-                                "told_them_call".tr,
-                                style: fontRegular.copyWith(
-                                    color: midnightBlue, fontSize: fontSize14),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              GFCheckbox(
-                                inactiveBgColor: ghostWhite,
-                                activeBgColor: ghostWhite,
-                                activeIcon: Icon(
-                                  Icons.check,
-                                  size: iconSize18,
-                                  color: bluishPurple,
-                                ),
-                                size: iconSize20,
-                                inactiveBorderColor: bluishPurple,
-                                activeBorderColor: bluishPurple,
-                                value:
-                                    addReferralsVM.referralStatusByCards.value,
-                                onChanged: (bool? value) {
-                                  addReferralsVM.referralStatusByCards.value =
-                                      !addReferralsVM
-                                          .referralStatusByCards.value;
-                                },
-                              ),
-                              Text(
-                                "given_your_card".tr,
-                                style: fontRegular.copyWith(
-                                    color: midnightBlue, fontSize: fontSize14),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: paddingSize25),
+                    const SizedBox(height: paddingSize15),
+
+                    Obx(() => Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _statusCheckbox(
+                              label: 'told_them_call'.tr,
+                              value: addReferralsVM.referralStatusByCall.value,
+                              onChanged: (_) {
+                                addReferralsVM.referralStatusByCall.value =
+                                    !addReferralsVM.referralStatusByCall.value;
+                              },
+                            ),
+                            _statusCheckbox(
+                              label: 'given_your_card'.tr,
+                              value: addReferralsVM.referralStatusByCards.value,
+                              onChanged: (_) {
+                                addReferralsVM.referralStatusByCards.value =
+                                    !addReferralsVM.referralStatusByCards.value;
+                              },
+                            ),
+                          ],
+                        )),
+
+                    const SizedBox(height: paddingSize25),
+
+                    // ── Fields ──
                     CommonTextFormField(
                       controller: addReferralsVM.referralsController,
-                      hintText: "referrals".tr,
+                      hintText: 'referrals'.tr,
                       hintColor: midnightBlue,
                       suffixIcon: Image.asset(referralsBlue),
                       padding: const EdgeInsets.symmetric(
                           horizontal: paddingSize20, vertical: paddingSize20),
                     ),
-                    SizedBox(height: paddingSize25),
+                    const SizedBox(height: paddingSize25),
                     CommonTextFormField(
                       inputType: TextInputType.number,
                       controller: addReferralsVM.telephoneController,
-                      hintText: "telephone".tr,
+                      hintText: 'telephone'.tr,
                       hintColor: midnightBlue,
                       padding: const EdgeInsets.symmetric(
                           horizontal: paddingSize20, vertical: paddingSize20),
                     ),
-                    SizedBox(height: paddingSize25),
+                    const SizedBox(height: paddingSize25),
                     CommonTextFormField(
                       controller: addReferralsVM.emailController,
-                      hintText: "email".tr,
+                      hintText: 'email'.tr,
                       hintColor: midnightBlue,
                       padding: const EdgeInsets.symmetric(
                           horizontal: paddingSize20, vertical: paddingSize20),
                     ),
-                    SizedBox(height: paddingSize25),
+                    const SizedBox(height: paddingSize25),
                     CommonTextFormField(
                       controller: addReferralsVM.addressController,
-                      hintText: "address".tr,
+                      hintText: 'address'.tr,
                       hintColor: midnightBlue,
                       maxLines: 4,
                       padding: const EdgeInsets.symmetric(
                           horizontal: paddingSize20, vertical: paddingSize20),
                     ),
-                    SizedBox(height: paddingSize25),
+                    const SizedBox(height: paddingSize25),
                     CommonTextFormField(
                       controller: addReferralsVM.commentController,
-                      hintText: "comments".tr,
+                      hintText: 'comments'.tr,
                       maxLines: 4,
                       hintColor: midnightBlue,
                       padding: const EdgeInsets.symmetric(
                           horizontal: paddingSize20, vertical: paddingSize20),
                     ),
-                    SizedBox(height: paddingSize25),
+                    const SizedBox(height: paddingSize25),
+
+                    // ── Referral Rate ──
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         CommonTextLabel(
-                            labelText: "referral_rate".tr,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: paddingSize25,
-                                vertical: paddingSize8)),
-                        Expanded(
-                          child: Divider(
-                            height: 1.0,
-                            color: divider,
-                          ),
-                        )
+                          labelText: 'referral_rate'.tr,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: paddingSize25,
+                              vertical: paddingSize8),
+                        ),
+                        Expanded(child: Divider(height: 1.0, color: divider)),
                       ],
                     ),
-                    SizedBox(height: paddingSize25),
-                    Obx(
-                      () => Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              GFCheckbox(
-                                inactiveBgColor: ghostWhite,
-                                activeBgColor: ghostWhite,
-                                activeIcon: Icon(
-                                  Icons.check,
-                                  size: iconSize18,
-                                  color: bluishPurple,
-                                ),
-                                size: iconSize20,
-                                inactiveBorderColor: bluishPurple,
-                                activeBorderColor: bluishPurple,
-                                value: addReferralsVM
-                                    .referralStatusByHotness1.value,
-                                onChanged: (bool? value) {
-                                  addReferralsVM
-                                          .referralStatusByHotness1.value =
-                                      !addReferralsVM
-                                          .referralStatusByHotness1.value;
-                                  addReferralsVM.referralHotnessRate.value = 1;
-                                  addReferralsVM
-                                      .referralStatusByHotness2.value = false;
-                                  addReferralsVM
-                                      .referralStatusByHotness3.value = false;
-                                  addReferralsVM
-                                      .referralStatusByHotness4.value = false;
-                                  addReferralsVM
-                                      .referralStatusByHotness5.value = false;
-                                },
-                              ),
-                              Container(
-                                height: 20.0,
-                                width: 40.0,
-                                decoration: BoxDecoration(
-                                    color: Color(0xFFFFB800),
-                                    borderRadius: BorderRadius.circular(4.0)),
-                              )
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              GFCheckbox(
-                                inactiveBgColor: ghostWhite,
-                                activeBgColor: ghostWhite,
-                                activeIcon: Icon(
-                                  Icons.check,
-                                  size: iconSize18,
-                                  color: bluishPurple,
-                                ),
-                                size: iconSize20,
-                                inactiveBorderColor: bluishPurple,
-                                activeBorderColor: bluishPurple,
-                                value: addReferralsVM
-                                    .referralStatusByHotness2.value,
-                                onChanged: (bool? value) {
-                                  addReferralsVM
-                                          .referralStatusByHotness2.value =
-                                      !addReferralsVM
-                                          .referralStatusByHotness2.value;
-                                  addReferralsVM.referralHotnessRate.value = 2;
-                                  addReferralsVM
-                                      .referralStatusByHotness1.value = false;
-                                  addReferralsVM
-                                      .referralStatusByHotness3.value = false;
-                                  addReferralsVM
-                                      .referralStatusByHotness4.value = false;
-                                  addReferralsVM
-                                      .referralStatusByHotness5.value = false;
-                                },
-                              ),
-                              Container(
-                                height: 20.0,
-                                width: 80.0,
-                                decoration: BoxDecoration(
-                                    color: Color(0xFFFF8300),
-                                    borderRadius: BorderRadius.circular(4.0)),
-                              )
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              GFCheckbox(
-                                inactiveBgColor: ghostWhite,
-                                activeBgColor: ghostWhite,
-                                activeIcon: Icon(
-                                  Icons.check,
-                                  size: iconSize18,
-                                  color: bluishPurple,
-                                ),
-                                size: iconSize20,
-                                inactiveBorderColor: bluishPurple,
-                                activeBorderColor: bluishPurple,
-                                value: addReferralsVM
-                                    .referralStatusByHotness3.value,
-                                onChanged: (bool? value) {
-                                  addReferralsVM
-                                          .referralStatusByHotness3.value =
-                                      !addReferralsVM
-                                          .referralStatusByHotness3.value;
-                                  addReferralsVM.referralHotnessRate.value = 3;
-                                  addReferralsVM
-                                      .referralStatusByHotness1.value = false;
-                                  addReferralsVM
-                                      .referralStatusByHotness2.value = false;
-                                  addReferralsVM
-                                      .referralStatusByHotness4.value = false;
-                                  addReferralsVM
-                                      .referralStatusByHotness5.value = false;
-                                },
-                              ),
-                              Container(
-                                height: 20.0,
-                                width: 120.0,
-                                decoration: BoxDecoration(
-                                    color: Color(0xFFFF5C00),
-                                    borderRadius: BorderRadius.circular(4.0)),
-                              )
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              GFCheckbox(
-                                inactiveBgColor: ghostWhite,
-                                activeBgColor: ghostWhite,
-                                activeIcon: Icon(
-                                  Icons.check,
-                                  size: iconSize18,
-                                  color: bluishPurple,
-                                ),
-                                size: iconSize20,
-                                inactiveBorderColor: bluishPurple,
-                                activeBorderColor: bluishPurple,
-                                value: addReferralsVM
-                                    .referralStatusByHotness4.value,
-                                onChanged: (bool? value) {
-                                  addReferralsVM
-                                          .referralStatusByHotness4.value =
-                                      !addReferralsVM
-                                          .referralStatusByHotness4.value;
-                                  addReferralsVM.referralHotnessRate.value = 4;
-                                  addReferralsVM
-                                      .referralStatusByHotness1.value = false;
-                                  addReferralsVM
-                                      .referralStatusByHotness2.value = false;
-                                  addReferralsVM
-                                      .referralStatusByHotness3.value = false;
-                                  addReferralsVM
-                                      .referralStatusByHotness5.value = false;
-                                },
-                              ),
-                              Container(
-                                height: 20.0,
-                                width: 160.0,
-                                decoration: BoxDecoration(
-                                    color: Color(0xFFFF3400),
-                                    borderRadius: BorderRadius.circular(4.0)),
-                              )
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              GFCheckbox(
-                                inactiveBgColor: ghostWhite,
-                                activeBgColor: ghostWhite,
-                                activeIcon: Icon(
-                                  Icons.check,
-                                  size: iconSize18,
-                                  color: bluishPurple,
-                                ),
-                                size: iconSize20,
-                                inactiveBorderColor: bluishPurple,
-                                activeBorderColor: bluishPurple,
-                                value: addReferralsVM
-                                    .referralStatusByHotness5.value,
-                                onChanged: (bool? value) {
-                                  addReferralsVM
-                                          .referralStatusByHotness5.value =
-                                      !addReferralsVM
-                                          .referralStatusByHotness5.value;
-                                  addReferralsVM.referralHotnessRate.value = 5;
-                                  addReferralsVM
-                                      .referralStatusByHotness1.value = false;
-                                  addReferralsVM
-                                      .referralStatusByHotness2.value = false;
-                                  addReferralsVM
-                                      .referralStatusByHotness3.value = false;
-                                  addReferralsVM
-                                      .referralStatusByHotness4.value = false;
-                                },
-                              ),
-                              Container(
-                                height: 20.0,
-                                width: 200.0,
-                                decoration: BoxDecoration(
-                                    color: Color(0xFFFF0000),
-                                    borderRadius: BorderRadius.circular(4.0)),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: paddingSize25),
+                    const SizedBox(height: paddingSize25),
+
+                    Obx(() => Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _hotnessRow(
+                              vm: addReferralsVM,
+                              value:
+                                  addReferralsVM.referralStatusByHotness1.value,
+                              rate: 1,
+                              barWidth: 40.0,
+                              barColor: const Color(0xFFFFB800),
+                              onChanged: () =>
+                                  _selectHotness(addReferralsVM, 1),
+                            ),
+                            _hotnessRow(
+                              vm: addReferralsVM,
+                              value:
+                                  addReferralsVM.referralStatusByHotness2.value,
+                              rate: 2,
+                              barWidth: 80.0,
+                              barColor: const Color(0xFFFF8300),
+                              onChanged: () =>
+                                  _selectHotness(addReferralsVM, 2),
+                            ),
+                            _hotnessRow(
+                              vm: addReferralsVM,
+                              value:
+                                  addReferralsVM.referralStatusByHotness3.value,
+                              rate: 3,
+                              barWidth: 120.0,
+                              barColor: const Color(0xFFFF5C00),
+                              onChanged: () =>
+                                  _selectHotness(addReferralsVM, 3),
+                            ),
+                            _hotnessRow(
+                              vm: addReferralsVM,
+                              value:
+                                  addReferralsVM.referralStatusByHotness4.value,
+                              rate: 4,
+                              barWidth: 160.0,
+                              barColor: const Color(0xFFFF3400),
+                              onChanged: () =>
+                                  _selectHotness(addReferralsVM, 4),
+                            ),
+                            _hotnessRow(
+                              vm: addReferralsVM,
+                              value:
+                                  addReferralsVM.referralStatusByHotness5.value,
+                              rate: 5,
+                              barWidth: 200.0,
+                              barColor: const Color(0xFFFF0000),
+                              onChanged: () =>
+                                  _selectHotness(addReferralsVM, 5),
+                            ),
+                          ],
+                        )),
+
+                    const SizedBox(height: paddingSize25),
+
                     CommonButton(
-                      buttonText: "confirm".tr,
+                      buttonText: 'confirm'.tr,
                       bgColor: midnightBlue,
                       textColor: periwinkle,
                       onPressed: () async {
                         await _collectDataAndAddReferrals(addReferralsVM);
                       },
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -640,143 +424,134 @@ class AddReferralSlipPageState extends State<AddReferralSlipPage> {
     );
   }
 
+  // ── Status checkbox row ──
+  Widget _statusCheckbox({
+    required String label,
+    required bool value,
+    required void Function(bool?) onChanged,
+  }) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        GFCheckbox(
+          inactiveBgColor: ghostWhite,
+          activeBgColor: ghostWhite,
+          activeIcon: Icon(Icons.check, size: iconSize18, color: bluishPurple),
+          size: iconSize20,
+          inactiveBorderColor: bluishPurple,
+          activeBorderColor: bluishPurple,
+          value: value,
+          onChanged: onChanged,
+        ),
+        Text(label,
+            style: fontRegular.copyWith(
+                color: midnightBlue, fontSize: fontSize14)),
+      ],
+    );
+  }
 
-  void referralTypeInsideOrOutside(ReferralSlipViewModel addReferralsVM, bool isInsideClick) {
-    addReferralsVM.referralTypeInside.value = isInsideClick;
-    addReferralsVM.referralTypeOutside.value = !isInsideClick;
+  // ── Hotness bar row ──
+  Widget _hotnessRow({
+    required ReferralSlipViewModel vm,
+    required bool value,
+    required int rate,
+    required double barWidth,
+    required Color barColor,
+    required VoidCallback onChanged,
+  }) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        GFCheckbox(
+          inactiveBgColor: ghostWhite,
+          activeBgColor: ghostWhite,
+          activeIcon: Icon(Icons.check, size: iconSize18, color: bluishPurple),
+          size: iconSize20,
+          inactiveBorderColor: bluishPurple,
+          activeBorderColor: bluishPurple,
+          value: value,
+          onChanged: (_) => onChanged(),
+        ),
+        Container(
+          height: 20.0,
+          width: barWidth,
+          decoration: BoxDecoration(
+            color: barColor,
+            borderRadius: BorderRadius.circular(4.0),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // ── Select hotness (radio-like — only one at a time) ──
+  void _selectHotness(ReferralSlipViewModel vm, int rate) {
+    vm.referralHotnessRate.value = rate;
+    vm.referralStatusByHotness1.value = rate == 1;
+    vm.referralStatusByHotness2.value = rate == 2;
+    vm.referralStatusByHotness3.value = rate == 3;
+    vm.referralStatusByHotness4.value = rate == 4;
+    vm.referralStatusByHotness5.value = rate == 5;
+  }
+
+  void referralTypeInsideOrOutside(ReferralSlipViewModel vm, bool isInside) {
+    vm.referralTypeInside.value = isInside;
+    vm.referralTypeOutside.value = !isInside;
   }
 
   Future<void> _collectDataAndAddReferrals(
       ReferralSlipViewModel addReferralsVM) async {
     if (addReferralsVM.toController.text.isEmpty) {
-      showSnackBar("select_referral_user".tr);
+      showSnackBar('select_referral_user'.tr);
     } else if (addReferralsVM.referralsController.text.isEmpty) {
-      showSnackBar("select_referral".tr);
+      showSnackBar('select_referral'.tr);
     } else if (addReferralsVM.telephoneController.text.isEmpty) {
-      showSnackBar("enter_telephone".tr);
+      showSnackBar('enter_telephone'.tr);
     } else if (addReferralsVM.emailController.text.isEmpty) {
-      showSnackBar("enter_email".tr);
+      showSnackBar('enter_email'.tr);
     } else if (addReferralsVM.addressController.text.isEmpty) {
-      showSnackBar("enter_address".tr);
+      showSnackBar('enter_address'.tr);
     } else if (addReferralsVM.commentController.text.isEmpty) {
-      showSnackBar("enter_comment".tr);
+      showSnackBar('enter_comment'.tr);
     } else if (!addReferralsVM.referralStatusByCall.value &&
-        !addReferralsVM.referralStatusByCall.value) {
-      showSnackBar("select_referral_status".tr);
+        !addReferralsVM.referralStatusByCards.value) {
+      showSnackBar('select_referral_status'.tr);
     } else if (addReferralsVM.referralHotnessRate.value == 0) {
-      showSnackBar("select_referral_rate".tr);
+      showSnackBar('select_referral_rate'.tr);
     } else {
-      String type =
-          addReferralsVM.referralTypeOutside.value ? "OUTSIDE" : "INSIDE";
-      List<String> selectedStatus = [];
+      final String type =
+          addReferralsVM.referralTypeOutside.value ? 'OUTSIDE' : 'INSIDE';
+      final List<String> selectedStatus = [];
       if (addReferralsVM.referralStatusByCall.value) {
-        selectedStatus.add("TOLD_THEM_YOU_WOULD_CALL");
+        selectedStatus.add('TOLD_THEM_YOU_WOULD_CALL');
       }
       if (addReferralsVM.referralStatusByCards.value) {
-        selectedStatus.add("GIVEN_YOUR_CARD");
+        selectedStatus.add('GIVEN_YOUR_CARD');
       }
-      bool isSuccess = await addReferralsVM.addReferralsData(
-          addReferralsVM.selectedMemberId.toString(),
-          addReferralsVM.selectedMeetingId.isEmpty
-              ? null
-              : addReferralsVM.selectedMeetingId.toString(),
-          type,
-          selectedStatus,
-          addReferralsVM.referralsController.text.toString(),
-          addReferralsVM.telephoneController.text.toString(),
-          addReferralsVM.emailController.text.toString(),
-          addReferralsVM.addressController.text.toString(),
-          addReferralsVM.commentController.text.toString(),
-          addReferralsVM.referralHotnessRate.value);
+
+      final bool isSuccess = await addReferralsVM.addReferralsData(
+        addReferralsVM.selectedMemberId,
+        addReferralsVM.selectedMeetingId.isEmpty
+            ? null
+            : addReferralsVM.selectedMeetingId,
+        type,
+        selectedStatus,
+        addReferralsVM.referralsController.text,
+        addReferralsVM.telephoneController.text,
+        addReferralsVM.emailController.text,
+        addReferralsVM.addressController.text,
+        addReferralsVM.commentController.text,
+        addReferralsVM.referralHotnessRate.value,
+      );
+
       if (isSuccess) {
+        showSnackBar('referral_added'.tr, isError: false);
         Get.back();
-        showSnackBar("referral_added".tr, isError: false);
       } else {
         showSnackBar('errorMessage'.tr);
       }
     }
-  }
-
-  // Show dialog to select user from meeting attendees
-  Future<MembersChildData?> _showMeetingUsersDialog(
-      BuildContext context, List<MembersChildData> users) async {
-    return await showDialog<MembersChildData>(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(radius10),
-          ),
-          child: Container(
-            height: MediaQuery.of(context).size.height * 0.6,
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                Text(
-                  'Select Meeting Attendee',
-                  style: fontBold.copyWith(
-                    fontSize: fontSize18,
-                    color: midnightBlue,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Expanded(
-                  child: users.isEmpty
-                      ? Center(
-                          child: Text(
-                            'No attendees found',
-                            style: fontMedium.copyWith(
-                              color: midnightBlue,
-                              fontSize: fontSize14,
-                            ),
-                          ),
-                        )
-                      : ListView.builder(
-                          itemCount: users.length,
-                          itemBuilder: (context, index) {
-                            final user = users[index];
-                            return ListTile(
-                              leading: CircleAvatar(
-                                backgroundColor: bluishPurple,
-                                child: Text(
-                                  '${user.firstName?[0] ?? ''}${user.lastName?[0] ?? ''}',
-                                  style: fontBold.copyWith(
-                                    color: white,
-                                    fontSize: fontSize14,
-                                  ),
-                                ),
-                              ),
-                              title: Text(
-                                '${user.firstName ?? ''} ${user.lastName ?? ''}',
-                                style: fontMedium.copyWith(
-                                  color: midnightBlue,
-                                  fontSize: fontSize14,
-                                ),
-                              ),
-                              subtitle: Text(
-                                user.email ?? '',
-                                style: fontRegular.copyWith(
-                                  color: midnightBlue.withValues(alpha: 0.7),
-                                  fontSize: fontSize12,
-                                ),
-                              ),
-                              onTap: () {
-                                Navigator.of(context).pop(user);
-                              },
-                            );
-                          },
-                        ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 }

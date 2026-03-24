@@ -47,8 +47,9 @@ class ReferralsPageState extends State<ReferralsPage> {
               tooltip: "Add Referrals",
               elevation: 4.0,
               backgroundColor: midnightBlue,
-              onPressed: () {
-                Get.toNamed(Routes.getAddSlipPageRoute());
+              onPressed: () async {
+                await Get.toNamed(Routes.getAddSlipPageRoute());
+                await getReferralData(0, 10, "", "", "");
               },
               child: Icon(
                 Icons.add,

@@ -57,73 +57,50 @@ Future<Map<String, Map<String, String>>> init() async {
   Get.lazyPut(() => ApiClient(sharedPreferences: Get.find()));
 
   //appBaseUrl: baseUrl,
-
   /** Repositories **/
-  Get.lazyPut(
-      () => LoginRepo(apiClient: Get.find(), sharedPreferences: Get.find()));
-  Get.lazyPut(
-      () => TyfcbRepo(apiClient: Get.find(), sharedPreferences: Get.find()));
-  Get.lazyPut(
-      () => HomeRepo(apiClient: Get.find(), sharedPreferences: Get.find()));
-  Get.lazyPut(
-      () => AsksRepo(apiClient: Get.find(), sharedPreferences: Get.find()));
-  Get.lazyPut(() =>
-      MyNetworkRepo(apiClient: Get.find(), sharedPreferences: Get.find()));
-  Get.lazyPut(() =>
-      MyBusinessRepo(apiClient: Get.find(), sharedPreferences: Get.find()));
-  Get.lazyPut(
-      () => VisitorsRepo(apiClient: Get.find(), sharedPreferences: Get.find()));
-  Get.lazyPut(
-      () => AddressRepo(apiClient: Get.find(), sharedPreferences: Get.find()));
-  Get.lazyPut(
-      () => ContactRepo(apiClient: Get.find(), sharedPreferences: Get.find()));
-  Get.lazyPut(() =>
-      TestimonialRepo(apiClient: Get.find(), sharedPreferences: Get.find()));
-  Get.lazyPut(() => AccountSettingsRepo(
-      apiClient: Get.find(), sharedPreferences: Get.find()));
-  Get.lazyPut(
-      () => MembersRepo(apiClient: Get.find(), sharedPreferences: Get.find()));
-  Get.lazyPut(() =>
-      ActivityFeedsRepo(apiClient: Get.find(), sharedPreferences: Get.find()));
-  Get.lazyPut(
-      () => ReferralRepo(apiClient: Get.find(), sharedPreferences: Get.find()));
-
-  Get.lazyPut(
-      () => OneToOneRepo(apiClient: Get.find(), sharedPreferences: Get.find()));
-  Get.lazyPut(
-      () => PostsRepo(apiClient: Get.find(), sharedPreferences: Get.find()));
-  Get.lazyPut(() =>
-      VisitingCardRepo(apiClient: Get.find(), sharedPreferences: Get.find()));
-  Get.lazyPut(
-      () => ProfileRepo(apiClient: Get.find(), sharedPreferences: Get.find()));
-  Get.lazyPut(
-      () => SplashRepo(apiClient: Get.find(), sharedPreferences: Get.find()));
+  Get.lazyPut(() => LoginRepo(apiClient: Get.find(), sharedPreferences: Get.find()), fenix: true);
+  Get.lazyPut(() => TyfcbRepo(apiClient: Get.find(), sharedPreferences: Get.find()), fenix: true);
+  Get.lazyPut(() => HomeRepo(apiClient: Get.find(), sharedPreferences: Get.find()), fenix: true);
+  Get.lazyPut(() => AsksRepo(apiClient: Get.find(), sharedPreferences: Get.find()), fenix: true);
+  Get.lazyPut(() => MyNetworkRepo(apiClient: Get.find(), sharedPreferences: Get.find()), fenix: true);
+  Get.lazyPut(() => MyBusinessRepo(apiClient: Get.find(), sharedPreferences: Get.find()), fenix: true);
+  Get.lazyPut(() => VisitorsRepo(apiClient: Get.find(), sharedPreferences: Get.find()), fenix: true);
+  Get.lazyPut(() => AddressRepo(apiClient: Get.find(), sharedPreferences: Get.find()), fenix: true);
+  Get.lazyPut(() => ContactRepo(apiClient: Get.find(), sharedPreferences: Get.find()), fenix: true);
+  Get.lazyPut(() => TestimonialRepo(apiClient: Get.find(), sharedPreferences: Get.find()), fenix: true);
+  Get.lazyPut(() => AccountSettingsRepo(apiClient: Get.find(), sharedPreferences: Get.find()), fenix: true);
+  Get.lazyPut(() => MembersRepo(apiClient: Get.find(), sharedPreferences: Get.find()), fenix: true);
+  Get.lazyPut(() => ActivityFeedsRepo(apiClient: Get.find(), sharedPreferences: Get.find()), fenix: true);
+  Get.lazyPut(() => ReferralRepo(apiClient: Get.find(), sharedPreferences: Get.find()), fenix: true);
+  Get.lazyPut(() => OneToOneRepo(apiClient: Get.find(), sharedPreferences: Get.find()), fenix: true);
+  Get.lazyPut(() => PostsRepo(apiClient: Get.find(), sharedPreferences: Get.find()), fenix: true);
+  Get.lazyPut(() => VisitingCardRepo(apiClient: Get.find(), sharedPreferences: Get.find()), fenix: true);
+  Get.lazyPut(() => ProfileRepo(apiClient: Get.find(), sharedPreferences: Get.find()), fenix: true);
+  Get.lazyPut(() => SplashRepo(apiClient: Get.find(), sharedPreferences: Get.find()), fenix: true);
 
   /** ViewModels **/
-  Get.lazyPut(() => SplashViewModel(splashRepo: Get.find()));
-  Get.lazyPut(
-      () => LocalizationViewModel(sharedPreferences: sharedPreferences));
-  Get.lazyPut(() => AuthenticationViewModel());
-  Get.lazyPut(() => LoginViewModel(loginRepo: Get.find()));
-  Get.lazyPut(() => TyfcbViewModel(tyfcbRepo: Get.find()));
-  Get.lazyPut(() => HomeViewModel(homeRepo: Get.find()));
-  Get.lazyPut(() => ProfileViewModel(profileRepo: Get.find()));
-  Get.lazyPut(() => OneToOneSlipViewModel(oneToOneRepo: Get.find()));
-  Get.lazyPut(() => CEUSlipViewModel());
-  Get.lazyPut(() => PostsViewModel(postsRepo: Get.find()));
-  Get.lazyPut(() => AsksViewModel(asksRepo: Get.find()));
-  Get.lazyPut(() => MyNetworkViewModel(myNetworkRepo: Get.find()));
-  Get.lazyPut(() => MyBusinessViewModel(myBusinessRepo: Get.find()));
-  Get.lazyPut(() => VisitorsViewModel(visitorsRepo: Get.find(), referralRepo: Get.find()));
-  Get.lazyPut(() => AddressViewmodel(addressRepo: Get.find()));
-  Get.lazyPut(() => ContactViewmodel(contactRepo: Get.find()));
-  Get.lazyPut(() => TestimonialViewModel(testimonialRepo: Get.find()));
-  Get.lazyPut(() => AccountSettingsViewmodel(accountSettingsRepo: Get.find()));
-  Get.lazyPut(() => MembersViewmodel(membersRepo: Get.find()));
-  Get.lazyPut(() => ActivityFeedsViewmodel(activityFeedsRepo: Get.find()));
-  Get.lazyPut(() => ReferralSlipViewModel(referralRepo: Get.find()));
-  Get.lazyPut(() => VisitingCardViewModel(visitingCardRepo: Get.find()));
-  Get.lazyPut(() => ReferralRepo(apiClient: Get.find(), sharedPreferences: sharedPreferences));
+  Get.lazyPut(() => SplashViewModel(splashRepo: Get.find()), fenix: true);
+  Get.lazyPut(() => LocalizationViewModel(sharedPreferences: sharedPreferences), fenix: true);
+  Get.lazyPut(() => AuthenticationViewModel(), fenix: true);
+  Get.lazyPut(() => LoginViewModel(loginRepo: Get.find()), fenix: true);
+  Get.lazyPut(() => TyfcbViewModel(tyfcbRepo: Get.find()), fenix: true);
+  Get.lazyPut(() => HomeViewModel(homeRepo: Get.find()), fenix: true);
+  Get.lazyPut(() => ProfileViewModel(profileRepo: Get.find()), fenix: true);
+  Get.lazyPut(() => OneToOneSlipViewModel(oneToOneRepo: Get.find()), fenix: true);
+  Get.lazyPut(() => CEUSlipViewModel(), fenix: true);
+  Get.lazyPut(() => PostsViewModel(postsRepo: Get.find()), fenix: true);
+  Get.lazyPut(() => AsksViewModel(asksRepo: Get.find()), fenix: true);
+  Get.lazyPut(() => MyNetworkViewModel(myNetworkRepo: Get.find()), fenix: true);
+  Get.lazyPut(() => MyBusinessViewModel(myBusinessRepo: Get.find()), fenix: true);
+  Get.lazyPut(() => VisitorsViewModel(visitorsRepo: Get.find(), referralRepo: Get.find()), fenix: true);
+  Get.lazyPut(() => AddressViewmodel(addressRepo: Get.find()), fenix: true);
+  Get.lazyPut(() => ContactViewmodel(contactRepo: Get.find()), fenix: true);
+  Get.lazyPut(() => TestimonialViewModel(testimonialRepo: Get.find()), fenix: true);
+  Get.lazyPut(() => AccountSettingsViewmodel(accountSettingsRepo: Get.find()), fenix: true);
+  Get.lazyPut(() => MembersViewmodel(membersRepo: Get.find()), fenix: true);
+  Get.lazyPut(() => ActivityFeedsViewmodel(activityFeedsRepo: Get.find()), fenix: true);
+  Get.lazyPut(() => ReferralSlipViewModel(referralRepo: Get.find()), fenix: true);
+  Get.lazyPut(() => VisitingCardViewModel(visitingCardRepo: Get.find()), fenix: true);
 
   /** Retrieving localized data **/
   Map<String, Map<String, String>> languages = {};

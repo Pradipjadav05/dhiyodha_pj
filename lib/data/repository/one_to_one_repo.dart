@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:dhiyodha/data/api/api_client.dart';
 import 'package:dhiyodha/model/response_model/tyfcb_response_model.dart';
 import 'package:dhiyodha/utils/resource/app_constants.dart';
@@ -12,6 +11,7 @@ class OneToOneRepo {
 
   OneToOneRepo({required this.apiClient, required this.sharedPreferences});
 
+  // ── Add new one-to-one record ──
   Future<Response> addOneToOneData(
       String? connectedWith,
       String? initiatedBy,
@@ -23,25 +23,20 @@ class OneToOneRepo {
       "initiatedBy": initiatedBy,
       "oneToOneLocation": oneToOneLocation.toJson(),
       "oneToOneDate": oneToOneDate,
-      "oneToOneNotes": oneToOneNotes
+      "oneToOneNotes": oneToOneNotes,
     });
-    // , headers: {
-    // "Accept": "application/json",
-    // "Content-Type": "application/json",
-    // }
   }
 
-  // Future<Response> getReferralData(
-  //     int page, int size, String? sort, String? orderBy, String? search) async {
-  //   Map<String, dynamic> queryParameters = Map<String, dynamic>();
-  //   queryParameters.addAll(<String, dynamic>{
-  //     "page": page,
-  //     "size": size,
-  //     "sort": sort,
-  //     "sortDirection": orderBy,
-  //     "search": search
-  //   });
-  //   return await apiClient.getData('$referralUrl?page=$page&size=$size');
-  //   // return await apiClient.getData('$askListUrl?page=$page&size=$size');
-  // }
+  // ── Fetch paginated one-to-one list ──
+  Future<Response> getOneToOneData(
+      int page, int size, String? sort, String? sortDirection) async {
+    return await apiClient.getData(
+        '$oneToOneListUrl?page=$page&size=$size&sort=$sort&sortDirection=$sortDirection');
+  }
+
+  // ── Posts (unchanged) ──
+  Future<Response> getPosts(
+      int page, int size, String? sort, String? orderBy, String? search) async {
+    return await apiClient.getData('$postsUrl?page=$page&size=$size');
+  }
 }

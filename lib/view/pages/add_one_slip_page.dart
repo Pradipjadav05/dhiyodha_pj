@@ -1,4 +1,5 @@
 import 'package:dhiyodha/model/response_model/members_list_response_model.dart';
+import 'package:dhiyodha/model/response_model/tyfcb_response_model.dart';
 import 'package:dhiyodha/utils/helper/routes.dart';
 import 'package:dhiyodha/utils/resource/app_colors.dart';
 import 'package:dhiyodha/utils/resource/app_dimensions.dart';
@@ -8,11 +9,15 @@ import 'package:dhiyodha/view/widgets/common_app_bar.dart';
 import 'package:dhiyodha/view/widgets/common_button.dart';
 import 'package:dhiyodha/view/widgets/common_snackbar.dart';
 import 'package:dhiyodha/view/widgets/common_text_form_field.dart';
+import 'package:dhiyodha/view/widgets/common_text_label.dart';
 import 'package:dhiyodha/viewModel/one_to_one_slip_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AddOneToOneSlipPage extends StatefulWidget {
+  const AddOneToOneSlipPage({Key? key}) : super(key: key);
+
+  @override
   AddOneToOneSlipPageState createState() => AddOneToOneSlipPageState();
 }
 
@@ -20,157 +25,10 @@ class AddOneToOneSlipPageState extends State<AddOneToOneSlipPage> {
   @override
   void initState() {
     super.initState();
-    Get.find<OneToOneSlipViewModel>().initData();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
-      backgroundColor: ghostWhite,
-      appBar: CommonAppBar(
-        title: Text("one_slip".tr,
-            style: fontBold.copyWith(
-                fontSize: fontSize18,
-                color: Theme.of(context).textTheme.bodyLarge!.color)),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(14.0),
-          child: GetBuilder<OneToOneSlipViewModel>(
-            builder: (ovm) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // SizedBox(height: paddingSize25),
-                  // InkWell(
-                  //   onTap: () async {},
-                  //   child: CommonTextFormField(
-                  //     hintText: "upload_photo".tr,
-                  //     hintColor: midnightBlue,
-                  //     textStyle: fontRegular.copyWith(
-                  //         color: midnightBlue, fontSize: fontSize14),
-                  //     suffixIcon: Image.asset(postUpload),
-                  //     padding: const EdgeInsets.symmetric(
-                  //         horizontal: paddingSize20, vertical: paddingSize20),
-                  //   ),
-                  // ),
-                  SizedBox(height: paddingSize25),
-                  InkWell(
-                    onTap: () async {
-                      MembersChildData childData =
-                          await Get.toNamed(Routes.getMembersPageRoute("true"));
-                      //ovm.selectedMemberId = childData.uuid ?? "";
-                      ovm.metWithController.text =
-                          '${childData.firstName} ${childData.lastName}';
-                    },
-                    child: CommonTextFormField(
-                        isEnabled: false,
-                        controller: ovm.metWithController,
-                        hintText: "met_with".tr,
-                        hintColor: midnightBlue,
-                        textStyle: fontRegular.copyWith(
-                            color: midnightBlue, fontSize: fontSize14),
-                        suffixIcon: Image.asset(searchBlue),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: paddingSize20,
-                            vertical: paddingSize20)),
-                  ),
-                  SizedBox(height: paddingSize25),
-                  // CommonDropDown(
-                  //     value: "initiated_by".tr,
-                  //     title: "",
-                  //     dataList: [],
-                  //     onChanged: (value) {}),
-                  // Container(
-                  //   padding: const EdgeInsets.symmetric(
-                  //       horizontal: paddingSize20, vertical: paddingSize5),
-                  //   decoration: BoxDecoration(
-                  //     color: lavenderMist,
-                  //     borderRadius: BorderRadius.circular(radius10),
-                  //     boxShadow: [
-                  //       BoxShadow(
-                  //           color: Colors.grey,
-                  //           spreadRadius: 0,
-                  //           blurRadius: 0,
-                  //           offset: const Offset(0, 0))
-                  //     ],
-                  //   ),
-                  //   child: DropdownButton(
-                  //       icon: Image.asset(
-                  //         dropDownArrow,
-                  //         width: 18.0,
-                  //         height: 18.0,
-                  //       ),
-                  //       underline: const SizedBox(),
-                  //       style: fontRegular.copyWith(
-                  //           color: midnightBlue, fontSize: fontSize14),
-                  //       value: ovm.selectedInitiatedBy,
-                  //       isExpanded: true,
-                  //       items: [
-                  //         DropdownMenuItem(
-                  //           child: Text(
-                  //             ovm.selectedInitiatedBy,
-                  //             style: fontRegular.copyWith(
-                  //                 color: midnightBlue, fontSize: fontSize14),
-                  //           ),
-                  //           value: ovm.selectedInitiatedBy,
-                  //         )
-                  //       ],
-                  //       onChanged: (val) {}),
-                  // ),
-                  // SizedBox(height: paddingSize25),
-                  CommonTextFormField(
-                    controller: ovm.whereMeetController,
-                    hintText: "where_meet".tr,
-                    textStyle: fontRegular.copyWith(
-                        color: midnightBlue, fontSize: fontSize14),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: paddingSize20, vertical: paddingSize20),
-                  ),
-                  SizedBox(height: paddingSize25),
-                  InkWell(
-                    onTap: () async {
-                      await ovm.selectDate(context);
-                    },
-                    child: CommonTextFormField(
-                      controller: ovm.whenMeetController,
-                      hintText: "select_date_time".tr,
-                      isEnabled: false,
-                      textStyle: fontRegular.copyWith(
-                          color: midnightBlue, fontSize: fontSize14),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: paddingSize20, vertical: paddingSize20),
-                    ),
-                  ),
-
-                  SizedBox(height: paddingSize25),
-                  CommonTextFormField(
-                    controller: ovm.conversionTopicController,
-                    maxLines: 4,
-                    hintText: "topics_of_conversation".tr,
-                    textStyle: fontRegular.copyWith(
-                        color: midnightBlue, fontSize: fontSize14),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: paddingSize20, vertical: paddingSize20),
-                  ),
-                  SizedBox(height: paddingSize25),
-                  CommonButton(
-                    buttonText: "confirm".tr,
-                    bgColor: midnightBlue,
-                    textColor: periwinkle,
-                    onPressed: () async {
-                      await _collectDataAndAddReferrals(ovm);
-                    },
-                  )
-                ],
-              );
-            },
-          ),
-        ),
-      ),
-    ));
+    // ✅ Defer initData to avoid setState during build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Get.find<OneToOneSlipViewModel>().initData();
+    });
   }
 
   @override
@@ -178,25 +36,231 @@ class AddOneToOneSlipPageState extends State<AddOneToOneSlipPage> {
     super.dispose();
   }
 
-  Future<void> _collectDataAndAddReferrals(OneToOneSlipViewModel ovm) async {
-    if (ovm.metWithController.text.isEmpty) {
-      showSnackBar("select_connected_with".tr);
-    } else if (ovm.whereMeetController.text.isEmpty) {
-      showSnackBar("select_meeting_location".tr);
-    } else if (ovm.whenMeetController.text.isEmpty) {
-      showSnackBar("select_meeting_date_time".tr);
-    } else if (ovm.conversionTopicController.text.isEmpty) {
-      showSnackBar("add_topic".tr);
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: ghostWhite,
+        appBar: CommonAppBar(
+          title: Text(
+            'one_to_one_slip'.tr,
+            style: fontBold.copyWith(
+                fontSize: fontSize18,
+                color: Theme.of(context).textTheme.bodyLarge!.color),
+          ),
+        ),
+        body: GetBuilder<OneToOneSlipViewModel>(
+          builder: (addOVM) {
+            return SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(14.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: paddingSize20),
+
+                    // ── Met With ──
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        CommonTextLabel(
+                          labelText: 'met_with'.tr,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: paddingSize25,
+                              vertical: paddingSize8),
+                        ),
+                        Expanded(child: Divider(height: 1.0, color: divider)),
+                      ],
+                    ),
+                    const SizedBox(height: paddingSize15),
+                    InkWell(
+                      onTap: () async {
+                        final MembersChildData childData = await Get.toNamed(
+                            Routes.getMembersPageRoute('true'));
+                        addOVM.metWithController.text =
+                            '${childData.firstName} ${childData.lastName}';
+                        setState(() {});
+                      },
+                      child: CommonTextFormField(
+                        isEnabled: false,
+                        controller: addOVM.metWithController,
+                        hintText: 'met_with'.tr,
+                        hintColor: midnightBlue,
+                        suffixIcon: Image.asset(search, color: bluishPurple),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: paddingSize20, vertical: paddingSize20),
+                      ),
+                    ),
+
+                    const SizedBox(height: paddingSize25),
+
+                    // ── Initiated By ──
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        CommonTextLabel(
+                          labelText: 'initiated_by'.tr,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: paddingSize25,
+                              vertical: paddingSize8),
+                        ),
+                        Expanded(child: Divider(height: 1.0, color: divider)),
+                      ],
+                    ),
+                    const SizedBox(height: paddingSize15),
+                    InkWell(
+                      onTap: () async {
+                        final MembersChildData childData = await Get.toNamed(
+                            Routes.getMembersPageRoute('true'));
+                        addOVM.selectedInitiatedBy = childData.uuid ?? '';
+                        setState(() {});
+                      },
+                      child: CommonTextFormField(
+                        isEnabled: false,
+                        controller: TextEditingController(
+                            text:
+                                addOVM.selectedInitiatedBy == 'Initiated By' ||
+                                        addOVM.selectedInitiatedBy.isEmpty
+                                    ? ''
+                                    : addOVM.selectedInitiatedBy),
+                        hintText: 'initiated_by'.tr,
+                        hintColor: midnightBlue,
+                        suffixIcon: Image.asset(search, color: bluishPurple),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: paddingSize20, vertical: paddingSize20),
+                      ),
+                    ),
+
+                    const SizedBox(height: paddingSize25),
+
+                    // ── Where ──
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        CommonTextLabel(
+                          labelText: 'where'.tr,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: paddingSize25,
+                              vertical: paddingSize8),
+                        ),
+                        Expanded(child: Divider(height: 1.0, color: divider)),
+                      ],
+                    ),
+                    const SizedBox(height: paddingSize15),
+                    CommonTextFormField(
+                      controller: addOVM.whereMeetController,
+                      hintText: 'where'.tr,
+                      hintColor: midnightBlue,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: paddingSize20, vertical: paddingSize20),
+                    ),
+
+                    const SizedBox(height: paddingSize25),
+
+                    // ── When ──
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        CommonTextLabel(
+                          labelText: 'when'.tr,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: paddingSize25,
+                              vertical: paddingSize8),
+                        ),
+                        Expanded(child: Divider(height: 1.0, color: divider)),
+                      ],
+                    ),
+                    const SizedBox(height: paddingSize15),
+                    InkWell(
+                      onTap: () async {
+                        await addOVM.selectDate(context);
+                        setState(() {});
+                      },
+                      child: CommonTextFormField(
+                        isEnabled: false,
+                        controller: addOVM.whenMeetController,
+                        hintText: 'when'.tr,
+                        hintColor: midnightBlue,
+                        suffixIcon: Icon(Icons.calendar_today,
+                            color: bluishPurple, size: iconSize18),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: paddingSize20, vertical: paddingSize20),
+                      ),
+                    ),
+
+                    const SizedBox(height: paddingSize25),
+
+                    // ── Conversation Topics ──
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        CommonTextLabel(
+                          labelText: 'topics_of_conversation'.tr,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: paddingSize25,
+                              vertical: paddingSize8),
+                        ),
+                        Expanded(child: Divider(height: 1.0, color: divider)),
+                      ],
+                    ),
+                    const SizedBox(height: paddingSize15),
+                    CommonTextFormField(
+                      controller: addOVM.conversionTopicController,
+                      hintText: 'topics_of_conversation'.tr,
+                      hintColor: midnightBlue,
+                      maxLines: 4,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: paddingSize20, vertical: paddingSize20),
+                    ),
+
+                    const SizedBox(height: paddingSize25),
+
+                    // ── Submit ──
+                    CommonButton(
+                      buttonText: 'confirm'.tr,
+                      bgColor: midnightBlue,
+                      textColor: periwinkle,
+                      onPressed: () async {
+                        await _submit(addOVM);
+                      },
+                    ),
+
+                    const SizedBox(height: paddingSize25),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Future<void> _submit(OneToOneSlipViewModel addOVM) async {
+    if (addOVM.metWithController.text.isEmpty) {
+      showSnackBar('select_met_with'.tr);
+    } else if (addOVM.selectedInitiatedBy == 'Initiated By' ||
+        addOVM.selectedInitiatedBy.isEmpty) {
+      showSnackBar('select_initiated_by'.tr);
+    } else if (addOVM.whereMeetController.text.isEmpty) {
+      showSnackBar('enter_where'.tr);
+    } else if (addOVM.whenMeetController.text.isEmpty) {
+      showSnackBar('select_when'.tr);
+    } else if (addOVM.conversionTopicController.text.isEmpty) {
+      showSnackBar('enter_topics'.tr);
     } else {
-      bool isSuccess = await ovm.addOneToOneData(
-          ovm.metWithController.text.toString(),
-          "SELF",
-          ovm.location,
-          ovm.whenMeetController.text.toString(),
-          ovm.conversionTopicController.text.toString());
+      final bool isSuccess = await addOVM.addOneToOneData(
+        addOVM.metWithController.text,
+        "SELF",
+        addOVM.location,
+        addOVM.whenMeetController.text,
+        addOVM.conversionTopicController.text,
+      );
+
       if (isSuccess) {
-        showSnackBar("one_to_one_added".tr, isError: false);
-        ovm.initData();
+        showSnackBar('one_to_one_added'.tr, isError: false);
+        Get.back();
       } else {
         showSnackBar('errorMessage'.tr);
       }

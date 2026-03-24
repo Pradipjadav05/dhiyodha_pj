@@ -54,8 +54,9 @@ class TyfcbPageState extends State<TyfcbPage> {
               tooltip: "Add TYFCBs",
               elevation: 4.0,
               backgroundColor: midnightBlue,
-              onPressed: () {
-                Get.toNamed(Routes.getAddTyPageRoute());
+              onPressed: () async {
+                await Get.toNamed(Routes.getAddTyPageRoute());
+                await getTyfcbData(0, 10, "", "", "");
               },
               child: Icon(
                 Icons.add,
