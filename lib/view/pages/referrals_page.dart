@@ -314,8 +314,8 @@ class ReferralsPageState extends State<ReferralsPage> {
           end: Alignment.bottomRight,
         ),
       ),
-      child: const Center(
-        child: Icon(Icons.person, color: Colors.white),
+      child: ClipOval(
+        child: Image.asset(profileImage, fit: BoxFit.cover),
       ),
     );
   }
