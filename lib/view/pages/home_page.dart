@@ -1372,8 +1372,14 @@ class HomePageState extends State<HomePage> {
               child: CommonCard(
                 elevation: 0.0,
                 bgColor: lavenderMist,
-                onTap: () {
-                  Get.toNamed(Routes.getReferralsPageRoute());
+                onTap: () async {
+                  final result =
+                      await Get.toNamed(Routes.getReferralsPageRoute());
+
+                  if (result == true) {
+                    await getDashboardData(homeVM.selectedDuration);
+                    setState(() {});
+                  }
                 },
                 cardChild: Padding(
                   padding: const EdgeInsets.only(
@@ -1645,6 +1651,7 @@ class HomePageState extends State<HomePage> {
                     homeVM.selectedData6month.value = true;
                     homeVM.selectedData12month.value = false;
                     homeVM.selectedDataLifeTime.value = false;
+                    homeVM.select6Month();
                     await getDashboardData("SIX_MONTH");
                     setState(() {});
                   },
@@ -1671,6 +1678,7 @@ class HomePageState extends State<HomePage> {
                     homeVM.selectedData6month.value = false;
                     homeVM.selectedData12month.value = true;
                     homeVM.selectedDataLifeTime.value = false;
+                    homeVM.select12Month();
                     await getDashboardData("ONE_YEAR");
                     setState(() {});
                   },
@@ -1697,6 +1705,7 @@ class HomePageState extends State<HomePage> {
                     homeVM.selectedData6month.value = false;
                     homeVM.selectedData12month.value = false;
                     homeVM.selectedDataLifeTime.value = true;
+                    homeVM.selectLifeTime();
                     await getDashboardData("ALL");
                     setState(() {});
                   },

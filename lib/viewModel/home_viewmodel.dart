@@ -8,6 +8,8 @@ import 'package:dhiyodha/utils/resource/app_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
+import '../model/response_model/referral_response_model.dart';
+
 class HomeViewModel extends GetxController implements GetxService {
   final HomeRepo homeRepo;
 
@@ -110,6 +112,10 @@ class HomeViewModel extends GetxController implements GetxService {
     if (position < 0) return total - 1;
     return position;
   }
+
+  List<ReferralChildData> referralGivenList = [];
+  List<ReferralChildData> referralReceivedList = [];
+  String selectedDuration = "SIX_MONTH";
 
   void updatePosition(int position) {
     currentDotPosition = _validPosition(position, bannerList.length);
@@ -310,6 +316,23 @@ class HomeViewModel extends GetxController implements GetxService {
         oneToOneCount = weekly['oneToOne']?['count'] ?? 0;
         trainingCount = weekly['training']?['count'] ?? 0;
         testimonialsCount = weekly['testimonials']?['count'] ?? 0;
+
+        referralGivenList = [];
+        referralReceivedList = [];
+
+        // GIVEN
+        if (weekly['referralGiven'] != null) {
+          for (var v in weekly['referralGiven']['list']) {
+            referralGivenList.add(_mapReferral(v));
+          }
+        }
+
+        // RECEIVED
+        if (weekly['referralReceived'] != null) {
+          for (var v in weekly['referralReceived']['list']) {
+            referralReceivedList.add(_mapReferral(v));
+          }
+        }
       }
 
       if (response.body['data']['stats'] != null) {
@@ -359,6 +382,23 @@ class HomeViewModel extends GetxController implements GetxService {
     }
 
     update();
+  }
+
+  ReferralChildData _mapReferral(Map<String, dynamic> json) {
+    return ReferralChildData(
+      uuid: json['userUuid'],
+      referralTo: ReferralUser(
+        uuid: json['userUuid'],
+        firstName: json['fullName']?.split(" ").first,
+        lastName: json['fullName']?.split(" ").length > 1
+            ? json['fullName']?.split(" ").last
+            : "",
+        profileUrl: json['profileImage'],
+      ),
+      telephone: json['number'],
+      comment: json['companyName'],
+      type: json['designation'],
+    );
   }
 
   Future<CurrentUserData> getCurrentUser() async {
@@ -412,5 +452,20 @@ class HomeViewModel extends GetxController implements GetxService {
 
   Future<bool> clearSharedPreferenceAndLogout() async {
     return homeRepo.clearSharedPreferenceAndLogout();
+  }
+
+  void select6Month() {
+    selectedDuration = "SIX_MONTH";
+    update();
+  }
+
+  void select12Month() {
+    selectedDuration = "ONE_YEAR";
+    update();
+  }
+
+  void selectLifeTime() {
+    selectedDuration = "ALL";
+    update();
   }
 }

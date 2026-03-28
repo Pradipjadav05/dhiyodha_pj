@@ -228,26 +228,28 @@ class MemberProfilePageState extends State<MemberProfilePage> {
               ),
             ),
             SizedBox(width: paddingSize15),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '${widget.membersChildData.firstName} ${widget.membersChildData.lastName}',
-                  style: fontBold.copyWith(
-                      fontSize: fontSize22, color: ghostWhite),
-                ),
-                Text(
-                  '${widget.membersChildData.organization?.businessCategory}',
-                  style: fontRegular.copyWith(
-                      fontSize: fontSize14, color: periwinkle),
-                ),
-                Text(
-                  '${widget.membersChildData.organization?.companyName}',
-                  style: fontRegular.copyWith(
-                      fontSize: fontSize14, color: lavenderMist),
-                ),
-              ],
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '${widget.membersChildData.firstName} ${widget.membersChildData.lastName}',
+                    style: fontBold.copyWith(
+                        fontSize: fontSize22, color: ghostWhite),
+                  ),
+                  Text(
+                    '${widget.membersChildData.organization?.businessCategory}',
+                    style: fontRegular.copyWith(
+                        fontSize: fontSize14, color: periwinkle),
+                  ),
+                  Text(
+                    '${widget.membersChildData.organization?.companyName}',
+                    style: fontRegular.copyWith(
+                        fontSize: fontSize14, color: lavenderMist),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

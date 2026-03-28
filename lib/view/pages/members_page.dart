@@ -95,7 +95,7 @@ class MembersPageState extends State<MembersPage>
             ),
           ),
           body: Obx(
-                () => FadeTransition(
+            () => FadeTransition(
               opacity: _fadeAnim,
               child: Column(
                 children: [
@@ -188,12 +188,12 @@ class MembersPageState extends State<MembersPage>
             borderRadius: BorderRadius.circular(10),
             boxShadow: isActive
                 ? [
-              BoxShadow(
-                color: midnightBlue.withOpacity(0.3),
-                blurRadius: 10,
-                offset: const Offset(0, 3),
-              ),
-            ]
+                    BoxShadow(
+                      color: midnightBlue.withOpacity(0.3),
+                      blurRadius: 10,
+                      offset: const Offset(0, 3),
+                    ),
+                  ]
                 : [],
           ),
           child: Center(
@@ -222,8 +222,7 @@ class MembersPageState extends State<MembersPage>
         // ── Member list ──
         Expanded(
           child: LoadMore(
-            isFinish:
-            membersVM.page.value == membersVM.totalPages.value,
+            isFinish: membersVM.page.value == membersVM.totalPages.value,
             whenEmptyLoad: true,
             delegate: const DefaultLoadMoreDelegate(),
             textBuilder: DefaultLoadMoreTextBuilder.english,
@@ -275,8 +274,7 @@ class MembersPageState extends State<MembersPage>
                 enabledBorder: InputBorder.none,
                 focusedBorder: InputBorder.none,
                 isDense: true,
-                contentPadding:
-                const EdgeInsets.symmetric(vertical: 10),
+                contentPadding: const EdgeInsets.symmetric(vertical: 10),
               ),
             ),
           ),
@@ -401,8 +399,7 @@ class MembersPageState extends State<MembersPage>
           borderRadius: BorderRadius.circular(16),
           splashColor: lavenderMist.withOpacity(0.4),
           child: Padding(
-            padding: const EdgeInsets.symmetric(
-                horizontal: 14, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
             child: Row(
               children: [
                 // Avatar
@@ -430,8 +427,7 @@ class MembersPageState extends State<MembersPage>
                         Row(
                           children: [
                             Icon(Icons.business_outlined,
-                                size: 12,
-                                color: greyText.withOpacity(0.7)),
+                                size: 12, color: greyText.withOpacity(0.7)),
                             const SizedBox(width: 4),
                             Expanded(
                               child: Text(
@@ -460,7 +456,7 @@ class MembersPageState extends State<MembersPage>
                     ),
                     child: Icon(
                       Icons.chevron_right_rounded,
-                      color: midnightBlue,
+                      color: bluishPurple,
                       size: 20,
                     ),
                   ),
@@ -510,12 +506,12 @@ class MembersPageState extends State<MembersPage>
       child: ClipOval(
         child: profileUrl != null && profileUrl.isNotEmpty
             ? CachedNetworkImage(
-          imageUrl: profileUrl,
-          height: 62.0,
-          width: 62.0,
-          fit: BoxFit.cover,
-          errorWidget: (context, url, error) => _placeholderAvatar(),
-        )
+                imageUrl: profileUrl,
+                height: 62.0,
+                width: 62.0,
+                fit: BoxFit.cover,
+                errorWidget: (context, url, error) => _placeholderAvatar(),
+              )
             : _placeholderAvatar(),
       ),
     );
@@ -545,28 +541,27 @@ class MembersPageState extends State<MembersPage>
     if (membersVM.isWorldWideListShow.value) {
       return membersVM.worldWiseMembersData.isNotEmpty
           ? ListView.builder(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-        itemCount: membersVM.worldWiseMembersData.length,
-        itemBuilder: (context, index) =>
-            _worldWideMemberItem(index, membersVM),
-      )
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+              itemCount: membersVM.worldWiseMembersData.length,
+              itemBuilder: (context, index) =>
+                  _worldWideMemberItem(index, membersVM),
+            )
           : Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.person_search_outlined,
-                size: 64,
-                color: midnightBlue.withOpacity(0.2)),
-            const SizedBox(height: 12),
-            Text(
-              'no_member_found'.tr,
-              style: fontRegular.copyWith(
-                  color: greyText, fontSize: fontSize14),
-            ),
-          ],
-        ),
-      );
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.person_search_outlined,
+                      size: 64, color: midnightBlue.withOpacity(0.2)),
+                  const SizedBox(height: 12),
+                  Text(
+                    'no_member_found'.tr,
+                    style: fontRegular.copyWith(
+                        color: greyText, fontSize: fontSize14),
+                  ),
+                ],
+              ),
+            );
     }
     return _worldWideSearchForm(membersVM);
   }
@@ -610,9 +605,8 @@ class MembersPageState extends State<MembersPage>
             label: 'select_state'.tr,
             icon: Icons.map_outlined,
             controller: _stateController,
-            options: membersVM.stateList
-                .where((s) => s != 'Select State')
-                .toList(),
+            options:
+                membersVM.stateList.where((s) => s != 'Select State').toList(),
             onSelected: (val) async {
               membersVM.selectedState = val;
               _cityController.clear();
@@ -629,9 +623,8 @@ class MembersPageState extends State<MembersPage>
             label: 'select_city'.tr,
             icon: Icons.location_city_outlined,
             controller: _cityController,
-            options: membersVM.cityList
-                .where((c) => c != 'Select City')
-                .toList(),
+            options:
+                membersVM.cityList.where((c) => c != 'Select City').toList(),
             onSelected: (val) {
               membersVM.selectedCity = val;
               setState(() {});
@@ -687,14 +680,14 @@ class MembersPageState extends State<MembersPage>
                 await _collectDataAndSearchMember(membersVM);
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: midnightBlue,
+                backgroundColor: bluishPurple,
                 foregroundColor: white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(14),
                 ),
                 elevation: 4,
-                shadowColor: midnightBlue.withOpacity(0.4),
+                shadowColor: bluishPurple.withOpacity(0.4),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -703,8 +696,8 @@ class MembersPageState extends State<MembersPage>
                   const SizedBox(width: 8),
                   Text(
                     'confirm'.tr,
-                    style: fontBold.copyWith(
-                        fontSize: fontSize16, color: white),
+                    style:
+                        fontBold.copyWith(fontSize: fontSize16, color: white),
                   ),
                 ],
               ),
@@ -737,7 +730,7 @@ class MembersPageState extends State<MembersPage>
       child: Row(
         children: [
           const SizedBox(width: 14),
-          Icon(icon, color: midnightBlue.withOpacity(0.5), size: 20),
+          Icon(icon, color: bluishPurple.withOpacity(0.5), size: 20),
           const SizedBox(width: 10),
           Expanded(
             child: TextField(
@@ -747,14 +740,12 @@ class MembersPageState extends State<MembersPage>
               decoration: InputDecoration(
                 hintText: hintText,
                 hintStyle: fontRegular.copyWith(
-                    color: midnightBlue.withOpacity(0.4),
-                    fontSize: fontSize14),
+                    color: midnightBlue.withOpacity(0.4), fontSize: fontSize14),
                 border: InputBorder.none,
                 enabledBorder: InputBorder.none,
                 focusedBorder: InputBorder.none,
                 isDense: true,
-                contentPadding:
-                const EdgeInsets.symmetric(vertical: 14),
+                contentPadding: const EdgeInsets.symmetric(vertical: 14),
               ),
             ),
           ),
@@ -783,11 +774,11 @@ class MembersPageState extends State<MembersPage>
         onSelected(selection);
       },
       fieldViewBuilder: (
-          BuildContext context,
-          TextEditingController fieldController,
-          FocusNode focusNode,
-          VoidCallback onFieldSubmitted,
-          ) {
+        BuildContext context,
+        TextEditingController fieldController,
+        FocusNode focusNode,
+        VoidCallback onFieldSubmitted,
+      ) {
         if (controller.text.isEmpty && fieldController.text.isNotEmpty) {
           fieldController.clear();
         }
@@ -799,9 +790,8 @@ class MembersPageState extends State<MembersPage>
               color: white,
               borderRadius: BorderRadius.circular(14),
               border: Border.all(
-                color: focusNode.hasFocus
-                    ? midnightBlue
-                    : const Color(0xFFE3E8F4),
+                color:
+                    focusNode.hasFocus ? midnightBlue : const Color(0xFFE3E8F4),
                 width: focusNode.hasFocus ? 1.8 : 1.5,
               ),
               boxShadow: [
@@ -819,8 +809,8 @@ class MembersPageState extends State<MembersPage>
                 const SizedBox(width: 14),
                 Icon(icon,
                     color: focusNode.hasFocus
-                        ? midnightBlue
-                        : midnightBlue.withOpacity(0.45),
+                        ? bluishPurple
+                        : bluishPurple.withOpacity(0.45),
                     size: 20),
                 const SizedBox(width: 10),
                 Expanded(
@@ -838,8 +828,7 @@ class MembersPageState extends State<MembersPage>
                       enabledBorder: InputBorder.none,
                       focusedBorder: InputBorder.none,
                       isDense: true,
-                      contentPadding:
-                      const EdgeInsets.symmetric(vertical: 14),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 14),
                     ),
                   ),
                 ),
@@ -850,7 +839,7 @@ class MembersPageState extends State<MembersPage>
                     duration: const Duration(milliseconds: 200),
                     child: Icon(
                       Icons.keyboard_arrow_down_rounded,
-                      color: midnightBlue.withOpacity(0.6),
+                      color: bluishPurple.withOpacity(0.6),
                       size: 22,
                     ),
                   ),
@@ -861,10 +850,10 @@ class MembersPageState extends State<MembersPage>
         );
       },
       optionsViewBuilder: (
-          BuildContext context,
-          AutocompleteOnSelected<String> onSelected,
-          Iterable<String> options,
-          ) {
+        BuildContext context,
+        AutocompleteOnSelected<String> onSelected,
+        Iterable<String> options,
+      ) {
         return Align(
           alignment: Alignment.topLeft,
           child: Material(
@@ -875,8 +864,7 @@ class MembersPageState extends State<MembersPage>
               decoration: BoxDecoration(
                 color: white,
                 borderRadius: BorderRadius.circular(14),
-                border:
-                Border.all(color: const Color(0xFFE3E8F4), width: 1.5),
+                border: Border.all(color: const Color(0xFFE3E8F4), width: 1.5),
                 boxShadow: [
                   BoxShadow(
                     color: midnightBlue.withOpacity(0.1),
@@ -909,13 +897,9 @@ class MembersPageState extends State<MembersPage>
                               child: Text(
                                 option,
                                 style: fontRegular.copyWith(
-                                    color: midnightBlue,
-                                    fontSize: fontSize14),
+                                    color: bluishPurple, fontSize: fontSize14),
                               ),
                             ),
-                            Icon(Icons.check_rounded,
-                                size: 16,
-                                color: midnightBlue.withOpacity(0.3)),
                           ],
                         ),
                       ),
@@ -937,19 +921,8 @@ class MembersPageState extends State<MembersPage>
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [midnightBlue, const Color(0xFF2D5FA5)],
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-            ),
+            color: bluishPurple,
             borderRadius: BorderRadius.circular(8),
-            boxShadow: [
-              BoxShadow(
-                color: midnightBlue.withOpacity(0.25),
-                blurRadius: 8,
-                offset: const Offset(0, 3),
-              ),
-            ],
           ),
           child: Text(
             label,
@@ -981,24 +954,24 @@ class MembersPageState extends State<MembersPage>
   Future<void> _collectDataAndSearchMember(MembersViewmodel membersVM) async {
     await membersVM.getWorldWideSearchedUsersOrMembers(
       membersVM.selectedCity != 'Select City' &&
-          membersVM.selectedCity.toString().isNotEmpty
+              membersVM.selectedCity.toString().isNotEmpty
           ? membersVM.selectedCity
           : '',
       membersVM.selectedState != 'Select State' &&
-          membersVM.selectedState.toString().isNotEmpty
+              membersVM.selectedState.toString().isNotEmpty
           ? membersVM.selectedState
           : '',
       membersVM.selectedCountry != 'Select Country' &&
-          membersVM.selectedCountry.toString().isNotEmpty
+              membersVM.selectedCountry.toString().isNotEmpty
           ? membersVM.selectedCountry
           : '',
       membersVM.memberNameController.text,
       membersVM.selectedBusinessCategory.toString().isNotEmpty &&
-          membersVM.selectedBusinessCategory != membersVM.businessCatList[0]
+              membersVM.selectedBusinessCategory != membersVM.businessCatList[0]
           ? membersVM.selectedBusinessCategory.toString().toUpperCase()
           : '',
       membersVM.selectedChapter != 'Select Chapter' &&
-          membersVM.selectedChapter.toString().isNotEmpty
+              membersVM.selectedChapter.toString().isNotEmpty
           ? membersVM.selectedChapter
           : '',
     );

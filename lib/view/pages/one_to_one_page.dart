@@ -92,7 +92,7 @@ class OneToOnePageState extends State<OneToOnePage>
       ),
       tooltip: "Add One-to-One",
       elevation: 6,
-      backgroundColor: midnightBlue,
+      backgroundColor: bluishPurple,
       onPressed: () async {
         await Get.toNamed(Routes.getAddOneToOnePageRoute());
         await _fetchData();
@@ -107,7 +107,7 @@ class OneToOnePageState extends State<OneToOnePage>
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.people_outline_rounded,
-              size: 72, color: midnightBlue.withOpacity(0.18)),
+              size: 72, color: bluishPurple.withOpacity(0.18)),
           const SizedBox(height: 14),
           Text(
             'No records found',
@@ -420,11 +420,11 @@ class OneToOnePageState extends State<OneToOnePage>
       width: 34,
       height: 34,
       decoration: BoxDecoration(
-        color: midnightBlue.withOpacity(0.08),
+        color: bluishPurple.withOpacity(0.08),
         borderRadius: BorderRadius.circular(9),
       ),
       child: Center(
-        child: Image.asset(assetPath, height: iconSize18, width: iconSize18,  color: midnightBlue),
+        child: Image.asset(assetPath, height: iconSize18, width: iconSize18,  color: bluishPurple),
       ),
     );
   }

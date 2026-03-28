@@ -94,7 +94,7 @@ class TyfcbPageState extends State<TyfcbPage>
       ),
       tooltip: "Add TYFCBs",
       elevation: 6,
-      backgroundColor: midnightBlue,
+      backgroundColor: bluishPurple,
       onPressed: () async {
         await Get.toNamed(Routes.getAddTyPageRoute());
         await getTyfcbData(0, 10, "", "", "");
@@ -109,7 +109,7 @@ class TyfcbPageState extends State<TyfcbPage>
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.handshake_outlined,
-              size: 72, color: midnightBlue.withOpacity(0.18)),
+              size: 72, color: bluishPurple.withOpacity(0.18)),
           const SizedBox(height: 14),
           Text(
             'No TYFCBs yet',
@@ -197,7 +197,7 @@ class TyfcbPageState extends State<TyfcbPage>
                       isExpanded ? nextArrow : dropDownArrow,
                       height: iconSize18,
                       width: iconSize18,
-                      color: midnightBlue,
+                      color: bluishPurple,
                     ),
                   ],
                 ),
@@ -313,19 +313,19 @@ class TyfcbPageState extends State<TyfcbPage>
           assetPath: company,
           label: 'Business Type',
           value: tyfcbData.businessType ?? '—',
-          assetColor: midnightBlue,
+          assetColor: bluishPurple,
         ),
         _divider(),
         _detailRow(
           assetPath: referralsBlue,
           label: 'Referral Type',
           value: tyfcbData.referralType ?? '—',
-          assetColor: midnightBlue,
+          assetColor: bluishPurple,
         ),
         _divider(),
         _detailRow(
           assetPath: postComment,
-          assetColor: midnightBlue,
+          assetColor: bluishPurple,
           label: 'Comments',
           value: tyfcbData.comments ?? '—',
         ),

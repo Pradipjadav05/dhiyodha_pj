@@ -1,78 +1,93 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dhiyodha/model/response_model/referral_response_model.dart';
-import 'package:dhiyodha/utils/helper/routes.dart';
-import 'package:dhiyodha/utils/resource/app_colors.dart';
-import 'package:dhiyodha/utils/resource/app_dimensions.dart';
-import 'package:dhiyodha/utils/resource/app_font_size.dart';
-import 'package:dhiyodha/utils/resource/app_media_assets.dart';
-import 'package:dhiyodha/view/widgets/common_app_bar.dart';
-import 'package:dhiyodha/viewModel/referral_slip_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../../model/response_model/referral_response_model.dart';
+import '../../utils/helper/routes.dart';
+import '../../utils/resource/app_colors.dart';
+import '../../utils/resource/app_dimensions.dart';
+import '../../utils/resource/app_font_size.dart';
+import '../../utils/resource/app_media_assets.dart';
+import '../../view/widgets/common_app_bar.dart';
+import '../../viewModel/home_viewmodel.dart';
 
 class ReferralsPage extends StatefulWidget {
   @override
   ReferralsPageState createState() => ReferralsPageState();
 }
 
-class ReferralsPageState extends State<ReferralsPage>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _animController;
-  late Animation<double> _fadeAnim;
-
+class ReferralsPageState extends State<ReferralsPage> {
   final Map<int, bool> _expandedMap = {};
+
+  final RxBool isGivenTab = true.obs;
 
   @override
   void initState() {
     super.initState();
-    _animController = AnimationController(
-      duration: const Duration(milliseconds: 400),
-      vsync: this,
-    );
-    _fadeAnim =
-        CurvedAnimation(parent: _animController, curve: Curves.easeOut);
-    _animController.forward();
-    getReferralData(0, 10, "", "", "");
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      getReferralData();
+    });
   }
 
-  Future<void> getReferralData(
-      int page, int size, String? sort, String? orderBy, String? search) async {
-    await Get.find<ReferralSlipViewModel>()
-        .getReferralData(page, size, sort, orderBy, search);
-  }
+  Future<void> getReferralData() async {
+    final homeVM = Get.find<HomeViewModel>();
 
-  @override
-  void dispose() {
-    _animController.dispose();
-    super.dispose();
+    await homeVM.dashboardData(homeVM.selectedDuration);
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: GetBuilder<ReferralSlipViewModel>(builder: (rVM) {
-        return Scaffold(
-          backgroundColor: const Color(0xFFF4F6FB),
-          appBar: CommonAppBar(
-            title: Text(
-              "Referrals".tr,
-              style: fontBold.copyWith(
-                fontSize: fontSize18,
-                color: Theme.of(context).textTheme.bodyLarge!.color,
+      child: GetBuilder<HomeViewModel>(builder: (homeVM) {
+        return WillPopScope(
+          onWillPop: () async {
+            Get.back(result: true);
+            return false;
+          },
+          child: Scaffold(
+            backgroundColor: const Color(0xFFF4F6FB),
+            appBar: CommonAppBar(
+              title: Text(
+                "Referrals".tr,
+                style: fontBold.copyWith(
+                  fontSize: fontSize18,
+                  color: Theme.of(context).textTheme.bodyLarge!.color,
+                ),
               ),
             ),
-          ),
-          floatingActionButton: _buildFAB(rVM),
-          body: FadeTransition(
-            opacity: _fadeAnim,
-            child: rVM.referralDataList.isEmpty
-                ? _buildEmptyState()
-                : ListView.builder(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 100),
-              itemCount: rVM.referralDataList.length,
-              itemBuilder: (context, index) {
-                return _referralCard(index, rVM);
+            floatingActionButton: FloatingActionButton(
+              backgroundColor: bluishPurple,
+              onPressed: () async {
+                final result = await Get.toNamed(Routes.getAddSlipPageRoute());
+
+                if (result == true) {
+                  await getReferralData();
+                }
               },
+              child: const Icon(Icons.add, color: Colors.white),
+            ),
+            body: Column(
+              children: [
+                Visibility(
+                  visible: homeVM.isLoading,
+                  child: LinearProgressIndicator(
+                    color: midnightBlue,
+                    backgroundColor: lavenderMist,
+                    borderRadius: BorderRadius.circular(radius20),
+                  ),
+                ),
+                _buildTabSwitcher(),
+                Expanded(
+                  child: homeVM.isLoading
+                      ? const Center(child: CircularProgressIndicator())
+                      : Obx(() {
+                          return isGivenTab.value
+                              ? _buildList(homeVM.referralGivenList)
+                              : _buildList(homeVM.referralReceivedList);
+                        }),
+                ),
+              ],
             ),
           ),
         );
@@ -80,52 +95,106 @@ class ReferralsPageState extends State<ReferralsPage>
     );
   }
 
-  Widget _buildFAB(ReferralSlipViewModel rVM) {
-    return FloatingActionButton(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
-      tooltip: "Add Referrals",
-      elevation: 6,
-      backgroundColor: midnightBlue,
-      onPressed: () async {
-        await Get.toNamed(Routes.getAddSlipPageRoute());
-        await getReferralData(0, 10, "", "", "");
-      },
-      child: const Icon(Icons.add_rounded, color: Colors.white, size: 28),
-    );
-  }
-
-  Widget _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.share_outlined,
-              size: 72, color: midnightBlue.withOpacity(0.18)),
-          const SizedBox(height: 14),
-          Text(
-            'No Referrals yet',
-            style: fontMedium.copyWith(color: greyText, fontSize: fontSize16),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            'Tap + to add your first Referral',
-            style: fontRegular.copyWith(
-                color: greyText.withOpacity(0.7), fontSize: fontSize13),
+  Widget _buildTabSwitcher() {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 14, 16, 6),
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: const Color(0xFFE3E8F4),
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.06),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
+      child: Obx(() {
+        return Row(
+          children: [
+            _tabPill(
+              label: "Given",
+              isActive: isGivenTab.value,
+              onTap: () async {
+                isGivenTab.value = true;
+                await getReferralData();
+              },
+            ),
+            _tabPill(
+              label: "Received",
+              isActive: !isGivenTab.value,
+              onTap: () async {
+                isGivenTab.value = false;
+                await getReferralData();
+              },
+            ),
+          ],
+        );
+      }),
     );
   }
 
-  Widget _referralCard(int index, ReferralSlipViewModel rVM) {
-    final ReferralChildData data = rVM.referralDataList[index];
+  Widget _tabPill({
+    required String label,
+    required bool isActive,
+    required VoidCallback onTap,
+  }) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 250),
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          decoration: BoxDecoration(
+            color: isActive ? midnightBlue : Colors.transparent,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: isActive
+                ? [
+                    BoxShadow(
+                      color: midnightBlue.withOpacity(0.3),
+                      blurRadius: 10,
+                      offset: const Offset(0, 3),
+                    ),
+                  ]
+                : [],
+          ),
+          child: Center(
+            child: Text(
+              label,
+              style: fontRegular.copyWith(
+                color: isActive ? white : const Color(0xFF6B7BA4),
+                fontSize: fontSize14,
+                fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildList(List<ReferralChildData> list) {
+    if (list.isEmpty) {
+      return const Center(child: Text("No Data"));
+    }
+
+    return ListView.builder(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 100),
+      itemCount: list.length,
+      itemBuilder: (context, index) {
+        return _referralCard(index, list);
+      },
+    );
+  }
+
+  Widget _referralCard(int index, List<ReferralChildData> list) {
+    final data = list[index];
     final bool isExpanded = _expandedMap[index] ?? false;
+
     final String fullName =
-    '${data.referralTo?.firstName ?? ""} ${data.referralTo?.lastName ?? ""}'
-        .trim();
-    final String? profileUrl = data.referralTo?.profileUrl;
+        '${data.referralTo?.firstName ?? ""} ${data.referralTo?.lastName ?? ""}'
+            .trim();
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -145,40 +214,29 @@ class ReferralsPageState extends State<ReferralsPage>
         borderRadius: BorderRadius.circular(18),
         child: Column(
           children: [
-            // ── Header row ──
             InkWell(
-              onTap: () => setState(() {
-                _expandedMap[index] = !isExpanded;
-              }),
-              borderRadius: BorderRadius.only(
-                topLeft: const Radius.circular(18),
-                topRight: const Radius.circular(18),
-                bottomLeft: Radius.circular(isExpanded ? 0 : 18),
-                bottomRight: Radius.circular(isExpanded ? 0 : 18),
-              ),
-              splashColor: lavenderMist.withOpacity(0.4),
+              onTap: () {
+                setState(() {
+                  _expandedMap[index] = !isExpanded;
+                });
+              },
               child: Padding(
                 padding:
-                const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                 child: Row(
                   children: [
-                    // ── Circular profile image ──
-                    _profileAvatar(profileUrl),
+                    _profileAvatar(data.referralTo?.profileUrl),
                     const SizedBox(width: 14),
-
-                    // ── Name + type badge ──
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            fullName.isNotEmpty ? fullName : 'Unknown',
-                            style: fontBold.copyWith(
-                              fontSize: fontSize16,
-                              color: midnightBlue,
-                              letterSpacing: 0.1,
-                            ),
-                          ),
+                          Text(fullName,
+                              style: fontBold.copyWith(
+                                fontSize: fontSize16,
+                                color: midnightBlue,
+                                letterSpacing: 0.1,
+                              )),
                           const SizedBox(height: 5),
                           _typeBadge(data.type ?? ""),
                         ],
@@ -190,7 +248,7 @@ class ReferralsPageState extends State<ReferralsPage>
                       isExpanded ? nextArrow : dropDownArrow,
                       height: iconSize18,
                       width: iconSize18,
-                      color: midnightBlue,
+                      color: bluishPurple,
                     ),
                   ],
                 ),
@@ -230,12 +288,17 @@ class ReferralsPageState extends State<ReferralsPage>
       child: ClipOval(
         child: profileUrl != null && profileUrl.isNotEmpty
             ? CachedNetworkImage(
-          imageUrl: profileUrl,
-          width: 58,
-          height: 58,
-          fit: BoxFit.cover,
-          errorWidget: (context, url, error) => _avatarFallback(),
-        )
+                imageUrl: profileUrl,
+                fit: BoxFit.cover,
+                placeholder: (context, url) => const Center(
+                  child: SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                ),
+                errorWidget: (context, url, error) => _avatarFallback(),
+              )
             : _avatarFallback(),
       ),
     );
@@ -243,8 +306,6 @@ class ReferralsPageState extends State<ReferralsPage>
 
   Widget _avatarFallback() {
     return Container(
-      width: 58,
-      height: 58,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         gradient: LinearGradient(
@@ -253,9 +314,8 @@ class ReferralsPageState extends State<ReferralsPage>
           end: Alignment.bottomRight,
         ),
       ),
-      child: ClipOval(
-        child: Image.asset(profileImage,
-            width: 58, height: 58, fit: BoxFit.cover),
+      child: const Center(
+        child: Icon(Icons.person, color: Colors.white),
       ),
     );
   }
@@ -298,7 +358,7 @@ class ReferralsPageState extends State<ReferralsPage>
         _detailRow(
           assetPath: company,
           label: 'Company Name',
-          value:  'Alphabit Infoway',
+          value: 'Alphabit Infoway',
         ),
         _divider(),
         _detailRow(
@@ -311,8 +371,8 @@ class ReferralsPageState extends State<ReferralsPage>
           assetPath: vCard,
           label: 'V-Card',
           value:
-          '${data.referralTo?.firstName ?? ""} ${data.referralTo?.lastName ?? ""}'
-              .trim(),
+              '${data.referralTo?.firstName ?? ""} ${data.referralTo?.lastName ?? ""}'
+                  .trim(),
         ),
       ],
     );
@@ -341,7 +401,7 @@ class ReferralsPageState extends State<ReferralsPage>
                 assetPath,
                 height: iconSize18,
                 width: iconSize18,
-                color: midnightBlue,
+                color: bluishPurple,
               ),
             ),
           ),
