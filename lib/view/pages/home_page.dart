@@ -855,7 +855,6 @@ class HomePageState extends State<HomePage> {
                                 if (isSuccess) {
                                   showSnackBar("post_deleted".tr,
                                       isError: false);
-                                  await callPostOrMyPostAPI(homeVM);
                                 } else {
                                   showSnackBar("errorMessage".tr);
                                 }
@@ -866,7 +865,6 @@ class HomePageState extends State<HomePage> {
                                 if (isSuccess) {
                                   showSnackBar("post_deleted".tr,
                                       isError: false);
-                                  await callPostOrMyPostAPI(homeVM);
                                 } else {
                                   showSnackBar("errorMessage".tr);
                                 }
@@ -1893,16 +1891,6 @@ class HomePageState extends State<HomePage> {
 
   _postListItems(int index, HomeViewModel homeVM) {
     PostChildData data = homeVM.postData[index];
-    if (data.likes != null) {
-      if (data.likes!.isNotEmpty) {
-        data.likes!.forEach((likess) {
-          if (likess.userId == globalCurrentUserData.uuid) {
-            data.isPostLiked = true;
-            data.likeIconPath = liked;
-          }
-        });
-      }
-    }
     return Padding(
       padding: const EdgeInsets.all(paddingSize5),
       child: CommonCard(
@@ -1920,7 +1908,6 @@ class HomePageState extends State<HomePage> {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(21),
-                    // half of 42 for perfect circle
                     child: data.profileUrl != null &&
                             data.profileUrl!.isNotEmpty
                         ? CachedNetworkImage(
@@ -1928,10 +1915,8 @@ class HomePageState extends State<HomePage> {
                             width: 42.0,
                             height: 42.0,
                             fit: BoxFit.cover,
-                            placeholder: (context, url) => SizedBox(
-                              width: 42.0,
-                              height: 42.0,
-                            ),
+                            placeholder: (context, url) =>
+                                SizedBox(width: 42.0, height: 42.0),
                             errorWidget: (context, url, error) => Image.asset(
                               profileImage,
                               width: 42.0,
@@ -2087,40 +2072,39 @@ class HomePageState extends State<HomePage> {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  InkWell(
-                    onTap: () async {
-                      Response response = await homeVM.likeOnPost(data);
-                      if (response.statusCode == 201) {
-                        showSnackBar(response.body['message'], isError: false);
-                        await callPostOrMyPostAPI(homeVM);
-                      } else {
-                        showSnackBar(response.body['message']);
-                      }
-                    },
-                    customBorder: const CircleBorder(),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          data.isLikeLoading
-                              ? CircularProgressIndicator()
-                              : Image.asset(
-                                  data.likeIconPath,
-                                  height: iconSize28,
-                                  width: iconSize28,
-                                ),
-                          SizedBox(width: 4.0),
-                          Text(
-                            data.likesCounter.toString(),
-                            style: fontRegular.copyWith(
-                                fontSize: fontSize12, color: greyText),
-                          )
-                        ],
+                  GetBuilder<HomeViewModel>(builder: (_) {
+                    return InkWell(
+                      onTap: () async {
+                        Response response = await homeVM.likeOnPost(data);
+                        if (response.statusCode != 201) {
+                          showSnackBar(response.body['message']);
+                        }
+                      },
+                      customBorder: const CircleBorder(),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            data.isLikeLoading
+                                ? const CircularProgressIndicator()
+                                : Image.asset(
+                                    data.isPostLiked ? liked : like,
+                                    height: iconSize28,
+                                    width: iconSize28,
+                                  ),
+                            const SizedBox(width: 4.0),
+                            Text(
+                              (data.likesCounter ?? 0).toString(),
+                              style: fontRegular.copyWith(
+                                  fontSize: fontSize12, color: greyText),
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                  ),
+                    );
+                  }),
                   InkWell(
                     customBorder: const CircleBorder(),
                     onTap: () async {
@@ -2160,10 +2144,9 @@ class HomePageState extends State<HomePage> {
                         final bytes = resp.bodyBytes;
                         final temp = await getTemporaryDirectory();
                         final path = '${temp.path}/image.jpg';
-                        XFile image;
                         File file = File(path);
                         file.writeAsBytesSync(bytes);
-                        image = XFile(file.path);
+                        XFile image = XFile(file.path);
                         await Share.shareXFiles([image], text: shareString);
                         // final response = await Share.share(shareString);
                         // await Share.shareUri(Uri.parse(data.imageUrl.toString()));
@@ -2492,7 +2475,6 @@ class HomePageState extends State<HomePage> {
                                         showSnackBar("added_comments".tr,
                                             isError: false);
                                         homeVM.commentController.text = "";
-                                        await callPostOrMyPostAPI(homeVM);
                                       } else {
                                         showSnackBar('errorMessage'.tr);
                                       }
@@ -2522,9 +2504,9 @@ class HomePageState extends State<HomePage> {
 
   Future<void> callInitAPIs() async {
     await Get.find<HomeViewModel>().initData();
+    await getCurrentUser(Get.find<HomeViewModel>());
     await callPostOrMyPostAPI(Get.find<HomeViewModel>());
     await getDashboardData("ALL");
-    await getCurrentUser(Get.find<HomeViewModel>());
   }
 
   Future<void> getPosts(

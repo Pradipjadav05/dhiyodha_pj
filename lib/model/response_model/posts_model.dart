@@ -77,7 +77,6 @@ class PostChildData {
   bool? active;
   String? postUuid;
 
-  String likeIconPath = like;
   bool isLikeLoading = false;
   bool isPostLiked = false;
 

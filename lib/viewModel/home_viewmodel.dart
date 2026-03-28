@@ -13,9 +13,7 @@ import '../model/response_model/referral_response_model.dart';
 class HomeViewModel extends GetxController implements GetxService {
   final HomeRepo homeRepo;
 
-  HomeViewModel({required this.homeRepo}) {
-    // _notification = loginRepo.isNotificationActive();
-  }
+  HomeViewModel({required this.homeRepo});
 
   RxInt _page = 0.obs;
   RxInt _size = 10.obs;
@@ -47,75 +45,56 @@ class HomeViewModel extends GetxController implements GetxService {
 
   CarouselSliderController get controller => _controller;
 
-  set controller(CarouselSliderController value) {
-    _controller = value;
-  }
+  set controller(CarouselSliderController value) => _controller = value;
 
   int get currentDotPosition => _currentDotPosition;
 
-  set currentDotPosition(int value) {
-    _currentDotPosition = value;
-  }
+  set currentDotPosition(int value) => _currentDotPosition = value;
 
   RxBool get isAllPost => _isAllPost;
 
-  set isAllPost(RxBool value) {
-    _isAllPost = value;
-  }
+  set isAllPost(RxBool value) => _isAllPost = value;
 
   RxInt get totalPages => _totalPages;
 
-  set totalPages(RxInt value) {
-    _totalPages = value;
-  }
+  set totalPages(RxInt value) => _totalPages = value;
 
   RxInt get page => _page;
 
-  set page(RxInt value) {
-    _page = value;
-  }
+  set page(RxInt value) => _page = value;
 
   RxInt get size => _size;
 
-  set size(RxInt value) {
-    _size = value;
-  }
+  set size(RxInt value) => _size = value;
 
   TextEditingController get commentController => _commentController;
 
-  set commentController(TextEditingController value) {
-    _commentController = value;
-  }
+  set commentController(TextEditingController value) =>
+      _commentController = value;
 
   CurrentUserData get currentUserData => _currentUserData;
 
-  set currentUserData(CurrentUserData value) {
-    _currentUserData = value;
-  }
+  set currentUserData(CurrentUserData value) => _currentUserData = value;
 
   List<Documents> get guestBannerList => _guestBannerList;
 
-  set guestBannerList(List<Documents> value) {
-    _guestBannerList = value;
-  }
+  set guestBannerList(List<Documents> value) => _guestBannerList = value;
 
   List<Documents> get bannerList => _bannerList;
 
-  set bannerList(List<Documents> value) {
-    _bannerList = value;
-  }
+  set bannerList(List<Documents> value) => _bannerList = value;
 
   List<Stats> get statsList => _statsList;
+
+  List<ReferralChildData> referralGivenList = [];
+  List<ReferralChildData> referralReceivedList = [];
+  String selectedDuration = "SIX_MONTH";
 
   int _validPosition(int position, int total) {
     if (position >= total) return 0;
     if (position < 0) return total - 1;
     return position;
   }
-
-  List<ReferralChildData> referralGivenList = [];
-  List<ReferralChildData> referralReceivedList = [];
-  String selectedDuration = "SIX_MONTH";
 
   void updatePosition(int position) {
     currentDotPosition = _validPosition(position, bannerList.length);
@@ -158,64 +137,46 @@ class HomeViewModel extends GetxController implements GetxService {
 
   RxInt get selectedIndex => _selectedIndex;
 
-  set selectedIndex(RxInt value) {
-    _selectedIndex = value;
-  }
+  set selectedIndex(RxInt value) => _selectedIndex = value;
 
   List<PostChildData> get postData => _postData;
 
-  set postData(List<PostChildData> value) {
-    _postData = value;
-  }
+  set postData(List<PostChildData> value) => _postData = value;
 
   RxBool get isAllPostPage => _isAllPostPage;
 
-  set isAllPostPage(RxBool value) {
-    _isAllPostPage = value;
-  }
+  set isAllPostPage(RxBool value) => _isAllPostPage = value;
 
   bool get isLoading => _isLoading;
 
-  set isLoading(bool value) {
-    _isLoading = value;
-  }
+  set isLoading(bool value) => _isLoading = value;
 
   get selectedDataLifeTime => _selectedDataLifeTime;
 
-  set selectedDataLifeTime(value) {
-    _selectedDataLifeTime = value;
-  }
+  set selectedDataLifeTime(value) => _selectedDataLifeTime = value;
 
   get selectedData12month => _selectedData12month;
 
-  set selectedData12month(value) {
-    _selectedData12month = value;
-  }
+  set selectedData12month(value) => _selectedData12month = value;
 
   RxBool get selectedData6month => _selectedData6month;
 
-  set selectedData6month(RxBool value) {
-    _selectedData6month = value;
-  }
+  set selectedData6month(RxBool value) => _selectedData6month = value;
 
   bool get isCommentLoading => _isCommentLoading;
 
   NextMeeting? get nextMeeting => _nextMeeting;
 
-  set nextMeeting(NextMeeting? value) {
-    _nextMeeting = value;
-  }
+  set nextMeeting(NextMeeting? value) => _nextMeeting = value;
 
   List<String> get reelList => _reelList;
 
-  set reelList(List<String> value) {
-    _reelList = value;
-  }
+  set reelList(List<String> value) => _reelList = value;
 
   Future<bool> loadMore() async {
     if (page.value < totalPages.value) {
       page.value += 1;
-      if(isAllPost.value == false) {
+      if (isAllPost.value == false) {
         await getMyPosts();
       } else {
         await getPosts(page.value, size.value, "", "", "");
@@ -224,6 +185,12 @@ class HomeViewModel extends GetxController implements GetxService {
     } else {
       return false;
     }
+  }
+
+  void _setLikeState(PostChildData postChildData) {
+    postChildData.isPostLiked = postChildData.likes
+            ?.any((l) => l.userId == globalCurrentUserData.uuid) ??
+        false;
   }
 
   Future<void> getPosts(
@@ -236,6 +203,7 @@ class HomeViewModel extends GetxController implements GetxService {
     if (response.statusCode == 200) {
       response.body['data']['data'].forEach((order) {
         PostChildData postChildData = PostChildData.fromJson(order);
+        _setLikeState(postChildData);
         _postData.add(postChildData);
       });
       totalPages.value = (response.body['data']['total'] / size).round();
@@ -255,9 +223,9 @@ class HomeViewModel extends GetxController implements GetxService {
         _postData = [];
         response.body['data'].forEach((order) {
           PostChildData postChildData = PostChildData.fromJson(order);
+          _setLikeState(postChildData);
           _postData.add(postChildData);
         });
-        //totalPages.value = (response.body['data']['total'] / size).round();
       } catch (e) {
         ApiChecker.checkApi(response);
         update();
@@ -269,17 +237,20 @@ class HomeViewModel extends GetxController implements GetxService {
   }
 
   Future<Response> likeOnPost(PostChildData postChildData) async {
-    postChildData.isLikeLoading = true;
+    final wasLiked = postChildData.isPostLiked;
+    final prevCount = postChildData.likesCounter ?? 0;
+
+    postChildData.isPostLiked = !wasLiked;
+    postChildData.likesCounter = !wasLiked ? prevCount + 1 : prevCount - 1;
     update();
-    bool isSuccess = false;
+
     Response response = await homeRepo.likeOnPost(postChildData.postUuid ?? "");
-    postChildData.isLikeLoading = false;
-    if (response.statusCode == 201) {
-      isSuccess = true;
-    } else {
-      isSuccess = false;
+
+    if (response.statusCode != 201) {
+      postChildData.isPostLiked = wasLiked;
+      postChildData.likesCounter = prevCount;
+      update();
     }
-    update();
     return response;
   }
 
@@ -287,17 +258,28 @@ class HomeViewModel extends GetxController implements GetxService {
       String postUuid, String parentCommentId, String comment) async {
     _isCommentLoading = true;
     update();
-    bool isSuccess = false;
+
     Response response =
         await homeRepo.commentOnPost(postUuid, parentCommentId, comment);
     _isCommentLoading = false;
+
     if (response.statusCode == 201) {
-      isSuccess = true;
-    } else {
-      isSuccess = false;
+      final post = _postData.firstWhereOrNull((p) => p.postUuid == postUuid);
+      if (post != null) {
+        post.comments ??= [];
+        post.comments!.add(Comments(
+          commentUuid: response.body['data']?['commentUuid'] ?? '',
+          comment: comment,
+          userId: globalCurrentUserData.uuid,
+          createdAt: DateTime.now().toIso8601String(),
+        ));
+        post.commentsCounter = (post.commentsCounter ?? 0) + 1;
+      }
+      update();
+      return true;
     }
     update();
-    return isSuccess;
+    return false;
   }
 
   Future<void> dashboardData(String duration) async {
@@ -306,10 +288,8 @@ class HomeViewModel extends GetxController implements GetxService {
     Response response = await homeRepo.dashboardData(duration);
     _isLoading = false;
     if (response.statusCode == 200) {
-      // Weekly counts mapping
       if (response.body['data']['weekly'] != null) {
         final weekly = response.body['data']['weekly'];
-
         tyfcbCount = weekly['tyfcb']?['count'] ?? 0;
         referralCount = weekly['referralGiven']?['count'] ?? 0;
         visitorsCount = weekly['visitors']?['count'] ?? 0;
@@ -320,14 +300,11 @@ class HomeViewModel extends GetxController implements GetxService {
         referralGivenList = [];
         referralReceivedList = [];
 
-        // GIVEN
         if (weekly['referralGiven'] != null) {
           for (var v in weekly['referralGiven']['list']) {
             referralGivenList.add(_mapReferral(v));
           }
         }
-
-        // RECEIVED
         if (weekly['referralReceived'] != null) {
           for (var v in weekly['referralReceived']['list']) {
             referralReceivedList.add(_mapReferral(v));
@@ -338,15 +315,13 @@ class HomeViewModel extends GetxController implements GetxService {
       if (response.body['data']['stats'] != null) {
         _statsList = [];
         response.body['data']['stats'].forEach((order) {
-          Stats stats = Stats.fromJson(order);
-          _statsList.add(stats);
+          _statsList.add(Stats.fromJson(order));
         });
       }
       if (response.body['data']['documents'] != null) {
         _bannerList = [];
         response.body['data']['documents'].forEach((documents) {
-          Documents document = Documents.fromJson(documents);
-          _bannerList.add(document);
+          _bannerList.add(Documents.fromJson(documents));
         });
       }
       if (response.body['data']['nextMeeting'] != null) {
@@ -369,18 +344,15 @@ class HomeViewModel extends GetxController implements GetxService {
     if (response.statusCode == 200) {
       _guestBannerList = [];
       response.body['data'][0]['imageList'].forEach((documents) {
-        Documents document = Documents.fromJson(documents);
-        _guestBannerList.add(document);
+        _guestBannerList.add(Documents.fromJson(documents));
       });
       _reelList = [];
-      //_reelList.add("https://youtu.be/WcMc8FKdtwQ?si=_U1JMh6ugLXXM7M9");
       response.body['data'][0]['reelList'].forEach((reels) {
         _reelList.add(reels);
       });
     } else {
       ApiChecker.checkApi(response);
     }
-
     update();
   }
 
@@ -407,47 +379,47 @@ class HomeViewModel extends GetxController implements GetxService {
     Response response = await homeRepo.getCurrentUser();
     _isLoading = false;
     if (response.statusCode == 200) {
-      _currentUserData = CurrentUserData();
       _currentUserData = CurrentUserData.fromJson(response.body['data']);
       globalCurrentUserData = CurrentUserData.fromJson(response.body['data']);
     } else {
       ApiChecker.checkApi(response);
     }
-
     update();
     return _currentUserData;
   }
 
   Future<bool> deletePost(String postUuid) async {
     _isLoading = true;
-    bool isSuccess = false;
     update();
     Response response = await homeRepo.deletePost(postUuid);
     _isLoading = false;
     if (response.statusCode == 204) {
-      isSuccess = true;
-    } else {
-      isSuccess = false;
-      ApiChecker.checkApi(response);
+      _postData.removeWhere((p) => p.postUuid == postUuid);
+      update();
+      return true;
     }
-    update();
-    return isSuccess;
+    ApiChecker.checkApi(response);
+    // update();
+    return false;
   }
 
   Future<bool> deleteCommentOnPost(String postUuid, String commentId) async {
     _isLoading = true;
-    bool isSuccess = false;
     update();
     Response response = await homeRepo.deleteCommentOnPost(postUuid, commentId);
     _isLoading = false;
     if (response.statusCode == 204) {
-      isSuccess = true;
-    } else {
-      isSuccess = false;
-      ApiChecker.checkApi(response);
+      final post = _postData.firstWhereOrNull((p) => p.postUuid == postUuid);
+      if (post != null) {
+        post.comments?.removeWhere((c) => c.commentUuid == commentId);
+        post.commentsCounter = (post.commentsCounter ?? 1) - 1;
+      }
+      update();
+      return true;
     }
+    ApiChecker.checkApi(response);
     update();
-    return isSuccess;
+    return false;
   }
 
   Future<bool> clearSharedPreferenceAndLogout() async {
