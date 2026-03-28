@@ -189,10 +189,43 @@ class MemberProfilePageState extends State<MemberProfilePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.asset(
-              profileImage,
-              height: 68.0,
-              width: 68.0,
+            // Image.asset(
+            //   profileImage,
+            //   height: 68.0,
+            //   width: 68.0,
+            // ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(50),
+              child:
+              widget.membersChildData.profileUrl !=
+                  null &&
+                  widget.membersChildData.profileUrl!.isNotEmpty
+                  ? CachedNetworkImage(
+                height: 68.0,
+                width: 68.0,
+                imageUrl: widget.membersChildData.profileUrl!,
+                fit: BoxFit.fill,
+                placeholder: (context, url) =>
+                const Center(
+                  child:
+                  CircularProgressIndicator(
+                      strokeWidth: 2),
+                ),
+                errorWidget:
+                    (context, url, error) =>
+                    Image.asset(
+                      profileImage,
+                      height: 68.0,
+                      width: 68.0,
+                      fit: BoxFit.fill,
+                    ),
+              )
+                  : Image.asset(
+                profileImage,
+                height: 68.0,
+                width: 68.0,
+                fit: BoxFit.fill,
+              ),
             ),
             SizedBox(width: paddingSize15),
             Column(
@@ -245,10 +278,24 @@ class MemberProfilePageState extends State<MemberProfilePage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Image.asset(
-                        profileImage,
-                        height: 50.0,
-                        width: 50.0,
+                      Container(
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: bluishPurple,
+                          border: Border.all(
+                              color: const Color(0xFFE3E8F4), width: 1.5),
+                        ),
+                        child: Center(
+                          child: Text(
+                            (widget.membersChildData.organization?.companyName ?? 'A')
+                                .substring(0, 1)
+                                .toUpperCase(),
+                            style: fontBold.copyWith(
+                                fontSize: fontSize18, color: white),
+                          ),
+                        ),
                       ),
                       SizedBox(width: paddingSize15),
                       Expanded(

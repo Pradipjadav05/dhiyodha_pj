@@ -126,35 +126,42 @@ class HomePageState extends State<HomePage> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    homeVM.currentUserData.profileUrl != null &&
-                                            homeVM.currentUserData.profileUrl!
-                                                .isNotEmpty
-                                        ? CachedNetworkImage(
-                                            height: 68.0,
-                                            width: 68.0,
-                                            imageUrl: homeVM
-                                                .currentUserData.profileUrl!,
-                                            fit: BoxFit.fill,
-                                            placeholder: (context, url) =>
-                                                const Center(
-                                              child: CircularProgressIndicator(
-                                                  strokeWidth: 2),
-                                            ),
-                                            errorWidget:
-                                                (context, url, error) =>
-                                                    Image.asset(
-                                              logoRound,
-                                              height: 68.0,
-                                              width: 68.0,
-                                              fit: BoxFit.fill,
-                                            ),
-                                          )
-                                        : Image.asset(
-                                            logoRound,
-                                            height: 68.0,
-                                            width: 68.0,
-                                            fit: BoxFit.fill,
-                                          ),
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(50),
+                                      child:
+                                          homeVM.currentUserData.profileUrl !=
+                                                      null &&
+                                                  homeVM.currentUserData
+                                                      .profileUrl!.isNotEmpty
+                                              ? CachedNetworkImage(
+                                                  height: 68.0,
+                                                  width: 68.0,
+                                                  imageUrl: homeVM
+                                                      .currentUserData
+                                                      .profileUrl!,
+                                                  fit: BoxFit.fill,
+                                                  placeholder: (context, url) =>
+                                                      const Center(
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                            strokeWidth: 2),
+                                                  ),
+                                                  errorWidget:
+                                                      (context, url, error) =>
+                                                          Image.asset(
+                                                    logoRound,
+                                                    height: 68.0,
+                                                    width: 68.0,
+                                                    fit: BoxFit.fill,
+                                                  ),
+                                                )
+                                              : Image.asset(
+                                                  logoRound,
+                                                  height: 68.0,
+                                                  width: 68.0,
+                                                  fit: BoxFit.fill,
+                                                ),
+                                    ),
                                     Text(
                                       '${homeVM.currentUserData.firstName} ${homeVM.currentUserData.lastName}',
                                       style: fontBold.copyWith(
@@ -1890,30 +1897,34 @@ class HomePageState extends State<HomePage> {
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  data.profileUrl != null && data.profileUrl!.isNotEmpty
-                      ? CachedNetworkImage(
-                          imageUrl: data.profileUrl!,
-                          width: 42.0,
-                          height: 42.0,
-                          fit: BoxFit.cover,
-                          placeholder: (context, url) => SizedBox(
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(21),
+                    // half of 42 for perfect circle
+                    child: data.profileUrl != null &&
+                            data.profileUrl!.isNotEmpty
+                        ? CachedNetworkImage(
+                            imageUrl: data.profileUrl!,
                             width: 42.0,
                             height: 42.0,
-                            child: SizedBox.shrink(),
-                          ),
-                          errorWidget: (context, url, error) => Image.asset(
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => SizedBox(
+                              width: 42.0,
+                              height: 42.0,
+                            ),
+                            errorWidget: (context, url, error) => Image.asset(
+                              profileImage,
+                              width: 42.0,
+                              height: 42.0,
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                        : Image.asset(
                             profileImage,
                             width: 42.0,
                             height: 42.0,
                             fit: BoxFit.cover,
                           ),
-                        )
-                      : Image.asset(
-                          profileImage,
-                          width: 42.0,
-                          height: 42.0,
-                          fit: BoxFit.cover,
-                        ),
+                  ),
                   SizedBox(width: paddingSize10),
                   Expanded(
                     child: Column(

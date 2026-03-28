@@ -30,29 +30,49 @@ class OneToOneSlipViewModel extends GetxController implements GetxService {
 
   // ── Getters ──
   bool get isLoading => _isLoading;
+
   get isExpanded => _isExpanded;
+
   DateTime get selectedDate => _selectedDate;
+
   TimeOfDay get selectedTime => _selectedTime;
+
   String get selectedInitiatedBy => _selectedInitiatedBy;
+
   Location get location => _location;
+
   List<OneToOneChildData> get oneToOneDataList => _oneToOneDataList;
+
   TextEditingController get metWithController => _metWithController;
+
   TextEditingController get whereMeetController => _whereMeetController;
+
   TextEditingController get whenMeetController => _whenMeetController;
+
   TextEditingController get conversionTopicController =>
       _conversionTopicController;
 
   // ── Setters ──
   set isLoading(bool v) => _isLoading = v;
+
   set isExpanded(v) => _isExpanded = v;
+
   set selectedDate(DateTime v) => _selectedDate = v;
+
   set selectedTime(TimeOfDay v) => _selectedTime = v;
+
   set selectedInitiatedBy(String v) => _selectedInitiatedBy = v;
+
   set location(Location v) => _location = v;
+
   set oneToOneDataList(List<OneToOneChildData> v) => _oneToOneDataList = v;
+
   set metWithController(TextEditingController v) => _metWithController = v;
+
   set whereMeetController(TextEditingController v) => _whereMeetController = v;
+
   set whenMeetController(TextEditingController v) => _whenMeetController = v;
+
   set conversionTopicController(TextEditingController v) =>
       _conversionTopicController = v;
 
@@ -80,13 +100,13 @@ class OneToOneSlipViewModel extends GetxController implements GetxService {
     _isLoading = true;
     update();
 
-    final Response response = await oneToOneRepo.getOneToOneData(
-        page, size, sort, sortDirection);
+    final Response response =
+        await oneToOneRepo.getOneToOneData(page, size, sort, sortDirection);
 
     _isLoading = false;
     if (response.statusCode == 200) {
       final OneToOneResponseModel model =
-      OneToOneResponseModel.fromJson(response.body);
+          OneToOneResponseModel.fromJson(response.body);
       _oneToOneDataList = model.data?.data ?? [];
     } else {
       ApiChecker.checkApi(response);
@@ -107,8 +127,8 @@ class OneToOneSlipViewModel extends GetxController implements GetxService {
     bool isSuccess = false;
     update();
 
-    final Response response = await oneToOneRepo.addOneToOneData(
-        connectedWith, initiatedBy, oneToOneLocation, oneToOneDate, oneToOneNotes);
+    final Response response = await oneToOneRepo.addOneToOneData(connectedWith,
+        initiatedBy, oneToOneLocation, oneToOneDate, oneToOneNotes);
 
     _isLoading = false;
     if (response.statusCode == 201) {
@@ -125,10 +145,11 @@ class OneToOneSlipViewModel extends GetxController implements GetxService {
   // ────────────────────────────────────────────────────────────
   Future<void> selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: selectedDate,
-        firstDate: DateTime(2000, 8),
-        lastDate: DateTime.now());
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2200),
+    );
     if (picked != null && picked != selectedDate) {
       selectedDate = picked;
       whenMeetController.text =
@@ -138,11 +159,11 @@ class OneToOneSlipViewModel extends GetxController implements GetxService {
 
   Future<void> selectTime(BuildContext context) async {
     final TimeOfDay? picked =
-    await showTimePicker(context: context, initialTime: TimeOfDay.now());
+        await showTimePicker(context: context, initialTime: TimeOfDay.now());
     if (picked != null) {
       selectedTime = picked;
       whenMeetController.text =
-      '${whenMeetController.text} ${selectedTime.hour}:${selectedTime.minute}';
+          '${whenMeetController.text} ${selectedTime.hour}:${selectedTime.minute}';
     }
   }
 }

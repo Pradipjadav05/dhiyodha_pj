@@ -15,6 +15,7 @@ class CommonTextFormField extends StatefulWidget {
   final TextInputAction inputAction;
   final bool isPassword;
   final Function? onChanged;
+  final Function? onTap;
   final Function? onSubmit;
   final bool isEnabled;
   final int maxLines;
@@ -49,6 +50,7 @@ class CommonTextFormField extends StatefulWidget {
     this.maxLength = 1000,
     this.onSubmit,
     this.onChanged,
+    this.onTap,
     this.prefixIcon,
     this.suffixIcon,
     this.capitalization = TextCapitalization.none,
@@ -236,6 +238,7 @@ class CustomTextFieldState extends State<CommonTextFormField> {
                   ? widget.onSubmit!(text)
                   : null,
           onChanged: widget.onChanged as void Function(String)?,
+          onTap: widget.onTap as void Function()?,
         ),
         widget.divider
             ? const Padding(

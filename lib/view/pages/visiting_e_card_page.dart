@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dhiyodha/model/request_model/update_profile_request_model.dart';
 import 'package:dhiyodha/model/response_model/current_user_response_model.dart';
 import 'package:dhiyodha/model/response_model/visitor_response_model.dart';
@@ -41,7 +42,7 @@ class VisitingECardPageState extends State<VisitingECardPage> {
     await Get.find<VisitingCardViewModel>().initData();
     if (widget.currentUserData != null) {
       Get.find<VisitingCardViewModel>().currentUserData =
-      widget.currentUserData!;
+          widget.currentUserData!;
     } else if (widget.visitorChildData != null) {
       Get.find<VisitingCardViewModel>().visitorData = widget.visitorChildData!;
     }
@@ -82,75 +83,75 @@ class VisitingECardPageState extends State<VisitingECardPage> {
               return Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Obx(() => Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // ── Profile header ──
-                    _buildProfileHeader(),
-                    const SizedBox(height: paddingSize20),
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // ── Profile header ──
+                        _buildProfileHeader(),
+                        const SizedBox(height: paddingSize20),
 
-                    // ── Details card ──
-                    _buildDetailsCard(vvm),
-                    const SizedBox(height: paddingSize25),
+                        // ── Details card ──
+                        _buildDetailsCard(vvm),
+                        const SizedBox(height: paddingSize25),
 
-                    // ── Share + Edit ──
-                    Visibility(
-                      visible: !vvm.isVisitorData.value,
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: CommonButton(
-                              icon: share,
-                              buttonText: 'share'.tr,
-                              bgColor: midnightBlue,
-                              iconColor: white,
-                              textColor: white,
-                              onPressed: () async {
-                                final String data =
-                                    '${widget.currentUserData?.firstName} ${widget.currentUserData?.lastName}'
-                                    '\n${widget.currentUserData?.mobileNo}'
-                                    '\n${widget.currentUserData?.currentUserOrganization?.companyName}'
-                                    '\n${widget.currentUserData?.currentUserOrganization?.businessCategory}';
-                                final String shareString =
-                                    '${'checkout_profile'.tr} \n\n$data \n\nDownload Now : $playStoreUrl';
-                                await Share.share(shareString);
-                              },
-                            ),
+                        // ── Share + Edit ──
+                        Visibility(
+                          visible: !vvm.isVisitorData.value,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: CommonButton(
+                                  icon: share,
+                                  buttonText: 'share'.tr,
+                                  bgColor: midnightBlue,
+                                  iconColor: white,
+                                  textColor: white,
+                                  onPressed: () async {
+                                    final String data =
+                                        '${widget.currentUserData?.firstName} ${widget.currentUserData?.lastName}'
+                                        '\n${widget.currentUserData?.mobileNo}'
+                                        '\n${widget.currentUserData?.currentUserOrganization?.companyName}'
+                                        '\n${widget.currentUserData?.currentUserOrganization?.businessCategory}';
+                                    final String shareString =
+                                        '${'checkout_profile'.tr} \n\n$data \n\nDownload Now : $playStoreUrl';
+                                    await Share.share(shareString);
+                                  },
+                                ),
+                              ),
+                              const SizedBox(width: paddingSize15),
+                              Expanded(
+                                child: CommonButton(
+                                  icon: edit,
+                                  buttonText: 'edit'.tr,
+                                  iconColor: bluishPurple,
+                                  bgColor: lavenderMist,
+                                  textColor: bluishPurple,
+                                  onPressed: () {
+                                    vvm.isEditData.value = true;
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(width: paddingSize15),
-                          Expanded(
-                            child: CommonButton(
-                              icon: edit,
-                              buttonText: 'edit'.tr,
-                              iconColor: bluishPurple,
-                              bgColor: lavenderMist,
-                              textColor: bluishPurple,
-                              onPressed: () {
-                                vvm.isEditData.value = true;
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                        ),
 
-                    const SizedBox(height: paddingSize15),
+                        const SizedBox(height: paddingSize15),
 
-                    // ── Submit ──
-                    Visibility(
-                      visible: vvm.isEditData.value,
-                      child: vvm.isLoading
-                          ? const Center(child: CircularProgressIndicator())
-                          : CommonButton(
-                        buttonText: 'submit'.tr,
-                        bgColor: bluishPurple,
-                        textColor: lavenderMist,
-                        onPressed: () async {
-                          await _updateUserProfile(vvm);
-                        },
-                      ),
-                    ),
-                  ],
-                )),
+                        // ── Submit ──
+                        Visibility(
+                          visible: vvm.isEditData.value,
+                          child: vvm.isLoading
+                              ? const Center(child: CircularProgressIndicator())
+                              : CommonButton(
+                                  buttonText: 'submit'.tr,
+                                  bgColor: bluishPurple,
+                                  textColor: lavenderMist,
+                                  onPressed: () async {
+                                    await _updateUserProfile(vvm);
+                                  },
+                                ),
+                        ),
+                      ],
+                    )),
               );
             },
           ),
@@ -162,9 +163,9 @@ class VisitingECardPageState extends State<VisitingECardPage> {
   // ── Profile header banner ──
   Widget _buildProfileHeader() {
     final String fullName =
-    '${widget.currentUserData?.firstName ?? widget.visitorChildData?.name ?? ''}'
-        ' ${widget.currentUserData?.lastName ?? ''}'
-        .trim();
+        '${widget.currentUserData?.firstName ?? widget.visitorChildData?.name ?? ''}'
+                ' ${widget.currentUserData?.lastName ?? ''}'
+            .trim();
 
     return Container(
       width: double.infinity,
@@ -181,16 +182,31 @@ class VisitingECardPageState extends State<VisitingECardPage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            height: 68.0,
-            width: 68.0,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: white.withOpacity(0.6), width: 2.5),
-            ),
-            child: ClipOval(
-              child: Image.asset(profileImage, fit: BoxFit.cover),
-            ),
-          ),
+              height: 68.0,
+              width: 68.0,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: white.withOpacity(0.6), width: 2.5),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(50),
+                // half of 42 for perfect circle
+                child: widget.currentUserData?.profileUrl != null &&
+                        widget.currentUserData!.profileUrl!.isNotEmpty
+                    ? CachedNetworkImage(
+                        imageUrl: widget.currentUserData!.profileUrl!,
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => SizedBox(),
+                        errorWidget: (context, url, error) => Image.asset(
+                          profileImage,
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                    : Image.asset(
+                        profileImage,
+                        fit: BoxFit.cover,
+                      ),
+              )),
           const SizedBox(width: paddingSize15),
           Expanded(
             child: Text(
@@ -354,29 +370,28 @@ class VisitingECardPageState extends State<VisitingECardPage> {
         Text(
           label,
           style: fontRegular.copyWith(
-              fontSize: fontSize12,
-              color: midnightBlue.withOpacity(0.5)),
+              fontSize: fontSize12, color: midnightBlue.withOpacity(0.5)),
         ),
         const SizedBox(height: 2),
         isEnabled
             ? CommonTextFormField(
-          isEnabled: true,
-          inputType: inputType,
-          maxLength: maxLength,
-          maxLines: 1,
-          controller: controller,
-          bgColor: Colors.transparent,
-          padding: const EdgeInsets.symmetric(vertical: 4),
-          textStyle: fontMedium.copyWith(
-              fontSize: fontSize14, color: midnightBlue),
-        )
+                isEnabled: true,
+                inputType: inputType,
+                maxLength: maxLength,
+                maxLines: 1,
+                controller: controller,
+                bgColor: Colors.transparent,
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                textStyle: fontMedium.copyWith(
+                    fontSize: fontSize14, color: midnightBlue),
+              )
             : Text(
-          controller.text.isNotEmpty ? controller.text : '—',
-          style: fontMedium.copyWith(
-              fontSize: fontSize14, color: midnightBlue),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
+                controller.text.isNotEmpty ? controller.text : '—',
+                style: fontMedium.copyWith(
+                    fontSize: fontSize14, color: midnightBlue),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
         const Divider(height: 1),
       ],
     );
@@ -406,31 +421,30 @@ class VisitingECardPageState extends State<VisitingECardPage> {
               Text(
                 label,
                 style: fontRegular.copyWith(
-                    fontSize: fontSize12,
-                    color: midnightBlue.withOpacity(0.6)),
+                    fontSize: fontSize12, color: midnightBlue.withOpacity(0.6)),
               ),
             ],
           ),
           const SizedBox(height: 4),
           isEnabled
               ? CommonTextFormField(
-            isEnabled: true,
-            inputType: inputType,
-            maxLength: maxLength,
-            maxLines: maxLines,
-            controller: controller,
-            bgColor: Colors.transparent,
-            padding: const EdgeInsets.symmetric(vertical: 4),
-            textStyle: fontMedium.copyWith(
-                fontSize: fontSize14, color: midnightBlue),
-          )
+                  isEnabled: true,
+                  inputType: inputType,
+                  maxLength: maxLength,
+                  maxLines: maxLines,
+                  controller: controller,
+                  bgColor: Colors.transparent,
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  textStyle: fontMedium.copyWith(
+                      fontSize: fontSize14, color: midnightBlue),
+                )
               : Text(
-            controller.text.isNotEmpty ? controller.text : '—',
-            style: fontMedium.copyWith(
-                fontSize: fontSize16, color: midnightBlue),
-            maxLines: maxLines,
-            overflow: TextOverflow.visible,
-          ),
+                  controller.text.isNotEmpty ? controller.text : '—',
+                  style: fontMedium.copyWith(
+                      fontSize: fontSize16, color: midnightBlue),
+                  maxLines: maxLines,
+                  overflow: TextOverflow.visible,
+                ),
         ],
       ),
     );
@@ -480,7 +494,7 @@ class VisitingECardPageState extends State<VisitingECardPage> {
       mobileNo: vvm.contactController.text.isNotEmpty
           ? vvm.contactController.text
           : vvm.currentUserData.mobileNo ?? '',
-      uploadDocumentId: vvm.currentUserData.uploadDocumentId ?? '',
+      uploadDocumentId: vvm.currentUserData.uploadDocumentId ?? 'ce6b8b8f-b252-4834-97c2-8d9927e4f5a2',
       education: vvm.currentUserData.education ?? '',
       children: vvm.currentUserData.children ?? 0,
       pet: vvm.currentUserData.pet ?? '',
@@ -488,7 +502,7 @@ class VisitingECardPageState extends State<VisitingECardPage> {
       cityResidingYears: vvm.currentUserData.cityResidingYears ?? 0,
       burningDesire: vvm.currentUserData.burningDesire ?? '',
       somethingNoOneKnowsAboutMe:
-      vvm.currentUserData.somethingNoOneKnowsAboutMe ?? '',
+          vvm.currentUserData.somethingNoOneKnowsAboutMe ?? '',
       keyToSuccess: vvm.currentUserData.keyToSuccess ?? '',
       residentAddress: vvm.currentUserData.permanentAddress ?? '',
       permanentAddress: vvm.currentUserData.permanentAddress ?? '',
@@ -500,46 +514,42 @@ class VisitingECardPageState extends State<VisitingECardPage> {
         companyName: vvm.companyNameController.text.isNotEmpty
             ? vvm.companyNameController.text
             : vvm.currentUserData.currentUserOrganization?.companyName ?? '',
-        companyEstablishment: vvm.currentUserData
-            .currentUserOrganization?.companyEstablishment ??
-            '',
+        companyEstablishment:
+            vvm.currentUserData.currentUserOrganization?.companyEstablishment ??
+                '',
         companyAddress:
-        vvm.currentUserData.currentUserOrganization?.companyAddress ?? '',
+            vvm.currentUserData.currentUserOrganization?.companyAddress ?? '',
         registeredType:
-        widget.currentUserData?.currentUserOrganization?.registeredType ??
-            '',
+            widget.currentUserData?.currentUserOrganization?.registeredType ??
+                '',
         numberOfEmployees:
-        vvm.currentUserData.currentUserOrganization?.numberOfEmployees,
+            vvm.currentUserData.currentUserOrganization?.numberOfEmployees,
         yearlyTurnover:
-        vvm.currentUserData.currentUserOrganization?.yearlyTurnover ?? '',
+            vvm.currentUserData.currentUserOrganization?.yearlyTurnover ?? '',
         companyEmail:
-        widget.currentUserData?.currentUserOrganization?.companyEmail ?? '',
+            widget.currentUserData?.currentUserOrganization?.companyEmail ?? '',
         companyWebsite:
-        widget.currentUserData?.currentUserOrganization?.companyWebsite ??
-            '',
+            widget.currentUserData?.currentUserOrganization?.companyWebsite ??
+                '',
         designation: vvm.designationController.text.isNotEmpty
             ? vvm.designationController.text
             : widget.currentUserData?.currentUserOrganization?.designation ??
-            '',
+                '',
         companyContact:
-        vvm.currentUserData.currentUserOrganization?.companyContact ?? '',
+            vvm.currentUserData.currentUserOrganization?.companyContact ?? '',
         businessCategory: vvm.businessCategoryController.text.isNotEmpty
             ? vvm.businessCategoryController.text
             : vvm.currentUserData.currentUserOrganization?.businessCategory ??
-            '',
-        businessDescription: vvm.currentUserData.currentUserOrganization
-            ?.businessDescription ??
-            '',
+                '',
+        businessDescription:
+            vvm.currentUserData.currentUserOrganization?.businessDescription ??
+                '',
         yearlyProfit:
-        vvm.currentUserData.currentUserOrganization?.yearlyProfit ?? 0.0,
-        gstNumber:
-        vvm.currentUserData.currentUserOrganization?.gstNumber ?? '',
-        uploadGst:
-        vvm.currentUserData.currentUserOrganization?.uploadGst ?? '',
-        panNumber:
-        vvm.currentUserData.currentUserOrganization?.panNumber ?? '',
-        uploadPan:
-        vvm.currentUserData.currentUserOrganization?.uploadPan ?? '',
+            vvm.currentUserData.currentUserOrganization?.yearlyProfit ?? 0.0,
+        gstNumber: vvm.currentUserData.currentUserOrganization?.gstNumber ?? '',
+        uploadGst: vvm.currentUserData.currentUserOrganization?.uploadGst ?? '',
+        panNumber: vvm.currentUserData.currentUserOrganization?.panNumber ?? '',
+        uploadPan: vvm.currentUserData.currentUserOrganization?.uploadPan ?? '',
       ),
 
       // ── Each address field sent individually — no more duplication ──

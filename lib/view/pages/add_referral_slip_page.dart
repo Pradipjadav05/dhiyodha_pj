@@ -198,7 +198,15 @@ class AddReferralSlipPageState extends State<AddReferralSlipPage> {
                                 bgColor: addReferralsVM.referralTypeInside.value
                                     ? bluishPurple
                                     : lavenderMist,
-                                onTap: () {},
+                                onTap: () {
+                                  // Only allow manual toggle when no meeting
+                                  // is selected (meeting auto-sets the type)
+                                  if (addReferralsVM
+                                      .selectedMeetingId.isEmpty) {
+                                    referralTypeInsideOrOutside(
+                                        addReferralsVM, true);
+                                  }
+                                },
                                 cardChild: Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: paddingSize15,
@@ -224,7 +232,13 @@ class AddReferralSlipPageState extends State<AddReferralSlipPage> {
                                     addReferralsVM.referralTypeOutside.value
                                         ? bluishPurple
                                         : lavenderMist,
-                                onTap: () {},
+                                onTap: () {
+                                  if (addReferralsVM
+                                      .selectedMeetingId.isEmpty) {
+                                    referralTypeInsideOrOutside(
+                                        addReferralsVM, false);
+                                  }
+                                },
                                 cardChild: Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: paddingSize15,
@@ -547,8 +561,8 @@ class AddReferralSlipPageState extends State<AddReferralSlipPage> {
       );
 
       if (isSuccess) {
-        showSnackBar('referral_added'.tr, isError: false);
         Get.back();
+        showSnackBar('referral_added'.tr, isError: false);
       } else {
         showSnackBar('errorMessage'.tr);
       }

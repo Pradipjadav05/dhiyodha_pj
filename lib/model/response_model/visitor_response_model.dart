@@ -1,3 +1,5 @@
+import 'package:dhiyodha/utils/resource/app_media_assets.dart';
+
 class VisitorResponseModel {
   String? timestamp;
   String? status;
@@ -76,6 +78,7 @@ class VisitorChildData {
   String? meetingDate;
   String? email;
   String? meetingCode;
+  String? profileUrl;
 
   VisitorChildData(
       {this.uuId,
@@ -93,6 +96,7 @@ class VisitorChildData {
       this.title,
       this.meetingDate,
       this.email,
+      this.profileUrl,
       this.meetingCode});
 
   VisitorChildData.fromJson(Map<String, dynamic> json) {
@@ -112,6 +116,7 @@ class VisitorChildData {
     meetingDate = json['meetingDate'];
     email = json['email'];
     meetingCode = json['meetingCode'];
+    profileUrl = json['profileUrl'];
   }
 
   Map<String, dynamic> toJson() {
@@ -132,6 +137,7 @@ class VisitorChildData {
     data['meetingDate'] = this.meetingDate;
     data['meetingCode'] = this.meetingCode;
     data['email'] = this.email;
+    data['profileUrl'] = this.profileUrl;
     return data;
   }
 }

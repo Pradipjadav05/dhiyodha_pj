@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dhiyodha/model/response_model/tyfcb_response_model.dart';
 import 'package:dhiyodha/utils/helper/routes.dart';
 import 'package:dhiyodha/utils/resource/app_colors.dart';
@@ -10,13 +11,27 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class TyfcbPage extends StatefulWidget {
+  @override
   TyfcbPageState createState() => TyfcbPageState();
 }
 
-class TyfcbPageState extends State<TyfcbPage> {
+class TyfcbPageState extends State<TyfcbPage>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animController;
+  late Animation<double> _fadeAnim;
+
+  // Track each tile's expansion independently
+  final Map<int, bool> _expandedMap = {};
+
   @override
   void initState() {
     super.initState();
+    _animController = AnimationController(
+      duration: const Duration(milliseconds: 400),
+      vsync: this,
+    );
+    _fadeAnim = CurvedAnimation(parent: _animController, curve: Curves.easeOut);
+    _animController.forward();
     callInitData();
   }
 
@@ -34,232 +49,349 @@ class TyfcbPageState extends State<TyfcbPage> {
   }
 
   @override
+  void dispose() {
+    _animController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: GetBuilder<TyfcbViewModel>(builder: (tyVM) {
         return Scaffold(
-          backgroundColor: ghostWhite,
+          backgroundColor: const Color(0xFFF4F6FB),
           appBar: CommonAppBar(
             title: Text(
               "TYFCBs".tr,
               style: fontBold.copyWith(
-                  fontSize: fontSize18,
-                  color: Theme.of(context).textTheme.bodyLarge!.color),
+                fontSize: fontSize18,
+                color: Theme.of(context).textTheme.bodyLarge!.color,
+              ),
             ),
           ),
-          floatingActionButton: FloatingActionButton(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(40),
-              ),
-              tooltip: "Add TYFCBs",
-              elevation: 4.0,
-              backgroundColor: midnightBlue,
-              onPressed: () async {
-                await Get.toNamed(Routes.getAddTyPageRoute());
-                await getTyfcbData(0, 10, "", "", "");
+          floatingActionButton: _buildFAB(tyVM),
+          body: FadeTransition(
+            opacity: _fadeAnim,
+            child: tyVM.tyfcbList.isEmpty
+                ? _buildEmptyState()
+                : ListView.builder(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 100),
+              itemCount: tyVM.tyfcbList.length,
+              itemBuilder: (context, index) {
+                return _tyfcbCard(index, tyVM);
               },
-              child: Icon(
-                Icons.add,
-                color: periwinkle,
-                size: 32.0,
-              )),
-          body: ListView.builder(
-            shrinkWrap: true,
-            itemBuilder: (context, index) {
-              return _tyfcbListItems(index, tyVM);
-            },
-            itemCount: tyVM.tyfcbList.length,
+            ),
           ),
         );
       }),
     );
   }
 
-  @override
-  void dispose() {
-    super.dispose();
+  Widget _buildFAB(TyfcbViewModel tyVM) {
+    return FloatingActionButton(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      tooltip: "Add TYFCBs",
+      elevation: 6,
+      backgroundColor: midnightBlue,
+      onPressed: () async {
+        await Get.toNamed(Routes.getAddTyPageRoute());
+        await getTyfcbData(0, 10, "", "", "");
+      },
+      child: const Icon(Icons.add_rounded, color: Colors.white, size: 28),
+    );
   }
 
-  _tyfcbListItems(int index, TyfcbViewModel tyVM) {
-    TyfcbChildData tyfcbData = tyVM.tyfcbList[index];
-    return Padding(
-      padding: const EdgeInsets.all(paddingSize5),
-      child: Obx(
-        () => ExpansionTile(
-          dense: false,
-          leading: Image.asset(
-            profileImage,
-            width: 48.0,
-            height: 48.0,
+  Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.handshake_outlined,
+              size: 72, color: midnightBlue.withOpacity(0.18)),
+          const SizedBox(height: 14),
+          Text(
+            'No TYFCBs yet',
+            style: fontMedium.copyWith(
+                color: greyText, fontSize: fontSize16),
           ),
+          const SizedBox(height: 6),
+          Text(
+            'Tap + to add your first TYFCB',
+            style: fontRegular.copyWith(
+                color: greyText.withOpacity(0.7), fontSize: fontSize13),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _tyfcbCard(int index, TyfcbViewModel tyVM) {
+    final TyfcbChildData tyfcbData = tyVM.tyfcbList[index];
+    final bool isExpanded = _expandedMap[index] ?? false;
+    final String fullName =
+    '${tyfcbData.recipient?.firstName ?? ""} ${tyfcbData.recipient?.lastName ?? ""}'.trim();
+    final String? profileUrl = tyfcbData.recipient?.profileUrl;
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF1E3A5F).withOpacity(0.08),
+            blurRadius: 16,
+            offset: const Offset(0, 4),
+          ),
+        ],
+        border: Border.all(color: const Color(0xFFEAEEF8), width: 1),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(18),
+        child: Column(
           children: [
-            Column(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: paddingSize20, vertical: paddingSize15),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.center,
+            // ── Header row (always visible) ──
+            InkWell(
+              onTap: () => setState(() {
+                _expandedMap[index] = !isExpanded;
+              }),
+              borderRadius: BorderRadius.only(
+                topLeft: const Radius.circular(18),
+                topRight: const Radius.circular(18),
+                bottomLeft: Radius.circular(isExpanded ? 0 : 18),
+                bottomRight: Radius.circular(isExpanded ? 0 : 18),
+              ),
+              splashColor: lavenderMist.withOpacity(0.4),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 14, vertical: 12),
+                child: Row(
+                  children: [
+                    // ── Circular profile image ──
+                    _profileAvatar(profileUrl),
+                    const SizedBox(width: 14),
+
+                    // ── Name + gift amount ──
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Image.asset(meeting,
-                              color: bluishPurple,
-                              height: iconSize18,
-                              width: iconSize18),
-                          SizedBox(width: paddingSize5),
                           Text(
-                            "Status",
-                            style: fontRegular.copyWith(
-                                fontSize: fontSize12, color: midnightBlue),
-                          ),
-                        ],
-                      ),
-                      Text(
-                        tyfcbData.meetingDetails?.status ?? "",
-                        style: fontMedium.copyWith(
-                            fontSize: fontSize14, color: midnightBlue),
-                      ),
-                    ],
-                  ),
-                ),
-                Divider(
-                  thickness: 0.2,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: paddingSize20, vertical: paddingSize15),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Image.asset(company,
-                              height: iconSize18, width: iconSize18),
-                          SizedBox(width: paddingSize5),
-                          Text(
-                            "Business Type",
-                            style: fontRegular.copyWith(
-                                fontSize: fontSize12, color: midnightBlue),
-                          ),
-                        ],
-                      ),
-                      Text(
-                        tyfcbData.businessType ?? "",
-                        style: fontMedium.copyWith(
-                            fontSize: fontSize14, color: midnightBlue),
-                      ),
-                    ],
-                  ),
-                ),
-                Divider(
-                  thickness: 0.2,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: paddingSize20, vertical: paddingSize15),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Image.asset(referralsBlue,
-                              height: iconSize18, width: iconSize18),
-                          SizedBox(width: paddingSize5),
-                          Text(
-                            "Referral Type",
-                            style: fontRegular.copyWith(
-                                fontSize: fontSize12, color: midnightBlue),
-                          ),
-                        ],
-                      ),
-                      Text(
-                        tyfcbData.referralType ?? "",
-                        style: fontMedium.copyWith(
-                            fontSize: fontSize14, color: midnightBlue),
-                      ),
-                    ],
-                  ),
-                ),
-                Divider(
-                  thickness: 0.2,
-                ),
-                InkWell(
-                  onTap: () {},
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: paddingSize20, vertical: paddingSize15),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisSize: MainAxisSize.max,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Image.asset(postComment,
-                                color: bluishPurple,
-                                height: iconSize18,
-                                width: iconSize18),
-                            SizedBox(width: paddingSize5),
-                            Text(
-                              "Comments",
-                              style: fontRegular.copyWith(
-                                  fontSize: fontSize12, color: midnightBlue),
+                            fullName.isNotEmpty ? fullName : 'Unknown',
+                            style: fontBold.copyWith(
+                              fontSize: fontSize16,
+                              color: midnightBlue,
+                              letterSpacing: 0.1,
                             ),
-                          ],
-                        ),
-                        Text(
-                          tyfcbData.comments ?? "",
-                          style: fontMedium.copyWith(
-                              fontSize: fontSize14, color: midnightBlue),
-                        ),
-                      ],
+                          ),
+                          const SizedBox(height: 5),
+                          _giftAmountBadge((tyfcbData.giftAmount ?? '0.0').toString()),
+                        ],
+                      ),
                     ),
-                  ),
+
+                    // ── Expand / collapse arrow ──
+                    Image.asset(
+                      isExpanded ? nextArrow : dropDownArrow,
+                      height: iconSize18,
+                      width: iconSize18,
+                      color: midnightBlue,
+                    ),
+                  ],
                 ),
-                Divider(
-                  thickness: 0.2,
-                ),
-              ],
+              ),
+            ),
+
+            // ── Expandable detail rows ──
+            AnimatedCrossFade(
+              duration: const Duration(milliseconds: 280),
+              crossFadeState: isExpanded
+                  ? CrossFadeState.showSecond
+                  : CrossFadeState.showFirst,
+              firstChild: const SizedBox.shrink(),
+              secondChild: _expandedDetails(tyfcbData),
             ),
           ],
-          subtitle: Text(
-            "GiftAmount : ${tyfcbData.giftAmount ?? "0.0"}",
-            style: fontRegular.copyWith(fontSize: fontSize12, color: greyText),
-          ),
-          shape: Border(),
-          title: Text(
-            "${tyfcbData.recipient?.firstName ?? ""} ${tyfcbData.recipient?.lastName ?? ""}",
-            style: fontBold.copyWith(fontSize: fontSize16, color: midnightBlue),
-          ),
-          onExpansionChanged: (isExpandedItem) {
-            tyVM.isExpanded.value = isExpandedItem;
-          },
-          trailing: tyVM.isExpanded.value
-              ? Image.asset(
-                  nextArrow,
-                  height: iconSize18,
-                  width: iconSize18,
-                )
-              : Image.asset(
-                  dropDownArrow,
-                  height: iconSize18,
-                  width: iconSize18,
-                ),
         ),
       ),
     );
   }
+
+  Widget _profileAvatar(String? profileUrl) {
+    return Container(
+      width: 58,
+      height: 58,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: Colors.white, width: 2.5),
+        boxShadow: [
+          BoxShadow(
+            color: midnightBlue.withOpacity(0.15),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: ClipOval(
+        child: profileUrl != null && profileUrl.isNotEmpty
+            ? CachedNetworkImage(
+          imageUrl: profileUrl,
+          width: 58,
+          height: 58,
+          fit: BoxFit.cover,
+          errorWidget: (context, url, error) => _avatarFallback(),
+        )
+            : _avatarFallback(),
+      ),
+    );
+  }
+
+  Widget _avatarFallback() {
+    return Container(
+      width: 58,
+      height: 58,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          colors: [midnightBlue, const Color(0xFF4A6FA5)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: ClipOval(
+        child: Image.asset(profileImage,
+            width: 58, height: 58, fit: BoxFit.cover),
+      ),
+    );
+  }
+
+  Widget _giftAmountBadge(String amount) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            const Color(0xFFE8F0FE),
+            const Color(0xFFD6E4FF),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: midnightBlue.withOpacity(0.12)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.card_giftcard_rounded,
+              size: 13, color: midnightBlue.withOpacity(0.7)),
+          const SizedBox(width: 4),
+          Text(
+            'Gift: ₹$amount',
+            style: fontMedium.copyWith(
+              fontSize: 12,
+              color: midnightBlue,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _expandedDetails(TyfcbChildData tyfcbData) {
+    return Column(
+      children: [
+        Divider(height: 1, thickness: 1, color: const Color(0xFFEAEEF8)),
+        // _detailRow(
+        //   assetPath: meeting,
+        //   assetColor: midnightBlue,
+        //   label: 'Status',
+        //   value: tyfcbData.meetingDetails?.status ?? '—',
+        // ),
+        // _divider(),
+        _detailRow(
+          assetPath: company,
+          label: 'Business Type',
+          value: tyfcbData.businessType ?? '—',
+          assetColor: midnightBlue,
+        ),
+        _divider(),
+        _detailRow(
+          assetPath: referralsBlue,
+          label: 'Referral Type',
+          value: tyfcbData.referralType ?? '—',
+          assetColor: midnightBlue,
+        ),
+        _divider(),
+        _detailRow(
+          assetPath: postComment,
+          assetColor: midnightBlue,
+          label: 'Comments',
+          value: tyfcbData.comments ?? '—',
+        ),
+      ],
+    );
+  }
+
+  Widget _detailRow({
+    required String assetPath,
+    Color? assetColor,
+    required String label,
+    required String value,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Asset icon container
+          Container(
+            width: 34,
+            height: 34,
+            decoration: BoxDecoration(
+              color: (assetColor ?? midnightBlue).withOpacity(0.08),
+              borderRadius: BorderRadius.circular(9),
+            ),
+            child: Center(
+              child: Image.asset(
+                assetPath,
+                height: iconSize18,
+                width: iconSize18,
+                color: assetColor,
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+
+          // Label + value
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: fontRegular.copyWith(
+                    fontSize: 11,
+                    color: greyText,
+                    letterSpacing: 0.3,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  value,
+                  style: fontMedium.copyWith(
+                    fontSize: fontSize14,
+                    color: midnightBlue,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _divider() =>
+      Divider(height: 1, thickness: 1, color: const Color(0xFFF0F3FA));
 }

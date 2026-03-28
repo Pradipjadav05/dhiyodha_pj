@@ -28,17 +28,26 @@ class MembersPage extends StatefulWidget {
   MembersPageState createState() => MembersPageState();
 }
 
-class MembersPageState extends State<MembersPage> {
-  // ── Autocomplete text controllers (for display text in the field) ──
+class MembersPageState extends State<MembersPage>
+    with SingleTickerProviderStateMixin {
   final TextEditingController _countryController = TextEditingController();
   final TextEditingController _stateController = TextEditingController();
   final TextEditingController _cityController = TextEditingController();
   final TextEditingController _chapterController = TextEditingController();
   final TextEditingController _businessCatController = TextEditingController();
 
+  late AnimationController _animController;
+  late Animation<double> _fadeAnim;
+
   @override
   void initState() {
     super.initState();
+    _animController = AnimationController(
+      duration: const Duration(milliseconds: 400),
+      vsync: this,
+    );
+    _fadeAnim = CurvedAnimation(parent: _animController, curve: Curves.easeOut);
+    _animController.forward();
     _initData();
   }
 
@@ -47,7 +56,6 @@ class MembersPageState extends State<MembersPage> {
     _resetAutocompleteControllers();
   }
 
-  // Reset autocomplete display text when tab switches or form resets
   void _resetAutocompleteControllers() {
     _countryController.text = '';
     _stateController.text = '';
@@ -58,6 +66,7 @@ class MembersPageState extends State<MembersPage> {
 
   @override
   void dispose() {
+    _animController.dispose();
     _countryController.dispose();
     _stateController.dispose();
     _cityController.dispose();
@@ -66,7 +75,6 @@ class MembersPageState extends State<MembersPage> {
     super.dispose();
   }
 
-  // ── Convert WorldWideMembers → MembersChildData via JSON round-trip ──
   MembersChildData _toMembersChildData(WorldWideMembers w) {
     return MembersChildData.fromJson(w.toJson());
   }
@@ -76,7 +84,7 @@ class MembersPageState extends State<MembersPage> {
     return SafeArea(
       child: GetBuilder<MembersViewmodel>(builder: (membersVM) {
         return Scaffold(
-          backgroundColor: ghostWhite,
+          backgroundColor: const Color(0xFFF4F6FB),
           appBar: CommonAppBar(
             title: Text(
               'members'.tr,
@@ -87,185 +95,29 @@ class MembersPageState extends State<MembersPage> {
             ),
           ),
           body: Obx(
-                () => Column(
-              children: [
-                // Loading bar
-                Visibility(
-                  visible: membersVM.isLoading,
-                  child: LinearProgressIndicator(
-                    color: midnightBlue,
-                    backgroundColor: lavenderMist,
-                    borderRadius: BorderRadius.circular(radius20),
-                  ),
-                ),
-
-                // ── Tab row ──
-                Row(
-                  children: [
-                    Expanded(
-                      child: CommonCard(
-                        elevation: 2.0,
-                        bgColor: membersVM.isChapterRoster.value
-                            ? midnightBlue
-                            : lavenderMist,
-                        onTap: () {
-                          membersVM.isChapterRoster.value = true;
-                          membersVM.isWorldWide.value = false;
-                          membersVM.isWorldWideListShow.value = false;
-                          membersVM.worldWiseMembersData = [];
-                        },
-                        cardChild: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: paddingSize15,
-                              vertical: paddingSize10),
-                          child: Center(
-                            child: Text(
-                              'chapter_roaster'.tr,
-                              overflow: TextOverflow.ellipsis,
-                              style: fontRegular.copyWith(
-                                color: membersVM.isChapterRoster.value
-                                    ? white
-                                    : black,
-                                fontSize: fontSize14,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
+                () => FadeTransition(
+              opacity: _fadeAnim,
+              child: Column(
+                children: [
+                  // ── Loading bar ──
+                  if (membersVM.isLoading)
+                    LinearProgressIndicator(
+                      color: midnightBlue,
+                      backgroundColor: lavenderMist,
+                      minHeight: 3,
+                      borderRadius: BorderRadius.circular(radius20),
                     ),
-                    Expanded(
-                      child: CommonCard(
-                        elevation: 2.0,
-                        bgColor: membersVM.isWorldWide.value
-                            ? midnightBlue
-                            : lavenderMist,
-                        onTap: () async {
-                          membersVM.isChapterRoster.value = false;
-                          membersVM.isWorldWide.value = true;
-                          membersVM.isWorldWideListShow.value = false;
-                          membersVM.worldWiseMembersData = [];
-                          _resetAutocompleteControllers();
-                          await membersVM.getGroups(
-                              0, membersVM.size.value, '', '', '');
-                          await membersVM.getCountries();
-                        },
-                        cardChild: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: paddingSize15,
-                              vertical: paddingSize10),
-                          child: Center(
-                            child: Text(
-                              'worldwide_search'.tr,
-                              overflow: TextOverflow.ellipsis,
-                              style: fontRegular.copyWith(
-                                color: membersVM.isWorldWide.value
-                                    ? white
-                                    : black,
-                                fontSize: fontSize14,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
 
-                // ── Chapter Roster tab ──
-                if (membersVM.isChapterRoster.value)
-                  Expanded(
-                    child: ListView(
-                      primary: false,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: paddingSize10, vertical: 8.0),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: CommonTextFormField(
-                                  padding: EdgeInsets.all(paddingSize8),
-                                  hintText: 'search_member'.tr,
-                                  controller: membersVM.memberSearchController,
-                                  textStyle: fontMedium.copyWith(
-                                      color: midnightBlue,
-                                      fontSize: fontSize14),
-                                ),
-                              ),
-                              const SizedBox(width: paddingSize8),
-                              InkWell(
-                                onTap: () async {
-                                  if (membersVM
-                                      .memberSearchController.text.isEmpty) {
-                                    showSnackBar('member_name_search'.tr);
-                                  } else {
-                                    await membersVM.searchType('GLOBAL',
-                                        membersVM.memberSearchController.text);
-                                  }
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.only(right: 8.0),
-                                  child: Image.asset(searchBlue,
-                                      width: iconSize24, height: iconSize24),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(paddingSize8),
-                                child: InkWell(
-                                  onTap: () async {
-                                    membersVM.memberSearchController.text = '';
-                                    membersVM.page.value = 0;
-                                    membersVM.totalPages.value = 0;
-                                    membersVM.membersData = [];
-                                    await membersVM.getUsersOrMembers(
-                                        0, membersVM.size.value, '', '', '');
-                                  },
-                                  child: Image.asset(reload,
-                                      height: iconSize28, width: iconSize28),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        LoadMore(
-                          isFinish: membersVM.page.value ==
-                              membersVM.totalPages.value,
-                          whenEmptyLoad: true,
-                          delegate: const DefaultLoadMoreDelegate(),
-                          textBuilder: DefaultLoadMoreTextBuilder.english,
-                          onLoadMore: membersVM.loadMore,
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            primary: false,
-                            itemCount: membersVM.membersData.length,
-                            itemBuilder: (context, index) {
-                              return _chapterRosterItem(index, membersVM);
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
+                  // ── Tab switcher ──
+                  _buildTabSwitcher(membersVM),
 
-                // ── Worldwide Search tab ──
-                else
-                  Expanded(
-                    child: membersVM.isWorldWideListShow.value
-                        ? membersVM.worldWiseMembersData.isNotEmpty
-                        ? ListView.builder(
-                      physics: const BouncingScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount:
-                      membersVM.worldWiseMembersData.length,
-                      itemBuilder: (context, index) {
-                        return _worldWideMemberItem(
-                            index, membersVM);
-                      },
-                    )
-                        : Center(child: Text('no_member_found'.tr))
-                        : _worldWideSearchForm(membersVM),
-                  ),
-              ],
+                  // ── Body ──
+                  if (membersVM.isChapterRoster.value)
+                    Expanded(child: _buildChapterRosterTab(membersVM))
+                  else
+                    Expanded(child: _buildWorldWideTab(membersVM)),
+                ],
+              ),
             ),
           ),
         );
@@ -273,264 +125,657 @@ class MembersPageState extends State<MembersPage> {
     );
   }
 
-  // ── Chapter Roster item ──
-  Widget _chapterRosterItem(int index, MembersViewmodel membersVM) {
-    final MembersChildData member = membersVM.membersData[index];
-    return Padding(
-      padding: const EdgeInsets.all(paddingSize5),
-      child: ListTile(
-        contentPadding: EdgeInsets.all(paddingSize10),
-        onTap: () async {
-          if (widget.isReturnResult == 'false') {
-            await Get.toNamed(Routes.getMembersProfilePageRoute(member));
-          } else {
-            Get.back(result: member, closeOverlays: true);
-          }
-        },
-        leading: _memberAvatar(member.profileUrl),
-        title: _memberTitle(
-          name: '${member.firstName} ${member.lastName}',
-          businessCategory: member.organization?.businessCategory ?? '',
-          companyName: member.organization?.companyName ?? '',
-        ),
-        trailing: InkWell(
-          onTap: () async {
-            await Get.toNamed(Routes.getMembersProfilePageRoute(member));
-          },
-          child: Image.asset(nextArrow, width: iconSize18, height: iconSize18),
+  // ── Pill-style tab switcher ──
+  Widget _buildTabSwitcher(MembersViewmodel membersVM) {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 14, 16, 6),
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: const Color(0xFFE3E8F4),
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.06),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          _tabPill(
+            label: 'chapter_roaster'.tr,
+            isActive: membersVM.isChapterRoster.value,
+            onTap: () {
+              membersVM.isChapterRoster.value = true;
+              membersVM.isWorldWide.value = false;
+              membersVM.isWorldWideListShow.value = false;
+              membersVM.worldWiseMembersData = [];
+            },
+          ),
+          _tabPill(
+            label: 'worldwide_search'.tr,
+            isActive: membersVM.isWorldWide.value,
+            onTap: () async {
+              membersVM.isChapterRoster.value = false;
+              membersVM.isWorldWide.value = true;
+              membersVM.isWorldWideListShow.value = false;
+              membersVM.worldWiseMembersData = [];
+              _resetAutocompleteControllers();
+              await membersVM.getGroups(0, membersVM.size.value, '', '', '');
+              await membersVM.getCountries();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _tabPill({
+    required String label,
+    required bool isActive,
+    required VoidCallback onTap,
+  }) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeInOut,
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          decoration: BoxDecoration(
+            color: isActive ? midnightBlue : Colors.transparent,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: isActive
+                ? [
+              BoxShadow(
+                color: midnightBlue.withOpacity(0.3),
+                blurRadius: 10,
+                offset: const Offset(0, 3),
+              ),
+            ]
+                : [],
+          ),
+          child: Center(
+            child: Text(
+              label,
+              overflow: TextOverflow.ellipsis,
+              style: fontRegular.copyWith(
+                color: isActive ? white : const Color(0xFF6B7BA4),
+                fontSize: fontSize14,
+                fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
+              ),
+            ),
+          ),
         ),
       ),
     );
   }
 
-  // ── Worldwide Member item ──
+  // ── Chapter Roster Tab ──
+  Widget _buildChapterRosterTab(MembersViewmodel membersVM) {
+    return Column(
+      children: [
+        // ── Search bar ──
+        _buildSearchBar(membersVM),
+
+        // ── Member list ──
+        Expanded(
+          child: LoadMore(
+            isFinish:
+            membersVM.page.value == membersVM.totalPages.value,
+            whenEmptyLoad: true,
+            delegate: const DefaultLoadMoreDelegate(),
+            textBuilder: DefaultLoadMoreTextBuilder.english,
+            onLoadMore: membersVM.loadMore,
+            child: ListView.builder(
+              padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
+              itemCount: membersVM.membersData.length,
+              itemBuilder: (context, index) {
+                return _chapterRosterItem(index, membersVM);
+              },
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSearchBar(MembersViewmodel membersVM) {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+      decoration: BoxDecoration(
+        color: white,
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF1E3A5F).withOpacity(0.08),
+            blurRadius: 16,
+            offset: const Offset(0, 4),
+          ),
+        ],
+        border: Border.all(color: const Color(0xFFE3E8F4), width: 1.5),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.search_rounded,
+              color: midnightBlue.withOpacity(0.5), size: 22),
+          const SizedBox(width: 10),
+          Expanded(
+            child: TextField(
+              controller: membersVM.memberSearchController,
+              style: fontMedium.copyWith(
+                  color: midnightBlue, fontSize: fontSize14),
+              decoration: InputDecoration(
+                hintText: 'search_member'.tr,
+                hintStyle: fontRegular.copyWith(
+                    color: midnightBlue.withOpacity(0.4), fontSize: fontSize14),
+                border: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                isDense: true,
+                contentPadding:
+                const EdgeInsets.symmetric(vertical: 10),
+              ),
+            ),
+          ),
+          // Search action
+          _iconButton(
+            assetPath: searchBlue,
+            size: 22,
+            onTap: () async {
+              if (membersVM.memberSearchController.text.isEmpty) {
+                showSnackBar('member_name_search'.tr);
+              } else {
+                await membersVM.searchType(
+                    'GLOBAL', membersVM.memberSearchController.text);
+              }
+            },
+          ),
+          const SizedBox(width: 6),
+          // Reload action
+          _iconButton(
+            assetPath: reload,
+            size: 24,
+            onTap: () async {
+              membersVM.memberSearchController.text = '';
+              membersVM.page.value = 0;
+              membersVM.totalPages.value = 0;
+              membersVM.membersData = [];
+              await membersVM.getUsersOrMembers(
+                  0, membersVM.size.value, '', '', '');
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _iconButton({
+    required String assetPath,
+    required double size,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: Padding(
+        padding: const EdgeInsets.all(6.0),
+        child: Image.asset(assetPath, width: size, height: size),
+      ),
+    );
+  }
+
+  // ── Chapter Roster card item ──
+  Widget _chapterRosterItem(int index, MembersViewmodel membersVM) {
+    final MembersChildData member = membersVM.membersData[index];
+    return _memberCard(
+      profileUrl: member.profileUrl,
+      name: '${member.firstName} ${member.lastName}',
+      businessCategory: member.organization?.businessCategory ?? '',
+      companyName: member.organization?.companyName ?? '',
+      onTap: () async {
+        if (widget.isReturnResult == 'false') {
+          await Get.toNamed(Routes.getMembersProfilePageRoute(member));
+        } else {
+          Get.back(result: member, closeOverlays: true);
+        }
+      },
+      onArrowTap: () async {
+        await Get.toNamed(Routes.getMembersProfilePageRoute(member));
+      },
+    );
+  }
+
+  // ── Worldwide member card item ──
   Widget _worldWideMemberItem(int index, MembersViewmodel membersVM) {
     final WorldWideMembers wwMember = membersVM.worldWiseMembersData[index];
     final MembersChildData member = _toMembersChildData(wwMember);
-    return Padding(
-      padding: const EdgeInsets.all(paddingSize5),
-      child: ListTile(
-        contentPadding: EdgeInsets.all(paddingSize10),
-        onTap: () async {
-          if (widget.isReturnResult == 'false') {
-            await Get.toNamed(Routes.getMembersProfilePageRoute(member));
-          } else {
-            Get.back(result: member, closeOverlays: true);
-          }
-        },
-        leading: _memberAvatar(wwMember.profileUrl),
-        title: _memberTitle(
-          name: '${wwMember.firstName} ${wwMember.lastName}',
-          businessCategory: wwMember.organization?.businessCategory ?? '',
-          companyName: wwMember.organization?.companyName ?? '',
+    return _memberCard(
+      profileUrl: wwMember.profileUrl,
+      name: '${wwMember.firstName} ${wwMember.lastName}',
+      businessCategory: wwMember.organization?.businessCategory ?? '',
+      companyName: wwMember.organization?.companyName ?? '',
+      onTap: () async {
+        if (widget.isReturnResult == 'false') {
+          await Get.toNamed(Routes.getMembersProfilePageRoute(member));
+        } else {
+          Get.back(result: member, closeOverlays: true);
+        }
+      },
+      onArrowTap: () async {
+        await Get.toNamed(Routes.getMembersProfilePageRoute(member));
+      },
+    );
+  }
+
+  // ── Shared polished member card ──
+  Widget _memberCard({
+    required String? profileUrl,
+    required String name,
+    required String businessCategory,
+    required String companyName,
+    required VoidCallback onTap,
+    required VoidCallback onArrowTap,
+  }) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      decoration: BoxDecoration(
+        color: white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF1E3A5F).withOpacity(0.07),
+            blurRadius: 14,
+            offset: const Offset(0, 4),
+          ),
+        ],
+        border: Border.all(color: const Color(0xFFEAEEF8), width: 1),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(16),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(16),
+          splashColor: lavenderMist.withOpacity(0.4),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+                horizontal: 14, vertical: 12),
+            child: Row(
+              children: [
+                // Avatar
+                _memberAvatar(profileUrl),
+                const SizedBox(width: 14),
+
+                // Text info
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        name,
+                        style: fontBold.copyWith(
+                          color: midnightBlue,
+                          fontSize: fontSize16,
+                          letterSpacing: 0.1,
+                        ),
+                      ),
+                      const SizedBox(height: 3),
+                      if (businessCategory.isNotEmpty)
+                        _infoChip(businessCategory),
+                      if (companyName.isNotEmpty) ...[
+                        const SizedBox(height: 2),
+                        Row(
+                          children: [
+                            Icon(Icons.business_outlined,
+                                size: 12,
+                                color: greyText.withOpacity(0.7)),
+                            const SizedBox(width: 4),
+                            Expanded(
+                              child: Text(
+                                companyName,
+                                overflow: TextOverflow.ellipsis,
+                                style: fontRegular.copyWith(
+                                    color: greyText, fontSize: fontSize12),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+
+                // Arrow button
+                GestureDetector(
+                  onTap: onArrowTap,
+                  child: Container(
+                    width: 32,
+                    height: 32,
+                    decoration: BoxDecoration(
+                      color: midnightBlue.withOpacity(0.06),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Icon(
+                      Icons.chevron_right_rounded,
+                      color: midnightBlue,
+                      size: 20,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
-        trailing: InkWell(
-          onTap: () async {
-            await Get.toNamed(Routes.getMembersProfilePageRoute(member));
-          },
-          child: Image.asset(nextArrow, width: iconSize18, height: iconSize18),
+      ),
+    );
+  }
+
+  Widget _infoChip(String label) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      margin: const EdgeInsets.only(bottom: 2),
+      decoration: BoxDecoration(
+        color: lavenderMist,
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Text(
+        label,
+        overflow: TextOverflow.ellipsis,
+        style: fontRegular.copyWith(
+          color: midnightBlue.withOpacity(0.75),
+          fontSize: 11,
         ),
       ),
     );
   }
 
   Widget _memberAvatar(String? profileUrl) {
-    if (profileUrl != null && profileUrl.isNotEmpty) {
-      return CachedNetworkImage(
-        imageUrl: profileUrl,
-        height: 62.0,
-        width: 62.0,
-        errorWidget: (context, url, error) =>
-            Image.asset(profileImage, height: 62.0, width: 62.0),
-      );
-    }
-    return Image.asset(profileImage, height: 62.0, width: 62.0);
-  }
-
-  Widget _memberTitle({
-    required String name,
-    required String businessCategory,
-    required String companyName,
-  }) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(name,
-            style:
-            fontBold.copyWith(color: midnightBlue, fontSize: fontSize18)),
-        Text(businessCategory,
-            style:
-            fontRegular.copyWith(color: greyText, fontSize: fontSize12)),
-        Text(companyName,
-            style:
-            fontRegular.copyWith(color: greyText, fontSize: fontSize12)),
-      ],
-    );
-  }
-
-  // ────────────────────────────────────────────────────────────
-  // Worldwide search form — all dropdowns replaced with
-  // Autocomplete widgets. Same lavenderMist container style,
-  // same arrow icon, same onChanged behaviour (loads sub-lists).
-  // ────────────────────────────────────────────────────────────
-  Widget _worldWideSearchForm(MembersViewmodel membersVM) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(14.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // ── Location ──
-            _sectionHeader('location'.tr),
-            const SizedBox(height: paddingSize15),
-
-            // Country autocomplete
-            _autocompleteField(
-              label: 'select_country'.tr,
-              controller: _countryController,
-              options: membersVM.countryList
-                  .where((c) => c != 'Select Country')
-                  .toList(),
-              onSelected: (val) async {
-                membersVM.selectedCountry = val;
-                _stateController.clear();
-                _cityController.clear();
-                membersVM.selectedState = membersVM.stateList.isNotEmpty
-                    ? membersVM.stateList[0]
-                    : 'Select State';
-                membersVM.selectedCity = membersVM.cityList.isNotEmpty
-                    ? membersVM.cityList[0]
-                    : 'Select City';
-                await membersVM.getStates(val);
-                setState(() {});
-              },
-            ),
-            const SizedBox(height: paddingSize25),
-
-            // State autocomplete
-            _autocompleteField(
-              label: 'select_state'.tr,
-              controller: _stateController,
-              options: membersVM.stateList
-                  .where((s) => s != 'Select State')
-                  .toList(),
-              onSelected: (val) async {
-                membersVM.selectedState = val;
-                _cityController.clear();
-                membersVM.selectedCity = membersVM.cityList.isNotEmpty
-                    ? membersVM.cityList[0]
-                    : 'Select City';
-                await membersVM.getCities(val);
-                setState(() {});
-              },
-            ),
-            const SizedBox(height: paddingSize25),
-
-            // City autocomplete
-            _autocompleteField(
-              label: 'select_city'.tr,
-              controller: _cityController,
-              options: membersVM.cityList
-                  .where((c) => c != 'Select City')
-                  .toList(),
-              onSelected: (val) {
-                membersVM.selectedCity = val;
-                setState(() {});
-              },
-            ),
-            const SizedBox(height: paddingSize25),
-
-            // Chapter autocomplete
-            _autocompleteField(
-              label: 'select_chapter'.tr,
-              controller: _chapterController,
-              options: membersVM.chapterList
-                  .where((c) => c != 'Select Chapter')
-                  .toList(),
-              onSelected: (val) {
-                membersVM.selectedChapter = val;
-                setState(() {});
-              },
-            ),
-            const SizedBox(height: paddingSize25),
-
-            // ── Member Details ──
-            _sectionHeader('member_details'.tr),
-            const SizedBox(height: paddingSize25),
-
-            // Member name text field (unchanged)
-            CommonTextFormField(
-              controller: membersVM.memberNameController,
-              hintText: 'member_name'.tr,
-              hintColor: midnightBlue,
-              textStyle: fontRegular.copyWith(
-                  color: midnightBlue, fontSize: fontSize14),
-              padding: const EdgeInsets.symmetric(
-                  horizontal: paddingSize20, vertical: paddingSize20),
-            ),
-            const SizedBox(height: paddingSize25),
-
-            // Business category autocomplete
-            _autocompleteField(
-              label: 'select_business_category'.tr,
-              controller: _businessCatController,
-              options: membersVM.businessCatList
-                  .where((b) => b != membersVM.businessCatList[0])
-                  .toList(),
-              onSelected: (val) {
-                membersVM.selectedBusinessCategory = val;
-                setState(() {});
-              },
-            ),
-            const SizedBox(height: paddingSize45),
-
-            CommonButton(
-              buttonText: 'confirm'.tr,
-              bgColor: midnightBlue,
-              textColor: periwinkle,
-              onPressed: () async {
-                await _collectDataAndSearchMember(membersVM);
-              },
-            ),
-          ],
-        ),
+    return Container(
+      width: 62,
+      height: 62,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: white, width: 2.5),
+        boxShadow: [
+          BoxShadow(
+            color: midnightBlue.withOpacity(0.15),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: ClipOval(
+        child: profileUrl != null && profileUrl.isNotEmpty
+            ? CachedNetworkImage(
+          imageUrl: profileUrl,
+          height: 62.0,
+          width: 62.0,
+          fit: BoxFit.cover,
+          errorWidget: (context, url, error) => _placeholderAvatar(),
+        )
+            : _placeholderAvatar(),
       ),
     );
   }
 
-  // ────────────────────────────────────────────────────────────
-  // _autocompleteField
-  //
-  // Matches the original dropdown visual exactly:
-  //   - lavenderMist background
-  //   - radius10 rounded corners
-  //   - dropDownArrow icon on the right
-  //   - midnightBlue text, fontSize14, fontRegular
-  //
-  // Extra behaviour from autocomplete:
-  //   - User can type to filter the list instantly
-  //   - Matching is case-insensitive substring
-  //   - Selecting an item fills the field and closes the overlay
-  //   - Unfocusing without selecting clears the field and
-  //     resets the VM value (prevents stale partial text)
-  // ────────────────────────────────────────────────────────────
+  Widget _placeholderAvatar() {
+    return Container(
+      height: 62,
+      width: 62,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          colors: [midnightBlue, const Color(0xFF4A6FA5)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: ClipOval(
+        child: Image.asset(profileImage,
+            height: 62.0, width: 62.0, fit: BoxFit.cover),
+      ),
+    );
+  }
+
+  // ── Worldwide tab ──
+  Widget _buildWorldWideTab(MembersViewmodel membersVM) {
+    if (membersVM.isWorldWideListShow.value) {
+      return membersVM.worldWiseMembersData.isNotEmpty
+          ? ListView.builder(
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+        itemCount: membersVM.worldWiseMembersData.length,
+        itemBuilder: (context, index) =>
+            _worldWideMemberItem(index, membersVM),
+      )
+          : Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.person_search_outlined,
+                size: 64,
+                color: midnightBlue.withOpacity(0.2)),
+            const SizedBox(height: 12),
+            Text(
+              'no_member_found'.tr,
+              style: fontRegular.copyWith(
+                  color: greyText, fontSize: fontSize14),
+            ),
+          ],
+        ),
+      );
+    }
+    return _worldWideSearchForm(membersVM);
+  }
+
+  // ── Worldwide search form ──
+  Widget _worldWideSearchForm(MembersViewmodel membersVM) {
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // ── Location section ──
+          _sectionHeader('location'.tr),
+          const SizedBox(height: 14),
+
+          _autocompleteField(
+            label: 'select_country'.tr,
+            icon: Icons.public_outlined,
+            controller: _countryController,
+            options: membersVM.countryList
+                .where((c) => c != 'Select Country')
+                .toList(),
+            onSelected: (val) async {
+              membersVM.selectedCountry = val;
+              _stateController.clear();
+              _cityController.clear();
+              membersVM.selectedState = membersVM.stateList.isNotEmpty
+                  ? membersVM.stateList[0]
+                  : 'Select State';
+              membersVM.selectedCity = membersVM.cityList.isNotEmpty
+                  ? membersVM.cityList[0]
+                  : 'Select City';
+              await membersVM.getStates(val);
+              setState(() {});
+            },
+          ),
+          const SizedBox(height: 12),
+
+          _autocompleteField(
+            label: 'select_state'.tr,
+            icon: Icons.map_outlined,
+            controller: _stateController,
+            options: membersVM.stateList
+                .where((s) => s != 'Select State')
+                .toList(),
+            onSelected: (val) async {
+              membersVM.selectedState = val;
+              _cityController.clear();
+              membersVM.selectedCity = membersVM.cityList.isNotEmpty
+                  ? membersVM.cityList[0]
+                  : 'Select City';
+              await membersVM.getCities(val);
+              setState(() {});
+            },
+          ),
+          const SizedBox(height: 12),
+
+          _autocompleteField(
+            label: 'select_city'.tr,
+            icon: Icons.location_city_outlined,
+            controller: _cityController,
+            options: membersVM.cityList
+                .where((c) => c != 'Select City')
+                .toList(),
+            onSelected: (val) {
+              membersVM.selectedCity = val;
+              setState(() {});
+            },
+          ),
+          const SizedBox(height: 12),
+
+          _autocompleteField(
+            label: 'select_chapter'.tr,
+            icon: Icons.groups_outlined,
+            controller: _chapterController,
+            options: membersVM.chapterList
+                .where((c) => c != 'Select Chapter')
+                .toList(),
+            onSelected: (val) {
+              membersVM.selectedChapter = val;
+              setState(() {});
+            },
+          ),
+          const SizedBox(height: 20),
+
+          // ── Member Details section ──
+          _sectionHeader('member_details'.tr),
+          const SizedBox(height: 14),
+
+          // Member name
+          _styledTextInput(
+            controller: membersVM.memberNameController,
+            hintText: 'member_name'.tr,
+            icon: Icons.person_outline_rounded,
+          ),
+          const SizedBox(height: 12),
+
+          _autocompleteField(
+            label: 'select_business_category'.tr,
+            icon: Icons.business_center_outlined,
+            controller: _businessCatController,
+            options: membersVM.businessCatList
+                .where((b) => b != membersVM.businessCatList[0])
+                .toList(),
+            onSelected: (val) {
+              membersVM.selectedBusinessCategory = val;
+              setState(() {});
+            },
+          ),
+          const SizedBox(height: 28),
+
+          // Confirm button
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () async {
+                await _collectDataAndSearchMember(membersVM);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: midnightBlue,
+                foregroundColor: white,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                elevation: 4,
+                shadowColor: midnightBlue.withOpacity(0.4),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.search_rounded, size: 20),
+                  const SizedBox(width: 8),
+                  Text(
+                    'confirm'.tr,
+                    style: fontBold.copyWith(
+                        fontSize: fontSize16, color: white),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ── Styled text input (Member Name) ──
+  Widget _styledTextInput({
+    required TextEditingController controller,
+    required String hintText,
+    required IconData icon,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: white,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: const Color(0xFFE3E8F4), width: 1.5),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF1E3A5F).withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          const SizedBox(width: 14),
+          Icon(icon, color: midnightBlue.withOpacity(0.5), size: 20),
+          const SizedBox(width: 10),
+          Expanded(
+            child: TextField(
+              controller: controller,
+              style: fontRegular.copyWith(
+                  color: midnightBlue, fontSize: fontSize14),
+              decoration: InputDecoration(
+                hintText: hintText,
+                hintStyle: fontRegular.copyWith(
+                    color: midnightBlue.withOpacity(0.4),
+                    fontSize: fontSize14),
+                border: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                isDense: true,
+                contentPadding:
+                const EdgeInsets.symmetric(vertical: 14),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ── Autocomplete field ──
   Widget _autocompleteField({
     required String label,
+    required IconData icon,
     required TextEditingController controller,
     required List<String> options,
     required void Function(String) onSelected,
   }) {
     return Autocomplete<String>(
       optionsBuilder: (TextEditingValue textEditingValue) {
-        if (textEditingValue.text.isEmpty) {
-          // Show all options when field is empty/tapped
-          return options;
-        }
-        // Filter case-insensitively
-        return options.where((option) => option
-            .toLowerCase()
-            .contains(textEditingValue.text.toLowerCase()));
+        if (textEditingValue.text.isEmpty) return options;
+        return options.where((o) =>
+            o.toLowerCase().contains(textEditingValue.text.toLowerCase()));
       },
       displayStringForOption: (String option) => option,
       onSelected: (String selection) {
@@ -543,43 +788,75 @@ class MembersPageState extends State<MembersPage> {
           FocusNode focusNode,
           VoidCallback onFieldSubmitted,
           ) {
-        // Sync external controller → internal autocomplete controller
-        // so we can reset it from outside (e.g. tab switch)
         if (controller.text.isEmpty && fieldController.text.isNotEmpty) {
           fieldController.clear();
         }
-
-        return Container(
-          padding: const EdgeInsets.symmetric(
-              horizontal: paddingSize20, vertical: paddingSize5),
-          decoration: BoxDecoration(
-            color: lavenderMist,
-            borderRadius: BorderRadius.circular(radius10),
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: fieldController,
-                  focusNode: focusNode,
-                  style: fontRegular.copyWith(
-                      color: midnightBlue, fontSize: fontSize14),
-                  decoration: InputDecoration(
-                    hintText: label,
-                    hintStyle: fontRegular.copyWith(
-                        color: midnightBlue.withOpacity(0.5),
-                        fontSize: fontSize14),
-                    border: InputBorder.none,
-                    enabledBorder: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                    isDense: true,
-                    contentPadding:
-                    const EdgeInsets.symmetric(vertical: paddingSize10),
+        return Focus(
+          onFocusChange: (hasFocus) => setState(() {}),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            decoration: BoxDecoration(
+              color: white,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(
+                color: focusNode.hasFocus
+                    ? midnightBlue
+                    : const Color(0xFFE3E8F4),
+                width: focusNode.hasFocus ? 1.8 : 1.5,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: focusNode.hasFocus
+                      ? midnightBlue.withOpacity(0.1)
+                      : const Color(0xFF1E3A5F).withOpacity(0.05),
+                  blurRadius: focusNode.hasFocus ? 12 : 8,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                const SizedBox(width: 14),
+                Icon(icon,
+                    color: focusNode.hasFocus
+                        ? midnightBlue
+                        : midnightBlue.withOpacity(0.45),
+                    size: 20),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: TextField(
+                    controller: fieldController,
+                    focusNode: focusNode,
+                    style: fontRegular.copyWith(
+                        color: midnightBlue, fontSize: fontSize14),
+                    decoration: InputDecoration(
+                      hintText: label,
+                      hintStyle: fontRegular.copyWith(
+                          color: midnightBlue.withOpacity(0.4),
+                          fontSize: fontSize14),
+                      border: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      isDense: true,
+                      contentPadding:
+                      const EdgeInsets.symmetric(vertical: 14),
+                    ),
                   ),
                 ),
-              ),
-              Image.asset(dropDownArrow, width: 18.0, height: 18.0),
-            ],
+                Padding(
+                  padding: const EdgeInsets.only(right: 14),
+                  child: AnimatedRotation(
+                    turns: focusNode.hasFocus ? 0.5 : 0,
+                    duration: const Duration(milliseconds: 200),
+                    child: Icon(
+                      Icons.keyboard_arrow_down_rounded,
+                      color: midnightBlue.withOpacity(0.6),
+                      size: 22,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },
@@ -591,30 +868,60 @@ class MembersPageState extends State<MembersPage> {
         return Align(
           alignment: Alignment.topLeft,
           child: Material(
-            elevation: 4.0,
-            borderRadius: BorderRadius.circular(radius10),
-            color: lavenderMist,
-            child: ConstrainedBox(
+            elevation: 0,
+            borderRadius: BorderRadius.circular(14),
+            color: Colors.transparent,
+            child: Container(
+              decoration: BoxDecoration(
+                color: white,
+                borderRadius: BorderRadius.circular(14),
+                border:
+                Border.all(color: const Color(0xFFE3E8F4), width: 1.5),
+                boxShadow: [
+                  BoxShadow(
+                    color: midnightBlue.withOpacity(0.1),
+                    blurRadius: 20,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+              ),
               constraints: const BoxConstraints(maxHeight: 200),
-              child: ListView.builder(
-                padding: EdgeInsets.zero,
-                shrinkWrap: true,
-                itemCount: options.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final String option = options.elementAt(index);
-                  return InkWell(
-                    onTap: () => onSelected(option),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: paddingSize20, vertical: paddingSize14),
-                      child: Text(
-                        option,
-                        style: fontRegular.copyWith(
-                            color: midnightBlue, fontSize: fontSize14),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(14),
+                child: ListView.separated(
+                  padding: EdgeInsets.zero,
+                  shrinkWrap: true,
+                  itemCount: options.length,
+                  separatorBuilder: (_, __) => Divider(
+                    height: 1,
+                    color: const Color(0xFFEAEEF8),
+                  ),
+                  itemBuilder: (BuildContext context, int index) {
+                    final String option = options.elementAt(index);
+                    return InkWell(
+                      onTap: () => onSelected(option),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 13),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                option,
+                                style: fontRegular.copyWith(
+                                    color: midnightBlue,
+                                    fontSize: fontSize14),
+                              ),
+                            ),
+                            Icon(Icons.check_rounded,
+                                size: 16,
+                                color: midnightBlue.withOpacity(0.3)),
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             ),
           ),
@@ -623,24 +930,55 @@ class MembersPageState extends State<MembersPage> {
     );
   }
 
+  // ── Section header ──
   Widget _sectionHeader(String label) {
     return Row(
-      mainAxisSize: MainAxisSize.min,
       children: [
-        CommonTextLabel(
-          textColor: white,
-          bgColor: bluishPurple,
-          labelText: label,
-          padding: const EdgeInsets.symmetric(
-              horizontal: paddingSize25, vertical: paddingSize8),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [midnightBlue, const Color(0xFF2D5FA5)],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            ),
+            borderRadius: BorderRadius.circular(8),
+            boxShadow: [
+              BoxShadow(
+                color: midnightBlue.withOpacity(0.25),
+                blurRadius: 8,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
+          child: Text(
+            label,
+            style: fontBold.copyWith(
+              color: white,
+              fontSize: fontSize13,
+              letterSpacing: 0.5,
+            ),
+          ),
         ),
-        Expanded(child: Divider(height: 1.0, color: divider)),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Container(
+            height: 1.5,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  midnightBlue.withOpacity(0.25),
+                  Colors.transparent,
+                ],
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }
 
-  Future<void> _collectDataAndSearchMember(
-      MembersViewmodel membersVM) async {
+  Future<void> _collectDataAndSearchMember(MembersViewmodel membersVM) async {
     await membersVM.getWorldWideSearchedUsersOrMembers(
       membersVM.selectedCity != 'Select City' &&
           membersVM.selectedCity.toString().isNotEmpty
@@ -656,8 +994,7 @@ class MembersPageState extends State<MembersPage> {
           : '',
       membersVM.memberNameController.text,
       membersVM.selectedBusinessCategory.toString().isNotEmpty &&
-          membersVM.selectedBusinessCategory !=
-              membersVM.businessCatList[0]
+          membersVM.selectedBusinessCategory != membersVM.businessCatList[0]
           ? membersVM.selectedBusinessCategory.toString().toUpperCase()
           : '',
       membersVM.selectedChapter != 'Select Chapter' &&

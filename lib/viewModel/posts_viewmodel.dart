@@ -7,6 +7,9 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
+import '../data/api/api_checker.dart';
+import '../model/request_model/update_profile_request_model.dart';
+
 class PostsViewModel extends GetxController implements GetxService {
   final PostsRepo postsRepo;
 
@@ -41,6 +44,7 @@ class PostsViewModel extends GetxController implements GetxService {
   }
 
   bool get isLoading => _isLoading;
+  String get uploadedDocumentUuid => _uploadedDocumentUuid ?? "";
 
   XFile? get postImageFile => _postImageFile;
 
@@ -125,6 +129,24 @@ class PostsViewModel extends GetxController implements GetxService {
         _postImageFile = null;
       }
     }
+  }
+
+  Future<bool> updateProfile(
+      UpdateProfileRequestModel updateProfileRequestModel) async {
+    _isLoading = true;
+    bool isSuccess = false;
+    update();
+    Response response =
+    await postsRepo.updateProfile(updateProfileRequestModel);
+    _isLoading = false;
+    if (response.statusCode == 200) {
+      isSuccess = true;
+    } else {
+      isSuccess = false;
+      ApiChecker.checkApi(response);
+    }
+    update();
+    return isSuccess;
   }
 
   Future<AddUploadOperationResponseModel> uploadImageDocument(
