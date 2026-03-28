@@ -100,12 +100,10 @@ class HomePageState extends State<HomePage> {
                       InkWell(
                         onTap: () async {
                           Get.back();
-                          bool isResult = await Get.toNamed(
-                              Routes.getProfilePageRoute(
-                                  homeVM.currentUserData));
-                          if (isResult ?? false) {
-                            await getCurrentUser(homeVM);
-                          }
+                          await Get.toNamed(
+                              Routes.getProfilePageRoute(homeVM.currentUserData));
+                          await getCurrentUser(homeVM);
+                          homeVM.update();
                         },
                         child: DrawerHeader(
                           padding: EdgeInsets.zero,
@@ -1908,28 +1906,34 @@ class HomePageState extends State<HomePage> {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(21),
-                    child: data.profileUrl != null &&
-                            data.profileUrl!.isNotEmpty
-                        ? CachedNetworkImage(
-                            imageUrl: data.profileUrl!,
-                            width: 42.0,
-                            height: 42.0,
-                            fit: BoxFit.cover,
-                            placeholder: (context, url) =>
-                                SizedBox(width: 42.0, height: 42.0),
-                            errorWidget: (context, url, error) => Image.asset(
-                              profileImage,
-                              width: 42.0,
-                              height: 42.0,
-                              fit: BoxFit.cover,
-                            ),
-                          )
-                        : Image.asset(
-                            profileImage,
-                            width: 42.0,
-                            height: 42.0,
-                            fit: BoxFit.cover,
-                          ),
+                    child: () {
+                      final String? avatarUrl =
+                      data.createdBy == globalCurrentUserData.uuid
+                          ? globalCurrentUserData.profileUrl
+                          : data.profileUrl;
+
+                      return avatarUrl != null && avatarUrl.isNotEmpty
+                          ? CachedNetworkImage(
+                        imageUrl: avatarUrl,
+                        width: 42.0,
+                        height: 42.0,
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) =>
+                            SizedBox(width: 42.0, height: 42.0),
+                        errorWidget: (context, url, error) => Image.asset(
+                          profileImage,
+                          width: 42.0,
+                          height: 42.0,
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                          : Image.asset(
+                        profileImage,
+                        width: 42.0,
+                        height: 42.0,
+                        fit: BoxFit.cover,
+                      );
+                    }(),
                   ),
                   SizedBox(width: paddingSize10),
                   Expanded(
