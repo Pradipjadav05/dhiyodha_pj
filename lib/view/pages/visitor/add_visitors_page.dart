@@ -151,7 +151,7 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
                   hintColor: midnightBlue,
                   bgColor: white,
                   textStyle: fontRegular.copyWith(
-                      color: midnightBlue, fontSize: fontSize14),
+                      color: bluishPurple, fontSize: fontSize14),
                   suffixIcon: Image.asset(calendar),
                   onTap: () async {
                     await vvm.selectDate(context);
@@ -263,7 +263,7 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
                     isEnabled: false,
                     hintText: "upload_visiting_card".tr + " Front",
                     bgColor: white,
-                    hintColor: midnightBlue,
+                    hintColor: bluishPurple,
                     textStyle: fontRegular.copyWith(
                         color: midnightBlue, fontSize: fontSize14),
                     suffixIcon: Image.asset(uploadCard),
@@ -349,7 +349,7 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
                       child: Text(
                         "confirm_visitor".tr,
                         style: fontRegular.copyWith(
-                            color: midnightBlue, fontSize: fontSize12),
+                            color: bluishPurple, fontSize: fontSize12),
                       ),
                     ),
                   ],
@@ -357,7 +357,7 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
                 SizedBox(height: paddingSize25),
                 CommonButton(
                   buttonText: "confirm".tr,
-                  bgColor: midnightBlue,
+                  bgColor: bluishPurple,
                   textColor: periwinkle,
                   onPressed: () async {
                     await _collectDataAndAddVisitors();
@@ -406,7 +406,7 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
                           ),
                           Text("gallery".tr,
                               style: fontBold.copyWith(
-                                  color: midnightBlue, fontSize: fontSize16)),
+                                  color: bluishPurple, fontSize: fontSize16)),
                         ],
                       ),
                       onTap: () async {
@@ -431,7 +431,7 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
                           ),
                           Text("camera".tr,
                               style: fontBold.copyWith(
-                                  color: midnightBlue, fontSize: fontSize16)),
+                                  color: bluishPurple, fontSize: fontSize16)),
                         ],
                       ),
                       onTap: () async {
@@ -541,13 +541,13 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
               borderRadius: BorderRadius.circular(14),
               border: Border.all(
                 color:
-                    focusNode.hasFocus ? midnightBlue : const Color(0xFFE3E8F4),
+                    focusNode.hasFocus ? bluishPurple : const Color(0xFFE3E8F4),
                 width: focusNode.hasFocus ? 1.8 : 1.5,
               ),
               boxShadow: [
                 BoxShadow(
                   color: focusNode.hasFocus
-                      ? midnightBlue.withOpacity(0.1)
+                      ? bluishPurple.withOpacity(0.1)
                       : const Color(0xFF1E3A5F).withOpacity(0.05),
                   blurRadius: focusNode.hasFocus ? 12 : 8,
                   offset: const Offset(0, 3),
@@ -559,8 +559,8 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
                 const SizedBox(width: 14),
                 Icon(icon,
                     color: focusNode.hasFocus
-                        ? midnightBlue
-                        : midnightBlue.withOpacity(0.45),
+                        ? bluishPurple
+                        : bluishPurple.withOpacity(0.45),
                     size: 20),
                 const SizedBox(width: 10),
                 Expanded(
@@ -589,7 +589,7 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
                     duration: const Duration(milliseconds: 200),
                     child: Icon(
                       Icons.keyboard_arrow_down_rounded,
-                      color: midnightBlue.withOpacity(0.6),
+                      color: bluishPurple.withOpacity(0.6),
                       size: 22,
                     ),
                   ),
@@ -617,7 +617,7 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
                 border: Border.all(color: const Color(0xFFE3E8F4), width: 1.5),
                 boxShadow: [
                   BoxShadow(
-                    color: midnightBlue.withOpacity(0.1),
+                    color: bluishPurple.withOpacity(0.1),
                     blurRadius: 20,
                     offset: const Offset(0, 8),
                   ),
@@ -647,11 +647,11 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
                               child: Text(
                                 option,
                                 style: fontRegular.copyWith(
-                                    color: midnightBlue, fontSize: fontSize14),
+                                    color: bluishPurple, fontSize: fontSize14),
                               ),
                             ),
                             Icon(Icons.check_rounded,
-                                size: 16, color: midnightBlue.withOpacity(0.3)),
+                                size: 16, color: bluishPurple.withOpacity(0.3)),
                           ],
                         ),
                       ),

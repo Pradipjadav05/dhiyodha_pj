@@ -124,7 +124,7 @@ class VisitorPageState extends State<VisitorPage>
       ),
       tooltip: "add_visitor".tr,
       elevation: 6,
-      backgroundColor: midnightBlue,
+      backgroundColor: bluishPurple,
       onPressed: () {
         if (widget.isAppBarRequired) {
           Get.toNamed(Routes.getAddVisitorPageRoute());
@@ -142,7 +142,7 @@ class VisitorPageState extends State<VisitorPage>
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.person_add_alt_outlined,
-              size: 72, color: midnightBlue.withOpacity(0.18)),
+              size: 72, color: bluishPurple.withOpacity(0.18)),
           const SizedBox(height: 14),
           Text(
             'no_visitors'.tr,
@@ -228,7 +228,7 @@ class VisitorPageState extends State<VisitorPage>
                       isExpanded ? nextArrow : dropDownArrow,
                       height: iconSize18,
                       width: iconSize18,
-                      color: midnightBlue,
+                      color: bluishPurple,
                     ),
                   ],
                 ),
@@ -432,11 +432,11 @@ class VisitorPageState extends State<VisitorPage>
       width: 34,
       height: 34,
       decoration: BoxDecoration(
-        color: midnightBlue.withOpacity(0.08),
+        color: bluishPurple.withOpacity(0.08),
         borderRadius: BorderRadius.circular(9),
       ),
       child: Center(
-        child: Image.asset(assetPath, height: iconSize18, width: iconSize18,  color: midnightBlue,),
+        child: Image.asset(assetPath, height: iconSize18, width: iconSize18,  color: bluishPurple,),
       ),
     );
   }
