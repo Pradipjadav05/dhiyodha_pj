@@ -35,6 +35,12 @@ class HomeViewModel extends GetxController implements GetxService {
   RxInt _selectedIndex = 0.obs;
   List<PostChildData> _postData = [];
   int _currentDotPosition = 0;
+  int tyfcbCount = 0;
+  int referralCount = 0;
+  int visitorsCount = 0;
+  int oneToOneCount = 0;
+  int trainingCount = 0;
+  int testimonialsCount = 0;
   CarouselSliderController _controller = CarouselSliderController();
 
   CarouselSliderController get controller => _controller;
@@ -294,6 +300,18 @@ class HomeViewModel extends GetxController implements GetxService {
     Response response = await homeRepo.dashboardData(duration);
     _isLoading = false;
     if (response.statusCode == 200) {
+      // Weekly counts mapping
+      if (response.body['data']['weekly'] != null) {
+        final weekly = response.body['data']['weekly'];
+
+        tyfcbCount = weekly['tyfcb']?['count'] ?? 0;
+        referralCount = weekly['referralGiven']?['count'] ?? 0;
+        visitorsCount = weekly['visitors']?['count'] ?? 0;
+        oneToOneCount = weekly['oneToOne']?['count'] ?? 0;
+        trainingCount = weekly['training']?['count'] ?? 0;
+        testimonialsCount = weekly['testimonials']?['count'] ?? 0;
+      }
+
       if (response.body['data']['stats'] != null) {
         _statsList = [];
         response.body['data']['stats'].forEach((order) {

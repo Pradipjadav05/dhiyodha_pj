@@ -1356,9 +1356,11 @@ class HomePageState extends State<HomePage> {
                             color: midnightBlue, fontSize: fontSize16),
                       ),
                       Text(
-                        '0',
+                        '${homeVM.tyfcbCount}',
                         style: fontBold.copyWith(
-                            color: bluishPurple, fontSize: fontSize20),
+                          color: bluishPurple,
+                          fontSize: fontSize20,
+                        ),
                       ),
                     ],
                   ),
@@ -1391,9 +1393,11 @@ class HomePageState extends State<HomePage> {
                             color: midnightBlue, fontSize: fontSize16),
                       ),
                       Text(
-                        "0",
+                        '${homeVM.referralCount}',
                         style: fontBold.copyWith(
-                            color: bluishPurple, fontSize: fontSize20),
+                          color: bluishPurple,
+                          fontSize: fontSize20,
+                        ),
                       ),
                     ],
                   ),
@@ -1434,9 +1438,11 @@ class HomePageState extends State<HomePage> {
                             color: midnightBlue, fontSize: fontSize16),
                       ),
                       Text(
-                        "0",
+                        '${homeVM.visitorsCount}',
                         style: fontBold.copyWith(
-                            color: bluishPurple, fontSize: fontSize20),
+                          color: bluishPurple,
+                          fontSize: fontSize20,
+                        ),
                       ),
                     ],
                   ),
@@ -1471,9 +1477,11 @@ class HomePageState extends State<HomePage> {
                             color: midnightBlue, fontSize: fontSize16),
                       ),
                       Text(
-                        "0",
+                        '${homeVM.oneToOneCount}',
                         style: fontBold.copyWith(
-                            color: bluishPurple, fontSize: fontSize20),
+                          color: bluishPurple,
+                          fontSize: fontSize20,
+                        ),
                       ),
                     ],
                   ),
@@ -1514,9 +1522,11 @@ class HomePageState extends State<HomePage> {
                             color: midnightBlue, fontSize: fontSize16),
                       ),
                       Text(
-                        "0",
+                        '${homeVM.trainingCount}',
                         style: fontBold.copyWith(
-                            color: bluishPurple, fontSize: fontSize20),
+                          color: bluishPurple,
+                          fontSize: fontSize20,
+                        ),
                       ),
                     ],
                   ),
@@ -1551,9 +1561,11 @@ class HomePageState extends State<HomePage> {
                             color: midnightBlue, fontSize: fontSize16),
                       ),
                       Text(
-                        "0",
+                        '${homeVM.testimonialsCount}',
                         style: fontBold.copyWith(
-                            color: bluishPurple, fontSize: fontSize20),
+                          color: bluishPurple,
+                          fontSize: fontSize20,
+                        ),
                       ),
                     ],
                   ),
