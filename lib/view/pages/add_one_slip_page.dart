@@ -13,6 +13,8 @@ import 'package:dhiyodha/view/widgets/common_text_label.dart';
 import 'package:dhiyodha/viewModel/one_to_one_slip_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import '../../utils/resource/app_constants.dart';
 
 class AddOneToOneSlipPage extends StatefulWidget {
   const AddOneToOneSlipPage({Key? key}) : super(key: key);
@@ -80,6 +82,14 @@ class AddOneToOneSlipPageState extends State<AddOneToOneSlipPage> {
                             Routes.getMembersPageRoute('true'));
                         addOVM.metWithController.text =
                             '${childData.firstName} ${childData.lastName}';
+
+                        if (globalCurrentUserData.currentUserRoles?[0].uuid ==
+                            childData.uuid) {
+                          addOVM.initiatedBy = "SELF";
+                        } else {
+                          addOVM.initiatedBy = "OTHER";
+                        }
+
                         setState(() {});
                       },
                       child: CommonTextFormField(
@@ -113,7 +123,9 @@ class AddOneToOneSlipPageState extends State<AddOneToOneSlipPage> {
                       onTap: () async {
                         final MembersChildData childData = await Get.toNamed(
                             Routes.getMembersPageRoute('true'));
-                        addOVM.selectedInitiatedBy = childData.uuid ?? '';
+                        addOVM.selectedInitiatedBy =
+                            '${childData.firstName} ${childData.lastName}';
+                        addOVM.connectedWith = childData.uuid!;
                         setState(() {});
                       },
                       child: CommonTextFormField(
@@ -251,11 +263,16 @@ class AddOneToOneSlipPageState extends State<AddOneToOneSlipPage> {
       showSnackBar('enter_topics'.tr);
     } else {
       final bool isSuccess = await addOVM.addOneToOneData(
-        addOVM.metWithController.text,
-        "SELF",
+        //todo: meetingUuid
+        "",
+        addOVM.connectedWith,
+        addOVM.initiatedBy,
         addOVM.location,
-        addOVM.whenMeetController.text,
+        DateFormat("yyyy-MM-dd").format(addOVM.selectedDate),
         addOVM.conversionTopicController.text,
+        // locationName
+        addOVM.whereMeetController.text,
+        "${globalCurrentUserData.firstName} ${globalCurrentUserData.lastName}",
       );
 
       if (isSuccess) {

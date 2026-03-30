@@ -125,9 +125,10 @@ class VisitorPageState extends State<VisitorPage>
       tooltip: "add_visitor".tr,
       elevation: 6,
       backgroundColor: bluishPurple,
-      onPressed: () {
+      onPressed: () async {
         if (widget.isAppBarRequired) {
-          Get.toNamed(Routes.getAddVisitorPageRoute());
+          await Get.toNamed(Routes.getAddVisitorPageRoute());
+          await setupInitialData();
         } else {
           widget.onStateChanged();
         }

@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class MeetingListResponseModel {
   String? uuid;
   String? title;
@@ -51,8 +53,24 @@ class MeetingListResponseModel {
     return MeetingListResponseModel(
       uuid: json['uuid'],
       title: json['title'],
-      meetingDate: json['meetingDate'],
-      startTime: json['startTime'],
+      meetingDate: json['date'] != null && json['time'] != null
+          ? (() {
+              try {
+                final d = DateFormat("MMMM dd, yyyy").parse(json['date']);
+                final t = json['time'].split(":");
+
+                return DateTime.utc(
+                  d.year,
+                  d.month,
+                  d.day,
+                  int.parse(t[0]),
+                  int.parse(t[1]),
+                ).toIso8601String();
+              } catch (e) {
+                return null;
+              }
+            })()
+          : null,
       endTime: json['endTime'],
       location:
           json['location'] != null ? Location.fromJson(json['location']) : null,

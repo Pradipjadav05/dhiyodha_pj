@@ -41,6 +41,15 @@ class HomeViewModel extends GetxController implements GetxService {
   int oneToOneCount = 0;
   int trainingCount = 0;
   int testimonialsCount = 0;
+
+  int fcOneToOne = 0;
+  int fcReferralGiven = 0;
+  int fcReferralReceived = 0;
+  int fcTyfcb = 0;
+  int fcRevenue = 0;
+  int fcVisitors = 0;
+  int fcCeus = 0;
+
   CarouselSliderController _controller = CarouselSliderController();
 
   CarouselSliderController get controller => _controller;
@@ -329,6 +338,18 @@ class HomeViewModel extends GetxController implements GetxService {
             NextMeeting.fromJson(response.body['data']['nextMeeting']);
         globalNextMeeting =
             NextMeeting.fromJson(response.body['data']['nextMeeting']);
+      }
+
+      if (response.body['data']['filteredCounts'] != null) {
+        final fc = response.body['data']['filteredCounts'];
+
+        fcOneToOne = fc['oneToOne'] ?? 0;
+        fcReferralGiven = fc['referralGiven'] ?? 0;
+        fcReferralReceived = fc['referralReceived'] ?? 0;
+        fcTyfcb = fc['tyfcb'] ?? 0;
+        fcRevenue = fc['revenueReceived'] ?? 0;
+        fcVisitors = fc['visitors'] ?? 0;
+        fcCeus = fc['ceus'] ?? 0;
       }
     } else {
       ApiChecker.checkApi(response);

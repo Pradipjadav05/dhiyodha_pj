@@ -6,6 +6,9 @@ import 'package:dhiyodha/utils/helper/date_converter.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../model/response_model/current_user_response_model.dart';
+import '../utils/resource/app_constants.dart';
+
 class OneToOneSlipViewModel extends GetxController implements GetxService {
   final OneToOneRepo oneToOneRepo;
 
@@ -76,6 +79,10 @@ class OneToOneSlipViewModel extends GetxController implements GetxService {
   set conversionTopicController(TextEditingController v) =>
       _conversionTopicController = v;
 
+  String initiatedBy = "";
+  String connectedWith = "";
+  CurrentUserData _currentUserData = CurrentUserData();
+
   // ────────────────────────────────────────────────────────────
   // initData — resets ADD FORM state only, never clears the list
   // ────────────────────────────────────────────────────────────
@@ -118,24 +125,38 @@ class OneToOneSlipViewModel extends GetxController implements GetxService {
   // addOneToOneData
   // ────────────────────────────────────────────────────────────
   Future<bool> addOneToOneData(
-      String? connectedWith,
-      String? initiatedBy,
-      Location oneToOneLocation,
-      String? oneToOneDate,
-      String? oneToOneNotes) async {
+    String? meetingUuid,
+    String? connectedWith,
+    String? initiatedBy,
+    Location oneToOneLocation,
+    String? oneToOneDate,
+    String? oneToOneNotes,
+    String? locationName,
+    String? senderName,
+  ) async {
     _isLoading = true;
     bool isSuccess = false;
     update();
 
-    final Response response = await oneToOneRepo.addOneToOneData(connectedWith,
-        initiatedBy, oneToOneLocation, oneToOneDate, oneToOneNotes);
+    final Response response = await oneToOneRepo.addOneToOneData(
+      meetingUuid,
+      connectedWith,
+      initiatedBy,
+      oneToOneLocation,
+      oneToOneDate,
+      oneToOneNotes,
+      locationName,
+      senderName,
+    );
 
     _isLoading = false;
+
     if (response.statusCode == 201) {
       isSuccess = true;
     } else {
       ApiChecker.checkApi(response);
     }
+
     update();
     return isSuccess;
   }

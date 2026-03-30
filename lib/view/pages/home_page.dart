@@ -100,8 +100,8 @@ class HomePageState extends State<HomePage> {
                       InkWell(
                         onTap: () async {
                           Get.back();
-                          await Get.toNamed(
-                              Routes.getProfilePageRoute(homeVM.currentUserData));
+                          await Get.toNamed(Routes.getProfilePageRoute(
+                              homeVM.currentUserData));
                           await getCurrentUser(homeVM);
                           homeVM.update();
                         },
@@ -1369,13 +1369,10 @@ class HomePageState extends State<HomePage> {
                 elevation: 0.0,
                 bgColor: lavenderMist,
                 onTap: () async {
-                  final result =
-                      await Get.toNamed(Routes.getReferralsPageRoute());
+                  await Get.toNamed(Routes.getReferralsPageRoute());
 
-                  if (result == true) {
-                    await getDashboardData(homeVM.selectedDuration);
-                    setState(() {});
-                  }
+                  await getDashboardData(homeVM.selectedDuration);
+                  setState(() {});
                 },
                 cardChild: Padding(
                   padding: const EdgeInsets.only(
@@ -1417,8 +1414,10 @@ class HomePageState extends State<HomePage> {
               child: CommonCard(
                 elevation: 0.0,
                 bgColor: lavenderMist,
-                onTap: () {
-                  Get.toNamed(Routes.getVisitorPageRoute());
+                onTap: () async {
+                  await Get.toNamed(Routes.getVisitorPageRoute());
+                  await getDashboardData(homeVM.selectedDuration);
+                  setState(() {});
                 },
                 cardChild: Padding(
                   padding: const EdgeInsets.only(
@@ -1595,38 +1594,23 @@ class HomePageState extends State<HomePage> {
                   right: paddingSize25,
                   bottom: paddingSize25,
                   top: paddingSize55),
-              child: ListView.builder(
-                  itemCount: homeVM.statsList.length,
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    Stats stats = homeVM.statsList[index];
-                    return Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: paddingSize10,
-                              horizontal: paddingSize8),
-                          child: Row(
-                            children: [
-                              Text(
-                                stats.name ?? "",
-                                style: fontRegular.copyWith(
-                                    color: midnightBlue, fontSize: fontSize16),
-                              ),
-                              Spacer(),
-                              Text(
-                                stats.count.toString(),
-                                style: fontBold.copyWith(
-                                    color: midnightBlue, fontSize: fontSize16),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Divider(),
-                      ],
-                    );
-                  })),
+              child: Column(
+                children: [
+                  _rowItem("one_to_one".tr, homeVM.fcOneToOne),
+                  _divider(),
+                  _rowItem("Referrals Given", homeVM.fcReferralGiven),
+                  _divider(),
+                  _rowItem("Referrals Received", homeVM.fcReferralReceived),
+                  _divider(),
+                  _rowItem("TYFCB Given", homeVM.fcTyfcb),
+                  _divider(),
+                  _rowItem("Revenue Received", homeVM.fcRevenue),
+                  _divider(),
+                  _rowItem("visitors".tr, homeVM.fcVisitors),
+                  _divider(),
+                  _rowItem("CEUs", homeVM.fcCeus),
+                ],
+              )),
           onTap: () {},
         ),
         Positioned(
@@ -1725,166 +1709,35 @@ class HomePageState extends State<HomePage> {
         ),
       ],
     );
-    // return Stack(
-    //   clipBehavior: Clip.none,
-    //   children: [
-    //     CommonCard(
-    //       elevation: 0.0,
-    //       bgColor: lavenderMist,
-    //       radius: 16.0,
-    //       cardChild: Padding(
-    //           padding: const EdgeInsets.only(
-    //               left: paddingSize25,
-    //               right: paddingSize25,
-    //               bottom: paddingSize25,
-    //               top: paddingSize55),
-    //           child: ListView.builder(
-    //               itemCount: homeVM.statsList.length,
-    //               physics: NeverScrollableScrollPhysics(),
-    //               shrinkWrap: true,
-    //               itemBuilder: (context, index) {
-    //                 Stats stats = homeVM.statsList[index];
-    //                 return Column(
-    //                   children: [
-    //                     InkWell(
-    //                       onTap: () {
-    //                         Get.toNamed(
-    //                           Routes.getMyNetworkPageRoute(),
-    //                         );
-    //                       },
-    //                       child: Padding(
-    //                         padding: const EdgeInsets.symmetric(
-    //                             vertical: paddingSize10,
-    //                             horizontal: paddingSize8),
-    //                         child: Row(
-    //                           children: [
-    //                             Text(
-    //                               stats.name ?? "",
-    //                               style: fontRegular.copyWith(
-    //                                   color: midnightBlue,
-    //                                   fontSize: fontSize16),
-    //                             ),
-    //                             Spacer(),
-    //                             Text(
-    //                               stats.count.toString(),
-    //                               style: fontBold.copyWith(
-    //                                   color: midnightBlue,
-    //                                   fontSize: fontSize16),
-    //                             ),
-    //                           ],
-    //                         ),
-    //                       ),
-    //                     ),
-    //                     Divider(),
-    //                   ],
-    //                 );
-    //               })),
-    //       onTap: () {},
-    //     ),
-    //     Positioned(
-    //       top: -15,
-    //       left: 20,
-    //       child: Padding(
-    //         padding: const EdgeInsets.all(8.0),
-    //         child: Obx(
-    //           () => Row(
-    //             mainAxisAlignment: MainAxisAlignment.start,
-    //             crossAxisAlignment: CrossAxisAlignment.start,
-    //             children: [
-    //               Expanded(
-    //                 child: CommonCard(
-    //                   elevation: 0.0,
-    //                   bgColor: homeVM.selectedData6month.value
-    //                       ? bluishPurple
-    //                       : lavenderMist,
-    //                   onTap: () async {
-    //                     homeVM.selectedData6month.value = true;
-    //                     homeVM.selectedData12month.value = false;
-    //                     homeVM.selectedDataLifeTime.value = false;
-    //                     await getDashboardData("SIX_MONTH");
-    //                     setState(() {});
-    //                   },
-    //                   cardChild: Padding(
-    //                     padding: const EdgeInsets.symmetric(
-    //                         horizontal: paddingSize15, vertical: paddingSize10),
-    //                     child: Text(
-    //                       textAlign: TextAlign.center,
-    //                       "6 MONTHS".tr,
-    //                       overflow: TextOverflow.ellipsis,
-    //                       style: fontRegular.copyWith(
-    //                           color: homeVM.selectedData6month.value
-    //                               ? white
-    //                               : black,
-    //                           fontSize: fontSize14),
-    //                     ),
-    //                   ),
-    //                 ),
-    //               ),
-    //               Expanded(
-    //                 child: CommonCard(
-    //                   elevation: 2.0,
-    //                   bgColor: homeVM.selectedData12month.value
-    //                       ? bluishPurple
-    //                       : lavenderMist,
-    //                   onTap: () async {
-    //                     homeVM.selectedData6month.value = false;
-    //                     homeVM.selectedData12month.value = true;
-    //                     homeVM.selectedDataLifeTime.value = false;
-    //                     await getDashboardData("ONE_YEAR");
-    //                     setState(() {});
-    //                   },
-    //                   cardChild: Padding(
-    //                     padding: const EdgeInsets.symmetric(
-    //                         horizontal: paddingSize15, vertical: paddingSize10),
-    //                     child: Text(
-    //                       textAlign: TextAlign.center,
-    //                       "12 MONTHS".tr,
-    //                       overflow: TextOverflow.ellipsis,
-    //                       style: fontRegular.copyWith(
-    //                           color: homeVM.selectedData12month.value
-    //                               ? white
-    //                               : black,
-    //                           fontSize: fontSize14),
-    //                     ),
-    //                   ),
-    //                 ),
-    //               ),
-    //               Expanded(
-    //                 child: CommonCard(
-    //                   elevation: 2.0,
-    //                   bgColor: homeVM.selectedDataLifeTime.value
-    //                       ? bluishPurple
-    //                       : lavenderMist,
-    //                   onTap: () async {
-    //                     homeVM.selectedData6month.value = false;
-    //                     homeVM.selectedData12month.value = false;
-    //                     homeVM.selectedDataLifeTime.value = true;
-    //                     await getDashboardData("ALL");
-    //                     setState(() {});
-    //                   },
-    //                   cardChild: Padding(
-    //                     padding: const EdgeInsets.symmetric(
-    //                         horizontal: paddingSize15, vertical: paddingSize10),
-    //                     child: Text(
-    //                       textAlign: TextAlign.center,
-    //                       overflow: TextOverflow.ellipsis,
-    //                       "LIFETIME".tr,
-    //                       style: fontRegular.copyWith(
-    //                           color: homeVM.selectedDataLifeTime.value
-    //                               ? white
-    //                               : black,
-    //                           fontSize: fontSize14),
-    //                     ),
-    //                   ),
-    //                 ),
-    //               ),
-    //             ],
-    //           ),
-    //         ),
-    //       ),
-    //     ),
-    //   ],
-    // );
+  }
+
+  Widget _rowItem(String title, int value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Row(
+        children: [
+          Text(
+            title,
+            style: fontRegular.copyWith(
+              color: midnightBlue,
+              fontSize: fontSize14,
+            ),
+          ),
+          Spacer(),
+          Text(
+            value.toString(),
+            style: fontBold.copyWith(
+              color: midnightBlue,
+              fontSize: fontSize14,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _divider() {
+    return Divider(color: bluishPurple.withOpacity(0.3));
   }
 
   _postListItems(int index, HomeViewModel homeVM) {
@@ -1908,31 +1761,31 @@ class HomePageState extends State<HomePage> {
                     borderRadius: BorderRadius.circular(21),
                     child: () {
                       final String? avatarUrl =
-                      data.createdBy == globalCurrentUserData.uuid
-                          ? globalCurrentUserData.profileUrl
-                          : data.profileUrl;
+                          data.createdBy == globalCurrentUserData.uuid
+                              ? globalCurrentUserData.profileUrl
+                              : data.profileUrl;
 
                       return avatarUrl != null && avatarUrl.isNotEmpty
                           ? CachedNetworkImage(
-                        imageUrl: avatarUrl,
-                        width: 42.0,
-                        height: 42.0,
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) =>
-                            SizedBox(width: 42.0, height: 42.0),
-                        errorWidget: (context, url, error) => Image.asset(
-                          profileImage,
-                          width: 42.0,
-                          height: 42.0,
-                          fit: BoxFit.cover,
-                        ),
-                      )
+                              imageUrl: avatarUrl,
+                              width: 42.0,
+                              height: 42.0,
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) =>
+                                  SizedBox(width: 42.0, height: 42.0),
+                              errorWidget: (context, url, error) => Image.asset(
+                                profileImage,
+                                width: 42.0,
+                                height: 42.0,
+                                fit: BoxFit.cover,
+                              ),
+                            )
                           : Image.asset(
-                        profileImage,
-                        width: 42.0,
-                        height: 42.0,
-                        fit: BoxFit.cover,
-                      );
+                              profileImage,
+                              width: 42.0,
+                              height: 42.0,
+                              fit: BoxFit.cover,
+                            );
                     }(),
                   ),
                   SizedBox(width: paddingSize10),
