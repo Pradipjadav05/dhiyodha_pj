@@ -38,6 +38,7 @@ class MembersPageState extends State<MembersPage>
 
   late AnimationController _animController;
   late Animation<double> _fadeAnim;
+  Timer? _debounce;
 
   @override
   void initState() {
@@ -276,6 +277,22 @@ class MembersPageState extends State<MembersPage>
                 isDense: true,
                 contentPadding: const EdgeInsets.symmetric(vertical: 10),
               ),
+              onChanged: (value) async {
+                if (value.isNotEmpty) {
+                  if (_debounce?.isActive ?? false) _debounce?.cancel();
+                  _debounce =
+                      Timer(const Duration(milliseconds: 700), () async {
+                    await membersVM.searchType('GLOBAL', value);
+                  });
+                } else {
+                  membersVM.memberSearchController.text = '';
+                  membersVM.page.value = 0;
+                  membersVM.totalPages.value = 0;
+                  membersVM.membersData = [];
+                  await membersVM.getUsersOrMembers(
+                      0, membersVM.size.value, '', '', '');
+                }
+              },
             ),
           ),
           // Search action
