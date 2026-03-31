@@ -488,6 +488,7 @@ class MemberProfilePageState extends State<MemberProfilePage> {
       children: [
         CarouselSlider(
           options: CarouselOptions(
+            autoPlay: true,
             height: 250,
             viewportFraction: 1.0,
           ),
