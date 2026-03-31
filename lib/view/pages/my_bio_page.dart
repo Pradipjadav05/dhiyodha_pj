@@ -36,7 +36,7 @@ class MyBioPagePageState extends State<MyBioPage> {
 
     // ── Bio-specific fields not covered by _refreshControllers ──
     vvm.yearOfBusinessController.text =
-        widget.currentUserData.currentUserOrganization?.companyEstablishment ?? '';
+        widget.currentUserData.currentUserOrganization?.yearOfBusiness.toString() ?? '';
     vvm.previousTypesOfJobsController.text =
         widget.currentUserData.previousTypesOfJobs ?? '';
     vvm.partnerController.text =
@@ -270,12 +270,13 @@ class MyBioPagePageState extends State<MyBioPage> {
       businessDetailsResponse: CompanyDetailsRequest(
         uuid: widget.currentUserData.uuid ?? '',
         companyName:
-        widget.currentUserData.currentUserOrganization?.companyName ?? '',
-        companyEstablishment: vvm.yearOfBusinessController.text.isNotEmpty
-            ? vvm.yearOfBusinessController.text
-            : widget.currentUserData.currentUserOrganization
-            ?.companyEstablishment ??
+            widget.currentUserData.currentUserOrganization?.companyName ?? '',
+        companyEstablishment: widget.currentUserData.currentUserOrganization
+                ?.companyEstablishment ??
             '',
+        yearOfBusiness: vvm.yearOfBusinessController.text.isNotEmpty
+            ? vvm.yearOfBusinessController.text
+            : widget.currentUserData.currentUserOrganization?.yearOfBusiness.toString() ?? '',
         companyAddress:
         widget.currentUserData.currentUserOrganization?.companyAddress ?? '',
         registeredType:

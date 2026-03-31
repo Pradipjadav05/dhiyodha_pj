@@ -251,6 +251,7 @@ class CurrentUserOrganization {
   String? uploadPan;
   String? aadharNo;
   String? uploadAadhar;
+  double? yearOfBusiness;
 
   CurrentUserOrganization(
       {this.uuid,
@@ -273,6 +274,7 @@ class CurrentUserOrganization {
       this.uploadPan,
       this.aadharNo,
       this.uploadAadhar,
+      this.yearOfBusiness,
       });
 
   CurrentUserOrganization.fromJson(Map<String, dynamic> json) {
@@ -298,6 +300,7 @@ class CurrentUserOrganization {
     uploadPan = json['uploadPan'];
     aadharNo = json['aadharNo'];
     uploadAadhar = json['uploadAadhar'];
+    yearOfBusiness = json['yearOfBusiness'];
   }
 
   Map<String, dynamic> toJson() {
@@ -324,6 +327,7 @@ class CurrentUserOrganization {
     data['uploadPan'] = this.uploadPan;
     data['aadharNo'] = this.aadharNo;
     data['uploadAadhar'] = this.uploadAadhar;
+    data['yearOfBusiness'] = this.yearOfBusiness;
     return data;
   }
 }

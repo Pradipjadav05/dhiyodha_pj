@@ -130,6 +130,7 @@ class CompanyDetailsRequest {
   String? uploadPan;
   String? aadharNo;
   String? uploadAadhar;
+  String? yearOfBusiness;
 
   CompanyDetailsRequest(
       {this.uuid,
@@ -151,7 +152,8 @@ class CompanyDetailsRequest {
       this.panNumber,
       this.uploadPan,
       this.aadharNo,
-      this.uploadAadhar
+      this.uploadAadhar,
+      this.yearOfBusiness,
       });
 
   CompanyDetailsRequest.fromJson(Map<String, dynamic> json) {
@@ -175,6 +177,7 @@ class CompanyDetailsRequest {
     uploadPan = json['uploadPan'];
     aadharNo = json['aadharNo'];
     uploadAadhar = json['uploadAadhar'];
+    yearOfBusiness = json['yearOfBusiness'];
   }
 
   Map<String, dynamic> toJson() {
@@ -199,6 +202,7 @@ class CompanyDetailsRequest {
     data['uploadPan'] = uploadPan;
     data['aadharNo'] = aadharNo;
     data['uploadAadhar'] = uploadAadhar;
+    data['yearOfBusiness'] = yearOfBusiness;
     return data;
   }
 }
