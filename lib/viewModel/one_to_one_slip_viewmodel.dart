@@ -125,10 +125,10 @@ class OneToOneSlipViewModel extends GetxController implements GetxService {
   // addOneToOneData
   // ────────────────────────────────────────────────────────────
   Future<bool> addOneToOneData(
-    String? meetingUuid,
+    // String? meetingUuid,
     String? connectedWith,
     String? initiatedBy,
-    Location oneToOneLocation,
+    // Location oneToOneLocation,
     String? oneToOneDate,
     String? oneToOneNotes,
     String? locationName,
@@ -139,10 +139,10 @@ class OneToOneSlipViewModel extends GetxController implements GetxService {
     update();
 
     final Response response = await oneToOneRepo.addOneToOneData(
-      meetingUuid,
+      // meetingUuid,
       connectedWith,
       initiatedBy,
-      oneToOneLocation,
+      // oneToOneLocation,
       oneToOneDate,
       oneToOneNotes,
       locationName,

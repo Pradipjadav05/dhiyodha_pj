@@ -1455,8 +1455,10 @@ class HomePageState extends State<HomePage> {
               child: CommonCard(
                 elevation: 0.0,
                 bgColor: lavenderMist,
-                onTap: () {
-                  Get.toNamed(Routes.getOneToOnePageRoute());
+                onTap: () async {
+                  await Get.toNamed(Routes.getOneToOnePageRoute());
+                  await getDashboardData(homeVM.selectedDuration);
+                  setState(() {});
                 },
                 cardChild: Padding(
                   padding: const EdgeInsets.only(

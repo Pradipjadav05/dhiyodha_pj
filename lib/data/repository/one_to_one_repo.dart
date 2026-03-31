@@ -13,20 +13,20 @@ class OneToOneRepo {
 
   // ── Add new one-to-one record ──
   Future<Response> addOneToOneData(
-      String? meetingUuid,
+      // String? meetingUuid,
       String? connectedWith,
       String? initiatedBy,
-      Location oneToOneLocation,
+      // Location oneToOneLocation,
       String? oneToOneDate,
       String? oneToOneNotes,
       String? locationName,
       String? senderName,
       ) async {
     return await apiClient.postData(addOneToOneUrl, {
-      "meetingUuid": meetingUuid,
+      // "meetingUuid": meetingUuid,
       "connectedWith": connectedWith,
       "initiatedBy": initiatedBy,
-      "oneToOneLocation": oneToOneLocation.toJson(),
+      // "oneToOneLocation": oneToOneLocation.toJson(),
       "oneToOneDate": oneToOneDate,
       "oneToOneNotes": oneToOneNotes,
       "locationName": locationName,

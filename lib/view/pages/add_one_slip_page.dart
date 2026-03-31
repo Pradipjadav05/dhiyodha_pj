@@ -83,12 +83,7 @@ class AddOneToOneSlipPageState extends State<AddOneToOneSlipPage> {
                         addOVM.metWithController.text =
                             '${childData.firstName} ${childData.lastName}';
 
-                        if (globalCurrentUserData.currentUserRoles?[0].uuid ==
-                            childData.uuid) {
-                          addOVM.initiatedBy = "SELF";
-                        } else {
-                          addOVM.initiatedBy = "OTHER";
-                        }
+                        addOVM.connectedWith = childData.uuid!;
 
                         setState(() {});
                       },
@@ -125,7 +120,12 @@ class AddOneToOneSlipPageState extends State<AddOneToOneSlipPage> {
                             Routes.getMembersPageRoute('true'));
                         addOVM.selectedInitiatedBy =
                             '${childData.firstName} ${childData.lastName}';
-                        addOVM.connectedWith = childData.uuid!;
+                        if (globalCurrentUserData.currentUserRoles?[0].uuid ==
+                            childData.uuid) {
+                          addOVM.initiatedBy = "SELF";
+                        } else {
+                          addOVM.initiatedBy = "OTHER";
+                        }
                         setState(() {});
                       },
                       child: CommonTextFormField(
@@ -264,10 +264,10 @@ class AddOneToOneSlipPageState extends State<AddOneToOneSlipPage> {
     } else {
       final bool isSuccess = await addOVM.addOneToOneData(
         //todo: meetingUuid
-        "",
+        // "",
         addOVM.connectedWith,
         addOVM.initiatedBy,
-        addOVM.location,
+        // addOVM.location,
         DateFormat("yyyy-MM-dd").format(addOVM.selectedDate),
         addOVM.conversionTopicController.text,
         // locationName
