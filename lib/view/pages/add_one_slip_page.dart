@@ -277,6 +277,7 @@ class AddOneToOneSlipPageState extends State<AddOneToOneSlipPage> {
 
       if (isSuccess) {
         showSnackBar('one_to_one_added'.tr, isError: false);
+        addOVM.resetForm();
         Get.back();
       } else {
         showSnackBar('errorMessage'.tr);

@@ -96,7 +96,7 @@ class OneToOneSlipViewModel extends GetxController implements GetxService {
     _whenMeetController = TextEditingController();
     _conversionTopicController = TextEditingController();
     _location = Location(latitude: 0, longitude: 0);
-    // ✅ _oneToOneDataList is intentionally NOT reset here
+    resetForm();
   }
 
   // ────────────────────────────────────────────────────────────
@@ -186,5 +186,19 @@ class OneToOneSlipViewModel extends GetxController implements GetxService {
       whenMeetController.text =
           '${whenMeetController.text} ${selectedTime.hour}:${selectedTime.minute}';
     }
+  }
+
+  void resetForm() {
+    metWithController.clear();
+    whereMeetController.clear();
+    whenMeetController.clear();
+    conversionTopicController.clear();
+
+    selectedInitiatedBy = '';
+    connectedWith = '';
+    initiatedBy = '';
+    selectedDate = DateTime.now();
+
+    update(); // important for GetBuilder
   }
 }
