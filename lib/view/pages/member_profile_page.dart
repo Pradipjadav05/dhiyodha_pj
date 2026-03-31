@@ -27,6 +27,7 @@ class MemberProfilePage extends StatefulWidget {
 }
 
 class MemberProfilePageState extends State<MemberProfilePage> {
+  int _currentIndex = 0;
   @override
   void initState() {
     super.initState();
@@ -85,7 +86,25 @@ class MemberProfilePageState extends State<MemberProfilePage> {
                   SizedBox(height: paddingSize40),
                   _businessCardDetails(),
                   SizedBox(height: paddingSize40),
-                  _testimonialCardDetails(memberVM)
+                  _testimonialCardDetails(memberVM),
+                  SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(
+                      memberVM.testimonialDataList.length,
+                          (index) => Container(
+                        margin: EdgeInsets.symmetric(horizontal: 4),
+                        width: _currentIndex == index ? 15 : 10,
+                        height: _currentIndex == index ? 15 : 10,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: _currentIndex == index
+                              ? bluishPurple
+                              : bluishPurple.withOpacity(0.3),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -491,6 +510,11 @@ class MemberProfilePageState extends State<MemberProfilePage> {
             autoPlay: true,
             height: 250,
             viewportFraction: 1.0,
+            onPageChanged: (index, reason) {
+              setState(() {
+                _currentIndex = index;
+              });
+            },
           ),
           items: memberVM.testimonialDataList.map((i) {
             return Builder(
