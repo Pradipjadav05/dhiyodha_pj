@@ -175,7 +175,7 @@ class MembersViewmodel extends GetxController implements GetxService {
     _selectedCity = 'Select City';
     _selectedChapter = 'Select Chapter';
     _businessCatList = [];
-    _selectedBusinessCategory = _businessCatList[0];
+    _selectedBusinessCategory = "";
 
     // ── Load first page of chapter roster ──
     await getUsersOrMembers(_page.value, _size.value, '', '', '');
