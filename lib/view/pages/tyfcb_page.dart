@@ -10,6 +10,8 @@ import 'package:dhiyodha/viewModel/tyfcb_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../viewModel/home_viewmodel.dart';
+
 class TyfcbPage extends StatefulWidget {
   @override
   TyfcbPageState createState() => TyfcbPageState();
@@ -37,9 +39,14 @@ class TyfcbPageState extends State<TyfcbPage>
 
   Future<void> callInitData() async {
     TyfcbViewModel tyfcbViewModel = Get.find<TyfcbViewModel>();
+    final homeVM = Get.find<HomeViewModel>();
+
     await tyfcbViewModel.initData();
-    await tyfcbViewModel.getTyfcbData(
-        tyfcbViewModel.page.value, tyfcbViewModel.size.value, "", "", "");
+    // await tyfcbViewModel.getTyfcbData(
+    //     tyfcbViewModel.page.value, tyfcbViewModel.size.value, "", "", "");
+    await homeVM.dashboardData(homeVM.selectedDuration);
+
+    tyfcbViewModel.setDashboardTyfcb(homeVM.lastWeeklyData ?? {});
   }
 
   Future<void> getTyfcbData(
@@ -72,18 +79,104 @@ class TyfcbPageState extends State<TyfcbPage>
           floatingActionButton: _buildFAB(tyVM),
           body: FadeTransition(
             opacity: _fadeAnim,
-            child: tyVM.tyfcbList.isEmpty
-                ? _buildEmptyState()
-                : ListView.builder(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 100),
-              itemCount: tyVM.tyfcbList.length,
-              itemBuilder: (context, index) {
-                return _tyfcbCard(index, tyVM);
-              },
+            child: Column(
+              children: [
+                // Loading bar
+                if (tyVM.isLoading)
+                  LinearProgressIndicator(
+                    color: midnightBlue,
+                    backgroundColor: lavenderMist,
+                    minHeight: 3,
+                    borderRadius: BorderRadius.circular(radius20),
+                  ),
+                _buildTabSwitcher(tyVM),
+
+                Expanded(
+                  child: Obx(() {
+
+                    final list = tyVM.isGivenTab.value
+                        ? tyVM.tyfcbGivenList
+                        : tyVM.tyfcbReceivedList;
+
+                    if (list.isEmpty) {
+                      return _buildEmptyState();
+                    }
+
+                    return ListView.builder(
+                      padding: const EdgeInsets.fromLTRB(16, 12, 16, 100),
+                      itemCount: list.length,
+                      itemBuilder: (context, index) {
+                        return _tyfcbCard(index, tyVM, list);
+                      },
+                    );
+                  }),
+                ),
+              ],
             ),
           ),
         );
       }),
+    );
+  }
+
+  Widget _buildTabSwitcher(TyfcbViewModel tyVM) {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 14, 16, 6),
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: const Color(0xFFE3E8F4),
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Obx(() {
+        return Row(
+          children: [
+            _tabPill(
+              label: "Given",
+              isActive: tyVM.isGivenTab.value,
+              onTap: () async {
+                tyVM.isGivenTab.value = true;
+                await callInitData();
+              },
+            ),
+            _tabPill(
+              label: "Received",
+              isActive: !tyVM.isGivenTab.value,
+              onTap: () async {
+                tyVM.isGivenTab.value = false;
+                await callInitData();
+              },
+            ),
+          ],
+        );
+      }),
+    );
+  }
+
+  Widget _tabPill({
+    required String label,
+    required bool isActive,
+    required VoidCallback onTap,
+  }) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          decoration: BoxDecoration(
+            color: isActive ? midnightBlue : Colors.transparent,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Center(
+            child: Text(
+              label,
+              style: TextStyle(
+                color: isActive ? Colors.white : Colors.grey,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -97,7 +190,8 @@ class TyfcbPageState extends State<TyfcbPage>
       backgroundColor: bluishPurple,
       onPressed: () async {
         await Get.toNamed(Routes.getAddTyPageRoute());
-        await getTyfcbData(0, 10, "", "", "");
+        // await getTyfcbData(0, 10, "", "", "");
+        await callInitData();
       },
       child: const Icon(Icons.add_rounded, color: Colors.white, size: 28),
     );
@@ -127,8 +221,8 @@ class TyfcbPageState extends State<TyfcbPage>
     );
   }
 
-  Widget _tyfcbCard(int index, TyfcbViewModel tyVM) {
-    final TyfcbChildData tyfcbData = tyVM.tyfcbList[index];
+  Widget _tyfcbCard(int index, TyfcbViewModel tyVM, List list) {
+    final TyfcbChildData tyfcbData = list[index];
     final bool isExpanded = _expandedMap[index] ?? false;
     final String fullName =
     '${tyfcbData.recipient?.firstName ?? ""} ${tyfcbData.recipient?.lastName ?? ""}'.trim();

@@ -98,6 +98,18 @@ class TyfcbViewModel extends GetxController implements GetxService {
 
   bool _isLoading = false;
 
+  RxBool _isGivenTab = true.obs;
+
+  RxBool get isGivenTab => _isGivenTab;
+
+  set isGivenTab(RxBool value) {
+    _isGivenTab = value;
+  }
+
+  List<TyfcbChildData> tyfcbGivenList = [];
+  List<TyfcbChildData> tyfcbReceivedList = [];
+
+
   Future<void> initData() async {
     _businessTypeNew = true.obs;
     _businessTypeRepeat = false.obs;
@@ -176,5 +188,69 @@ class TyfcbViewModel extends GetxController implements GetxService {
 
   set totalDataSize(RxInt value) {
     _totalDataSize = value;
+  }
+
+  void setDashboardTyfcb(Map<String, dynamic> weekly) {
+
+    _isLoading = true;
+    update();
+
+    tyfcbGivenList = [];
+    tyfcbReceivedList = [];
+
+    // GIVEN
+    if (weekly['tyfcb'] != null) {
+      for (var v in weekly['tyfcb']['list']) {
+        tyfcbGivenList.add(
+          TyfcbChildData.fromJson({
+            "uuid": v['uuid'],
+            "giftAmount": (v['referralAmount'] as num?)?.toDouble(),
+            "businessType": v['businessType'],
+            "referralType": v['referralType'],
+            "comments": v['comments'],
+            "recipientId": {
+              "id": v['userId'],
+              "uuid": v['userUuid'],
+              "firstName": v['fullName']?.split(" ").first,
+              "lastName": v['fullName']?.split(" ").length > 1
+                  ? v['fullName']?.split(" ").last
+                  : "",
+              "profileUrl": v['profileImage'],
+            },
+
+            "createdAt": v['createdAt'],
+          }),
+        );
+      }
+    }
+
+    //  RECEIVED
+    if (weekly['tyfcbReceived'] != null) {
+      for (var v in weekly['tyfcbReceived']['list']) {
+        tyfcbReceivedList.add(
+          TyfcbChildData.fromJson({
+            "uuid": v['uuid'],
+            "giftAmount": (v['referralAmount'] as num?)?.toDouble(),
+            "businessType": v['businessType'],
+            "referralType": v['referralType'],
+            "comments": v['comments'],
+            "recipientId": {
+              "id": v['userId'],
+              "uuid": v['userUuid'],
+              "firstName": v['fullName']?.split(" ").first,
+              "lastName": v['fullName']?.split(" ").length > 1
+                  ? v['fullName']?.split(" ").last
+                  : "",
+              "profileUrl": v['profileImage'],
+            },
+
+            "createdAt": v['createdAt'],
+          }),
+        );
+      }
+    }
+
+    _isLoading = false;
+    update();
   }
 }
