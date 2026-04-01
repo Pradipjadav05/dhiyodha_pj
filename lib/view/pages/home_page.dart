@@ -1803,11 +1803,11 @@ class HomePageState extends State<HomePage> {
                           style: fontMedium.copyWith(
                               fontSize: fontSize14, color: midnightBlue),
                         ),
-                        Text(
-                          '${DateConverter.convertDateToDate(data.createdAt ?? DateTime.now().toString())}',
-                          style: fontMedium.copyWith(
-                              fontSize: fontSize10, color: greyText),
-                        ),
+                        // Text(
+                        //   '${DateConverter.convertDateToDate(data.createdAt ?? DateTime.now().toString())}',
+                        //   style: fontMedium.copyWith(
+                        //       fontSize: fontSize10, color: greyText),
+                        // ),
                         Text(
                           data.postRegion == "CITY_REGION"
                               ? 'CITY'
@@ -2039,6 +2039,13 @@ class HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                child: Text(
+                  timeAgo(data.createdAt ?? ""),
+                  style: TextStyle(color: Colors.grey, fontSize: 12),
+                ),
+              ),
               // SizedBox(height: paddingSize5),
               // Row(
               //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -2068,6 +2075,29 @@ class HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  String timeAgo(String dateString) {
+    const months = [
+      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    ];
+
+    try {
+      final dateTime = DateTime.parse(dateString).toLocal();
+      final now = DateTime.now();
+      final diff = now.difference(dateTime);
+
+      if (diff.inSeconds < 60) return "${diff.inSeconds} second ago";
+      if (diff.inMinutes < 60) return "${diff.inMinutes} minutes Ago";
+      if (diff.inHours < 24) return "${diff.inHours} hours Ago";
+      // if (diff.inDays == 1) return "Yesterday";
+      if (diff.inDays < 7) return "${diff.inDays} days Ago";
+
+      return "${dateTime.day} ${months[dateTime.month - 1]} ${dateTime.year}";
+    } catch (e) {
+      return "";
+    }
   }
 
   Future<void> _showAllCommentsSheet(
@@ -2177,16 +2207,15 @@ class HomePageState extends State<HomePage> {
                                                                 .start,
                                                         children: [
                                                           Text(
-                                                            data
-                                                                    .comments?[
-                                                                        index]
-                                                                    .comment ??
-                                                                "",
+                                                            "${data.firstName} ${data.lastName}",
                                                             style: fontMedium.copyWith(
-                                                                fontSize:
-                                                                    fontSize12,
-                                                                color:
-                                                                    midnightBlue),
+                                                                fontSize: fontSize14, color: midnightBlue),
+                                                          ),
+                                                          Text(
+                                                            data.comments?[index].comment ?? "",
+                                                            style: fontMedium.copyWith(
+                                                                fontSize: fontSize12,
+                                                                color: midnightBlue),
                                                           ),
                                                           // Text(
                                                           //   "Beautiful place.",
@@ -2197,9 +2226,6 @@ class HomePageState extends State<HomePage> {
                                                           //           color:
                                                           //               midnightBlue),
                                                           // ),
-                                                          SizedBox(
-                                                              height:
-                                                                  paddingSize5),
                                                           // Row(
                                                           //   mainAxisSize: MainAxisSize.max,
                                                           //   mainAxisAlignment:
