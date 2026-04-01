@@ -71,6 +71,7 @@ class PostChildData {
   String? postRegion;
   int? commentsCounter;
   List<Comments>? comments;
+  AddressDTO? addressDTO;
   List<Likes>? likes;
   String? createdAt;
   String? createdBy;
@@ -113,6 +114,9 @@ class PostChildData {
         comments!.add(new Comments.fromJson(v));
       });
     }
+    if (json['addressDTO'] != null) {
+      addressDTO = AddressDTO.fromJson(json['addressDTO']);
+    }
     if (json['likes'] != null) {
       likes = <Likes>[];
       json['likes'].forEach((v) {
@@ -138,6 +142,9 @@ class PostChildData {
     data['commentsCounter'] = this.commentsCounter;
     if (this.comments != null) {
       data['comments'] = this.comments!.map((v) => v.toJson()).toList();
+    }
+    if (this.addressDTO != null) {
+      data['addressDTO'] = this.addressDTO!.toJson();
     }
     if (this.likes != null) {
       data['likes'] = this.likes!.map((v) => v.toJson()).toList();
@@ -171,6 +178,31 @@ class Comments {
     data['comment'] = this.comment;
     data['userId'] = this.userId;
     data['createdAt'] = this.createdAt;
+    return data;
+  }
+}
+
+class AddressDTO {
+  String? city;
+  String? state;
+  String? country;
+  String? pinCode;
+
+  AddressDTO({this.city, this.state, this.country, this.pinCode});
+
+  AddressDTO.fromJson(Map<String, dynamic> json) {
+    city = json['city'];
+    state = json['state'];
+    country = json['country'];
+    pinCode = json['pinCode'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['city'] = this.city;
+    data['state'] = this.state;
+    data['country'] = this.country;
+    data['pinCode'] = this.pinCode;
     return data;
   }
 }

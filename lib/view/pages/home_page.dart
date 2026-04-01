@@ -1803,18 +1803,23 @@ class HomePageState extends State<HomePage> {
                           style: fontMedium.copyWith(
                               fontSize: fontSize14, color: midnightBlue),
                         ),
+                        Text(
+                            "${data.addressDTO?.city ?? ""}, ${data.addressDTO?.state ?? ""}",
+                          style: fontMedium.copyWith(
+                              fontSize: fontSize10, color: greyText),
+                        ),
                         // Text(
                         //   '${DateConverter.convertDateToDate(data.createdAt ?? DateTime.now().toString())}',
                         //   style: fontMedium.copyWith(
                         //       fontSize: fontSize10, color: greyText),
                         // ),
-                        Text(
-                          data.postRegion == "CITY_REGION"
-                              ? 'CITY'
-                              : '${data.postRegion}',
-                          style: fontMedium.copyWith(
-                              fontSize: fontSize10, color: greyText),
-                        )
+                        // Text(
+                        //   data.postRegion == "CITY_REGION"
+                        //       ? 'CITY'
+                        //       : '${data.postRegion}',
+                        //   style: fontMedium.copyWith(
+                        //       fontSize: fontSize10, color: greyText),
+                        // )
                       ],
                     ),
                   ),
@@ -2039,12 +2044,9 @@ class HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                child: Text(
-                  timeAgo(data.createdAt ?? ""),
-                  style: TextStyle(color: Colors.grey, fontSize: 12),
-                ),
+              Text(
+                timeAgo(data.createdAt ?? ""),
+                style: TextStyle(color: Colors.grey, fontSize: 12),
               ),
               // SizedBox(height: paddingSize5),
               // Row(
