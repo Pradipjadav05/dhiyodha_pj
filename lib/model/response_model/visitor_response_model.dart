@@ -70,7 +70,7 @@ class VisitorChildData {
   String? date;
   String? businessCategory;
   String? name;
-  int? contactNumber;
+  String? contactNumber;
   String? companyName;
   String? addedBy;
   String? groupName;

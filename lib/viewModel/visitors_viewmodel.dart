@@ -674,4 +674,23 @@ class VisitorsViewModel extends GetxController implements GetxService {
     }
     update();
   }
+
+  void setDashboardVisitors(Map<String, dynamic> weekly) {
+    _visitorData = [];
+
+    if (weekly['visitors'] != null) {
+      for (var v in weekly['visitors']['list']) {
+        _visitorData.add(VisitorChildData(
+          name: v['fullName'],
+          title: v['designation'],
+          profileUrl: v['profileImage'],
+          companyName: v['companyName'],
+          contactNumber: v['number'],
+          businessCategory: v['designation'],
+        ));
+      }
+    }
+
+    update();
+  }
 }

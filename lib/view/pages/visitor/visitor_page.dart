@@ -11,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loadmore/loadmore.dart';
 
+import '../../../viewModel/home_viewmodel.dart';
+
 class VisitorPage extends StatefulWidget {
   final bool isAppBarRequired;
   final VoidCallback onStateChanged;
@@ -46,9 +48,15 @@ class VisitorPageState extends State<VisitorPage>
   }
 
   Future<void> setupInitialData() async {
-    VisitorsViewModel vvm = Get.find<VisitorsViewModel>();
-    await vvm.initData();
-    await vvm.getVisitors(vvm.page.value, vvm.size.value, "", "", "");
+    final visitorVM = Get.find<VisitorsViewModel>();
+    final homeVM = Get.find<HomeViewModel>();
+
+    await visitorVM.initData();
+    // await vvm.getVisitors(vvm.page.value, vvm.size.value, "", "", "");
+
+    await homeVM.dashboardData(homeVM.selectedDuration);
+
+    visitorVM.setDashboardVisitors(homeVM.lastWeeklyData ?? {});
   }
 
   @override
