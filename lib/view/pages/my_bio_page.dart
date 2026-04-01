@@ -275,8 +275,8 @@ class MyBioPagePageState extends State<MyBioPage> {
                 ?.companyEstablishment ??
             '',
         yearOfBusiness: vvm.yearOfBusinessController.text.isNotEmpty
-            ? vvm.yearOfBusinessController.text
-            : widget.currentUserData.currentUserOrganization?.yearOfBusiness.toString() ?? '',
+            ? double.tryParse(vvm.yearOfBusinessController.text)
+            : widget.currentUserData.currentUserOrganization?.yearOfBusiness?.toDouble(),
         companyAddress:
         widget.currentUserData.currentUserOrganization?.companyAddress ?? '',
         registeredType:

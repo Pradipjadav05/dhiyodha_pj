@@ -299,12 +299,12 @@ class HomeViewModel extends GetxController implements GetxService {
     if (response.statusCode == 200) {
       if (response.body['data']['weekly'] != null) {
         final weekly = response.body['data']['weekly'];
-        tyfcbCount = weekly['tyfcb']?['count'] ?? 0;
-        referralCount = weekly['referralGiven']?['count'] ?? 0;
+        tyfcbCount = weekly['tyfcbReceived']?['count'] ?? 0;
+        referralCount = weekly['referralReceived']?['count'] ?? 0;
         visitorsCount = weekly['visitors']?['count'] ?? 0;
         oneToOneCount = weekly['oneToOne']?['count'] ?? 0;
         trainingCount = weekly['training']?['count'] ?? 0;
-        testimonialsCount = weekly['testimonials']?['count'] ?? 0;
+        testimonialsCount = weekly['testimonialReviewers']?['count'] ?? 0;
 
         referralGivenList = [];
         referralReceivedList = [];

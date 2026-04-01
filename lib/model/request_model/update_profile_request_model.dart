@@ -130,7 +130,7 @@ class CompanyDetailsRequest {
   String? uploadPan;
   String? aadharNo;
   String? uploadAadhar;
-  String? yearOfBusiness;
+  double? yearOfBusiness;
 
   CompanyDetailsRequest(
       {this.uuid,
