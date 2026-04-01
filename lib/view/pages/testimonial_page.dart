@@ -9,13 +9,18 @@ import 'package:dhiyodha/view/widgets/common_snackbar.dart';
 import 'package:dhiyodha/viewModel/testimonial_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:loadmore/loadmore.dart';
+
+import '../../viewModel/home_viewmodel.dart';
 
 class TestimonialPage extends StatefulWidget {
   TestimonialPageState createState() => TestimonialPageState();
 }
 
 class TestimonialPageState extends State<TestimonialPage> {
+
+  final RxBool isSenderTab = true.obs;
+
+  late TestimonialViewModel testimonialVM;
   @override
   void initState() {
     super.initState();
@@ -23,22 +28,33 @@ class TestimonialPageState extends State<TestimonialPage> {
   }
 
   Future<void> initData() async {
-    TestimonialViewModel testimonialViewModel =
-        Get.find<TestimonialViewModel>();
-    testimonialViewModel.initData();
-    testimonialViewModel.getMyTestimonial(testimonialViewModel.page.value,
-        testimonialViewModel.size.value, "", "", "");
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      testimonialVM = Get.find<TestimonialViewModel>();
+      testimonialVM.initData();
+
+      getTestimonialData();
+    });
   }
 
+  Future<void> getTestimonialData() async {
+    final homeVM = Get.find<HomeViewModel>();
+
+    await homeVM.dashboardData(homeVM.selectedDuration);
+
+    testimonialVM.setDashboardTestimonials(
+        homeVM.lastWeeklyData ?? {});
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: GetBuilder<TestimonialViewModel>(builder: (testimonialVM) {
+      child: GetBuilder<HomeViewModel>(builder: (homeVM) {
         return Scaffold(
           backgroundColor: ghostWhite,
           appBar: CommonAppBar(
             title: Text(
-              "testimonials_received".tr,
+              isSenderTab.value
+                  ? "Testimonials Sent"
+                  : "Testimonials Received",
               style: fontBold.copyWith(
                   fontSize: fontSize18,
                   color: Theme.of(context).textTheme.bodyLarge!.color),
@@ -47,38 +63,35 @@ class TestimonialPageState extends State<TestimonialPage> {
           body: Column(
             children: [
               Visibility(
-                visible: testimonialVM.isLoading,
+                visible: homeVM.isLoading,
                 child: LinearProgressIndicator(
                   color: midnightBlue,
                   backgroundColor: lavenderMist,
                   borderRadius: BorderRadius.circular(radius20),
                 ),
               ),
-              testimonialVM.myTestimonialList.isEmpty
-                  ? testimonialVM.isLoading
-                      ? Container()
-                      : Expanded(
-                          child: Center(
-                            child: Text("no_test_found".tr),
-                          ),
-                        )
-                  : Expanded(
-                      child: LoadMore(
-                          isFinish: testimonialVM.page.value ==
-                              testimonialVM.totalPages.value,
-                          whenEmptyLoad: true,
-                          delegate: const DefaultLoadMoreDelegate(),
-                          textBuilder: DefaultLoadMoreTextBuilder.english,
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              return _testimonialListItems(
-                                  index, testimonialVM);
-                            },
-                            itemCount: testimonialVM.myTestimonialList.length,
-                          ),
-                          onLoadMore: testimonialVM.loadMore),
-                    ),
+              _buildTabSwitcher(),
+
+              Expanded(
+                child: Obx(() {
+
+                  final list = isSenderTab.value
+                      ? testimonialVM.testimonialSenderList
+                      : testimonialVM.testimonialReceiverList;
+
+                  if (list.isEmpty) {
+                    return Center(child: Text("no_test_found".tr));
+                  }
+
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: list.length,
+                    itemBuilder: (context, index) {
+                      return _testimonialListItems(index, list, testimonialVM);
+                    },
+                  );
+                }),
+              ),
             ],
           ),
         );
@@ -86,87 +99,130 @@ class TestimonialPageState extends State<TestimonialPage> {
     );
   }
 
-  @override
-  void dispose() {
-    super.dispose();
+  Widget _buildTabSwitcher() {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 14, 16, 6),
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: const Color(0xFFE3E8F4),
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Obx(() {
+        return Row(
+          children: [
+            _tabPill(
+              label: "Sender",
+              isActive: isSenderTab.value,
+              onTap: () async {
+                isSenderTab.value = true;
+                await getTestimonialData();
+              },
+            ),
+            _tabPill(
+              label: "Receiver",
+              isActive: !isSenderTab.value,
+              onTap: () async {
+                isSenderTab.value = false;
+                await getTestimonialData();
+              },
+            ),
+          ],
+        );
+      }),
+    );
   }
 
-  Future<void> _refreshUserData(TestimonialViewModel testimonialVM) async {
-    try {
-      testimonialVM.myTestimonialList = [];
-      testimonialVM.page.value = 0;
-      testimonialVM.totalPages.value = 0;
-      await testimonialVM.getMyTestimonial(
-          testimonialVM.page.value, testimonialVM.size.value, "", "", "");
-      setState(() {});
-    } catch (e) {
-      print("Error refreshing user data: $e");
-    }
+  Widget _tabPill({
+    required String label,
+    required bool isActive,
+    required VoidCallback onTap,
+  }) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          decoration: BoxDecoration(
+            color: isActive ? midnightBlue : Colors.transparent,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Center(
+            child: Text(
+              label,
+              style: TextStyle(
+                color: isActive ? Colors.white : Colors.grey,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
-  _testimonialListItems(int index, TestimonialViewModel testimonialVM) {
+  _testimonialListItems(
+      int index,
+      List list,
+      TestimonialViewModel testimonialVM) {
+
+    final data = list[index];
+
     return Padding(
       padding: const EdgeInsets.all(paddingSize5),
       child: ListTile(
         contentPadding: EdgeInsets.all(paddingSize10),
         onTap: () async {
-          Get.toNamed(Routes.getTestimonialDetailsPageRoute(
-                  testimonialVM.myTestimonialList[index]))
+          Get.toNamed(Routes.getTestimonialDetailsPageRoute(data))
               ?.then((result) {
             if (result == true) {
-              _refreshUserData(testimonialVM);
               showSnackBar("testimonials_deleted".tr, isError: false);
             }
           });
         },
-        leading: testimonialVM.myTestimonialList[index].reviewerPofileUrl !=
-                    null &&
-                testimonialVM
-                    .myTestimonialList[index].reviewerPofileUrl!.isNotEmpty
+        leading: data.reviewerPofileUrl != null &&
+            data.reviewerPofileUrl!.isNotEmpty
             ? CachedNetworkImage(
-                imageUrl:
-                    testimonialVM.myTestimonialList[index].reviewerPofileUrl!,
-                width: 62.0,
-                height: 62.0,
-                fit: BoxFit.cover,
-                placeholder: (context, url) => const SizedBox(
-                  width: 62.0,
-                  height: 62.0,
-                  child: Center(
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  ),
-                ),
-                errorWidget: (context, url, error) => Image.asset(
-                  profileImage,
-                  width: 62.0,
-                  height: 62.0,
-                  fit: BoxFit.cover,
-                ),
-              )
+          imageUrl: data.reviewerPofileUrl!,
+          width: 62.0,
+          height: 62.0,
+          fit: BoxFit.cover,
+          placeholder: (context, url) => const SizedBox(
+            width: 62.0,
+            height: 62.0,
+            child: Center(
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
+          ),
+          errorWidget: (context, url, error) => Image.asset(
+            profileImage,
+            width: 62.0,
+            height: 62.0,
+            fit: BoxFit.cover,
+          ),
+        )
             : Image.asset(
-                profileImage,
-                width: 62.0,
-                height: 62.0,
-                fit: BoxFit.cover,
-              ),
+          profileImage,
+          width: 62.0,
+          height: 62.0,
+          fit: BoxFit.cover,
+        ),
         title: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '${testimonialVM.myTestimonialList[index].reviewerFirstName} ${testimonialVM.myTestimonialList[index].reviewerLastName}',
+              '${data.reviewerFirstName} ${data.reviewerLastName}',
               style:
-                  fontBold.copyWith(color: midnightBlue, fontSize: fontSize18),
+              fontBold.copyWith(color: midnightBlue, fontSize: fontSize18),
             ),
             Text(
-              '${testimonialVM.myTestimonialList[index].type}',
+              '${data.type}',
               style: fontMedium.copyWith(color: greyText, fontSize: fontSize12),
             ),
             SizedBox(height: paddingSize5),
             Text(
-              '${testimonialVM.myTestimonialList[index].review}',
+              '${data.review}',
               style:
-                  fontRegular.copyWith(color: greyText, fontSize: fontSize12),
+              fontRegular.copyWith(color: greyText, fontSize: fontSize12),
             ),
           ],
         ),

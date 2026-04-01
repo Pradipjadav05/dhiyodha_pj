@@ -78,6 +78,17 @@ class TestimonialViewModel extends GetxController implements GetxService {
     _totalPages = value;
   }
 
+  RxBool _isSenderTab = true.obs;
+
+  RxBool get isSenderTab => _isSenderTab;
+
+  set isSenderTab(RxBool value) {
+    _isSenderTab = value;
+  }
+
+  List<MyTestimonialChildData> senderList = [];
+  List<MyTestimonialChildData> receiverList = [];
+
   Future<void> initData() async {
     _myTestimonialList = [];
     _isLoading = false;
@@ -155,5 +166,46 @@ class TestimonialViewModel extends GetxController implements GetxService {
     }
     update();
     return isSuccess;
+  }
+
+  List<MyTestimonialChildData> testimonialSenderList = [];
+  List<MyTestimonialChildData> testimonialReceiverList = [];
+
+  void setDashboardTestimonials(Map<String, dynamic> weekly) {
+
+    testimonialSenderList = [];
+    testimonialReceiverList = [];
+
+    /// Sender
+    if (weekly['testimonials'] != null) {
+      for (var v in weekly['testimonials']['list']) {
+        testimonialSenderList.add(MyTestimonialChildData.fromJson({
+          "reviewerFirstName": v['fullName']?.split(" ").first,
+          "reviewerLastName": v['fullName']?.split(" ").length > 1
+              ? v['fullName']?.split(" ").last
+              : "",
+          "reviewerPofileUrl": v['profileImage'],
+          "type": v['designation'],
+          "review": v['companyName'],
+        }));
+      }
+    }
+
+    /// Receiver
+    if (weekly['testimonialReviewers'] != null) {
+      for (var v in weekly['testimonialReviewers']['list']) {
+        testimonialReceiverList.add(MyTestimonialChildData.fromJson({
+          "reviewerFirstName": v['fullName']?.split(" ").first,
+          "reviewerLastName": v['fullName']?.split(" ").length > 1
+              ? v['fullName']?.split(" ").last
+              : "",
+          "reviewerPofileUrl": v['profileImage'],
+          "type": v['designation'],
+          "review": v['companyName'],
+        }));
+      }
+    }
+
+    update();
   }
 }

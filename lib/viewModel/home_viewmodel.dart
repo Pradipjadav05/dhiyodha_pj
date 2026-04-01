@@ -8,6 +8,7 @@ import 'package:dhiyodha/utils/resource/app_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
+import '../model/response_model/my_testimonial_response_model.dart';
 import '../model/response_model/referral_response_model.dart';
 
 class HomeViewModel extends GetxController implements GetxService {
@@ -182,6 +183,8 @@ class HomeViewModel extends GetxController implements GetxService {
 
   set reelList(List<String> value) => _reelList = value;
 
+  Map<String, dynamic>? lastWeeklyData;
+
   Future<bool> loadMore() async {
     if (page.value < totalPages.value) {
       page.value += 1;
@@ -299,6 +302,8 @@ class HomeViewModel extends GetxController implements GetxService {
     if (response.statusCode == 200) {
       if (response.body['data']['weekly'] != null) {
         final weekly = response.body['data']['weekly'];
+        lastWeeklyData = weekly;
+
         tyfcbCount = weekly['tyfcbReceived']?['count'] ?? 0;
         referralCount = weekly['referralReceived']?['count'] ?? 0;
         visitorsCount = weekly['visitors']?['count'] ?? 0;

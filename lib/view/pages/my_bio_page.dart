@@ -35,16 +35,16 @@ class MyBioPagePageState extends State<MyBioPage> {
     vvm.currentUserData = widget.currentUserData;
 
     // ── Bio-specific fields not covered by _refreshControllers ──
-    vvm.yearOfBusinessController.text =
-        widget.currentUserData.currentUserOrganization?.yearOfBusiness.toString() ?? '';
+    vvm.yearOfBusinessController.text = widget
+            .currentUserData.currentUserOrganization?.yearOfBusiness
+            .toString() ??
+        '';
     vvm.previousTypesOfJobsController.text =
         widget.currentUserData.previousTypesOfJobs ?? '';
-    vvm.partnerController.text =
-        widget.currentUserData.partner ?? '';
+    vvm.partnerController.text = widget.currentUserData.partner ?? '';
     vvm.childrenController.text =
         (widget.currentUserData.children ?? 0).toString();
-    vvm.petsController.text =
-        widget.currentUserData.pet ?? '';
+    vvm.petsController.text = widget.currentUserData.pet ?? '';
     vvm.hobbiesController.text =
         widget.currentUserData.hobbiesAndInterest ?? '';
     vvm.cityResidenceController.text =
@@ -55,8 +55,7 @@ class MyBioPagePageState extends State<MyBioPage> {
         widget.currentUserData.burningDesire ?? '';
     vvm.knowAboutMeController.text =
         widget.currentUserData.somethingNoOneKnowsAboutMe ?? '';
-    vvm.keyToSuccessController.text =
-        widget.currentUserData.keyToSuccess ?? '';
+    vvm.keyToSuccessController.text = widget.currentUserData.keyToSuccess ?? '';
 
     setState(() {});
   }
@@ -93,11 +92,11 @@ class MyBioPagePageState extends State<MyBioPage> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const SizedBox(height: paddingSize15),
-
                     _buildField(
                       label: 'year_of_business'.tr,
                       controller: vvm.yearOfBusinessController,
                       hintText: 'year_of_business'.tr,
+                      isEnable: false,
                     ),
                     _buildField(
                       label: 'prev_jobs'.tr,
@@ -154,20 +153,17 @@ class MyBioPagePageState extends State<MyBioPage> {
                       hintText: 'success_key'.tr,
                       maxLines: 4,
                     ),
-
                     const SizedBox(height: paddingSize25),
-
                     vvm.isLoading
                         ? const Center(child: CircularProgressIndicator())
                         : CommonButton(
-                      buttonText: 'confirm'.tr,
-                      bgColor: midnightBlue,
-                      textColor: periwinkle,
-                      onPressed: () async {
-                        await _collectDataAndSaveProfile(vvm);
-                      },
-                    ),
-
+                            buttonText: 'confirm'.tr,
+                            bgColor: midnightBlue,
+                            textColor: periwinkle,
+                            onPressed: () async {
+                              await _collectDataAndSaveProfile(vvm);
+                            },
+                          ),
                     const SizedBox(height: paddingSize20),
                   ],
                 ),
@@ -186,6 +182,7 @@ class MyBioPagePageState extends State<MyBioPage> {
     required String hintText,
     TextInputType inputType = TextInputType.text,
     int maxLines = 1,
+    bool isEnable = true,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -196,6 +193,7 @@ class MyBioPagePageState extends State<MyBioPage> {
         ),
         const SizedBox(height: paddingSize8),
         CommonTextFormField(
+          isEnabled: isEnable,
           controller: controller,
           bgColor: lavenderMist,
           inputType: inputType,
@@ -203,7 +201,7 @@ class MyBioPagePageState extends State<MyBioPage> {
           padding: const EdgeInsets.symmetric(
               vertical: paddingSize15, horizontal: paddingSize15),
           textStyle:
-          fontMedium.copyWith(color: midnightBlue, fontSize: fontSize14),
+              fontMedium.copyWith(color: midnightBlue, fontSize: fontSize14),
           hintText: hintText,
         ),
         const SizedBox(height: paddingSize20),
@@ -276,37 +274,45 @@ class MyBioPagePageState extends State<MyBioPage> {
             '',
         yearOfBusiness: vvm.yearOfBusinessController.text.isNotEmpty
             ? double.tryParse(vvm.yearOfBusinessController.text)
-            : widget.currentUserData.currentUserOrganization?.yearOfBusiness?.toDouble(),
+            : widget.currentUserData.currentUserOrganization?.yearOfBusiness
+                ?.toDouble(),
         companyAddress:
-        widget.currentUserData.currentUserOrganization?.companyAddress ?? '',
+            widget.currentUserData.currentUserOrganization?.companyAddress ??
+                '',
         registeredType:
-        widget.currentUserData.currentUserOrganization?.registeredType ?? '',
+            widget.currentUserData.currentUserOrganization?.registeredType ??
+                '',
         numberOfEmployees:
-        widget.currentUserData.currentUserOrganization?.numberOfEmployees,
+            widget.currentUserData.currentUserOrganization?.numberOfEmployees,
         yearlyTurnover:
-        widget.currentUserData.currentUserOrganization?.yearlyTurnover ?? '',
+            widget.currentUserData.currentUserOrganization?.yearlyTurnover ??
+                '',
         companyEmail:
-        widget.currentUserData.currentUserOrganization?.companyEmail ?? '',
+            widget.currentUserData.currentUserOrganization?.companyEmail ?? '',
         companyWebsite:
-        widget.currentUserData.currentUserOrganization?.companyWebsite ?? '',
+            widget.currentUserData.currentUserOrganization?.companyWebsite ??
+                '',
         designation:
-        widget.currentUserData.currentUserOrganization?.designation ?? '',
+            widget.currentUserData.currentUserOrganization?.designation ?? '',
         companyContact:
-        widget.currentUserData.currentUserOrganization?.companyContact ?? '',
+            widget.currentUserData.currentUserOrganization?.companyContact ??
+                '',
         businessCategory:
-        widget.currentUserData.currentUserOrganization?.businessCategory ?? '',
-        businessDescription:
-        widget.currentUserData.currentUserOrganization?.businessDescription ?? '',
+            widget.currentUserData.currentUserOrganization?.businessCategory ??
+                '',
+        businessDescription: widget
+                .currentUserData.currentUserOrganization?.businessDescription ??
+            '',
         yearlyProfit:
-        widget.currentUserData.currentUserOrganization?.yearlyProfit ?? 0.0,
+            widget.currentUserData.currentUserOrganization?.yearlyProfit ?? 0.0,
         gstNumber:
-        widget.currentUserData.currentUserOrganization?.gstNumber ?? '',
+            widget.currentUserData.currentUserOrganization?.gstNumber ?? '',
         uploadGst:
-        widget.currentUserData.currentUserOrganization?.uploadGst ?? '',
+            widget.currentUserData.currentUserOrganization?.uploadGst ?? '',
         panNumber:
-        widget.currentUserData.currentUserOrganization?.panNumber ?? '',
+            widget.currentUserData.currentUserOrganization?.panNumber ?? '',
         uploadPan:
-        widget.currentUserData.currentUserOrganization?.uploadPan ?? '',
+            widget.currentUserData.currentUserOrganization?.uploadPan ?? '',
       ),
 
       // ── FIX: use separate address controllers (locationController removed) ──
