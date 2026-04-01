@@ -1761,37 +1761,40 @@ class HomePageState extends State<HomePage> {
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(21),
-                    child: () {
-                      final String? avatarUrl =
-                          data.createdBy == globalCurrentUserData.uuid
-                              ? globalCurrentUserData.profileUrl
-                              : data.profileUrl;
-
-                      return avatarUrl != null && avatarUrl.isNotEmpty
-                          ? CachedNetworkImage(
-                              imageUrl: avatarUrl,
-                              width: 42.0,
-                              height: 42.0,
-                              fit: BoxFit.cover,
-                              placeholder: (context, url) =>
-                                  SizedBox(width: 42.0, height: 42.0),
-                              errorWidget: (context, url, error) => Image.asset(
-                                profileImage,
-                                width: 42.0,
-                                height: 42.0,
-                                fit: BoxFit.cover,
-                              ),
-                            )
-                          : Image.asset(
-                              profileImage,
-                              width: 42.0,
-                              height: 42.0,
-                              fit: BoxFit.cover,
-                            );
-                    }(),
-                  ),
+                  // ClipRRect(
+                  //   borderRadius: BorderRadius.circular(21),
+                  //   child: () {
+                  //     final String? avatarUrl =
+                  //         data.createdBy == globalCurrentUserData.uuid
+                  //             ? globalCurrentUserData.profileUrl
+                  //             : data.profileUrl;
+                  //
+                  //     return avatarUrl != null && avatarUrl.isNotEmpty
+                  //         ? CachedNetworkImage(
+                  //             imageUrl: avatarUrl,
+                  //             width: 42.0,
+                  //             height: 42.0,
+                  //             fit: BoxFit.cover,
+                  //             placeholder: (context, url) =>
+                  //                 SizedBox(width: 42.0, height: 42.0),
+                  //             errorWidget: (context, url, error) => Image.asset(
+                  //               profileImage,
+                  //               width: 42.0,
+                  //               height: 42.0,
+                  //               fit: BoxFit.cover,
+                  //             ),
+                  //           )
+                  //         : Image.asset(
+                  //             profileImage,
+                  //             width: 42.0,
+                  //             height: 42.0,
+                  //             fit: BoxFit.cover,
+                  //           );
+                  //   }(),
+                  // ),
+                  _profileAvatar(data.createdBy == globalCurrentUserData.uuid
+                      ? globalCurrentUserData.profileUrl
+                      : data.profileUrl),
                   SizedBox(width: paddingSize10),
                   Expanded(
                     child: Column(
@@ -1804,7 +1807,7 @@ class HomePageState extends State<HomePage> {
                               fontSize: fontSize14, color: midnightBlue),
                         ),
                         Text(
-                            "${data.addressDTO?.city ?? ""}, ${data.addressDTO?.state ?? ""}",
+                          "${data.addressDTO?.city ?? ""}, ${data.addressDTO?.state ?? ""}",
                           style: fontMedium.copyWith(
                               fontSize: fontSize10, color: greyText),
                         ),
@@ -2079,10 +2082,65 @@ class HomePageState extends State<HomePage> {
     );
   }
 
+  Widget _profileAvatar(String? profileUrl) {
+    return Container(
+      width: 42,
+      height: 42,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: Colors.white, width: 2.5),
+        boxShadow: [
+          BoxShadow(
+            color: midnightBlue.withOpacity(0.15),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: ClipOval(
+        child: profileUrl != null && profileUrl.isNotEmpty
+            ? CachedNetworkImage(
+                imageUrl: profileUrl,
+                width: 42,
+                height: 42,
+                fit: BoxFit.cover,
+                errorWidget: (context, url, error) => _avatarFallback(),
+              )
+            : _avatarFallback(),
+      ),
+    );
+  }
+
+  Widget _avatarFallback() {
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          colors: [midnightBlue, const Color(0xFF4A6FA5)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: ClipOval(
+        child: Icon(Icons.person, color: Colors.white),
+      ),
+    );
+  }
+
   String timeAgo(String dateString) {
     const months = [
-      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
     ];
 
     try {
@@ -2211,13 +2269,22 @@ class HomePageState extends State<HomePage> {
                                                           Text(
                                                             "${data.firstName} ${data.lastName}",
                                                             style: fontMedium.copyWith(
-                                                                fontSize: fontSize14, color: midnightBlue),
+                                                                fontSize:
+                                                                    fontSize14,
+                                                                color:
+                                                                    midnightBlue),
                                                           ),
                                                           Text(
-                                                            data.comments?[index].comment ?? "",
+                                                            data
+                                                                    .comments?[
+                                                                        index]
+                                                                    .comment ??
+                                                                "",
                                                             style: fontMedium.copyWith(
-                                                                fontSize: fontSize12,
-                                                                color: midnightBlue),
+                                                                fontSize:
+                                                                    fontSize12,
+                                                                color:
+                                                                    midnightBlue),
                                                           ),
                                                           // Text(
                                                           //   "Beautiful place.",

@@ -179,33 +179,7 @@ class TestimonialPageState extends State<TestimonialPage> {
             }
           });
         },
-        leading: data.reviewerPofileUrl != null &&
-            data.reviewerPofileUrl!.isNotEmpty
-            ? CachedNetworkImage(
-          imageUrl: data.reviewerPofileUrl!,
-          width: 62.0,
-          height: 62.0,
-          fit: BoxFit.cover,
-          placeholder: (context, url) => const SizedBox(
-            width: 62.0,
-            height: 62.0,
-            child: Center(
-              child: CircularProgressIndicator(strokeWidth: 2),
-            ),
-          ),
-          errorWidget: (context, url, error) => Image.asset(
-            profileImage,
-            width: 62.0,
-            height: 62.0,
-            fit: BoxFit.cover,
-          ),
-        )
-            : Image.asset(
-          profileImage,
-          width: 62.0,
-          height: 62.0,
-          fit: BoxFit.cover,
-        ),
+        leading: _profileAvatar(data.reviewerPofileUrl),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -231,6 +205,51 @@ class TestimonialPageState extends State<TestimonialPage> {
           width: iconSize18,
           height: iconSize18,
         ),
+      ),
+    );
+  }
+
+  Widget _profileAvatar(String? profileUrl) {
+    return Container(
+      width: 58,
+      height: 58,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: Colors.white, width: 2.5),
+        boxShadow: [
+          BoxShadow(
+            color: midnightBlue.withOpacity(0.15),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: ClipOval(
+        child: profileUrl != null && profileUrl.isNotEmpty
+            ? CachedNetworkImage(
+          imageUrl: profileUrl,
+          width: 58,
+          height: 58,
+          fit: BoxFit.cover,
+          errorWidget: (context, url, error) => _avatarFallback(),
+        )
+            : _avatarFallback(),
+      ),
+    );
+  }
+
+  Widget _avatarFallback() {
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          colors: [midnightBlue, const Color(0xFF4A6FA5)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: ClipOval(
+        child: Icon(Icons.person, color: Colors.white),
       ),
     );
   }

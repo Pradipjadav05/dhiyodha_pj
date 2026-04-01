@@ -290,8 +290,6 @@ class VisitorPageState extends State<VisitorPage>
 
   Widget _avatarFallback() {
     return Container(
-      width: 58,
-      height: 58,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         gradient: LinearGradient(
@@ -301,8 +299,7 @@ class VisitorPageState extends State<VisitorPage>
         ),
       ),
       child: ClipOval(
-        child: Image.asset(profileImage,
-            width: 58, height: 58, fit: BoxFit.cover),
+        child: Icon(Icons.person, color: Colors.white),
       ),
     );
   }

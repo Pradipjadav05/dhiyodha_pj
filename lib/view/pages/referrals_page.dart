@@ -315,7 +315,7 @@ class ReferralsPageState extends State<ReferralsPage> {
         ),
       ),
       child: ClipOval(
-        child: Image.asset(profileImage, fit: BoxFit.cover),
+        child: Icon(Icons.person, color: Colors.white),
       ),
     );
   }

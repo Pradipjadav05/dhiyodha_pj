@@ -250,8 +250,6 @@ class TyfcbPageState extends State<TyfcbPage>
 
   Widget _avatarFallback() {
     return Container(
-      width: 58,
-      height: 58,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         gradient: LinearGradient(
@@ -261,8 +259,7 @@ class TyfcbPageState extends State<TyfcbPage>
         ),
       ),
       child: ClipOval(
-        child: Image.asset(profileImage,
-            width: 58, height: 58, fit: BoxFit.cover),
+        child: Icon(Icons.person, color: Colors.white),
       ),
     );
   }
