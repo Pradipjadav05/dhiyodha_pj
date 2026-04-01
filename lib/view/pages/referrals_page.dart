@@ -350,6 +350,18 @@ class ReferralsPageState extends State<ReferralsPage> {
       children: [
         const Divider(height: 1, thickness: 1, color: Color(0xFFEAEEF8)),
         _detailRow(
+          assetPath: referralsBlue,
+          label: 'Referral Type',
+          value: data.referralType ?? '—',
+        ),
+        _divider(),
+        _detailRow(
+          assetPath: meeting,
+          label: 'Referral Status',
+          value: data.referralStatus ?? '—',
+        ),
+        _divider(),
+        _detailRow(
           assetPath: contact,
           label: 'Contact Number',
           value: data.telephone ?? '—',
@@ -358,21 +370,12 @@ class ReferralsPageState extends State<ReferralsPage> {
         _detailRow(
           assetPath: company,
           label: 'Company Name',
-          value: 'Alphabit Infoway',
+          value: data.companyName ?? '-',
         ),
-        _divider(),
         _detailRow(
-          assetPath: businessCat,
-          label: 'Business Category',
-          value: 'Designing Agency',
-        ),
-        _divider(),
-        _detailRow(
-          assetPath: vCard,
-          label: 'V-Card',
-          value:
-              '${data.referralTo?.firstName ?? ""} ${data.referralTo?.lastName ?? ""}'
-                  .trim(),
+          assetPath: postComment,
+          label: 'Comments',
+          value: data.comments ?? '—',
         ),
       ],
     );

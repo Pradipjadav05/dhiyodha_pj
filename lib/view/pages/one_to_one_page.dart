@@ -10,6 +10,8 @@ import 'package:dhiyodha/viewModel/one_to_one_slip_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../viewModel/home_viewmodel.dart';
+
 class OneToOnePage extends StatefulWidget {
   const OneToOnePage({Key? key}) : super(key: key);
 
@@ -34,12 +36,22 @@ class OneToOnePageState extends State<OneToOnePage>
     _fadeAnim =
         CurvedAnimation(parent: _animController, curve: Curves.easeOut);
     _animController.forward();
-    _fetchData();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fetchData();
+    });
   }
 
   Future<void> _fetchData() async {
-    await Get.find<OneToOneSlipViewModel>()
-        .getOneToOneData(0, 100, 'createdAt', 'DESC');
+    // await Get.find<OneToOneSlipViewModel>()
+    //     .getOneToOneData(0, 100, 'createdAt', 'DESC');
+    final oVM = Get.find<OneToOneSlipViewModel>();
+    final homeVM = Get.find<HomeViewModel>();
+
+
+
+    await homeVM.dashboardData(homeVM.selectedDuration);
+
+    oVM.setDashboardOneToOne(homeVM.lastWeeklyData ?? {});
   }
 
   @override
@@ -136,6 +148,8 @@ class OneToOnePageState extends State<OneToOnePage>
         .trim();
     final String mobileNo = data.connectedWith?.mobileNo ?? '';
     final String notes = data.oneToOneNotes ?? '';
+    final String location = data.location ?? '';
+    final String topicOfConversation = data.topicOfConversation ?? '';
     final String date = data.oneToOneDate ?? '';
     final String? profileUrl = data.connectedWith?.profileUrl;
 
@@ -223,7 +237,7 @@ class OneToOnePageState extends State<OneToOnePage>
                 mobileNo: mobileNo,
                 initiatedByName: initiatedByName,
                 notes: notes,
-                connectedWithName: connectedWithName,
+                connectedWithName: connectedWithName, location: location, topicOfConversation: topicOfConversation,
               ),
             ),
           ],
@@ -308,35 +322,40 @@ class OneToOnePageState extends State<OneToOnePage>
     required String initiatedByName,
     required String notes,
     required String connectedWithName,
+    required String location,
+    required String topicOfConversation,
   }) {
     return Column(
       children: [
         const Divider(height: 1, thickness: 1, color: Color(0xFFEAEEF8)),
-        _detailRow(
-          assetPath: contact,
-          label: 'Contact Number',
-          value: mobileNo,
-        ),
-        _divider(),
+        // _detailRow(
+        //   assetPath: contact,
+        //   label: 'Contact Number',
+        //   value: mobileNo,
+        // ),
+        // _divider(),
         _detailRow(
           assetPath: company,
           label: 'Initiated By',
           value: initiatedByName,
         ),
         _divider(),
+        // _detailRow(
+        //   assetPath: businessCat,
+        //   label: 'Notes',
+        //   value: notes,
+        // ),
+        // _divider(),
         _detailRow(
           assetPath: businessCat,
-          label: 'Notes',
-          value: notes,
+          label: 'Location',
+          value: location,
         ),
         _divider(),
-        _detailRowTappable(
-          assetPath: vCard,
-          label: 'V-Card',
-          value: connectedWithName,
-          onTap: () {
-            // TODO: handle V-Card tap
-          },
+        _detailRow(
+          assetPath: businessCat,
+          label: 'Topic of Conversation',
+          value: topicOfConversation,
         ),
       ],
     );

@@ -394,8 +394,11 @@ class HomeViewModel extends GetxController implements GetxService {
         profileUrl: json['profileImage'],
       ),
       telephone: json['number'],
-      comment: json['companyName'],
+      companyName: json['companyName'] ?? "",
       type: json['designation'],
+      referralType: json['referralType'],
+      referralStatus: json['referralStatus'],
+      comments: json['comments'],
     );
   }
 

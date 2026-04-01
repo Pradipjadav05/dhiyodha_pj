@@ -201,4 +201,41 @@ class OneToOneSlipViewModel extends GetxController implements GetxService {
 
     update(); // important for GetBuilder
   }
+
+  void setDashboardOneToOne(Map<String, dynamic> weekly) {
+
+    _isLoading = true;
+    update();
+
+    _oneToOneDataList = [];
+
+    if (weekly['oneToOne'] != null) {
+      for (var v in weekly['oneToOne']['list']) {
+
+        _oneToOneDataList.add(
+          OneToOneChildData.fromJson({
+            "uuid": v['uuid'],
+            "connectedWith": {
+              "firstName": v['fullName']?.split(" ").first,
+              "lastName": v['fullName']?.split(" ").length > 1
+                  ? v['fullName']?.split(" ").last
+                  : "",
+              "profileUrl": v['profileImage'],
+              "mobileNo": v['mobileNo'],
+            },
+            "initiatedBy": {
+              "firstName": v['initiatedBy'] ?? "",
+            },
+            "oneToOneNotes": v['notes'],
+            "location": v['location'],
+            "topicOfConversation": v['topicOfConversation'],
+            "oneToOneDate": v['date'],
+          }),
+        );
+      }
+    }
+
+    _isLoading = false;
+    update();
+  }
 }

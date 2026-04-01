@@ -59,6 +59,8 @@ class OneToOneChildData {
   OneToOneUser? initiatedBy;
   String? oneToOneDate;
   String? oneToOneNotes;
+  String? location;
+  String? topicOfConversation;
   OneToOneLocationModel? oneToOneLocation;
   String? createdAt;
   String? createdBy;
@@ -71,6 +73,8 @@ class OneToOneChildData {
     this.oneToOneNotes,
     this.oneToOneLocation,
     this.createdAt,
+    this.location,
+    this.topicOfConversation,
     this.createdBy,
   });
 
@@ -93,6 +97,8 @@ class OneToOneChildData {
 
     oneToOneDate = json['oneToOneDate'];
     oneToOneNotes = json['oneToOneNotes'];
+    location = json['location'];
+    topicOfConversation = json['topicOfConversation'];
 
     oneToOneLocation = json['oneToOneLocation'] != null
         ? OneToOneLocationModel.fromJson(json['oneToOneLocation'])
@@ -109,6 +115,8 @@ class OneToOneChildData {
       'initiatedBy': initiatedBy?.toJson(),
       'oneToOneDate': oneToOneDate,
       'oneToOneNotes': oneToOneNotes,
+      'location': location,
+      'topicOfConversation': topicOfConversation,
       'oneToOneLocation': oneToOneLocation?.toJson(),
       'createdAt': createdAt,
       'createdBy': createdBy,

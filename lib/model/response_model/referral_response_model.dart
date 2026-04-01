@@ -68,10 +68,13 @@ class ReferralChildData {
   String? telephone;
   String? email;
   String? address;
-  String? comment;
+  String? comments;
   double? rate;
   String? createdAt;
   String? createdBy;
+  String? referralType;
+  String? referralStatus;
+  String? companyName;
 
   ReferralChildData({
     this.uuid,
@@ -82,10 +85,13 @@ class ReferralChildData {
     this.telephone,
     this.email,
     this.address,
-    this.comment,
+    this.comments,
     this.rate,
     this.createdAt,
     this.createdBy,
+    this.referralType,
+    this.referralStatus,
+    this.companyName,
   });
 
   ReferralChildData.fromJson(Map<String, dynamic> json) {
@@ -105,12 +111,15 @@ class ReferralChildData {
     telephone = json['telephone'];
     email = json['email'];
     address = json['address'];
-    comment = json['comment'];
+    comments = json['comments'];
 
     rate = (json['rate'] as num?)?.toDouble();
 
     createdAt = json['createdAt'];
     createdBy = json['createdBy'];
+    referralType = json['referralType'];
+    referralStatus = json['referralStatus'];
+    companyName = json['companyName'];
   }
 
   Map<String, dynamic> toJson() {
@@ -123,10 +132,13 @@ class ReferralChildData {
       'telephone': telephone,
       'email': email,
       'address': address,
-      'comment': comment,
+      'comments': comments,
       'rate': rate,
       'createdAt': createdAt,
       'createdBy': createdBy,
+      'referralType': referralType,
+      'referralStatus': referralStatus,
+      'companyName': companyName,
     };
   }
 }
