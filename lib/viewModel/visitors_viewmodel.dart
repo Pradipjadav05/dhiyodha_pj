@@ -324,8 +324,8 @@ class VisitorsViewModel extends GetxController implements GetxService {
     _selectedState = "Select State";
     _selectedCity = "Select City";
     _selectedChapter = "Select Chapter";
-    _businessCatList = globalBusinessCategoryForMemberList;
-    _selectedBusinessCategory = _businessCatList[0];
+    _businessCatList = [];
+    _selectedBusinessCategory = "";
     _uploadedDocRespModel = new UploadedDocRespModel();
     _uploadedProfilePictureFile = null;
     _uploadedVCardFrontFile = null;
@@ -618,8 +618,8 @@ class VisitorsViewModel extends GetxController implements GetxService {
       _cityList.add("Select City");
 
       unSortedList = [];
-      response.body['data'].forEach((country) {
-        unSortedList.add(country);
+      response.body.forEach((country) {
+        unSortedList.add(country["name"]);
       });
       unSortedList.sort();
       _countryList = _countryList + unSortedList;
@@ -669,6 +669,17 @@ class VisitorsViewModel extends GetxController implements GetxService {
       unSortedList.sort();
       _cityList = _cityList + unSortedList;
       _selectedCity = _cityList[0];
+    } else {
+      ApiChecker.checkApi(response);
+    }
+    update();
+  }
+
+  Future<void> getBusinessCategories() async {
+    final Response response = await visitorsRepo.getBusinessCategories();
+    if (response.statusCode == 200) {
+      response.body["data"].forEach((c) => _businessCatList.add(c));
+      _selectedBusinessCategory = _businessCatList[0];
     } else {
       ApiChecker.checkApi(response);
     }

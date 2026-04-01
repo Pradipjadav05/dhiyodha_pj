@@ -174,7 +174,7 @@ class MembersViewmodel extends GetxController implements GetxService {
     _selectedState = 'Select State';
     _selectedCity = 'Select City';
     _selectedChapter = 'Select Chapter';
-    _businessCatList = globalBusinessCategoryForMemberList;
+    _businessCatList = [];
     _selectedBusinessCategory = _businessCatList[0];
 
     // ── Load first page of chapter roster ──
@@ -332,7 +332,7 @@ class MembersViewmodel extends GetxController implements GetxService {
       _cityList = ['Select City'];
       _selectedState = _stateList[0];
       _selectedCity = _cityList[0];
-      response.body['data'].forEach((c) => _countryList.add(c));
+      response.body.forEach((c) => _countryList.add(c["name"]));
       _selectedCountry = _countryList[0];
     } else {
       ApiChecker.checkApi(response);
@@ -366,6 +366,17 @@ class MembersViewmodel extends GetxController implements GetxService {
       _cityList = ['Select City'];
       response.body['data'].forEach((c) => _cityList.add(c));
       _selectedCity = _cityList[0];
+    } else {
+      ApiChecker.checkApi(response);
+    }
+    update();
+  }
+
+
+  Future<void> getBusinessCategories() async {
+    final Response response = await membersRepo.getBusinessCategories();
+    if (response.statusCode == 200) {
+      response.body["data"].forEach((c) => _businessCatList.add(c));
     } else {
       ApiChecker.checkApi(response);
     }

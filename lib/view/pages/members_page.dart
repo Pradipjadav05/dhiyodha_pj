@@ -165,6 +165,7 @@ class MembersPageState extends State<MembersPage>
               _resetAutocompleteControllers();
               await membersVM.getGroups(0, membersVM.size.value, '', '', '');
               await membersVM.getCountries();
+              await membersVM.getBusinessCategories();
             },
           ),
         ],

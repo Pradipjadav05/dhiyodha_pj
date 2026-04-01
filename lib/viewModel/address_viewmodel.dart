@@ -96,8 +96,8 @@ class AddressViewmodel extends GetxController implements GetxService {
       _stateList.add("Select State");
       _cityList = [];
       _cityList.add("Select City");
-      response.body['data'].forEach((country) {
-        _countryList.add(country);
+      response.body.forEach((country) {
+        _countryList.add(country["name"]);
       });
       _selectedCountry = _countryList[0];
     } else {

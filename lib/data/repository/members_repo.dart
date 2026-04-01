@@ -87,11 +87,15 @@ class MembersRepo {
   }
 
   Future<Response> getStates(String countryName) async {
-    return await apiClient.getData('${stateListUrl}${countryName}');
+    return await apiClient.getData('${stateListUrl}${countryName}/ACTIVE');
   }
 
   Future<Response> getCities(String stateName) async {
-    return await apiClient.getData('${cityListUrl}${stateName}');
+    return await apiClient.getData('${cityListUrl}${stateName}/ACTIVE');
+  }
+
+  Future<Response> getBusinessCategories() async {
+    return await apiClient.getData(businessCategoriesUrl);
   }
 
   Future<Response> getUserTestimonial(String userid) async {

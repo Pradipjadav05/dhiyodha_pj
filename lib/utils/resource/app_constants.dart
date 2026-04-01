@@ -32,9 +32,10 @@ const String baseUrl = /*'http://13.202.103.22:8097/'; */ 'https://api.socialclu
 const String playStoreUrl =
     'https://play.google.com/store/apps/details?id=app.alphaabit.dhiyodha.dhiyodha';
 
-const String countryListUrl = baseUrl + 'api/fetch/new/countries';
+const String countryListUrl = baseUrl + 'api/fetch/country/ACTIVE';
 const String stateListUrl = baseUrl + 'api/fetch/new/states/';
 const String cityListUrl = baseUrl + 'api/fetch/new/cities/';
+const String businessCategoriesUrl = baseUrl + 'api/users/active-business-categories';
 
 // const String groupsUrl = baseUrl + 'api/groups/';
 const String groupsUrl = baseUrl + 'api/teams/';
@@ -134,7 +135,7 @@ List<LanguageModel> languagesList = [
       languageCode: 'hi'),
 ];
 
-List<String> globalBusinessCategoryList = [
+/*List<String> globalBusinessCategoryList = [
   "Select Business Category",
   "Agriculture, Forestry, Fishing and Hunting",
   "Mining",
@@ -156,9 +157,9 @@ List<String> globalBusinessCategoryList = [
   "Accommodation and Food Services",
   "Other Services (except Public Administration)",
   "Public Administration"
-];
+];*/
 
-List<String> globalBusinessCategoryForMemberList = [
+/*List<String> globalBusinessCategoryForMemberList = [
   "Select Business Category",
   "Agriculture",
   "Education",
@@ -167,7 +168,7 @@ List<String> globalBusinessCategoryForMemberList = [
   "HealthCare",
   "Retail",
   "Technology"
-];
+];*/
 
 NextMeeting globalNextMeeting = NextMeeting();
 CurrentUserData globalCurrentUserData = CurrentUserData();
