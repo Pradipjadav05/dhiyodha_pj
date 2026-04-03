@@ -185,8 +185,12 @@ class TestimonialViewModel extends GetxController implements GetxService {
               ? v['fullName']?.split(" ").last
               : "",
           "reviewerPofileUrl": v['profileImage'],
+          "review": v['review'],
           "type": v['designation'],
-          "review": v['companyName'],
+          "designation": v['designation'],
+          "companyName": v['companyName'],
+          "number": v['number'],
+          "date": v['date'],
         }));
       }
     }
@@ -200,8 +204,12 @@ class TestimonialViewModel extends GetxController implements GetxService {
               ? v['fullName']?.split(" ").last
               : "",
           "reviewerPofileUrl": v['profileImage'],
+          "review": v['review'],
           "type": v['designation'],
-          "review": v['companyName'],
+          "designation": v['designation'],
+          "companyName": v['companyName'],
+          "number": v['number'],
+          "date": v['date'],
         }));
       }
     }

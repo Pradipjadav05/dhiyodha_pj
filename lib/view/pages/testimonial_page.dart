@@ -194,7 +194,7 @@ class TestimonialPageState extends State<TestimonialPage> {
             ),
             SizedBox(height: paddingSize5),
             Text(
-              '${data.review}',
+              '${data.companyName}',
               style:
               fontRegular.copyWith(color: greyText, fontSize: fontSize12),
             ),

@@ -73,6 +73,10 @@ class MyTestimonialChildData {
   String? reviewerFirstName;
   String? reviewerLastName;
   String? reviewerPofileUrl;
+  String? companyName;
+  String? number;
+  String? date;
+  String? designation;
 
   MyTestimonialChildData(
       {this.uuid,
@@ -82,6 +86,10 @@ class MyTestimonialChildData {
       this.reviewer,
       this.reviewerFirstName,
       this.reviewerLastName,
+      this.companyName,
+      this.number,
+      this.date,
+      this.designation,
       this.reviewerPofileUrl});
 
   MyTestimonialChildData.fromJson(Map<String, dynamic> json) {
@@ -89,12 +97,16 @@ class MyTestimonialChildData {
     uuid = json['uuid'];
     review = json['review'];
     type = json['type'];
-    reviewer = json['reviewer'] != null
+    reviewer = json['comments'] != null
         ? new Reviewer.fromJson(json['reviewer'])
         : null;
     reviewerFirstName = json['reviewerFirstName'];
     reviewerLastName = json['reviewerLastName'];
     reviewerPofileUrl = json['reviewerPofileUrl'];
+    companyName = json['companyName'];
+    number = json['number'];
+    date = json['date'];
+    designation = json['designation'];
   }
 
   Map<String, dynamic> toJson() {
@@ -109,6 +121,10 @@ class MyTestimonialChildData {
     data['reviewerFirstName'] = this.reviewerFirstName;
     data['reviewerLastName'] = this.reviewerLastName;
     data['reviewerPofileUrl'] = this.reviewerPofileUrl;
+    data['companyName'] = this.companyName;
+    data['number'] = this.number;
+    data['date'] = this.date;
+    data['designation'] = this.designation;
     return data;
   }
 }
@@ -118,6 +134,9 @@ class TestimonialChildData {
   String? review;
   String? type;
   Reviewer? reviewer;
+  String? senderName;
+  String? senderBusinessCategory;
+  String? senderProfileUrl;
   String? reviewerFirstName;
   String? reviewerLastName;
   String? reviewerPofileUrl;
@@ -127,6 +146,9 @@ class TestimonialChildData {
       this.review,
       this.type,
       this.reviewer,
+      this.senderName,
+      this.senderBusinessCategory,
+      this.senderProfileUrl,
       this.reviewerFirstName,
       this.reviewerLastName,
       this.reviewerPofileUrl});
@@ -138,6 +160,9 @@ class TestimonialChildData {
     reviewer = json['reviewer'] != null
         ? new Reviewer.fromJson(json['reviewer'])
         : null;
+    senderName = json['senderName'];
+    senderBusinessCategory = json['senderBusinessCategory'];
+    senderProfileUrl = json['senderProfileUrl'];
     reviewerFirstName = json['reviewerFirstName'];
     reviewerLastName = json['reviewerLastName'];
     reviewerPofileUrl = json['reviewerPofileUrl'];
@@ -151,6 +176,9 @@ class TestimonialChildData {
     if (this.reviewer != null) {
       data['reviewer'] = this.reviewer!.toJson();
     }
+    data['senderName'] = this.senderName;
+    data['senderBusinessCategory'] = this.senderBusinessCategory;
+    data['senderProfileUrl'] = this.senderProfileUrl;
     data['reviewerFirstName'] = this.reviewerFirstName;
     data['reviewerLastName'] = this.reviewerLastName;
     data['reviewerPofileUrl'] = this.reviewerPofileUrl;

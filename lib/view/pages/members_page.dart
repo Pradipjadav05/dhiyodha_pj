@@ -507,98 +507,35 @@ class MembersPageState extends State<MembersPage>
   }
 
   Widget _memberAvatar(String? profileUrl) {
-    return GestureDetector(
-      onTap: () {
-        if (profileUrl != null && profileUrl.isNotEmpty) {
-          _openImageViewer(profileUrl);
-        }
-      },
-      child: Hero(
-        tag: profileUrl ?? "",
-        child: Container(
-          width: 62,
-          height: 62,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: white, width: 2.5),
-            boxShadow: [
-              BoxShadow(
-                color: midnightBlue.withOpacity(0.15),
-                blurRadius: 8,
-                offset: const Offset(0, 3),
-              ),
-            ],
+    return Container(
+      width: 62,
+      height: 62,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: white, width: 2.5),
+        boxShadow: [
+          BoxShadow(
+            color: midnightBlue.withOpacity(0.15),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
           ),
-          child: ClipOval(
-            child: profileUrl != null && profileUrl.isNotEmpty
-                ? CachedNetworkImage(
-              imageUrl: profileUrl,
-              height: 62.0,
-              width: 62.0,
-              fit: BoxFit.cover,
-              errorWidget: (context, url, error) => _placeholderAvatar(),
-            )
-                : _placeholderAvatar(),
-          ),
-        ),
+        ],
+      ),
+      child: ClipOval(
+        child: profileUrl != null && profileUrl.isNotEmpty
+            ? CachedNetworkImage(
+          imageUrl: profileUrl,
+          height: 62.0,
+          width: 62.0,
+          fit: BoxFit.cover,
+          errorWidget: (context, url, error) => _placeholderAvatar(),
+        )
+            : _placeholderAvatar(),
       ),
     );
   }
 
-  void _openImageViewer(String imageUrl) {
-    Navigator.of(context).push(
-      PageRouteBuilder(
-        opaque: false,
-        barrierColor: Colors.black,
-        pageBuilder: (_, __, ___) {
-          return Scaffold(
-            backgroundColor: Colors.black,
-            body: Stack(
-              children: [
-                Center(
-                  child: Hero(
-                    tag: imageUrl,
-                    child: InteractiveViewer(
-                      minScale: 0.5,
-                      maxScale: 4,
-                      child: CachedNetworkImage(
-                        imageUrl: imageUrl,
-                        fit: BoxFit.contain,
-                        errorWidget: (context, url, error) => _placeholderAvatar(),
-                      ),
-                    ),
-                  ),
-                ),
 
-                Positioned(
-                  top: 40,
-                  right: 20,
-                  child: GestureDetector(
-                    onTap: () => Navigator.pop(context),
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.black54,
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(Icons.close, color: Colors.white),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-        transitionsBuilder: (_, animation, __, child) {
-          return FadeTransition(
-            opacity: animation,
-            child: child,
-          );
-        },
-        transitionDuration: const Duration(milliseconds: 300),
-      ),
-    );
-  }
 
   Widget _placeholderAvatar() {
     return Container(

@@ -86,38 +86,41 @@ class MembersChildData {
   Address? address;
   String? maritalStatus;
   List<Roles>? roles;
+  List<UserGroup>? userGroups;
   Organization? organization;
   String? status;
   String? createdAt;
   String? updatedAt;
   String? uploadDocumentId;
 
-  MembersChildData(
-      {this.uuid,
-      this.firstName,
-      this.lastName,
-      this.fatherOrHusbandName,
-      this.fatherOrHusbandProfession,
-      this.cast,
-      this.university,
-      this.aadhaarNumber,
-      this.panNumber,
-      this.uploadAadhaar,
-      this.uploadPan,
-      this.email,
-      this.mobileNo,
-      this.dob,
-      this.countryCode,
-      this.profileUrl,
-      this.education,
-      this.address,
-      this.maritalStatus,
-      this.roles,
-      this.organization,
-      this.status,
-      this.createdAt,
-      this.updatedAt,
-      this.uploadDocumentId});
+  MembersChildData({
+    this.uuid,
+    this.firstName,
+    this.lastName,
+    this.fatherOrHusbandName,
+    this.fatherOrHusbandProfession,
+    this.cast,
+    this.university,
+    this.aadhaarNumber,
+    this.panNumber,
+    this.uploadAadhaar,
+    this.uploadPan,
+    this.email,
+    this.mobileNo,
+    this.dob,
+    this.countryCode,
+    this.profileUrl,
+    this.education,
+    this.address,
+    this.maritalStatus,
+    this.roles,
+    this.organization,
+    this.status,
+    this.createdAt,
+    this.updatedAt,
+    this.uploadDocumentId,
+    this.userGroups,
+  });
 
   MembersChildData.fromJson(Map<String, dynamic> json) {
     uuid = json['uuid'];
@@ -149,6 +152,14 @@ class MembersChildData {
     organization = json['businessDetails'] != null
         ? new Organization.fromJson(json['businessDetails'])
         : null;
+
+    if (json['userGroups'] != null) {
+      userGroups = [];
+      json['userGroups'].forEach((v) {
+        userGroups!.add(UserGroup.fromJson(v));
+      });
+    }
+
     status = json['status'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
@@ -183,6 +194,10 @@ class MembersChildData {
     }
     if (this.organization != null) {
       data['businessDetails'] = this.organization!.toJson();
+    }
+
+    if (userGroups != null) {
+      data['userGroups'] = userGroups!.map((v) => v.toJson()).toList();
     }
     data['status'] = this.status;
     data['createdAt'] = this.createdAt;
@@ -335,6 +350,52 @@ class Organization {
     data['uploadGst'] = this.uploadGst;
     data['panNumber'] = this.panNumber;
     data['uploadPan'] = this.uploadPan;
+    return data;
+  }
+}
+
+class UserGroup {
+  String? uuid;
+  String? groupName;
+  String? description;
+  int? groupLimit;
+  String? city;
+  String? state;
+  String? country;
+  String? groupStatus;
+
+  UserGroup({
+    this.uuid,
+    this.groupName,
+    this.description,
+    this.groupLimit,
+    this.city,
+    this.state,
+    this.country,
+    this.groupStatus,
+  });
+
+  UserGroup.fromJson(Map<String, dynamic> json) {
+    uuid = json['uuid'];
+    groupName = json['groupName'];
+    description = json['description'];
+    groupLimit = json['groupLimit'];
+    city = json['city'];
+    state = json['state'];
+    country = json['country'];
+    groupStatus = json['groupStatus'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = {};
+    data['uuid'] = uuid;
+    data['groupName'] = groupName;
+    data['description'] = description;
+    data['groupLimit'] = groupLimit;
+    data['city'] = city;
+    data['state'] = state;
+    data['country'] = country;
+    data['groupStatus'] = groupStatus;
     return data;
   }
 }

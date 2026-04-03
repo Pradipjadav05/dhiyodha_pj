@@ -74,6 +74,7 @@ class AddVisitorsPageState extends State<AddVisitorsPage> {
                       bgColor: midnightBlue,
                       textColor: periwinkle,
                       onPressed: () async {
+                        await initData();
                         setState(() {
                           isListScreen = false;
                         });
@@ -87,8 +88,9 @@ class AddVisitorsPageState extends State<AddVisitorsPage> {
               visible: isListScreen,
               child: Expanded(child: VisitorPage(
                 isAppBarRequired: false,
-                onStateChanged: () {
-                  setState(() {
+                onStateChanged: () async {
+                  await initData();
+                  setState(()  {
                     isListScreen = false;
                   });
                 },

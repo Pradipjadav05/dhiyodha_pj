@@ -16,6 +16,7 @@ class VisitingCardViewModel extends GetxController implements GetxService {
   VisitingCardViewModel({required this.visitingCardRepo});
 
   TextEditingController _contactController = TextEditingController();
+  TextEditingController _meetingChapterNameController = TextEditingController();
   TextEditingController _companyNameController = TextEditingController();
   TextEditingController _designationController = TextEditingController();
   TextEditingController _businessCategoryController = TextEditingController();
@@ -47,6 +48,7 @@ class VisitingCardViewModel extends GetxController implements GetxService {
 
   // ── Getters ──
   TextEditingController get contactController => _contactController;
+  TextEditingController get meetingChapterNameController => _meetingChapterNameController;
   TextEditingController get companyNameController => _companyNameController;
   TextEditingController get designationController => _designationController;
   TextEditingController get businessCategoryController => _businessCategoryController;
@@ -73,6 +75,7 @@ class VisitingCardViewModel extends GetxController implements GetxService {
 
   // ── Setters ──
   set contactController(TextEditingController v) => _contactController = v;
+  set meetingChapterNameController(TextEditingController v) => meetingChapterNameController = v;
   set companyNameController(TextEditingController v) => _companyNameController = v;
   set designationController(TextEditingController v) => _designationController = v;
   set businessCategoryController(TextEditingController v) => _businessCategoryController = v;
@@ -101,10 +104,11 @@ class VisitingCardViewModel extends GetxController implements GetxService {
   set visitorData(VisitorChildData value) {
     _visitorData = value;
     _contactController.text = value.contactNumber?.toString() ?? '';
+    _meetingChapterNameController.text = value.chapterName?.toString() ?? '';
     _companyNameController.text = value.companyName ?? '';
-    _designationController.text = '';
+    _designationController.text = value.designation ?? '';
     _businessCategoryController.text = value.businessCategory ?? '';
-    _pinCodeController.text = '';
+    _pinCodeController.text = value.pinCode ?? '';
     _cityController.text = value.city ?? '';
     _stateController.text = value.state ?? '';
     _countryController.text = value.country ?? '';
@@ -140,6 +144,7 @@ class VisitingCardViewModel extends GetxController implements GetxService {
     _currentUserData = CurrentUserData();
     _visitorData = VisitorChildData();
     _contactController = TextEditingController();
+    _meetingChapterNameController = TextEditingController();
     _companyNameController = TextEditingController();
     _designationController = TextEditingController();
     _businessCategoryController = TextEditingController();

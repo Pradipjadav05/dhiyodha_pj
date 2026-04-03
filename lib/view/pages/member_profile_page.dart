@@ -28,6 +28,7 @@ class MemberProfilePage extends StatefulWidget {
 
 class MemberProfilePageState extends State<MemberProfilePage> {
   int _currentIndex = 0;
+
   @override
   void initState() {
     super.initState();
@@ -92,7 +93,7 @@ class MemberProfilePageState extends State<MemberProfilePage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(
                       memberVM.testimonialDataList.length,
-                          (index) => Container(
+                      (index) => Container(
                         margin: EdgeInsets.symmetric(horizontal: 4),
                         width: _currentIndex == index ? 15 : 10,
                         height: _currentIndex == index ? 15 : 10,
@@ -208,64 +209,145 @@ class MemberProfilePageState extends State<MemberProfilePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Image.asset(
-            //   profileImage,
-            //   height: 68.0,
-            //   width: 68.0,
-            // ),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(50),
-              child:
-              widget.membersChildData.profileUrl !=
-                  null &&
-                  widget.membersChildData.profileUrl!.isNotEmpty
-                  ? CachedNetworkImage(
-                height: 68.0,
-                width: 68.0,
-                imageUrl: widget.membersChildData.profileUrl!,
-                fit: BoxFit.fill,
-                placeholder: (context, url) =>
-                const Center(
-                  child:
-                  CircularProgressIndicator(
-                      strokeWidth: 2),
-                ),
-                errorWidget:
-                    (context, url, error) =>
-                    Image.asset(
-                      profileImage,
-                      height: 68.0,
-                      width: 68.0,
-                      fit: BoxFit.fill,
-                    ),
-              )
-                  : Image.asset(
-                profileImage,
-                height: 68.0,
-                width: 68.0,
-                fit: BoxFit.fill,
+            GestureDetector(
+              onTap: () {
+                if (widget.membersChildData.profileUrl != null &&
+                    widget.membersChildData.profileUrl!.isNotEmpty) {
+                  _openImageViewer(widget.membersChildData.profileUrl!);
+                }
+              },
+              child: Hero(
+                tag: widget.membersChildData.profileUrl ?? "",
+                child: ClipRRect(
+                    borderRadius: BorderRadius.circular(50),
+                    child: widget.membersChildData.profileUrl != null &&
+                            widget.membersChildData.profileUrl!.isNotEmpty
+                        ? CachedNetworkImage(
+                            height: 68.0,
+                            width: 68.0,
+                            imageUrl: widget.membersChildData.profileUrl!,
+                            fit: BoxFit.fill,
+                            placeholder: (context, url) => const Center(
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            ),
+                            errorWidget: (context, url, error) =>
+                                _placeholderAvatar(),
+                          )
+                        : _placeholderAvatar()),
               ),
             ),
             SizedBox(width: paddingSize15),
             Expanded(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    '${widget.membersChildData.firstName} ${widget.membersChildData.lastName}',
-                    style: fontBold.copyWith(
-                        fontSize: fontSize22, color: ghostWhite),
+                  // 👤 Name
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          '${widget.membersChildData.firstName} ${widget.membersChildData.lastName}',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: fontBold.copyWith(
+                            fontSize: fontSize22,
+                            color: ghostWhite,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  Text(
-                    '${widget.membersChildData.organization?.businessCategory}',
-                    style: fontRegular.copyWith(
-                        fontSize: fontSize14, color: periwinkle),
+
+                  const SizedBox(height: 4),
+
+                  // 👥 User Group (NEW)
+                  if ((widget.membersChildData.userGroups ?? []).isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 6),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.groups,
+                            size: 14,
+                            color: white.withOpacity(0.85),
+                          ),
+                          const SizedBox(width: 6),
+                          Expanded(
+                            child: Text(
+                              widget.membersChildData.userGroups![0].groupName ?? "",
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: fontRegular.copyWith(
+                                fontSize: fontSize12,
+                                color: white.withOpacity(0.85),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                  // 💼 Business Category
+                  Row(
+                    children: [
+                      Icon(Icons.work, size: 14, color: periwinkle),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: Text(
+                          '${widget.membersChildData.organization?.businessCategory ?? ''}',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: fontRegular.copyWith(
+                            fontSize: fontSize14,
+                            color: periwinkle,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  Text(
-                    '${widget.membersChildData.organization?.companyName}',
-                    style: fontRegular.copyWith(
-                        fontSize: fontSize14, color: lavenderMist),
+
+                  const SizedBox(height: 4),
+
+                  // 🏢 Company Name
+                  Row(
+                    children: [
+                      Icon(Icons.business, size: 14, color: lavenderMist),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: Text(
+                          '${widget.membersChildData.organization?.companyName ?? ''}',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: fontRegular.copyWith(
+                            fontSize: fontSize14,
+                            color: lavenderMist,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 6),
+
+                  // 📍 Location
+                  Row(
+                    children: [
+                      Icon(Icons.location_on, size: 14, color: white.withOpacity(0.85)),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: Text(
+                          '${widget.membersChildData.address?.city ?? ''}'
+                              '${widget.membersChildData.address?.city != null && widget.membersChildData.address?.state != null ? ', ' : ''}'
+                              '${widget.membersChildData.address?.state ?? ''}',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: fontRegular.copyWith(
+                            fontSize: fontSize12,
+                            color: white.withOpacity(0.85),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -310,7 +392,9 @@ class MemberProfilePageState extends State<MemberProfilePage> {
                         ),
                         child: Center(
                           child: Text(
-                            (widget.membersChildData.organization?.companyName ?? 'A')
+                            (widget.membersChildData.organization
+                                        ?.companyName ??
+                                    'A')
                                 .substring(0, 1)
                                 .toUpperCase(),
                             style: fontBold.copyWith(
@@ -537,49 +621,35 @@ class MemberProfilePageState extends State<MemberProfilePage> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            if (i.reviewerPofileUrl != null &&
-                                i.reviewerPofileUrl!.isNotEmpty)
+                            if (i.senderProfileUrl != null &&
+                                i.senderProfileUrl!.isNotEmpty)
                               CachedNetworkImage(
-                                imageUrl: i.reviewerPofileUrl!,
+                                imageUrl: i.senderProfileUrl!,
                                 width: 42.0,
                                 height: 42.0,
                                 fit: BoxFit.cover,
-                                placeholder: (context, url) => const SizedBox(
-                                  width: 42,
-                                  height: 42,
-                                  child: Center(
-                                    child: CircularProgressIndicator(
-                                        strokeWidth: 2),
-                                  ),
-                                ),
-                                errorWidget: (context, url, error) =>
-                                    Image.asset(
-                                  profileImage,
-                                  width: 42.0,
-                                  height: 42.0,
-                                  fit: BoxFit.cover,
-                                ),
+                                placeholder: (context, url) => const SizedBox.shrink(),
+                                errorWidget: (context, url, error) => _testimonialPlaceholderAvatar(),
                               )
                             else
-                              Image.asset(
-                                profileImage,
-                                width: 42.0,
-                                height: 42.0,
-                                fit: BoxFit.cover,
-                              ),
+                              _testimonialPlaceholderAvatar(),
                             SizedBox(width: paddingSize15),
                             Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '${i.reviewerFirstName} ${i.reviewerLastName}',
+                                  '${i.senderName ?? ""}',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                   style: fontBold.copyWith(
                                       fontSize: fontSize12,
                                       color: midnightBlue),
                                 ),
                                 Text(
-                                  '${i.reviewer?.organization?.businessCategory}',
+                                  '${i.senderBusinessCategory ?? ""}',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                   style: fontRegular.copyWith(
                                       fontSize: fontSize10,
                                       color: midnightBlue),
@@ -592,7 +662,7 @@ class MemberProfilePageState extends State<MemberProfilePage> {
                         CommonTextFormField(
                           isEnabled: false,
                           maxLines: 6,
-                          hintText: "${i.review}",
+                          hintText: "${i.review ?? ""}",
                           textStyle: fontRegular.copyWith(
                               color: midnightBlue, fontSize: fontSize14),
                         ),
@@ -624,6 +694,97 @@ class MemberProfilePageState extends State<MemberProfilePage> {
           ),
         ),
       ],
+    );
+  }
+
+  void _openImageViewer(String imageUrl) {
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        opaque: false,
+        barrierColor: Colors.black,
+        pageBuilder: (_, __, ___) {
+          return Scaffold(
+            backgroundColor: Colors.black,
+            body: Stack(
+              children: [
+                Center(
+                  child: Hero(
+                    tag: imageUrl,
+                    child: InteractiveViewer(
+                      minScale: 0.5,
+                      maxScale: 4,
+                      child: CachedNetworkImage(
+                        imageUrl: imageUrl,
+                        fit: BoxFit.contain,
+                        errorWidget: (context, url, error) =>
+                            _placeholderAvatar(),
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 40,
+                  right: 20,
+                  child: GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.black54,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.close, color: Colors.white),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+        transitionsBuilder: (_, animation, __, child) {
+          return FadeTransition(
+            opacity: animation,
+            child: child,
+          );
+        },
+        transitionDuration: const Duration(milliseconds: 300),
+      ),
+    );
+  }
+
+  Widget _placeholderAvatar() {
+    return Container(
+      height: 68.0,
+      width: 68.0,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          colors: [midnightBlue, const Color(0xFF4A6FA5)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: ClipOval(
+        child: Icon(Icons.person, color: Colors.white),
+      ),
+    );
+  }
+
+  Widget _testimonialPlaceholderAvatar() {
+    return Container(
+      width: 42.0,
+      height: 42.0,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          colors: [midnightBlue, const Color(0xFF4A6FA5)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: ClipOval(
+        child: Icon(Icons.person, color: Colors.white),
+      ),
     );
   }
 

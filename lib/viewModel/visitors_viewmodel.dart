@@ -693,11 +693,19 @@ class VisitorsViewModel extends GetxController implements GetxService {
       for (var v in weekly['visitors']['list']) {
         _visitorData.add(VisitorChildData(
           name: v['fullName'],
-          title: v['designation'],
+          designation: v['designation'],
           profileUrl: v['profileImage'],
           companyName: v['companyName'],
           contactNumber: v['number'],
-          businessCategory: v['designation'],
+          businessCategory: v['businessCategory'],
+          meetingName: v['meetingName'],
+          chapterName: v['chapterName'],
+          meetingDate: v['meetingDate'],
+          city: v['city'],
+          state: v['state'],
+          country: v['country'],
+          pinCode: v['pinCode'],
+          vcard: v['vcard'],
         ));
       }
     }

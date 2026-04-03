@@ -226,8 +226,8 @@ class VisitorPageState extends State<VisitorPage>
                             ),
                           ),
                           const SizedBox(height: 5),
-                          if(data.title != "" && data.title != null)
-                          _titleBadge(data.title ?? ''),
+                          if(data.designation != "" && data.designation != null)
+                          _titleBadge(data.designation ?? ''),
                         ],
                       ),
                     ),
@@ -333,6 +333,11 @@ class VisitorPageState extends State<VisitorPage>
     return Column(
       children: [
         const Divider(height: 1, thickness: 1, color: Color(0xFFEAEEF8)),
+        _detailRow(
+          assetPath: meeting,
+          label: 'Meeting Chapter Name',
+          value: data.chapterName?.toString() ?? '—',
+        ),
         _detailRow(
           assetPath: contact,
           label: 'contact_number'.tr,

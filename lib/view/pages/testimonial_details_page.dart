@@ -1,8 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dhiyodha/model/response_model/my_testimonial_response_model.dart';
-import 'package:dhiyodha/utils/helper/date_converter.dart';
 import 'package:dhiyodha/utils/resource/app_colors.dart';
-import 'package:dhiyodha/utils/resource/app_constants.dart';
 import 'package:dhiyodha/utils/resource/app_dimensions.dart';
 import 'package:dhiyodha/utils/resource/app_font_size.dart';
 import 'package:dhiyodha/utils/resource/app_media_assets.dart';
@@ -63,28 +61,12 @@ class TestimonialDetailsPageState extends State<TestimonialDetailsPage> {
                                 width: 42.0,
                                 height: 42.0,
                                 fit: BoxFit.cover,
-                                placeholder: (context, url) => const SizedBox(
-                                  width: 42,
-                                  height: 42,
-                                  child: Center(
-                                    child: CircularProgressIndicator(
-                                        strokeWidth: 2),
-                                  ),
-                                ),
+                                placeholder: (context, url) =>
+                                    const SizedBox.shrink(),
                                 errorWidget: (context, url, error) =>
-                                    Image.asset(
-                                  profileImage,
-                                  width: 42.0,
-                                  height: 42.0,
-                                  fit: BoxFit.cover,
-                                ),
+                                    _placeholderAvatar(),
                               )
-                            : Image.asset(
-                                profileImage,
-                                width: 42.0,
-                                height: 42.0,
-                                fit: BoxFit.cover,
-                              ),
+                            : _placeholderAvatar(),
                         SizedBox(width: paddingSize10),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -96,7 +78,7 @@ class TestimonialDetailsPageState extends State<TestimonialDetailsPage> {
                                   fontSize: fontSize18, color: midnightBlue),
                             ),
                             Text(
-                              '${DateConverter.convertDateToDate(widget.myTestimonialChildData.reviewer?.createdAt ?? DateTime.now().toString())}\n${DateConverter.convertDateToDate(widget.myTestimonialChildData.reviewer?.updatedAt ?? DateTime.now().toString())}',
+                              '${widget.myTestimonialChildData.date!}',
                               style: fontMedium.copyWith(
                                   fontSize: fontSize12, color: greyText),
                             ),
@@ -114,7 +96,7 @@ class TestimonialDetailsPageState extends State<TestimonialDetailsPage> {
                     isEnabled: false,
                     padding: EdgeInsets.all(20.0),
                     maxLines: 9,
-                    hintText: '${widget.myTestimonialChildData.review}',
+                    hintText: '${widget.myTestimonialChildData.review ?? ""}',
                     hintColor: bluishPurple,
                     textStyle: fontRegular.copyWith(
                         color: bluishPurple, fontSize: fontSize12),
@@ -180,6 +162,24 @@ class TestimonialDetailsPageState extends State<TestimonialDetailsPage> {
         ),
       ),
     ));
+  }
+
+  Widget _placeholderAvatar() {
+    return Container(
+      width: 42.0,
+      height: 42.0,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          colors: [midnightBlue, const Color(0xFF4A6FA5)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: ClipOval(
+        child: Icon(Icons.person, color: Colors.white),
+      ),
+    );
   }
 
   Future<void> _showDeleteDialog(TestimonialViewModel testimonialVM,

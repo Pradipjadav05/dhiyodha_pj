@@ -39,13 +39,21 @@ class VisitingECardPageState extends State<VisitingECardPage> {
   }
 
   Future<void> _initData() async {
-    await Get.find<VisitingCardViewModel>().initData();
-    if (widget.currentUserData != null) {
-      Get.find<VisitingCardViewModel>().currentUserData =
-          widget.currentUserData!;
+    final vvm = Get.find<VisitingCardViewModel>();
+
+    await vvm.initData();
+
+    bool hasCurrentUserData =
+        widget.currentUserData != null &&
+            (widget.currentUserData!.firstName?.isNotEmpty == true ||
+                widget.currentUserData!.mobileNo?.isNotEmpty == true);
+
+    if (hasCurrentUserData) {
+      vvm.currentUserData = widget.currentUserData!;
     } else if (widget.visitorChildData != null) {
-      Get.find<VisitingCardViewModel>().visitorData = widget.visitorChildData!;
+      vvm.visitorData = widget.visitorChildData!;
     }
+
     setState(() {});
   }
 
@@ -86,7 +94,7 @@ class VisitingECardPageState extends State<VisitingECardPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // ── Profile header ──
-                        _buildProfileHeader(),
+                        _buildProfileHeader(vvm),
                         const SizedBox(height: paddingSize20),
 
                         // ── Details card ──
@@ -107,10 +115,10 @@ class VisitingECardPageState extends State<VisitingECardPage> {
                                   textColor: white,
                                   onPressed: () async {
                                     final String data =
-                                        '${widget.currentUserData?.firstName} ${widget.currentUserData?.lastName}'
-                                        '\n${widget.currentUserData?.mobileNo}'
-                                        '\n${widget.currentUserData?.currentUserOrganization?.companyName}'
-                                        '\n${widget.currentUserData?.currentUserOrganization?.businessCategory}';
+                                        '${vvm.currentUserData.firstName ?? ''} ${vvm.currentUserData.lastName ?? ''}'
+                                        '\n${vvm.contactController.text}'
+                                        '\n${vvm.companyNameController.text}'
+                                        '\n${vvm.businessCategoryController.text}';
                                     final String shareString =
                                         '${'checkout_profile'.tr} \n\n$data \n\nDownload Now : $playStoreUrl';
                                     await Share.share(shareString);
@@ -161,11 +169,16 @@ class VisitingECardPageState extends State<VisitingECardPage> {
   }
 
   // ── Profile header banner ──
-  Widget _buildProfileHeader() {
-    final String fullName =
-        '${widget.currentUserData?.firstName ?? widget.visitorChildData?.name ?? ''}'
-                ' ${widget.currentUserData?.lastName ?? ''}'
-            .trim();
+  Widget _buildProfileHeader(VisitingCardViewModel vvm) {
+    final bool isVisitor = vvm.isVisitorData.value;
+
+    final String fullName = isVisitor
+        ? (vvm.visitorData.name ?? '')
+        : '${vvm.currentUserData.firstName ?? ''} ${vvm.currentUserData.lastName ?? ''}';
+
+    final String? imageUrl = isVisitor
+        ? vvm.visitorData.profileUrl
+        : vvm.currentUserData.profileUrl;
 
     return Container(
       width: double.infinity,
@@ -179,40 +192,31 @@ class VisitingECardPageState extends State<VisitingECardPage> {
       padding: const EdgeInsets.symmetric(
           horizontal: paddingSize20, vertical: paddingSize20),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-              height: 68.0,
-              width: 68.0,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: white.withOpacity(0.6), width: 2.5),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(50),
-                // half of 42 for perfect circle
-                child: widget.currentUserData?.profileUrl != null &&
-                        widget.currentUserData!.profileUrl!.isNotEmpty
-                    ? CachedNetworkImage(
-                        imageUrl: widget.currentUserData!.profileUrl!,
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) => SizedBox(),
-                        errorWidget: (context, url, error) => Image.asset(
-                          profileImage,
-                          fit: BoxFit.cover,
-                        ),
-                      )
-                    : Image.asset(
-                        profileImage,
-                        fit: BoxFit.cover,
-                      ),
-              )),
+            height: 68,
+            width: 68,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: white.withOpacity(0.6), width: 2.5),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(50),
+              child: imageUrl != null && imageUrl.isNotEmpty
+                  ? CachedNetworkImage(
+                imageUrl: imageUrl,
+                fit: BoxFit.cover,
+                errorWidget: (_, __, ___) => _placeholderAvatar(),
+              )
+                  : _placeholderAvatar(),
+            ),
+          ),
           const SizedBox(width: paddingSize15),
           Expanded(
             child: Text(
-              fullName,
-              overflow: TextOverflow.ellipsis,
+              fullName.trim(),
               maxLines: 2,
+              overflow: TextOverflow.ellipsis,
               style: fontBold.copyWith(fontSize: fontSize22, color: white),
             ),
           ),
@@ -221,8 +225,27 @@ class VisitingECardPageState extends State<VisitingECardPage> {
     );
   }
 
+  Widget _placeholderAvatar() {
+    return Container(
+      height: 68.0,
+      width: 68.0,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          colors: [midnightBlue, const Color(0xFF4A6FA5)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: ClipOval(
+        child: Icon(Icons.person, color: Colors.white),
+      ),
+    );
+  }
+
   // ── Details card ──
   Widget _buildDetailsCard(VisitingCardViewModel vvm) {
+    final bool isVisitor = vvm.isVisitorData.value;
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -232,6 +255,16 @@ class VisitingECardPageState extends State<VisitingECardPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          if(isVisitor)
+            ...[
+              _infoRow(
+                assetIcon: meeting,
+                label: 'Meeting Chapter Name',
+                controller: vvm.meetingChapterNameController,
+                isEnabled: vvm.isEditData.value,
+              ),
+              _divider(),
+            ],
           // Contact
           _infoRow(
             assetIcon: contact,
@@ -310,16 +343,19 @@ class VisitingECardPageState extends State<VisitingECardPage> {
           // Row 1: PinCode | City
           Row(
             children: [
-              Expanded(
-                child: _addressField(
-                  label: 'pin code',
-                  controller: vvm.pinCodeController,
-                  isEnabled: vvm.isEditData.value,
-                  inputType: TextInputType.number,
-                  maxLength: 6,
-                ),
-              ),
-              const SizedBox(width: paddingSize14),
+              if(!vvm.isVisitorData.value)
+                ...[
+                  Expanded(
+                    child: _addressField(
+                      label: 'pin code',
+                      controller: vvm.pinCodeController,
+                      isEnabled: vvm.isEditData.value,
+                      inputType: TextInputType.number,
+                      maxLength: 6,
+                    ),
+                  ),
+                  const SizedBox(width: paddingSize14),
+                ],
               Expanded(
                 child: _addressField(
                   label: 'city',
@@ -416,7 +452,7 @@ class VisitingECardPageState extends State<VisitingECardPage> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.asset(assetIcon, height: iconSize18, width: iconSize18),
+              Image.asset(assetIcon, height: iconSize18, width: iconSize18, color: bluishPurple,),
               const SizedBox(width: paddingSize5),
               Text(
                 label,
@@ -494,7 +530,8 @@ class VisitingECardPageState extends State<VisitingECardPage> {
       mobileNo: vvm.contactController.text.isNotEmpty
           ? vvm.contactController.text
           : vvm.currentUserData.mobileNo ?? '',
-      uploadDocumentId: vvm.currentUserData.uploadDocumentId ?? 'ce6b8b8f-b252-4834-97c2-8d9927e4f5a2',
+      uploadDocumentId: vvm.currentUserData.uploadDocumentId ??
+          'ce6b8b8f-b252-4834-97c2-8d9927e4f5a2',
       education: vvm.currentUserData.education ?? '',
       children: vvm.currentUserData.children ?? 0,
       pet: vvm.currentUserData.pet ?? '',
