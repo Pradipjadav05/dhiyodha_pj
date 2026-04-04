@@ -297,18 +297,18 @@ class MembersPageState extends State<MembersPage>
             ),
           ),
           // Search action
-          _iconButton(
-            assetPath: searchBlue,
-            size: 22,
-            onTap: () async {
-              if (membersVM.memberSearchController.text.isEmpty) {
-                showSnackBar('member_name_search'.tr);
-              } else {
-                await membersVM.searchType(
-                    'GLOBAL', membersVM.memberSearchController.text);
-              }
-            },
-          ),
+          // _iconButton(
+          //   assetPath: searchBlue,
+          //   size: 22,
+          //   onTap: () async {
+          //     if (membersVM.memberSearchController.text.isEmpty) {
+          //       showSnackBar('member_name_search'.tr);
+          //     } else {
+          //       await membersVM.searchType(
+          //           'GLOBAL', membersVM.memberSearchController.text);
+          //     }
+          //   },
+          // ),
           const SizedBox(width: 6),
           // Reload action
           _iconButton(
