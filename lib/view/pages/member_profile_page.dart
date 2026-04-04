@@ -92,20 +92,28 @@ class MemberProfilePageState extends State<MemberProfilePage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(
-                      memberVM.testimonialDataList.length,
-                      (index) => Container(
-                        margin: EdgeInsets.symmetric(horizontal: 4),
-                        width: _currentIndex == index ? 15 : 10,
-                        height: _currentIndex == index ? 15 : 10,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: _currentIndex == index
-                              ? bluishPurple
-                              : bluishPurple.withOpacity(0.3),
-                        ),
-                      ),
+                      _getVisibleDotCount(memberVM.testimonialDataList.length),
+                          (index) {
+                        int realIndex = _getRealIndex(
+                            index, _currentIndex, memberVM.testimonialDataList.length);
+
+                        bool isActive = realIndex == _currentIndex;
+
+                        return AnimatedContainer(
+                          duration: Duration(milliseconds: 300),
+                          margin: EdgeInsets.symmetric(horizontal: 4),
+                          width: isActive ? 14 : 8,
+                          height: isActive ? 14 : 8,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: isActive
+                                ? bluishPurple
+                                : bluishPurple.withOpacity(0.3),
+                          ),
+                        );
+                      },
                     ),
-                  ),
+                  )
                 ],
               ),
             ),
@@ -113,6 +121,19 @@ class MemberProfilePageState extends State<MemberProfilePage> {
         );
       },
     ));
+  }
+
+  int _getVisibleDotCount(int total) {
+    return total <= 3 ? total : 3;
+  }
+
+  int _getRealIndex(int dotIndex, int currentIndex, int total) {
+    if (total <= 3) return dotIndex;
+
+    if (currentIndex == 0) return dotIndex;
+    if (currentIndex == total - 1) return total - 3 + dotIndex;
+
+    return currentIndex - 1 + dotIndex;
   }
 
   _contactWays() {
