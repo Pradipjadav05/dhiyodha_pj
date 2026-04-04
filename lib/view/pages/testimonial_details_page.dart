@@ -45,46 +45,103 @@ class TestimonialDetailsPageState extends State<TestimonialDetailsPage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        widget.myTestimonialChildData.reviewerPofileUrl !=
-                                    null &&
-                                widget.myTestimonialChildData.reviewerPofileUrl!
-                                    .isNotEmpty
-                            ? CachedNetworkImage(
-                                imageUrl: widget
-                                    .myTestimonialChildData.reviewerPofileUrl!,
-                                width: 42.0,
-                                height: 42.0,
-                                fit: BoxFit.cover,
-                                placeholder: (context, url) =>
-                                    const SizedBox.shrink(),
-                                errorWidget: (context, url, error) =>
-                                    _placeholderAvatar(),
-                              )
-                            : _placeholderAvatar(),
-                        SizedBox(width: paddingSize10),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '${widget.myTestimonialChildData.reviewerFirstName} ${widget.myTestimonialChildData.reviewerLastName}',
-                              style: fontBold.copyWith(
-                                  fontSize: fontSize18, color: midnightBlue),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(radius10),
+                      image: DecorationImage(
+                        image: AssetImage(profileBg),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // widget.myTestimonialChildData.reviewerPofileUrl !=
+                          //             null &&
+                          //         widget.myTestimonialChildData.reviewerPofileUrl!
+                          //             .isNotEmpty
+                          //     ? CachedNetworkImage(
+                          //         imageUrl: widget
+                          //             .myTestimonialChildData.reviewerPofileUrl!,
+                          //         width: 42.0,
+                          //         height: 42.0,
+                          //         fit: BoxFit.cover,
+                          //         placeholder: (context, url) =>
+                          //             const SizedBox.shrink(),
+                          //         errorWidget: (context, url, error) =>
+                          //             _placeholderAvatar(),
+                          //       )
+                          //     : _placeholderAvatar(),
+                          // Avatar
+                          _Avatar(
+                              profileUrl: widget
+                                  .myTestimonialChildData.reviewerPofileUrl),
+                          SizedBox(width: paddingSize10),
+                          // Info
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Name
+                                Text(
+                                  '${widget.myTestimonialChildData.reviewerFirstName ?? ''} ${widget.myTestimonialChildData.reviewerLastName ?? ''}'
+                                      .trim(),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: fontBold.copyWith(
+                                    fontSize: fontSize22,
+                                    color: ghostWhite,
+                                    letterSpacing: 0.1,
+                                  ),
+                                ),
+
+                                const SizedBox(height: 6),
+
+                                // Type + Company
+                                if (widget.myTestimonialChildData.type != null)
+                                  _MetaRow(
+                                    icon: Icons.work_outline_rounded,
+                                    label: widget.myTestimonialChildData.type!,
+                                  ),
+
+                                const SizedBox(height: 5),
+
+                                // Phone
+                                if (widget.myTestimonialChildData.number != null)
+                                  _MetaRow(
+                                    icon: Icons.phone_outlined,
+                                    label:
+                                        '${widget.myTestimonialChildData.number}',
+                                  ),
+
+                                const SizedBox(height: 5),
+
+                                // Date
+                                if (widget.myTestimonialChildData.date != null)
+                                  _MetaRow(
+                                    icon: Icons.calendar_today_outlined,
+                                    label:
+                                        '${widget.myTestimonialChildData.date}',
+                                  ),
+
+                                // Type + Company
+                                if (widget.myTestimonialChildData.companyName !=
+                                    null)
+                                  _MetaRow(
+                                    icon: Icons.business_outlined,
+                                    label: widget
+                                        .myTestimonialChildData.companyName!,
+                                  ),
+
+                                const SizedBox(height: 5),
+                              ],
                             ),
-                            Text(
-                              '${widget.myTestimonialChildData.date!}',
-                              style: fontMedium.copyWith(
-                                  fontSize: fontSize12, color: greyText),
-                            ),
-                          ],
-                        ),
-                      ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   SizedBox(height: paddingSize8),
@@ -126,30 +183,35 @@ class TestimonialDetailsPageState extends State<TestimonialDetailsPage> {
                   //   ],
                   // ),
                   Container(
-                    margin: EdgeInsets.symmetric(
-                        vertical: paddingSize20, horizontal: paddingSize10),
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 15),
                     decoration: BoxDecoration(
-                        color: lavenderMist,
-                        borderRadius: BorderRadius.circular(radius10)),
-                    padding: EdgeInsets.all(paddingSize10),
+                      color: const Color(0xFFFFEDED),
+                      borderRadius: BorderRadius.circular(14),
+                      border:
+                          Border.all(color: const Color(0xFFFFCCCC), width: 1),
+                    ),
                     child: InkWell(
                       onTap: () async {
                         await _showDeleteDialog(
                             testimonialVM, widget.myTestimonialChildData);
                       },
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Image.asset(
                             delete,
                             width: iconSize18,
                             height: iconSize18,
+                            color: Color(0xFFD94040),
                           ),
                           SizedBox(width: paddingSize10),
                           Text(
                             "delete_testimonials".tr,
                             style: fontMedium.copyWith(
-                                color: bluishPurple, fontSize: fontSize14),
+                                color: const Color(0xFFD94040),
+                                fontSize: fontSize14),
                           )
                         ],
                       ),
@@ -164,23 +226,7 @@ class TestimonialDetailsPageState extends State<TestimonialDetailsPage> {
     ));
   }
 
-  Widget _placeholderAvatar() {
-    return Container(
-      width: 42.0,
-      height: 42.0,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        gradient: LinearGradient(
-          colors: [midnightBlue, const Color(0xFF4A6FA5)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-      ),
-      child: ClipOval(
-        child: Icon(Icons.person, color: Colors.white),
-      ),
-    );
-  }
+
 
   Future<void> _showDeleteDialog(TestimonialViewModel testimonialVM,
       MyTestimonialChildData myTestimonialChildData) async {
@@ -260,5 +306,79 @@ class TestimonialDetailsPageState extends State<TestimonialDetailsPage> {
   @override
   void dispose() {
     super.dispose();
+  }
+}
+
+class _Avatar extends StatelessWidget {
+  final String? profileUrl;
+
+  const _Avatar({this.profileUrl});
+
+  @override
+  Widget build(BuildContext context) {
+    const double size = 68;
+    if (profileUrl != null && profileUrl!.isNotEmpty) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(50),
+        child: CachedNetworkImage(
+          imageUrl: profileUrl!,
+          width: size,
+          height: size,
+          fit: BoxFit.cover,
+          placeholder: (_, __) => _fallback(size),
+          errorWidget: (_, __, ___) => _fallback(size),
+        ),
+      );
+    }
+    return _fallback(size);
+  }
+
+  Widget _fallback(double size) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        borderRadius: BorderRadius.circular(16),
+        gradient: LinearGradient(
+          colors: [midnightBlue, const Color(0xFF4A6FA5)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: Icon(Icons.person_rounded, color: Colors.white, size: size),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────
+// Meta Row Helper
+// ─────────────────────────────────────────────
+class _MetaRow extends StatelessWidget {
+  final IconData icon;
+  final String label;
+
+  const _MetaRow({
+    required this.icon,
+    required this.label,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Icon(icon, size: 13, color: white.withValues(alpha: 0.85)),
+        const SizedBox(width: 5),
+        Expanded(
+          child: Text(
+            label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: fontMedium.copyWith(fontSize: fontSize12, color: white.withValues(alpha: 0.85)),
+          ),
+        ),
+      ],
+    );
   }
 }
