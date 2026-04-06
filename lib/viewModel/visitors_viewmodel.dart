@@ -368,11 +368,11 @@ class VisitorsViewModel extends GetxController implements GetxService {
   void teamWiseFillMeeting(String selectedTeamName) {
     _chapterList;
     _teamWiseMeetingList = [];
-    _teamWiseMeetingList.add("Select Meeting (Optional)");
+    // _teamWiseMeetingList.add("Select Meeting (Optional)");
     List<String> groupNames = _meetingsList.where((item) => item["groupName"].toString().toLowerCase() == (selectedTeamName.toLowerCase()))
         .map((item) => item["title"].toString()).toList();
     _teamWiseMeetingList.addAll(groupNames);
-    _selectedMeeting =  _teamWiseMeetingList[0].toString();
+    // _selectedMeeting =  _teamWiseMeetingList[0].toString();
     _teamWiseMeetingList.length;
   }
 

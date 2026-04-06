@@ -460,7 +460,7 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
     } else if (vvm.selectedChapter.isEmpty ||
         vvm.selectedChapter == vvm.chapterList[0]) {
       showSnackBar("select_chapter".tr);
-    } else if (vvm.selectedMeeting.isEmpty || vvm.selectedMeeting == vvm.teamWiseMeetingList[0]) {
+    } else if (vvm.selectedMeeting.isEmpty) {
       showSnackBar("select_meeting".tr);
     } else if (vvm.dateController.text.isEmpty) {
       showSnackBar("enter_date".tr);
