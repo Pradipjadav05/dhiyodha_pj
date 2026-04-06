@@ -285,14 +285,14 @@ class VisitingECardPageState extends State<VisitingECardPage> {
           ),
           _divider(),
 
-          // Designation
-          _infoRow(
-            assetIcon: businessCat,
-            label: 'designation'.tr,
-            controller: vvm.designationController,
-            isEnabled: vvm.isEditData.value,
-          ),
-          _divider(),
+          // // Designation
+          // _infoRow(
+          //   assetIcon: businessCat,
+          //   label: 'designation'.tr,
+          //   controller: vvm.designationController,
+          //   isEnabled: vvm.isEditData.value,
+          // ),
+          // _divider(),
 
           // Business Category
           _infoRow(
