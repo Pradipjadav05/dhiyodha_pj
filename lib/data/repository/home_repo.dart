@@ -46,6 +46,11 @@ class HomeRepo {
     return await apiClient.postData(postCommentUrl, requestParameters);
   }
 
+  Future<Response> getMeetings(int page, int size, String? sort, String? sortDirection) async {
+    return await apiClient.getData(
+        '$getMeetingsListUrl?page=$page&size=$size&sort=$sort&sortDirection=$sortDirection');
+  }
+
   Future<Response> dashboardData(String duration) async {
     return await apiClient.getData('$dashboardUrl?duration=$duration');
   }

@@ -8,7 +8,6 @@ import 'package:dhiyodha/utils/resource/app_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
-import '../model/response_model/my_testimonial_response_model.dart';
 import '../model/response_model/referral_response_model.dart';
 
 class HomeViewModel extends GetxController implements GetxService {
@@ -143,6 +142,7 @@ class HomeViewModel extends GetxController implements GetxService {
     _postData = [];
     _currentDotPosition = 0;
     _controller = CarouselSliderController();
+    await getMeetingsList();
   }
 
   RxInt get selectedIndex => _selectedIndex;
@@ -184,6 +184,10 @@ class HomeViewModel extends GetxController implements GetxService {
   set reelList(List<String> value) => _reelList = value;
 
   Map<String, dynamic>? lastWeeklyData;
+
+  List<Documents> meetingBannerList = [];
+  List<Documents> businessPresentationBannerList = [];
+  List<Documents> trainingBannerList = [];
 
   Future<bool> loadMore() async {
     if (page.value < totalPages.value) {
@@ -294,6 +298,78 @@ class HomeViewModel extends GetxController implements GetxService {
     return false;
   }
 
+  Future<void> getMeetingsList() async {
+    _isLoading = true;
+    update();
+
+    Response response = await homeRepo.getMeetings(0, 1000, "updatedAt", "DESC");
+
+    _isLoading = false;
+
+    if (response.statusCode == 200) {
+
+      meetingBannerList = [];
+      businessPresentationBannerList = [];
+      trainingBannerList = [];
+
+      _bannerList = [];
+
+      if (response.body['data'] != null &&
+          response.body['data']['data'] != null &&
+          response.body['data']['data'].isNotEmpty) {
+
+        final meeting = response.body['data']['data'][0];
+
+        if (meeting['meetingBanner'] != null &&
+            meeting['meetingBanner'].toString().isNotEmpty) {
+
+          final banner = Documents(
+            url: meeting['meetingBanner'],
+            fileName: meeting['meetingtitle'],
+            documentType: "jfif",
+          );
+
+          meetingBannerList.add(banner);
+        }
+
+        if (meeting['businessPresentatioBanner'] != null &&
+            meeting['businessPresentatioBanner'].toString().isNotEmpty) {
+
+          final banner = Documents(
+            url: meeting['businessPresentatioBanner'],
+            fileName: meeting['businessPresentationTitle'],
+            documentType: "jfif",
+          );
+
+          businessPresentationBannerList.add(banner);
+        }
+
+        if (meeting['trainingBanner'] != null &&
+            meeting['trainingBanner'].toString().isNotEmpty) {
+
+          final banner = Documents(
+            url: meeting['trainingBanner'],
+            fileName: meeting['trainingtitle'],
+            documentType: "jfif",
+          );
+
+          trainingBannerList.add(banner);
+        }
+
+        _bannerList = [
+          ...meetingBannerList,
+          ...businessPresentationBannerList,
+          ...trainingBannerList,
+        ];
+      }
+
+    } else {
+      ApiChecker.checkApi(response);
+    }
+
+    update();
+  }
+
   Future<void> dashboardData(String duration) async {
     _isLoading = true;
     update();
@@ -332,12 +408,12 @@ class HomeViewModel extends GetxController implements GetxService {
           _statsList.add(Stats.fromJson(order));
         });
       }
-      if (response.body['data']['documents'] != null) {
+/*      if (response.body['data']['documents'] != null) {
         _bannerList = [];
         response.body['data']['documents'].forEach((documents) {
           _bannerList.add(Documents.fromJson(documents));
         });
-      }
+      }*/
       if (response.body['data']['nextMeeting'] != null) {
         _nextMeeting =
             NextMeeting.fromJson(response.body['data']['nextMeeting']);

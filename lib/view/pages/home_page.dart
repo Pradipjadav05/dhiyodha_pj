@@ -1229,94 +1229,89 @@ class HomePageState extends State<HomePage> {
   }
 
   _bannerSlider(HomeViewModel homeVM) {
-    return CarouselSlider(
+    return CarouselSlider.builder(
       carouselController: homeVM.controller,
+      itemCount: homeVM.bannerList.length,
       options: CarouselOptions(
-        height: 350.0,
-        viewportFraction: 1.0,
-        // onPageChanged: (position, reason) async {
-        //   homeVM.updatePosition(position);
-        // }
+        height: 300,
+        viewportFraction: 0.92,
+        enlargeCenterPage: true,
+
+        autoPlay: true,
+        autoPlayInterval: const Duration(seconds: 3),
+        autoPlayAnimationDuration: const Duration(milliseconds: 800),
+        enableInfiniteScroll: true,
       ),
-      items: homeVM.bannerList.map((i) {
-        return Card(
-          shape: Border.all(color: lavenderMist),
-          elevation: 2.0,
-          child: Builder(
-            builder: (BuildContext context) {
-              return ClipRRect(
-                borderRadius: BorderRadius.circular(6.0),
-                child: CachedNetworkImage(
-                  fit: BoxFit.fill,
-                  imageUrl: i.url!,
+      itemBuilder: (context, index, realIndex) {
+        final i = homeVM.bannerList[index];
+
+        return Container(
+          // margin: const EdgeInsets.symmetric(vertical: 8),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(18),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.15),
+                blurRadius: 10,
+                offset: const Offset(0, 5),
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(18),
+            child: Stack(
+              children: [
+
+                Positioned.fill(
+                  child: CachedNetworkImage(
+                    imageUrl: i.url ?? "",
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => Container(
+                      color: Colors.grey.shade200,
+                      child: const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                    errorWidget: (context, url, error) =>
+                    const Icon(Icons.image_not_supported),
+                  ),
                 ),
-              );
-            },
+
+                Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Colors.black.withOpacity(0.6),
+                          Colors.transparent,
+                        ],
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
+                      ),
+                    ),
+                  ),
+                ),
+
+                Positioned(
+                  left: 16,
+                  bottom: 16,
+                  right: 16,
+                  child: Text(
+                    i.fileName ?? "",
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: fontBold.copyWith(
+                      color: Colors.white,
+                      fontSize: fontSize16,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         );
-      }).toList(),
+      },
     );
-
-    // return InkWell(
-    //   onTap: () {
-    //     Get.toNamed(Routes.getProfileRoute());
-    //   },
-    //   child: Container(
-    //     decoration: BoxDecoration(
-    //       borderRadius: BorderRadius.circular(radius10),
-    //       image: DecorationImage(
-    //         image: AssetImage(profileBg),
-    //         fit: BoxFit.cover,
-    //       ),
-    //     ),
-    //     child: Padding(
-    //       padding: const EdgeInsets.symmetric(vertical: paddingSize30),
-    //       child: Row(
-    //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    //         crossAxisAlignment: CrossAxisAlignment.center,
-    //         children: [
-    //           Image.asset(
-    //             profileImage,
-    //             height: 68.0,
-    //             width: 68.0,
-    //           ),
-    //           Column(
-    //             mainAxisAlignment: MainAxisAlignment.start,
-    //             crossAxisAlignment: CrossAxisAlignment.start,
-    //             children: [
-    //               Row(
-    //                 mainAxisAlignment: MainAxisAlignment.start,
-    //                 crossAxisAlignment: CrossAxisAlignment.center,
-    //                 children: [
-    //                   Text(
-    //                     "Poonam Tala",
-    //                     style: fontBold.copyWith(
-    //                         fontSize: fontSize22, color: ghostWhite),
-    //                   ),
-    //                   SizedBox(width: 4.0),
-    //                   Image.asset(live),
-    //                 ],
-    //               ),
-    //               Text(
-    //                 "BNI Utsav",
-    //                 style: fontRegular.copyWith(
-    //                     fontSize: fontSize14, color: periwinkle),
-    //               ),
-    //               Text(
-    //                 "Due date : 30/01/2024",
-    //                 style: fontRegular.copyWith(
-    //                     fontSize: fontSize14, color: periwinkle),
-    //               )
-    //             ],
-    //           ),
-    //           Image.asset(
-    //             arrowWhite,
-    //           ),
-    //         ],
-    //       ),
-    //     ),
-    //   ),
-    // );
   }
 
   _otherFunctions(HomeViewModel homeVM) {
@@ -2479,5 +2474,6 @@ class HomePageState extends State<HomePage> {
 
   Future<void> getCurrentUser(HomeViewModel homeVM) async {
     homeVM.currentUserData = await homeVM.getCurrentUser();
+
   }
 }
