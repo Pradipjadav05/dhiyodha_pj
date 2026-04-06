@@ -358,6 +358,11 @@ class HomeViewModel extends GetxController implements GetxService {
           date: DateFormat('MMMM dd, yyyy').format(startDateTime),
           startTime: DateFormat('hh:mm a').format(startDateTime),
           endTime: DateFormat('hh:mm a').format(endDateTime),
+          visitors: meeting["totalVisitors"] ?? 0,
+          tyfcb: 0,
+          trainer: 0,
+          speakers: 0,
+          guest: 0
         );
 
         if (meeting['meetingBanner'] != null &&
@@ -455,8 +460,8 @@ class HomeViewModel extends GetxController implements GetxService {
         });
       }*/
       if (response.body['data']['nextMeeting'] != null) {
-        _nextMeetingCountData =
-            NextMeeting.fromJson(response.body['data']['nextMeeting']);
+        // _nextMeetingCountData =
+        //     NextMeeting.fromJson(response.body['data']['nextMeeting']);
         globalNextMeeting =
             NextMeeting.fromJson(response.body['data']['nextMeeting']);
       }

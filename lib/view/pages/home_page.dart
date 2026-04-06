@@ -1161,7 +1161,7 @@ class HomePageState extends State<HomePage> {
                                       fontSize: fontSize12),
                                 ),
                                 Text(
-                                  '${homeVM.nextMeetingCountData?.visitors ?? "00"}',
+                                  '${homeVM.nextMeeting?.visitors ?? "00"}',
                                   style: fontBold.copyWith(
                                       color: midnightBlue,
                                       fontSize: fontSize20),
@@ -1187,7 +1187,7 @@ class HomePageState extends State<HomePage> {
                                     color: midnightBlue, fontSize: fontSize12),
                               ),
                               Text(
-                                '${homeVM.nextMeetingCountData?.speakers ?? "00"}',
+                                '${homeVM.nextMeeting?.speakers ?? "00"}',
                                 style: fontBold.copyWith(
                                     color: midnightBlue, fontSize: fontSize20),
                               ),
@@ -1217,7 +1217,7 @@ class HomePageState extends State<HomePage> {
                                       fontSize: fontSize12),
                                 ),
                                 Text(
-                                  '${homeVM.nextMeetingCountData?.trainer ?? "00"}',
+                                  '${homeVM.nextMeeting?.trainer ?? "00"}',
                                   style: fontBold.copyWith(
                                       color: midnightBlue,
                                       fontSize: fontSize20),
@@ -1243,7 +1243,7 @@ class HomePageState extends State<HomePage> {
                                     color: midnightBlue, fontSize: fontSize12),
                               ),
                               Text(
-                                '${homeVM.nextMeetingCountData?.guest ?? "00"}',
+                                '${homeVM.nextMeeting?.guest ?? "00"}',
                                 style: fontBold.copyWith(
                                     color: midnightBlue, fontSize: fontSize20),
                               ),
