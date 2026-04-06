@@ -355,14 +355,16 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
                   ],
                 ),
                 SizedBox(height: paddingSize25),
-                CommonButton(
-                  buttonText: "confirm".tr,
-                  bgColor: bluishPurple,
-                  textColor: periwinkle,
-                  onPressed: () async {
-                    await _collectDataAndAddVisitors();
-                  },
-                )
+                vvm.isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : CommonButton(
+                        buttonText: "confirm".tr,
+                        bgColor: bluishPurple,
+                        textColor: periwinkle,
+                        onPressed: () async {
+                          await _collectDataAndAddVisitors();
+                        },
+                      )
               ],
             ),
           )),
