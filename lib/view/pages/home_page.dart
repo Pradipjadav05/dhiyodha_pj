@@ -23,6 +23,8 @@ import 'package:loadmore/loadmore.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../utils/resource/app_constants.dart';
+
 class HomePage extends StatefulWidget {
   HomePageState createState() => HomePageState();
 }
@@ -1062,151 +1064,202 @@ class HomePageState extends State<HomePage> {
             padding: const EdgeInsets.only(
                 bottom: paddingSize20,
                 top: paddingSize30,
-                right: paddingSize30,
-                left: paddingSize30),
+                right: paddingSize20,
+                left: paddingSize20),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${homeVM.nextMeeting?.day ?? ""}',
-                          style: fontRegular.copyWith(
-                              color: midnightBlue, fontSize: fontSize14),
+                // ── Top row: Day/Date | divider | Time ──
+                IntrinsicHeight(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Day + Date
+                      Expanded(
+                        flex:9,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 18.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '${homeVM.nextMeeting?.day ?? ""}',
+                                style: fontRegular.copyWith(
+                                    color: midnightBlue, fontSize: fontSize14),
+                              ),
+                              Text(
+                                '${homeVM.nextMeeting?.date ?? ""}',
+                                style: fontBold.copyWith(
+                                    color: midnightBlue, fontSize: fontSize20),
+                              ),
+                            ],
+                          ),
                         ),
-                        Text(
-                          '${homeVM.nextMeeting?.date ?? ""}',
-                          style: fontBold.copyWith(
-                              color: midnightBlue, fontSize: fontSize16),
+                      ),
+                      // Vertical divider
+                      Container(
+                        color: bluishPurple,
+                        width: 2.0,
+                      ),
+                      // Time
+                      Expanded(
+                        flex: 7,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 18.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Time :".tr,
+                                style: fontRegular.copyWith(
+                                    color: midnightBlue, fontSize: fontSize14),
+                              ),
+                              Text(
+                                '${homeVM.nextMeeting?.startTime ?? ""}',
+                                style: fontBold.copyWith(
+                                    color: midnightBlue, fontSize: fontSize20),
+                              ),
+                            ],
+                          ),
                         ),
-                      ],
-                    ),
-                    Container(
-                      color: bluishPurple,
-                      width: 2.0,
-                      height: 40.0,
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Time :".tr,
-                          style: fontRegular.copyWith(
-                              color: midnightBlue, fontSize: fontSize14),
-                        ),
-                        Text(
-                          '${homeVM.nextMeeting?.startTime ?? ""} - ${homeVM.nextMeeting?.endTime ?? ""}',
-                          style: fontBold.copyWith(
-                              color: midnightBlue, fontSize: fontSize16),
-                        ),
-                      ],
-                    ),
-                  ],
+                      ),
+                    ],
+                  ),
                 ),
+
                 SizedBox(height: paddingSize15),
                 Divider(thickness: 2.0, color: bluishPurple),
                 SizedBox(height: paddingSize15),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        Get.toNamed(Routes.getVisitorPageRoute());
-                      },
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "visitors".tr.toUpperCase(),
-                            style: fontRegular.copyWith(
-                                color: midnightBlue, fontSize: fontSize12),
+
+                // ── Bottom row: Visitor | Speaker | Trainer | Guest ──
+                IntrinsicHeight(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      // Visitor
+                      Expanded(
+                        child: InkWell(
+                          onTap: () {
+                            Get.toNamed(Routes.getVisitorPageRoute());
+                          },
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "visitors".tr,
+                                  style: fontRegular.copyWith(
+                                      color: midnightBlue,
+                                      fontSize: fontSize12),
+                                ),
+                                Text(
+                                  '${homeVM.nextMeetingCountData?.visitors ?? "00"}',
+                                  style: fontBold.copyWith(
+                                      color: midnightBlue,
+                                      fontSize: fontSize20),
+                                ),
+                              ],
+                            ),
                           ),
-                          Text(
-                            '${homeVM.nextMeeting?.visitors}',
-                            style: fontBold.copyWith(
-                                color: midnightBlue, fontSize: fontSize16),
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
-                    Spacer(),
-                    InkWell(
-                      onTap: () {},
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "speakers".tr,
-                            style: fontRegular.copyWith(
-                                color: midnightBlue, fontSize: fontSize12),
+                      // Vertical divider
+                      Container(color: bluishPurple, width: 1.5),
+                      // Speaker
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "speakers".tr,
+                                style: fontRegular.copyWith(
+                                    color: midnightBlue, fontSize: fontSize12),
+                              ),
+                              Text(
+                                '${homeVM.nextMeetingCountData?.speakers ?? "00"}',
+                                style: fontBold.copyWith(
+                                    color: midnightBlue, fontSize: fontSize20),
+                              ),
+                            ],
                           ),
-                          Text(
-                            '${homeVM.nextMeeting?.speakers}',
-                            style: fontBold.copyWith(
-                                color: midnightBlue, fontSize: fontSize16),
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
-                    Spacer(),
-                    InkWell(
-                      onTap: () {
-                        Get.toNamed(Routes.getTrainingPageRoute());
-                      },
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "trainer".tr.toUpperCase(),
-                            style: fontRegular.copyWith(
-                                color: midnightBlue, fontSize: fontSize12),
+                      // Vertical divider
+                      Container(color: bluishPurple, width: 1.5),
+                      // Trainer
+                      Expanded(
+                        child: InkWell(
+                          onTap: () {
+                            Get.toNamed(Routes.getTrainingPageRoute());
+                          },
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "trainer".tr,
+                                  style: fontRegular.copyWith(
+                                      color: midnightBlue,
+                                      fontSize: fontSize12),
+                                ),
+                                Text(
+                                  '${homeVM.nextMeetingCountData?.trainer ?? "00"}',
+                                  style: fontBold.copyWith(
+                                      color: midnightBlue,
+                                      fontSize: fontSize20),
+                                ),
+                              ],
+                            ),
                           ),
-                          Text(
-                            '${homeVM.nextMeeting?.trainer}',
-                            style: fontBold.copyWith(
-                                color: midnightBlue, fontSize: fontSize16),
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
-                    Spacer(),
-                    InkWell(
-                      onTap: () {},
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "guest".tr.toUpperCase(),
-                            style: fontRegular.copyWith(
-                                color: midnightBlue, fontSize: fontSize12),
+                      // Vertical divider
+                      Container(color: bluishPurple, width: 1.5),
+                      // Guest
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "guest".tr,
+                                style: fontRegular.copyWith(
+                                    color: midnightBlue, fontSize: fontSize12),
+                              ),
+                              Text(
+                                '${homeVM.nextMeetingCountData?.guest ?? "00"}',
+                                style: fontBold.copyWith(
+                                    color: midnightBlue, fontSize: fontSize20),
+                              ),
+                            ],
                           ),
-                          Text(
-                            '${homeVM.nextMeeting?.guest}',
-                            style: fontBold.copyWith(
-                                color: midnightBlue, fontSize: fontSize16),
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
         ),
+
+        // ── "Next Meeting" label chip ──
         Positioned(
           top: -15,
           left: 20,
@@ -1236,7 +1289,6 @@ class HomePageState extends State<HomePage> {
         height: 300,
         viewportFraction: 0.92,
         enlargeCenterPage: true,
-
         autoPlay: true,
         autoPlayInterval: const Duration(seconds: 3),
         autoPlayAnimationDuration: const Duration(milliseconds: 800),
@@ -1261,7 +1313,6 @@ class HomePageState extends State<HomePage> {
             borderRadius: BorderRadius.circular(18),
             child: Stack(
               children: [
-
                 Positioned.fill(
                   child: CachedNetworkImage(
                     imageUrl: i.url ?? "",
@@ -1273,10 +1324,9 @@ class HomePageState extends State<HomePage> {
                       ),
                     ),
                     errorWidget: (context, url, error) =>
-                    const Icon(Icons.image_not_supported),
+                        const Icon(Icons.image_not_supported),
                   ),
                 ),
-
                 Positioned.fill(
                   child: Container(
                     decoration: BoxDecoration(
@@ -1291,7 +1341,6 @@ class HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
-
                 Positioned(
                   left: 16,
                   bottom: 16,
@@ -2474,6 +2523,5 @@ class HomePageState extends State<HomePage> {
 
   Future<void> getCurrentUser(HomeViewModel homeVM) async {
     homeVM.currentUserData = await homeVM.getCurrentUser();
-
   }
 }

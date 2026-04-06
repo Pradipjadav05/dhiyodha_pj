@@ -7,7 +7,9 @@ import 'package:dhiyodha/model/response_model/posts_model.dart';
 import 'package:dhiyodha/utils/resource/app_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
+import '../model/response_model/meeting_lis_response_model.dart';
 import '../model/response_model/referral_response_model.dart';
 
 class HomeViewModel extends GetxController implements GetxService {
@@ -26,6 +28,7 @@ class HomeViewModel extends GetxController implements GetxService {
   List<Stats> _statsList = [];
   List<Documents> _bannerList = [];
   NextMeeting? _nextMeeting;
+  NextMeeting? _nextMeetingCountData;
   List<Documents> _guestBannerList = [];
   List<String> _reelList = [];
   RxBool _isAllPostPage = true.obs;
@@ -176,8 +179,10 @@ class HomeViewModel extends GetxController implements GetxService {
   bool get isCommentLoading => _isCommentLoading;
 
   NextMeeting? get nextMeeting => _nextMeeting;
+  NextMeeting? get nextMeetingCountData => _nextMeetingCountData;
 
   set nextMeeting(NextMeeting? value) => _nextMeeting = value;
+  set nextMeetingCountData(NextMeeting? value) => _nextMeetingCountData = value;
 
   List<String> get reelList => _reelList;
 
@@ -320,6 +325,41 @@ class HomeViewModel extends GetxController implements GetxService {
 
         final meeting = response.body['data']['data'][0];
 
+        final createdAt =
+            meeting['createdAt'] ?? DateTime.now().toIso8601String();
+
+        final date = DateTime.parse(createdAt);
+
+        final startParts =
+        (meeting['startTime'] ?? "00:00:00").split(":");
+
+        final startDateTime = DateTime(
+          date.year,
+          date.month,
+          date.day,
+          int.parse(startParts[0]),
+          int.parse(startParts[1]),
+        );
+
+        final endParts = (meeting['endTime'] ?? "00:00:00").split(":");
+
+        final endDateTime = DateTime(
+          date.year,
+          date.month,
+          date.day,
+          int.parse(endParts[0]),
+          int.parse(endParts[1]),
+        );
+
+        nextMeeting = NextMeeting(
+          uuid: meeting['uuid'],
+          title: meeting['title'],
+          day: DateFormat('EEEE').format(startDateTime),
+          date: DateFormat('MMMM dd, yyyy').format(startDateTime),
+          startTime: DateFormat('hh:mm a').format(startDateTime),
+          endTime: DateFormat('hh:mm a').format(endDateTime),
+        );
+
         if (meeting['meetingBanner'] != null &&
             meeting['meetingBanner'].toString().isNotEmpty) {
 
@@ -415,7 +455,7 @@ class HomeViewModel extends GetxController implements GetxService {
         });
       }*/
       if (response.body['data']['nextMeeting'] != null) {
-        _nextMeeting =
+        _nextMeetingCountData =
             NextMeeting.fromJson(response.body['data']['nextMeeting']);
         globalNextMeeting =
             NextMeeting.fromJson(response.body['data']['nextMeeting']);

@@ -167,6 +167,7 @@ class NextMeeting {
   String? startTime;
   String? endTime;
   String? meetingType;
+  String? title;
   int? tyfcb;
   int? speakers;
   int? visitors;
@@ -184,7 +185,7 @@ class NextMeeting {
       this.speakers,
       this.visitors,
       this.trainer,
-      this.guest});
+      this.guest, this. title});
 
   NextMeeting.fromJson(Map<String, dynamic> json) {
     day = json['day'];
@@ -198,6 +199,7 @@ class NextMeeting {
     visitors = json['visitors'];
     trainer = json['trainer'];
     guest = json['guest'];
+    title = json['title'];
   }
 
   Map<String, dynamic> toJson() {
@@ -213,6 +215,7 @@ class NextMeeting {
     data['visitors'] = this.visitors;
     data['trainer'] = this.trainer;
     data['guest'] = this.guest;
+    data['title'] = this.title;
     return data;
   }
 }
