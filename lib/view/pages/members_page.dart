@@ -361,6 +361,9 @@ class MembersPageState extends State<MembersPage>
       onArrowTap: () async {
         await Get.toNamed(Routes.getMembersProfilePageRoute(member));
       },
+      teamName: member.userGroups![0].groupName ?? "",
+      city: member.address?.city ?? '',
+      state: member.address?.state ?? '',
     );
   }
 
@@ -383,6 +386,9 @@ class MembersPageState extends State<MembersPage>
       onArrowTap: () async {
         await Get.toNamed(Routes.getMembersProfilePageRoute(member));
       },
+      teamName: member.userGroups![0].groupName ?? "",
+      city: member.address?.city ?? '',
+      state: member.address?.state ?? '',
     );
   }
 
@@ -392,6 +398,9 @@ class MembersPageState extends State<MembersPage>
     required String name,
     required String businessCategory,
     required String companyName,
+    required String teamName,
+    required String city,
+    required String state,
     required VoidCallback onTap,
     required VoidCallback onArrowTap,
   }) {
@@ -450,6 +459,42 @@ class MembersPageState extends State<MembersPage>
                             Expanded(
                               child: Text(
                                 companyName,
+                                overflow: TextOverflow.ellipsis,
+                                style: fontRegular.copyWith(
+                                    color: greyText, fontSize: fontSize12),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                      if (teamName.isNotEmpty) ...[
+                        const SizedBox(height: 2),
+                        Row(
+                          children: [
+                            Icon(Icons.groups,
+                                size: 12, color: greyText.withOpacity(0.7)),
+                            const SizedBox(width: 4),
+                            Expanded(
+                              child: Text(
+                                teamName,
+                                overflow: TextOverflow.ellipsis,
+                                style: fontRegular.copyWith(
+                                    color: greyText, fontSize: fontSize12),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                      if (city.isNotEmpty || state.isNotEmpty) ...[
+                        const SizedBox(height: 2),
+                        Row(
+                          children: [
+                            Icon(Icons.location_on,
+                                size: 12, color: greyText.withOpacity(0.7)),
+                            const SizedBox(width: 4),
+                            Expanded(
+                              child: Text(
+                                "$city, $state",
                                 overflow: TextOverflow.ellipsis,
                                 style: fontRegular.copyWith(
                                     color: greyText, fontSize: fontSize12),
@@ -524,18 +569,16 @@ class MembersPageState extends State<MembersPage>
       child: ClipOval(
         child: profileUrl != null && profileUrl.isNotEmpty
             ? CachedNetworkImage(
-          imageUrl: profileUrl,
-          height: 62.0,
-          width: 62.0,
-          fit: BoxFit.cover,
-          errorWidget: (context, url, error) => _placeholderAvatar(),
-        )
+                imageUrl: profileUrl,
+                height: 62.0,
+                width: 62.0,
+                fit: BoxFit.cover,
+                errorWidget: (context, url, error) => _placeholderAvatar(),
+              )
             : _placeholderAvatar(),
       ),
     );
   }
-
-
 
   Widget _placeholderAvatar() {
     return Container(
