@@ -458,7 +458,7 @@ class MemberProfilePageState extends State<MemberProfilePage> {
                   Image.asset(call, height: iconSize18, width: iconSize18),
                   SizedBox(width: paddingSize5),
                   Text(
-                    '${widget.membersChildData.organization?.companyContact}',
+                    '${widget.membersChildData.organization?.companyContact ?? ""}',
                     style: fontRegular.copyWith(
                         fontSize: fontSize12, color: midnightBlue),
                   ),
@@ -480,7 +480,7 @@ class MemberProfilePageState extends State<MemberProfilePage> {
                       Image.asset(mail, height: iconSize18, width: iconSize18),
                       SizedBox(width: paddingSize5),
                       Text(
-                        '${widget.membersChildData.organization?.companyEmail}',
+                        '${widget.membersChildData.organization?.companyEmail ?? ""}',
                         style: fontRegular.copyWith(
                             fontSize: fontSize12, color: midnightBlue),
                       ),
@@ -505,7 +505,7 @@ class MemberProfilePageState extends State<MemberProfilePage> {
                           height: iconSize18, width: iconSize18),
                       SizedBox(width: paddingSize5),
                       Text(
-                        '${widget.membersChildData.address?.city}',
+                        '${widget.membersChildData.organization?.companyAddress ?? ""}',
                         style: fontRegular.copyWith(
                             fontSize: fontSize12, color: midnightBlue),
                       ),

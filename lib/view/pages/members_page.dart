@@ -386,7 +386,7 @@ class MembersPageState extends State<MembersPage>
       onArrowTap: () async {
         await Get.toNamed(Routes.getMembersProfilePageRoute(member));
       },
-      teamName: member.userGroups![0].groupName ?? "",
+      teamName: member.userGroups != null ? member.userGroups![0].groupName ?? "" : "",
       city: member.address?.city ?? '',
       state: member.address?.state ?? '',
     );
