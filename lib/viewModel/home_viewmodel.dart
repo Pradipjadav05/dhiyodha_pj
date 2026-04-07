@@ -179,9 +179,11 @@ class HomeViewModel extends GetxController implements GetxService {
   bool get isCommentLoading => _isCommentLoading;
 
   NextMeeting? get nextMeeting => _nextMeeting;
+
   NextMeeting? get nextMeetingCountData => _nextMeetingCountData;
 
   set nextMeeting(NextMeeting? value) => _nextMeeting = value;
+
   set nextMeetingCountData(NextMeeting? value) => _nextMeetingCountData = value;
 
   List<String> get reelList => _reelList;
@@ -193,6 +195,7 @@ class HomeViewModel extends GetxController implements GetxService {
   List<Documents> meetingBannerList = [];
   List<Documents> businessPresentationBannerList = [];
   List<Documents> trainingBannerList = [];
+  List<Documents> additionalBannerList = [];
 
   Future<bool> loadMore() async {
     if (page.value < totalPages.value) {
@@ -307,112 +310,110 @@ class HomeViewModel extends GetxController implements GetxService {
     _isLoading = true;
     update();
 
-    Response response = await homeRepo.getMeetings(0, 1000, "updatedAt", "DESC");
+    Response response =
+        await homeRepo.getMeetings(0, 1000, "updatedAt", "DESC");
 
     _isLoading = false;
 
     if (response.statusCode == 200) {
-
       meetingBannerList = [];
       businessPresentationBannerList = [];
       trainingBannerList = [];
+      additionalBannerList = [];
 
       _bannerList = [];
 
       if (response.body['data'] != null &&
           response.body['data']['data'] != null &&
           response.body['data']['data'].isNotEmpty) {
-
         final meeting = response.body['data']['data'][0];
 
-        final createdAt =
-            meeting['createdAt'] ?? DateTime.now().toIso8601String();
-
-        final date = DateTime.parse(createdAt);
-
-        final startParts =
-        (meeting['startTime'] ?? "00:00:00").split(":");
-
-        final startDateTime = DateTime(
-          date.year,
-          date.month,
-          date.day,
-          int.parse(startParts[0]),
-          int.parse(startParts[1]),
-        );
-
-        final endParts = (meeting['endTime'] ?? "00:00:00").split(":");
-
-        final endDateTime = DateTime(
-          date.year,
-          date.month,
-          date.day,
-          int.parse(endParts[0]),
-          int.parse(endParts[1]),
-        );
-
         nextMeeting = NextMeeting(
-          uuid: meeting['uuid'],
-          title: meeting['title'],
-          day: DateFormat('EEEE').format(startDateTime),
-          date: DateFormat('MMMM dd, yyyy').format(startDateTime),
-          startTime: DateFormat('hh:mm a').format(startDateTime),
-          endTime: DateFormat('hh:mm a').format(endDateTime),
-          visitors: meeting["totalVisitors"] ?? 0,
-          tyfcb: 0,
-          trainer: 0,
-          speakers: 0,
-          guest: 0
-        );
+            uuid: meeting['uuid'],
+            title: meeting['title'],
+            day: meeting["day"],
+            date: meeting["date"],
+            startTime: formatTime(meeting['startTime']),
+            endTime: formatTime(meeting['endTime']),
+            visitors: meeting["totalVisitors"] ?? 0,
+            tyfcb: 0,
+            trainer: 0,
+            speakers: 0,
+            guest: 0);
 
         if (meeting['meetingBanner'] != null &&
             meeting['meetingBanner'].toString().isNotEmpty) {
-
-          final banner = Documents(
-            url: meeting['meetingBanner'],
-            fileName: meeting['meetingtitle'],
-            documentType: "jfif",
+          meetingBannerList.add(
+            Documents(
+              url: meeting['meetingBanner'],
+              fileName: meeting['meetingtitle'],
+              documentType: "jfif",
+            ),
           );
-
-          meetingBannerList.add(banner);
         }
 
-        if (meeting['businessPresentatioBanner'] != null &&
-            meeting['businessPresentatioBanner'].toString().isNotEmpty) {
-
-          final banner = Documents(
-            url: meeting['businessPresentatioBanner'],
-            fileName: meeting['businessPresentationTitle'],
-            documentType: "jfif",
-          );
-
-          businessPresentationBannerList.add(banner);
+        if (meeting['businessPresentations'] != null) {
+          for (var item in meeting['businessPresentations']) {
+            if (item['businessPresentatioBanner'] != null &&
+                item['businessPresentatioBanner'].toString().isNotEmpty) {
+              businessPresentationBannerList.add(
+                Documents(
+                  url: item['businessPresentatioBanner'],
+                  fileName: item['businessPresentationTitle'],
+                  documentType: "jfif",
+                ),
+              );
+            }
+          }
         }
 
-        if (meeting['trainingBanner'] != null &&
-            meeting['trainingBanner'].toString().isNotEmpty) {
+        if (meeting['trainings'] != null) {
+          for (var item in meeting['trainings']) {
+            if (item['trainingBanner'] != null &&
+                item['trainingBanner'].toString().isNotEmpty) {
+              trainingBannerList.add(
+                Documents(
+                  url: item['trainingBanner'],
+                  fileName: item['trainingtitle'],
+                  documentType: "jfif",
+                ),
+              );
+            }
+          }
+        }
 
-          final banner = Documents(
-            url: meeting['trainingBanner'],
-            fileName: meeting['trainingtitle'],
-            documentType: "jfif",
-          );
-
-          trainingBannerList.add(banner);
+        if (meeting['additionalBanners'] != null) {
+          for (var item in meeting['additionalBanners']) {
+            if (item['bannerUrl'] != null &&
+                item['bannerUrl'].toString().isNotEmpty) {
+              additionalBannerList.add(
+                Documents(
+                  url: item['bannerUrl'],
+                  fileName: item['bannerTitle'],
+                  documentType: "jfif",
+                ),
+              );
+            }
+          }
         }
 
         _bannerList = [
           ...meetingBannerList,
           ...businessPresentationBannerList,
           ...trainingBannerList,
+          ...additionalBannerList,
         ];
       }
-
     } else {
       ApiChecker.checkApi(response);
     }
 
     update();
+  }
+
+  String formatTime(String time) {
+    final parsedTime = DateFormat("HH:mm:ss").parse(time);
+    return DateFormat("hh:mm a").format(parsedTime);
   }
 
   Future<void> dashboardData(String duration) async {
@@ -460,8 +461,8 @@ class HomeViewModel extends GetxController implements GetxService {
         });
       }*/
       if (response.body['data']['nextMeeting'] != null) {
-        // _nextMeetingCountData =
-        //     NextMeeting.fromJson(response.body['data']['nextMeeting']);
+        _nextMeetingCountData =
+            NextMeeting.fromJson(response.body['data']['nextMeeting']);
         globalNextMeeting =
             NextMeeting.fromJson(response.body['data']['nextMeeting']);
       }

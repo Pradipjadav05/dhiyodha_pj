@@ -169,6 +169,7 @@ class NextMeeting {
   String? meetingType;
   String? title;
   int? tyfcb;
+  int? tyfcbReceived;
   int? speakers;
   int? visitors;
   int? trainer;
@@ -182,6 +183,7 @@ class NextMeeting {
       this.date,
       this.meetingType,
       this.tyfcb,
+      this.tyfcbReceived,
       this.speakers,
       this.visitors,
       this.trainer,
@@ -195,6 +197,7 @@ class NextMeeting {
     endTime = json['endTime'];
     meetingType = json['meetingType'];
     tyfcb = json['tyfcb'];
+    tyfcbReceived = json['tyfcbReceived'];
     speakers = json['speakers'];
     visitors = json['visitors'];
     trainer = json['trainer'];
@@ -211,6 +214,7 @@ class NextMeeting {
     data['endTime'] = this.endTime;
     data['meetingType'] = this.meetingType;
     data['tyfcb'] = this.tyfcb;
+    data['tyfcbReceived'] = this.tyfcbReceived;
     data['speakers'] = this.speakers;
     data['visitors'] = this.visitors;
     data['trainer'] = this.trainer;

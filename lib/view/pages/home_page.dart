@@ -21,6 +21,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:loadmore/loadmore.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../utils/resource/app_constants.dart';
@@ -1161,7 +1162,7 @@ class HomePageState extends State<HomePage> {
                                       fontSize: fontSize12),
                                 ),
                                 Text(
-                                  '${homeVM.nextMeeting?.visitors ?? "00"}',
+                                  '${homeVM.nextMeetingCountData?.visitors ?? "00"}',
                                   style: fontBold.copyWith(
                                       color: midnightBlue,
                                       fontSize: fontSize16),
@@ -1187,7 +1188,7 @@ class HomePageState extends State<HomePage> {
                                     color: midnightBlue, fontSize: fontSize12),
                               ),
                               Text(
-                                '${homeVM.nextMeeting?.speakers ?? "00"}',
+                                '${homeVM.nextMeetingCountData?.speakers ?? "00"}',
                                 style: fontBold.copyWith(
                                     color: midnightBlue, fontSize: fontSize16),
                               ),
@@ -1217,7 +1218,7 @@ class HomePageState extends State<HomePage> {
                                       fontSize: fontSize12),
                                 ),
                                 Text(
-                                  '${homeVM.nextMeeting?.trainer ?? "00"}',
+                                  '${homeVM.nextMeetingCountData?.trainer ?? "00"}',
                                   style: fontBold.copyWith(
                                       color: midnightBlue,
                                       fontSize: fontSize16),
@@ -1243,7 +1244,7 @@ class HomePageState extends State<HomePage> {
                                     color: midnightBlue, fontSize: fontSize12),
                               ),
                               Text(
-                                '${homeVM.nextMeeting?.guest ?? "00"}',
+                                '${homeVM.nextMeetingCountData?.guest ?? "00"}',
                                 style: fontBold.copyWith(
                                     color: midnightBlue, fontSize: fontSize16),
                               ),
@@ -1281,10 +1282,11 @@ class HomePageState extends State<HomePage> {
     );
   }
 
-  _bannerSlider(HomeViewModel homeVM) {
+  Widget _bannerSlider(HomeViewModel homeVM) {
     if (homeVM.bannerList.isEmpty) {
       return const SizedBox();
     }
+
     return CarouselSlider.builder(
       carouselController: homeVM.controller,
       itemCount: homeVM.bannerList.length,
@@ -1300,69 +1302,110 @@ class HomePageState extends State<HomePage> {
       itemBuilder: (context, index, realIndex) {
         final i = homeVM.bannerList[index];
 
-        return Container(
-          // margin: const EdgeInsets.symmetric(vertical: 8),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(18),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.15),
-                blurRadius: 10,
-                offset: const Offset(0, 5),
+        return GestureDetector(
+          onTap: () {
+            if ((i.url ?? "").isNotEmpty) {
+              _openBannerViewer(
+                context,
+                i.url!,
+                i.fileName ?? "",
+              );
+            }
+          },
+          child: Hero(
+            tag: i.url ?? "",
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(18),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.15),
+                    blurRadius: 10,
+                    offset: const Offset(0, 5),
+                  ),
+                ],
               ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(18),
-            child: Stack(
-              children: [
-                Positioned.fill(
-                  child: CachedNetworkImage(
-                    imageUrl: i.url ?? "",
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) => Container(
-                      color: Colors.grey.shade200,
-                      child: const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    ),
-                    errorWidget: (context, url, error) =>
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(18),
+                child: Stack(
+                  children: [
+                    /// Image
+                    Positioned.fill(
+                      child: CachedNetworkImage(
+                        imageUrl: i.url ?? "",
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => Container(
+                          color: Colors.grey.shade200,
+                          child: const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        ),
+                        errorWidget: (context, url, error) =>
                         const Icon(Icons.image_not_supported),
-                  ),
-                ),
-                Positioned.fill(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Colors.black.withOpacity(0.6),
-                          Colors.transparent,
-                        ],
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.topCenter,
                       ),
                     ),
-                  ),
-                ),
-                Positioned(
-                  left: 16,
-                  bottom: 16,
-                  right: 16,
-                  child: Text(
-                    i.fileName ?? "",
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: fontBold.copyWith(
-                      color: Colors.white,
-                      fontSize: fontSize16,
+
+                    /// Gradient
+                    Positioned.fill(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Colors.black.withOpacity(0.6),
+                              Colors.transparent,
+                            ],
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.topCenter,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
+
+                    /// Title
+                    Positioned(
+                      left: 16,
+                      bottom: 16,
+                      right: 16,
+                      child: Text(
+                        i.fileName ?? "",
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: fontBold.copyWith(
+                          color: Colors.white,
+                          fontSize: fontSize16,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         );
       },
+    );
+  }
+
+  void _openBannerViewer(
+      BuildContext context, String imageUrl, String title) {
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        opaque: false,
+        barrierColor: Colors.black,
+        pageBuilder: (_, __, ___) {
+          return _FullScreenBannerView(
+            imageUrl: imageUrl,
+            title: title,
+          );
+        },
+        transitionsBuilder: (_, animation, __, child) {
+          return FadeTransition(
+            opacity: animation,
+            child: child,
+          );
+        },
+        transitionDuration: const Duration(milliseconds: 300),
+      ),
     );
   }
 
@@ -2526,5 +2569,74 @@ class HomePageState extends State<HomePage> {
 
   Future<void> getCurrentUser(HomeViewModel homeVM) async {
     homeVM.currentUserData = await homeVM.getCurrentUser();
+  }
+}
+
+
+
+class _FullScreenBannerView extends StatelessWidget {
+  final String imageUrl;
+  final String title;
+
+  const _FullScreenBannerView({
+    required this.imageUrl,
+    required this.title,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Stack(
+        children: [
+          Hero(
+            tag: imageUrl,
+            child: PhotoView(
+              imageProvider: NetworkImage(imageUrl),
+              minScale: PhotoViewComputedScale.contained,
+              maxScale: PhotoViewComputedScale.covered * 3,
+              backgroundDecoration: const BoxDecoration(
+                color: Colors.black,
+              ),
+              loadingBuilder: (context, event) => const Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
+          ),
+
+          Positioned(
+            top: 40,
+            right: 20,
+            child: GestureDetector(
+              onTap: () => Navigator.pop(context),
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: const BoxDecoration(
+                  color: Colors.black54,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.close, color: Colors.white),
+              ),
+            ),
+          ),
+
+          if (title.isNotEmpty)
+            Positioned(
+              bottom: 30,
+              left: 20,
+              right: 20,
+              child: Text(
+                title,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
   }
 }
