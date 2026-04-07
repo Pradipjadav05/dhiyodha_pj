@@ -135,7 +135,7 @@ class TestimonialChildData {
   String? type;
   Reviewer? reviewer;
   String? senderName;
-  String? senderBusinessCategory;
+  String? businessCategory;
   String? senderProfileUrl;
   String? reviewerFirstName;
   String? reviewerLastName;
@@ -147,7 +147,7 @@ class TestimonialChildData {
       this.type,
       this.reviewer,
       this.senderName,
-      this.senderBusinessCategory,
+      this.businessCategory,
       this.senderProfileUrl,
       this.reviewerFirstName,
       this.reviewerLastName,
@@ -161,7 +161,7 @@ class TestimonialChildData {
         ? new Reviewer.fromJson(json['reviewer'])
         : null;
     senderName = json['senderName'];
-    senderBusinessCategory = json['senderBusinessCategory'];
+    businessCategory = json['businessCategory'];
     senderProfileUrl = json['senderProfileUrl'];
     reviewerFirstName = json['reviewerFirstName'];
     reviewerLastName = json['reviewerLastName'];
@@ -177,7 +177,7 @@ class TestimonialChildData {
       data['reviewer'] = this.reviewer!.toJson();
     }
     data['senderName'] = this.senderName;
-    data['senderBusinessCategory'] = this.senderBusinessCategory;
+    data['businessCategory'] = this.businessCategory;
     data['senderProfileUrl'] = this.senderProfileUrl;
     data['reviewerFirstName'] = this.reviewerFirstName;
     data['reviewerLastName'] = this.reviewerLastName;

@@ -668,7 +668,7 @@ class MemberProfilePageState extends State<MemberProfilePage> {
                                       color: midnightBlue),
                                 ),
                                 Text(
-                                  '${i.senderBusinessCategory ?? ""}',
+                                  '${i.businessCategory ?? ""}',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: fontRegular.copyWith(
