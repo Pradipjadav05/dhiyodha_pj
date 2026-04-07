@@ -1064,8 +1064,8 @@ class HomePageState extends State<HomePage> {
             padding: const EdgeInsets.only(
                 bottom: paddingSize20,
                 top: paddingSize30,
-                right: paddingSize20,
-                left: paddingSize20),
+                right: paddingSize30,
+                left: paddingSize30),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1093,7 +1093,7 @@ class HomePageState extends State<HomePage> {
                               Text(
                                 '${homeVM.nextMeeting?.date ?? ""}',
                                 style: fontBold.copyWith(
-                                    color: midnightBlue, fontSize: fontSize20),
+                                    color: midnightBlue, fontSize: fontSize16),
                               ),
                             ],
                           ),
@@ -1121,7 +1121,7 @@ class HomePageState extends State<HomePage> {
                               Text(
                                 '${homeVM.nextMeeting?.startTime ?? ""}',
                                 style: fontBold.copyWith(
-                                    color: midnightBlue, fontSize: fontSize20),
+                                    color: midnightBlue, fontSize: fontSize16),
                               ),
                             ],
                           ),
@@ -1149,7 +1149,7 @@ class HomePageState extends State<HomePage> {
                           },
                           child: Padding(
                             padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
+                                const EdgeInsets.symmetric(horizontal: 4.0),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1164,7 +1164,7 @@ class HomePageState extends State<HomePage> {
                                   '${homeVM.nextMeeting?.visitors ?? "00"}',
                                   style: fontBold.copyWith(
                                       color: midnightBlue,
-                                      fontSize: fontSize20),
+                                      fontSize: fontSize16),
                                 ),
                               ],
                             ),
@@ -1176,7 +1176,7 @@ class HomePageState extends State<HomePage> {
                       // Speaker
                       Expanded(
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -1189,7 +1189,7 @@ class HomePageState extends State<HomePage> {
                               Text(
                                 '${homeVM.nextMeeting?.speakers ?? "00"}',
                                 style: fontBold.copyWith(
-                                    color: midnightBlue, fontSize: fontSize20),
+                                    color: midnightBlue, fontSize: fontSize16),
                               ),
                             ],
                           ),
@@ -1205,7 +1205,7 @@ class HomePageState extends State<HomePage> {
                           },
                           child: Padding(
                             padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
+                                const EdgeInsets.symmetric(horizontal: 4.0),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1220,7 +1220,7 @@ class HomePageState extends State<HomePage> {
                                   '${homeVM.nextMeeting?.trainer ?? "00"}',
                                   style: fontBold.copyWith(
                                       color: midnightBlue,
-                                      fontSize: fontSize20),
+                                      fontSize: fontSize16),
                                 ),
                               ],
                             ),
@@ -1232,7 +1232,7 @@ class HomePageState extends State<HomePage> {
                       // Guest
                       Expanded(
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -1245,7 +1245,7 @@ class HomePageState extends State<HomePage> {
                               Text(
                                 '${homeVM.nextMeeting?.guest ?? "00"}',
                                 style: fontBold.copyWith(
-                                    color: midnightBlue, fontSize: fontSize20),
+                                    color: midnightBlue, fontSize: fontSize16),
                               ),
                             ],
                           ),
@@ -1282,6 +1282,9 @@ class HomePageState extends State<HomePage> {
   }
 
   _bannerSlider(HomeViewModel homeVM) {
+    if (homeVM.bannerList.isEmpty) {
+      return const SizedBox();
+    }
     return CarouselSlider.builder(
       carouselController: homeVM.controller,
       itemCount: homeVM.bannerList.length,
