@@ -210,6 +210,7 @@ class ProfilePageState extends State<ProfilePage> {
             InkWell(
               onTap: () async {
                 await postVM.pickImage('FACE_IMAGE');
+                if( postVM.uploadedDocumentUuid.isEmpty) return;
                 UpdateProfileRequestModel userProfileRequestModel =
                     new UpdateProfileRequestModel(
                   firstName: widget.currentUserData.firstName ?? "",

@@ -50,6 +50,7 @@ class WorldWideMembers {
   Organization? organization;
   Address? address;
   List<Roles>? roles;
+  List<UserGroup>? userGroups;
   String? status;
   String? createdBy;
   String? fatherOrHusbandName;
@@ -103,6 +104,7 @@ class WorldWideMembers {
       this.hobbiesAndInterest,
       this.cityResidingYears,
       this.burningDesire,
+      this.userGroups,
       this.keyToSuccess});
 
   WorldWideMembers.fromJson(Map<String, dynamic> json) {
@@ -149,6 +151,10 @@ class WorldWideMembers {
     cityResidingYears = json['cityResidingYears'];
     burningDesire = json['burningDesire'];
     keyToSuccess = json['keyToSuccess'];
+    if (json['groupName'] != null) {
+      userGroups = [];
+      userGroups!.add(UserGroup(groupName: json['groupName']));
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -194,6 +200,9 @@ class WorldWideMembers {
     data['cityResidingYears'] = this.cityResidingYears;
     data['burningDesire'] = this.burningDesire;
     data['keyToSuccess'] = this.keyToSuccess;
+    if (this.userGroups != null) {
+      data['userGroups'] = this.userGroups!.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }
@@ -344,6 +353,52 @@ class Roles {
     data['createdAt'] = this.createdAt;
     data['createdBy'] = this.createdBy;
     data['roleName'] = this.roleName;
+    return data;
+  }
+}
+
+class UserGroup {
+  String? uuid;
+  String? groupName;
+  String? description;
+  int? groupLimit;
+  String? city;
+  String? state;
+  String? country;
+  String? groupStatus;
+
+  UserGroup({
+    this.uuid,
+    this.groupName,
+    this.description,
+    this.groupLimit,
+    this.city,
+    this.state,
+    this.country,
+    this.groupStatus,
+  });
+
+  UserGroup.fromJson(Map<String, dynamic> json) {
+    uuid = json['uuid'];
+    groupName = json['groupName'];
+    description = json['description'];
+    groupLimit = json['groupLimit'];
+    city = json['city'];
+    state = json['state'];
+    country = json['country'];
+    groupStatus = json['groupStatus'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = {};
+    data['uuid'] = uuid;
+    data['groupName'] = groupName;
+    data['description'] = description;
+    data['groupLimit'] = groupLimit;
+    data['city'] = city;
+    data['state'] = state;
+    data['country'] = country;
+    data['groupStatus'] = groupStatus;
     return data;
   }
 }
