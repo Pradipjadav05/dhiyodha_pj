@@ -168,6 +168,9 @@ class NextMeeting {
   String? endTime;
   String? meetingType;
   String? title;
+  String? status;
+  String? locationName;
+  String? time;
   int? tyfcb;
   int? tyfcbReceived;
   int? speakers;
@@ -175,19 +178,24 @@ class NextMeeting {
   int? trainer;
   int? guest;
 
-  NextMeeting(
-      {this.day,
-      this.uuid,
-      this.startTime,
-      this.endTime,
-      this.date,
-      this.meetingType,
-      this.tyfcb,
-      this.tyfcbReceived,
-      this.speakers,
-      this.visitors,
-      this.trainer,
-      this.guest, this. title});
+  NextMeeting({
+    this.day,
+    this.uuid,
+    this.startTime,
+    this.endTime,
+    this.date,
+    this.meetingType,
+    this.tyfcb,
+    this.tyfcbReceived,
+    this.speakers,
+    this.visitors,
+    this.trainer,
+    this.guest,
+    this.title,
+    this.status,
+    this.locationName,
+    this.time,
+  });
 
   NextMeeting.fromJson(Map<String, dynamic> json) {
     day = json['day'];
@@ -203,6 +211,9 @@ class NextMeeting {
     trainer = json['trainer'];
     guest = json['guest'];
     title = json['title'];
+    status = json['status'];
+    locationName = json['locationName'];
+    time = json['time'];
   }
 
   Map<String, dynamic> toJson() {
@@ -220,6 +231,9 @@ class NextMeeting {
     data['trainer'] = this.trainer;
     data['guest'] = this.guest;
     data['title'] = this.title;
+    data['status'] = this.status;
+    data['locationName'] = this.locationName;
+    data['time'] = this.time;
     return data;
   }
 }

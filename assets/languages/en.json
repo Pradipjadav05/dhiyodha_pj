@@ -268,5 +268,18 @@
   "image_size_limit": "Image size must be under 1 MB",
   "enter_email_to_reset": "Enter your registered email address to receive OTP",
   "enter_otp_sent_to_email": "Enter the 6-digit OTP sent to your email address",
-  "otp_sent_to": "OTP sent to"
+  "otp_sent_to": "OTP sent to",
+  "current_meeting_status": "Current Meeting Status",
+  "meeting_status": "Meeting Status",
+  "attendance_status": "Attendance Status",
+  "open": "OPEN",
+  "mark_attendance": "Mark Attendance",
+  "meeting_closed_msg": "Attendance opens 2 hours before the meeting and closes when the meeting starts. Please ensure you mark your attendance on time.",
+  "open_meeting_modal": "Click - open meeting detail modal",
+  "meeting_details": "Meeting Details",
+  "meeting_name": "Meeting Name",
+  "time": "Time",
+  "add_my_attendance": "Add my attendance",
+  "attendance_success": "Attendance marked successfully",
+  "attendance_error": "Unable to mark attendance"
 }

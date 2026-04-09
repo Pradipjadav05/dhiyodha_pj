@@ -6,10 +6,10 @@ import 'package:dhiyodha/model/response_model/dashboard_response_model.dart';
 import 'package:dhiyodha/model/response_model/posts_model.dart';
 import 'package:dhiyodha/utils/resource/app_constants.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-import '../model/response_model/meeting_lis_response_model.dart';
 import '../model/response_model/referral_response_model.dart';
 
 class HomeViewModel extends GetxController implements GetxService {
@@ -52,6 +52,7 @@ class HomeViewModel extends GetxController implements GetxService {
   int fcRevenue = 0;
   int fcVisitors = 0;
   int fcCeus = 0;
+  RxBool showMeetingDetails = false.obs;
 
   CarouselSliderController _controller = CarouselSliderController();
 
@@ -329,17 +330,21 @@ class HomeViewModel extends GetxController implements GetxService {
         final meeting = response.body['data']['data'][0];
 
         nextMeeting = NextMeeting(
-            uuid: meeting['uuid'],
-            title: meeting['title'],
-            day: meeting["day"],
-            date: meeting["date"],
-            startTime: formatTime(meeting['startTime']),
-            endTime: formatTime(meeting['endTime']),
-            visitors: meeting["totalVisitors"] ?? 0,
-            tyfcb: 0,
-            trainer: 0,
-            speakers: 0,
-            guest: 0);
+          uuid: meeting['uuid'],
+          title: meeting['title'],
+          day: meeting["day"],
+          date: meeting["date"],
+          startTime: formatTime(meeting['startTime']),
+          endTime: formatTime(meeting['endTime']),
+          visitors: meeting["totalVisitors"] ?? 0,
+          tyfcb: 0,
+          trainer: 0,
+          speakers: 0,
+          guest: 0,
+          status: meeting['status'],
+          locationName: meeting['locationName'],
+          time: meeting['time'],
+        );
 
         if (meeting['meetingBanner'] != null &&
             meeting['meetingBanner'].toString().isNotEmpty) {
@@ -590,5 +595,50 @@ class HomeViewModel extends GetxController implements GetxService {
   void selectLifeTime() {
     selectedDuration = "ALL";
     update();
+  }
+
+  Future<String?> markAttendance() async {
+    isLoading = true;
+    update();
+
+    try {
+      LocationPermission permission = await Geolocator.checkPermission();
+
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        return "Location permission denied";
+      }
+
+      Position position = await Geolocator.getCurrentPosition(
+        locationSettings:
+        const LocationSettings(accuracy: LocationAccuracy.high),
+      );
+
+      Response response = await homeRepo.markAttendance(
+        latitude: position.latitude,
+        longitude: position.longitude,
+      );
+
+      isLoading = false;
+      update();
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        showMeetingDetails.value = false;
+        return response.body['message'];
+      } else {
+        showMeetingDetails.value = false;
+        return response.body["errors"]?[0]?.toString() ??
+            "attendance_error".tr;
+      }
+    } catch (e) {
+      showMeetingDetails.value = false;
+      isLoading = false;
+      update();
+      return "attendance_error".tr;
+    }
+    return null;
   }
 }

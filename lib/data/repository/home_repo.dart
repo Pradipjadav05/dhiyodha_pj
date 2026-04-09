@@ -82,4 +82,19 @@ class HomeRepo {
     sharedPreferences.clear();
     return true;
   }
+
+  Future<Response> markAttendance({
+    required double latitude,
+    required double longitude,
+  }) async {
+    Map<String, dynamic> body = {
+      "latitude": latitude,
+      "longitude": longitude,
+    };
+
+    return await apiClient.postData(
+      "$markAttendanceUrl",
+      body,
+    );
+  }
 }

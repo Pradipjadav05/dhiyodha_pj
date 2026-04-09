@@ -987,6 +987,8 @@ class HomePageState extends State<HomePage> {
         child: Column(
           children: [
             _bannerSlider(homeVM),
+            SizedBox(height: paddingSize15),
+            _currentMeetingStatus(homeVM),
             // DotsIndicator(
             //   dotsCount: homeVM.bannerList.length,
             //   position: homeVM.currentDotPosition,
@@ -1079,7 +1081,7 @@ class HomePageState extends State<HomePage> {
                     children: [
                       // Day + Date
                       Expanded(
-                        flex:9,
+                        flex: 9,
                         child: Padding(
                           padding: const EdgeInsets.only(left: 18.0),
                           child: Column(
@@ -1282,6 +1284,229 @@ class HomePageState extends State<HomePage> {
     );
   }
 
+  Widget _currentMeetingStatus(HomeViewModel homeVM) {
+    final isOpen = (homeVM.nextMeeting?.status ?? "").toUpperCase() == "OPEN";
+
+    return Obx(() {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          /// Title
+          Text(
+            "current_meeting_status".tr,
+            style: fontBold.copyWith(
+              fontSize: fontSize16,
+              color: midnightBlue,
+            ),
+          ),
+
+          SizedBox(height: 10),
+
+          /// Cards
+          Row(
+            children: [
+              Expanded(
+                child: _statusCard(
+                  title: "meeting_status".tr,
+                  value: homeVM.nextMeeting?.status ?? "-",
+                  isGreen: isOpen,
+                ),
+              ),
+              SizedBox(width: 10),
+              Expanded(
+                child: _statusCard(
+                  title: "attendance_status".tr,
+                  value: isOpen ? "open".tr : "close".tr,
+                  isGreen: isOpen,
+                  color: isOpen ? white : Colors.grey.withValues(alpha: 0.3),
+                ),
+              ),
+            ],
+          ),
+
+          SizedBox(height: 15),
+
+          /// Closed Message
+          if (!isOpen)
+            Container(
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: Colors.orange.shade50,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.warning_amber,
+                    color: Colors.orange,
+                    size: 22,
+                  ),
+                  SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      "meeting_closed_msg".tr,
+                      style: fontRegular.copyWith(color: Colors.orange),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+          SizedBox(height: 15),
+
+          /// Mark Attendance Button
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: isOpen
+                  ? () {
+                      homeVM.showMeetingDetails.value =
+                          !homeVM.showMeetingDetails.value;
+                    }
+                  : null,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: isOpen ? bluishPurple : Colors.grey,
+                // padding: EdgeInsets.symmetric(vertical: 8),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "mark_attendance".tr,
+                    style: fontRegular.copyWith(
+                        color: ghostWhite, fontSize: fontSize16),
+                  ),
+                  SizedBox(
+                    width: paddingSize8,
+                  ),
+                  Icon(Icons.arrow_drop_down_circle_outlined,
+                      color: white, size: iconSize20),
+                ],
+              ),
+            ),
+          ),
+
+          SizedBox(height: 10),
+
+          if (homeVM.showMeetingDetails.value && isOpen)
+            Container(
+              padding: EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.grey.shade300),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    "meeting_details".tr,
+                    style: fontBold.copyWith(fontSize: fontSize16),
+                  ),
+                  SizedBox(height: 10),
+                  _dialogRow(
+                      "meeting_name".tr, homeVM.nextMeeting?.title ?? "-"),
+                  _dialogRow(
+                    "time".tr,
+                    "${homeVM.nextMeeting?.startTime ?? ""} - ${homeVM.nextMeeting?.endTime ?? ""}",
+                  ),
+                  _dialogRow(
+                    "location".tr,
+                    homeVM.nextMeeting?.locationName ?? "-",
+                  ),
+                  SizedBox(height: 15),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: bluishPurple,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      onPressed: () async {
+                        String? error = await homeVM.markAttendance();
+
+                        if (error == null) {
+                          showSnackBar("attendance_error".tr, isError: false);
+                        } else {
+                          showSnackBar(error, isError: true);
+                        }
+                      },
+                      child: Text(
+                        "add_my_attendance".tr,
+                        style: fontRegular.copyWith(
+                            color: ghostWhite, fontSize: fontSize16),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+        ],
+      );
+    });
+  }
+
+  Widget _statusCard({
+    required String title,
+    required String value,
+    bool isGreen = false,
+    Color color = white,
+  }) {
+    return Container(
+      padding: EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.shade300),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: fontRegular.copyWith(fontSize: fontSize12)),
+          SizedBox(height: 5),
+          Text(
+            value,
+            style: fontBold.copyWith(
+              color: isGreen ? Colors.green : Colors.red,
+              fontSize: fontSize14,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _dialogRow(String title, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Text(
+              "$title: ",
+              style: fontMedium.copyWith(color: midnightBlue),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Text(
+              value,
+              style: fontRegular.copyWith(color: greyText),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _bannerSlider(HomeViewModel homeVM) {
     if (homeVM.bannerList.isEmpty) {
       return const SizedBox();
@@ -1341,7 +1566,7 @@ class HomePageState extends State<HomePage> {
                           ),
                         ),
                         errorWidget: (context, url, error) =>
-                        const Icon(Icons.image_not_supported),
+                            const Icon(Icons.image_not_supported),
                       ),
                     ),
 
@@ -1386,8 +1611,7 @@ class HomePageState extends State<HomePage> {
     );
   }
 
-  void _openBannerViewer(
-      BuildContext context, String imageUrl, String title) {
+  void _openBannerViewer(BuildContext context, String imageUrl, String title) {
     Navigator.of(context).push(
       PageRouteBuilder(
         opaque: false,
@@ -2572,8 +2796,6 @@ class HomePageState extends State<HomePage> {
   }
 }
 
-
-
 class _FullScreenBannerView extends StatelessWidget {
   final String imageUrl;
   final String title;
@@ -2603,7 +2825,6 @@ class _FullScreenBannerView extends StatelessWidget {
               ),
             ),
           ),
-
           Positioned(
             top: 40,
             right: 20,
@@ -2619,7 +2840,6 @@ class _FullScreenBannerView extends StatelessWidget {
               ),
             ),
           ),
-
           if (title.isNotEmpty)
             Positioned(
               bottom: 30,

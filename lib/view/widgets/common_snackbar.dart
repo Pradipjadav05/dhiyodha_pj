@@ -14,11 +14,29 @@ void showSnackBar(String? message, {bool isError = true}) {
 
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
-      content: Text(message),
-      backgroundColor:
-      isError ? Colors.redAccent : Colors.green,
-      behavior: SnackBarBehavior.floating,
-      margin: const EdgeInsets.all(16),
+      content: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: isError ? Colors.redAccent : Colors.green,
+        ),
+
+          // margin: const EdgeInsets.all(16),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          child: Row(
+            children: [
+              Icon(
+                isError ? Icons.warning_amber : Icons.check_circle_outline,
+                color: white,
+                size: 22,
+              ),
+              SizedBox(width: 12),
+              Text(message, style: TextStyle(fontSize: fontSize16),),
+            ],
+          )),
+      backgroundColor: Colors.transparent,
+      behavior: SnackBarBehavior.fixed,
+      // margin: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       duration: const Duration(seconds: 3),
     ),
   );
