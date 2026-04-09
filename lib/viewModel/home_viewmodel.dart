@@ -11,6 +11,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../model/response_model/referral_response_model.dart';
+import '../view/widgets/common_snackbar.dart';
 
 class HomeViewModel extends GetxController implements GetxService {
   final HomeRepo homeRepo;
@@ -597,7 +598,7 @@ class HomeViewModel extends GetxController implements GetxService {
     update();
   }
 
-  Future<String?> markAttendance() async {
+  Future<void> markAttendance() async {
     isLoading = true;
     update();
 
@@ -609,7 +610,7 @@ class HomeViewModel extends GetxController implements GetxService {
       }
 
       if (permission == LocationPermission.deniedForever) {
-        return "Location permission denied";
+        showSnackBar("Location permission denied", isError: true);
       }
 
       Position position = await Geolocator.getCurrentPosition(
@@ -627,18 +628,17 @@ class HomeViewModel extends GetxController implements GetxService {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         showMeetingDetails.value = false;
-        return response.body['message'];
+        showSnackBar(response.body['message'], isError: false);
+        await getMeetingsList();
       } else {
         showMeetingDetails.value = false;
-        return response.body["errors"]?[0]?.toString() ??
-            "attendance_error".tr;
+        showSnackBar(response.body["errors"]?[0] ??  "attendance_error".tr, isError: true);
       }
     } catch (e) {
       showMeetingDetails.value = false;
       isLoading = false;
       update();
-      return "attendance_error".tr;
+      showSnackBar("attendance_error".tr, isError: true);
     }
-    return null;
   }
 }

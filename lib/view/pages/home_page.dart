@@ -1285,7 +1285,8 @@ class HomePageState extends State<HomePage> {
   }
 
   Widget _currentMeetingStatus(HomeViewModel homeVM) {
-    final isOpen = (homeVM.nextMeeting?.status ?? "").toUpperCase() == "OPEN";
+    final isOpen =
+        (homeVM.nextMeeting?.status ?? "").toUpperCase() == "ATTENDANCE_OPEN";
 
     return Obx(() {
       return Column(
@@ -1306,6 +1307,7 @@ class HomePageState extends State<HomePage> {
           Row(
             children: [
               Expanded(
+                flex: 7,
                 child: _statusCard(
                   title: "meeting_status".tr,
                   value: homeVM.nextMeeting?.status ?? "-",
@@ -1314,6 +1316,7 @@ class HomePageState extends State<HomePage> {
               ),
               SizedBox(width: 10),
               Expanded(
+                flex: 6,
                 child: _statusCard(
                   title: "attendance_status".tr,
                   value: isOpen ? "open".tr : "close".tr,
@@ -1324,10 +1327,9 @@ class HomePageState extends State<HomePage> {
             ],
           ),
 
-          SizedBox(height: 15),
-
           /// Closed Message
-          if (!isOpen)
+          if (!isOpen) ...[
+            SizedBox(height: 15),
             Container(
               padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
@@ -1351,7 +1353,7 @@ class HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-
+          ],
           SizedBox(height: 15),
 
           /// Mark Attendance Button
@@ -1389,9 +1391,8 @@ class HomePageState extends State<HomePage> {
             ),
           ),
 
-          SizedBox(height: 10),
-
-          if (homeVM.showMeetingDetails.value && isOpen)
+          if (homeVM.showMeetingDetails.value && isOpen) ...[
+            SizedBox(height: 10),
             Container(
               padding: EdgeInsets.all(12),
               decoration: BoxDecoration(
@@ -1429,13 +1430,13 @@ class HomePageState extends State<HomePage> {
                         ),
                       ),
                       onPressed: () async {
-                        String? error = await homeVM.markAttendance();
+                       await homeVM.markAttendance();
 
-                        if (error == null) {
-                          showSnackBar("attendance_error".tr, isError: false);
-                        } else {
-                          showSnackBar(error, isError: true);
-                        }
+                        // if (error == null) {
+                        //   showSnackBar("attendance_error".tr, isError: false);
+                        // } else {
+                        //   showSnackBar(error, isError: false);
+                        // }
                       },
                       child: Text(
                         "add_my_attendance".tr,
@@ -1447,6 +1448,7 @@ class HomePageState extends State<HomePage> {
                 ],
               ),
             ),
+          ],
         ],
       );
     });
