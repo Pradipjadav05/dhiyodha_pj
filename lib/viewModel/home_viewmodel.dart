@@ -598,7 +598,7 @@ class HomeViewModel extends GetxController implements GetxService {
     update();
   }
 
-  Future<void> markAttendance() async {
+  Future<bool> markAttendance() async {
     isLoading = true;
     update();
 
@@ -630,15 +630,18 @@ class HomeViewModel extends GetxController implements GetxService {
         showMeetingDetails.value = false;
         showSnackBar(response.body['message'], isError: false);
         await getMeetingsList();
+        return true;
       } else {
         showMeetingDetails.value = false;
         showSnackBar(response.body["errors"]?[0] ??  "attendance_error".tr, isError: true);
+        return false;
       }
     } catch (e) {
       showMeetingDetails.value = false;
       isLoading = false;
       update();
       showSnackBar("attendance_error".tr, isError: true);
+      return false;
     }
   }
 }
