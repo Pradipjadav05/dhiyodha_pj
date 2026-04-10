@@ -208,70 +208,86 @@ class WorldWideMembers {
 }
 
 class Organization {
-  String? id;
   String? uuid;
-  String? createdAt;
-  String? createdBy;
-  String? updatedAt;
-  String? updatedBy;
-  String? businessCategory;
   String? companyName;
-  int? establishedYear;
-  String? companyRegistration;
-  String? numberOfStaff;
+  String? companyEstablishment;
+  String? companyAddress;
+  String? registeredType;
+  int? numberOfEmployees;
+  String? yearlyTurnover;
+  String? companyEmail;
+  String? companyContact;
+  String? companyWebsite;
+  String? businessCategory;
+  String? businessDescription;
+  String? designation;
+  num? yearlyProfit;
   String? gstNumber;
-  String? officeNumber;
-  String? officeEmail;
+  String? uploadGst;
+  String? panNumber;
+  String? uploadPan;
 
   Organization(
-      {this.id,
-      this.uuid,
-      this.createdAt,
-      this.createdBy,
-      this.updatedAt,
-      this.updatedBy,
-      this.businessCategory,
+      {this.uuid,
       this.companyName,
-      this.establishedYear,
-      this.companyRegistration,
-      this.numberOfStaff,
+      this.companyEstablishment,
+      this.companyAddress,
+      this.registeredType,
+      this.numberOfEmployees,
+      this.yearlyTurnover,
+      this.companyEmail,
+      this.companyContact,
+      this.companyWebsite,
+      this.businessCategory,
+      this.businessDescription,
+      this.designation,
+      this.yearlyProfit,
       this.gstNumber,
-      this.officeNumber,
-      this.officeEmail});
+      this.uploadGst,
+      this.panNumber,
+      this.uploadPan});
 
   Organization.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
     uuid = json['uuid'];
-    createdAt = json['createdAt'];
-    createdBy = json['createdBy'];
-    updatedAt = json['updatedAt'];
-    updatedBy = json['updatedBy'];
-    businessCategory = json['businessCategory'];
     companyName = json['companyName'];
-    establishedYear = json['establishedYear'];
-    companyRegistration = json['companyRegistration'];
-    numberOfStaff = json['numberOfStaff'];
+    companyEstablishment = json['companyEstablishment'];
+    companyAddress = json['companyAddress'];
+    registeredType = json['registeredType'];
+    numberOfEmployees = json['numberOfEmployees'];
+    yearlyTurnover = json['yearlyTurnover'];
+    companyEmail = json['companyEmail'];
+    companyContact = json['companyContact'];
+    companyWebsite = json['companyWebsite'];
+    businessCategory = json['businessCategory'];
+    businessDescription = json['businessDescription'];
+    designation = json['designation'];
+    yearlyProfit = json['yearlyProfit'];
     gstNumber = json['gstNumber'];
-    officeNumber = json['officeNumber'];
-    officeEmail = json['officeEmail'];
+    uploadGst = json['uploadGst'];
+    panNumber = json['panNumber'];
+    uploadPan = json['uploadPan'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
     data['uuid'] = this.uuid;
-    data['createdAt'] = this.createdAt;
-    data['createdBy'] = this.createdBy;
-    data['updatedAt'] = this.updatedAt;
-    data['updatedBy'] = this.updatedBy;
-    data['businessCategory'] = this.businessCategory;
     data['companyName'] = this.companyName;
-    data['establishedYear'] = this.establishedYear;
-    data['companyRegistration'] = this.companyRegistration;
-    data['numberOfStaff'] = this.numberOfStaff;
+    data['companyEstablishment'] = this.companyEstablishment;
+    data['companyAddress'] = this.companyAddress;
+    data['registeredType'] = this.registeredType;
+    data['numberOfEmployees'] = this.numberOfEmployees;
+    data['yearlyTurnover'] = this.yearlyTurnover;
+    data['companyEmail'] = this.companyEmail;
+    data['companyContact'] = this.companyContact;
+    data['companyWebsite'] = this.companyWebsite;
+    data['businessCategory'] = this.businessCategory;
+    data['businessDescription'] = this.businessDescription;
+    data['designation'] = this.designation;
+    data['yearlyProfit'] = this.yearlyProfit;
     data['gstNumber'] = this.gstNumber;
-    data['officeNumber'] = this.officeNumber;
-    data['officeEmail'] = this.officeEmail;
+    data['uploadGst'] = this.uploadGst;
+    data['panNumber'] = this.panNumber;
+    data['uploadPan'] = this.uploadPan;
     return data;
   }
 }
