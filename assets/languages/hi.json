@@ -282,5 +282,7 @@
   "time": "समय",
   "add_my_attendance": "मेरी उपस्थिति जोड़ें",
   "attendance_success": "उपस्थिति सफलतापूर्वक दर्ज की गई",
-  "attendance_error": "उपस्थिति दर्ज करने में समस्या"
+  "attendance_error": "उपस्थिति दर्ज करने में समस्या",
+  "attendance_success_title": "उपस्थिति सफलतापूर्वक दर्ज की गई",
+  "attendance_success_subtitle": "आपकी उपस्थिति दर्ज हो गई है।"
 }

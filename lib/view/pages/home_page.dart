@@ -1430,13 +1430,10 @@ class HomePageState extends State<HomePage> {
                         ),
                       ),
                       onPressed: () async {
-                       await homeVM.markAttendance();
-
-                        // if (error == null) {
-                        //   showSnackBar("attendance_error".tr, isError: false);
-                        // } else {
-                        //   showSnackBar(error, isError: false);
-                        // }
+                       bool res = await homeVM.markAttendance();
+                       if(res) {
+                         await showAttendanceSuccessDialog(context);
+                       }
                       },
                       child: Text(
                         "add_my_attendance".tr,
@@ -2795,6 +2792,185 @@ class HomePageState extends State<HomePage> {
 
   Future<void> getCurrentUser(HomeViewModel homeVM) async {
     homeVM.currentUserData = await homeVM.getCurrentUser();
+  }
+
+  Future<void> showAttendanceSuccessDialog(BuildContext context) async {
+    await showDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierColor: Colors.black.withValues(alpha: 0.4),
+      builder: (_) => const _ModernSuccessDialog(),
+    );
+  }
+}
+
+class _ModernSuccessDialog extends StatefulWidget {
+  const _ModernSuccessDialog();
+
+  @override
+  State<_ModernSuccessDialog> createState() => _ModernSuccessDialogState();
+}
+
+class _ModernSuccessDialogState extends State<_ModernSuccessDialog>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> scaleAnim;
+  late Animation<double> fadeAnim;
+
+  final Color themeColor = const Color(0xFF6246EA);
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 700),
+    );
+
+    scaleAnim =
+        CurvedAnimation(parent: _controller, curve: Curves.easeOutBack);
+    fadeAnim =
+        CurvedAnimation(parent: _controller, curve: Curves.easeIn);
+
+    _controller.forward();
+
+    /// Auto close
+    // Future.delayed(const Duration(seconds: 2), () {
+    //   if (mounted) Navigator.pop(context);
+    // });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: fadeAnim,
+      child: Center(
+        child: ScaleTransition(
+          scale: scaleAnim,
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 30),
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(24),
+              gradient: LinearGradient(
+                colors: [
+                  themeColor.withOpacity(0.95),
+                  themeColor.withOpacity(0.75),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: themeColor.withOpacity(0.4),
+                  blurRadius: 20,
+                  offset: const Offset(0, 10),
+                )
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Animated Circle + Tick
+                _ModernCheck(themeColor: themeColor),
+
+                const SizedBox(height: 20),
+
+                // Title
+                Text(
+                  "attendance_success_title".tr,
+                  textAlign: TextAlign.center,
+                  style: fontBold.copyWith(
+                    decoration: TextDecoration.none,
+                    fontSize: 18,
+                    color: Colors.white,
+                  ),
+                ),
+
+                const SizedBox(height: 8),
+
+                // Subtitle
+                Text(
+                  "attendance_success_subtitle".tr,
+                  textAlign: TextAlign.center,
+                  style: fontRegular.copyWith(
+                    fontSize: 12,
+                    color: Colors.white.withValues(alpha: 0.85),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ModernCheck extends StatefulWidget {
+  final Color themeColor;
+
+  const _ModernCheck({required this.themeColor});
+
+  @override
+  State<_ModernCheck> createState() => _ModernCheckState();
+}
+
+class _ModernCheckState extends State<_ModernCheck>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> scaleAnim;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+
+    scaleAnim =
+        CurvedAnimation(parent: _controller, curve: Curves.elasticOut);
+
+    _controller.forward();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaleTransition(
+      scale: scaleAnim,
+      child: Container(
+        height: 90,
+        width: 90,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.white.withOpacity(0.15),
+        ),
+        child: Center(
+          child: Container(
+            height: 60,
+            width: 60,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white,
+            ),
+            child: Icon(
+              Icons.check_rounded,
+              color: widget.themeColor,
+              size: 35,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
 

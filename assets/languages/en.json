@@ -281,5 +281,7 @@
   "time": "Time",
   "add_my_attendance": "Add my attendance",
   "attendance_success": "Attendance marked successfully",
-  "attendance_error": "Unable to mark attendance"
+  "attendance_error": "Unable to mark attendance",
+  "attendance_success_title": "Attendance Marked Successfully",
+  "attendance_success_subtitle": "Your attendance has been recorded."
 }
