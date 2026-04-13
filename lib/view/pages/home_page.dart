@@ -558,7 +558,7 @@ class HomePageState extends State<HomePage> {
                     label: "dashboard".tr,
                     tooltip: "dashboard".tr),
               ],
-              onTap: (label) {
+              onTap: (label) async {
                 switch (label) {
                   case 0:
                     debugPrint("Home");
@@ -569,6 +569,7 @@ class HomePageState extends State<HomePage> {
                     debugPrint("Dashboard");
                     homeVM.isAllPostPage.value = false;
                     homeVM.selectedIndex.value = 1;
+                    await homeVM.getMeetingsList();
                     break;
                   default:
                     debugPrint("Home Default");
