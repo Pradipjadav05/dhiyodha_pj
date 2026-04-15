@@ -30,7 +30,7 @@ void showSnackBar(String? message, {bool isError = true}) {
                 size: 22,
               ),
               SizedBox(width: 12),
-              Text(message, style: TextStyle(fontSize: fontSize16),),
+              Expanded(child: Text(message, style: TextStyle(fontSize: fontSize16),)),
             ],
           )),
       backgroundColor: Colors.transparent,

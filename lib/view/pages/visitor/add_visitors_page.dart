@@ -459,8 +459,7 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
     } else if (vvm.selectedCity.isEmpty ||
         vvm.selectedCity == vvm.cityList[0]) {
       showSnackBar("select_city".tr);
-    } else if (vvm.selectedChapter.isEmpty ||
-        vvm.selectedChapter == vvm.chapterList[0]) {
+    } else if (vvm.selectedChapter.isEmpty) {
       showSnackBar("select_chapter".tr);
     } else if (vvm.selectedMeeting.isEmpty) {
       showSnackBar("select_meeting".tr);
