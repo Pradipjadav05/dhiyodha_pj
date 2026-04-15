@@ -10,7 +10,7 @@
   "i_accept": "By clicking, I accept the",
   "terms": "Terms & Conditions",
   "home": "Home",
-  "this_week_slips": "This Week’s Slips",
+  "this_week_slips": "This Month Slips",
   "meeting": "Meeting",
   "in_person": "In-Person",
   "tyfcb": "Tyfcb",
@@ -274,7 +274,7 @@
   "attendance_status": "Attendance Status",
   "open": "OPEN",
   "mark_attendance": "Mark Attendance",
-  "meeting_closed_msg": "Attendance opens 2 hours before the meeting and closes when the meeting starts. Please ensure you mark your attendance on time.",
+  "meeting_closed_msg": "Attendance opens 1 hours before the meeting and closes when the meeting starts. Please ensure you mark your attendance on time.",
   "open_meeting_modal": "Click - open meeting detail modal",
   "meeting_details": "Meeting Details",
   "meeting_name": "Meeting Name",
@@ -283,5 +283,11 @@
   "attendance_success": "Attendance marked successfully",
   "attendance_error": "Unable to mark attendance",
   "attendance_success_title": "Attendance Marked Successfully",
-  "attendance_success_subtitle": "Your attendance has been recorded."
+  "attendance_success_subtitle": "Your attendance has been recorded.",
+  "scan_qr_code_for_attendance": "Scan QR Code for Attendance",
+  "align_qr_code_inside_frame": "Align the QR code inside the frame",
+  "visitor": "Visitor",
+  "attendance_recorded_for": "Attendance for @name has\nbeen recorded.",
+  "visitor_uuid_not_found": "Visitor UUID not found",
+  "invalid_qr_message": "QR code must contain latitude and longitude."
 }

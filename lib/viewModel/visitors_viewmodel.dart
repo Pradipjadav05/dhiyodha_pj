@@ -1,19 +1,15 @@
-import 'dart:convert';
-
 import 'package:dhiyodha/data/api/api_checker.dart';
 import 'package:dhiyodha/data/repository/visitors_repo.dart';
 import 'package:dhiyodha/model/response_model/add_upload_operation_response_model.dart';
 import 'package:dhiyodha/model/response_model/groups_response_model.dart';
 import 'package:dhiyodha/model/response_model/visitor_response_model.dart';
 import 'package:dhiyodha/utils/helper/date_converter.dart';
-import 'package:dhiyodha/utils/resource/app_constants.dart';
 import 'package:dhiyodha/view/widgets/common_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../data/repository/referral_repo.dart';
-import '../model/dummy_model/teams_api_response.dart';
 import '../model/response_model/meeting_lis_response_model.dart';
 
 // declare an enum for image upload type
@@ -145,6 +141,7 @@ class VisitorsViewModel extends GetxController implements GetxService {
   set nameController(TextEditingController value) {
     _nameController = value;
   }
+
   TextEditingController get emailController => _emailController;
 
   set emailController(TextEditingController value) {
@@ -338,7 +335,8 @@ class VisitorsViewModel extends GetxController implements GetxService {
     _isLoading = true;
     update();
 
-    Response response = await referralRepo.getMeetings(0, 1000, "updatedAt", "DESC");
+    Response response =
+        await referralRepo.getMeetings(0, 1000, "updatedAt", "DESC");
 
     _isLoading = false;
     if (response.statusCode == 200) {
@@ -348,11 +346,12 @@ class VisitorsViewModel extends GetxController implements GetxService {
       // Parse meetings data
       if (response.body['data'] != null) {
         response.body['data']['data'].forEach((order) {
-          MeetingListResponseModel meetingRecord = MeetingListResponseModel.fromJson(order);
+          MeetingListResponseModel meetingRecord =
+              MeetingListResponseModel.fromJson(order);
           print("Meeting Meet -> ${meetingRecord.team?.uuid}");
           _meetingsList.add({
             "uuid": meetingRecord.team?.uuid ?? "",
-            "meetingUuid": meetingRecord?.uuid ?? "",
+            "meetingUuid": meetingRecord.uuid ?? "",
             "title": meetingRecord.title ?? "",
             "meetingDate": meetingRecord.meetingDate ?? "",
             "groupName": meetingRecord.team?.groupName ?? "",
@@ -369,23 +368,30 @@ class VisitorsViewModel extends GetxController implements GetxService {
     _chapterList;
     _teamWiseMeetingList = [];
     // _teamWiseMeetingList.add("Select Meeting (Optional)");
-    List<String> groupNames = _meetingsList.where((item) => item["groupName"].toString().toLowerCase() == (selectedTeamName.toLowerCase()))
-        .map((item) => item["title"].toString()).toList();
+    List<String> groupNames = _meetingsList
+        .where((item) =>
+            item["groupName"].toString().toLowerCase() ==
+            (selectedTeamName.toLowerCase()))
+        .map((item) => item["title"].toString())
+        .toList();
     _teamWiseMeetingList.addAll(groupNames);
     // _selectedMeeting =  _teamWiseMeetingList[0].toString();
     _teamWiseMeetingList.length;
   }
 
   void autoFillSelectedMeetingDate(String selectedMeetingName) {
-   var selectedMeeting = _meetingsList.firstWhere(
-         (item) => item["title"].toString().toLowerCase() == selectedMeetingName.toLowerCase(),
-     orElse: () => <String, String>{},
-   );
-   if (selectedMeeting.isNotEmpty) {
-     DateTime dateTime = DateTime.parse(selectedMeeting["meetingDate"].toString());
-     setMeetingOrSelectedDate(dateTime);
-     _selectedMeetingCode = selectedMeeting["meetingUuid"].toString();
-   }
+    var selectedMeeting = _meetingsList.firstWhere(
+      (item) =>
+          item["title"].toString().toLowerCase() ==
+          selectedMeetingName.toLowerCase(),
+      orElse: () => <String, String>{},
+    );
+    if (selectedMeeting.isNotEmpty) {
+      DateTime dateTime =
+          DateTime.parse(selectedMeeting["meetingDate"].toString());
+      setMeetingOrSelectedDate(dateTime);
+      _selectedMeetingCode = selectedMeeting["meetingUuid"].toString();
+    }
   }
 
   Future<void> selectDate(BuildContext context) async {
@@ -407,16 +413,16 @@ class VisitorsViewModel extends GetxController implements GetxService {
   Future<void> pickImage(String documentType) async {
     XFile? picked = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (picked != null) {
-      if(imageUploadType == ImageUploadType.profileImage) {
+      if (imageUploadType == ImageUploadType.profileImage) {
         _uploadedProfilePictureFile = picked;
-      } else if(imageUploadType == ImageUploadType.frontVisitingCard) {
+      } else if (imageUploadType == ImageUploadType.frontVisitingCard) {
         _uploadedVCardFrontFile = picked;
       } else {
         _uploadedVCardBackFile = picked;
       }
       update();
       AddUploadOperationResponseModel responseModel =
-          await uploadImageDocument(documentType, picked!);
+          await uploadImageDocument(documentType, picked);
       if (responseModel.status == "CREATED") {
         uploadedDocRespModel =
             UploadedDocRespModel.fromJson(responseModel.data);
@@ -426,9 +432,9 @@ class VisitorsViewModel extends GetxController implements GetxService {
       } else {
         showSnackBar(responseModel.message);
         manageIsImageUploadSuccess(false);
-        if(imageUploadType == ImageUploadType.profileImage) {
+        if (imageUploadType == ImageUploadType.profileImage) {
           _uploadedProfilePictureFile = null;
-        } else if(imageUploadType == ImageUploadType.frontVisitingCard) {
+        } else if (imageUploadType == ImageUploadType.frontVisitingCard) {
           _uploadedVCardFrontFile = null;
         } else {
           _uploadedVCardBackFile = null;
@@ -440,16 +446,16 @@ class VisitorsViewModel extends GetxController implements GetxService {
   Future<void> clickCameraImage(String documentType) async {
     XFile? picked = await ImagePicker().pickImage(source: ImageSource.camera);
     if (picked != null) {
-      if(imageUploadType == ImageUploadType.profileImage) {
+      if (imageUploadType == ImageUploadType.profileImage) {
         _uploadedProfilePictureFile = picked;
-      } else if(imageUploadType == ImageUploadType.frontVisitingCard) {
+      } else if (imageUploadType == ImageUploadType.frontVisitingCard) {
         _uploadedVCardFrontFile = picked;
       } else {
         _uploadedVCardBackFile = picked;
       }
       update();
       AddUploadOperationResponseModel responseModel =
-          await uploadImageDocument(documentType, picked!);
+          await uploadImageDocument(documentType, picked);
       if (responseModel.status == "CREATED") {
         uploadedDocRespModel =
             UploadedDocRespModel.fromJson(responseModel.data);
@@ -459,9 +465,9 @@ class VisitorsViewModel extends GetxController implements GetxService {
       } else {
         showSnackBar(responseModel.message);
         isImageUploadSuccess = false.obs;
-        if(imageUploadType == ImageUploadType.profileImage) {
+        if (imageUploadType == ImageUploadType.profileImage) {
           _uploadedProfilePictureFile = null;
-        } else if(imageUploadType == ImageUploadType.frontVisitingCard) {
+        } else if (imageUploadType == ImageUploadType.frontVisitingCard) {
           _uploadedVCardFrontFile = null;
         } else {
           _uploadedVCardBackFile = null;
@@ -471,9 +477,9 @@ class VisitorsViewModel extends GetxController implements GetxService {
   }
 
   void manageIsImageUploadSuccess(bool isSuccess) {
-    if(imageUploadType == ImageUploadType.profileImage) {
+    if (imageUploadType == ImageUploadType.profileImage) {
       isImageUploadSuccess = isSuccess.obs;
-    } else if(imageUploadType == ImageUploadType.frontVisitingCard) {
+    } else if (imageUploadType == ImageUploadType.frontVisitingCard) {
       isVCardFrontSuccess = isSuccess.obs;
     } else {
       isVCardBackSuccess = isSuccess.obs;
@@ -493,9 +499,9 @@ class VisitorsViewModel extends GetxController implements GetxService {
           status: response.body['status'],
           message: response.body['message'],
           data: response.body['data'] as Map<String, dynamic>);
-      if(imageUploadType == ImageUploadType.profileImage) {
+      if (imageUploadType == ImageUploadType.profileImage) {
         profileUrl = response.body['data']['url'];
-      } else if(imageUploadType == ImageUploadType.frontVisitingCard) {
+      } else if (imageUploadType == ImageUploadType.frontVisitingCard) {
         uploadFrontVisitingCard = response.body['data']['url'];
       } else {
         uploadBackVisitingCard = response.body['data']['url'];
@@ -555,7 +561,8 @@ class VisitorsViewModel extends GetxController implements GetxService {
         country,
         state,
         city,
-        groupName, // chapterName
+        groupName,
+        // chapterName
         meetingCode,
         meetingTitle,
         date,
@@ -686,12 +693,53 @@ class VisitorsViewModel extends GetxController implements GetxService {
     update();
   }
 
+  Future<bool> markVisitorAttendance({
+    required String visitorUuid,
+    required double latitude,
+    required double longitude,
+  }) async {
+    _isLoading = true;
+    update();
+
+    try {
+      final Response response = await visitorsRepo.markVisitorAttendance(
+        visitorUuid: visitorUuid,
+        latitude: latitude,
+        longitude: longitude,
+      );
+
+      _isLoading = false;
+      update();
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        showSnackBar(
+            response.body['message'] ?? 'attendance_success'.tr,
+            isError: false);
+        return true;
+      } else {
+        showSnackBar(
+          response.body?["errors"]?[0] ??
+              response.body?["message"] ??
+              "attendance_error".tr,
+        );
+        return false;
+      }
+    } catch (_) {
+      _isLoading = false;
+      update();
+      showSnackBar("attendance_error".tr);
+      return false;
+    }
+  }
+
   void setDashboardVisitors(Map<String, dynamic> weekly) {
     _visitorData = [];
 
     if (weekly['visitors'] != null) {
       for (var v in weekly['visitors']['list']) {
         _visitorData.add(VisitorChildData(
+          // todo: uuId not getting from API
+          uuId: v['uuId'],
           name: v['fullName'],
           designation: v['designation'],
           profileUrl: v['profileImage'],

@@ -51,7 +51,7 @@ class OneToOnePageState extends State<OneToOnePage>
 
     await homeVM.dashboardData(homeVM.selectedDuration);
 
-    oVM.setDashboardOneToOne(homeVM.lastWeeklyData ?? {});
+    oVM.setDashboardOneToOne(homeVM.lastMonthlyData ?? {});
   }
 
   @override

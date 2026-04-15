@@ -1731,7 +1731,8 @@ class HomePageState extends State<HomePage> {
                 elevation: 0.0,
                 bgColor: lavenderMist,
                 onTap: () async {
-                  await Get.toNamed(Routes.getVisitorPageRoute());
+                  // await Get.toNamed(Routes.getVisitorPageRoute());
+                  await Get.toNamed(Routes.getAddVisitorPageRoute());
                   await getDashboardData(homeVM.selectedDuration);
                   setState(() {});
                 },

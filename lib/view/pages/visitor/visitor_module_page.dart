@@ -41,7 +41,7 @@ class AddVisitorsPageState extends State<AddVisitorsPage> {
         backgroundColor: ghostWhite,
         appBar: CommonAppBar(
           title: Text(
-            "add_visitor".tr,
+            "visitors".tr,
             style: fontBold.copyWith(
                 fontSize: fontSize18,
                 color: Theme.of(context).textTheme.bodyLarge!.color),

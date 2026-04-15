@@ -42,7 +42,7 @@ class TestimonialPageState extends State<TestimonialPage> {
     await homeVM.dashboardData(homeVM.selectedDuration);
 
     testimonialVM.setDashboardTestimonials(
-        homeVM.lastWeeklyData ?? {});
+        homeVM.lastMonthlyData ?? {});
   }
   @override
   Widget build(BuildContext context) {

@@ -46,7 +46,7 @@ class TyfcbPageState extends State<TyfcbPage>
     //     tyfcbViewModel.page.value, tyfcbViewModel.size.value, "", "", "");
     await homeVM.dashboardData(homeVM.selectedDuration);
 
-    tyfcbViewModel.setDashboardTyfcb(homeVM.lastWeeklyData ?? {});
+    tyfcbViewModel.setDashboardTyfcb(homeVM.lastMonthlyData ?? {});
   }
 
   Future<void> getTyfcbData(

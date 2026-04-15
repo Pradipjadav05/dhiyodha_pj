@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dhiyodha/model/response_model/visitor_response_model.dart';
 import 'package:dhiyodha/utils/helper/routes.dart';
@@ -5,13 +7,16 @@ import 'package:dhiyodha/utils/resource/app_colors.dart';
 import 'package:dhiyodha/utils/resource/app_dimensions.dart';
 import 'package:dhiyodha/utils/resource/app_font_size.dart';
 import 'package:dhiyodha/utils/resource/app_media_assets.dart';
+import 'package:dhiyodha/view/pages/attendance_scanner_page.dart';
 import 'package:dhiyodha/view/widgets/common_app_bar.dart';
+import 'package:dhiyodha/view/widgets/attendance_success_dialog.dart';
 import 'package:dhiyodha/viewModel/visitors_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loadmore/loadmore.dart';
 
 import '../../../viewModel/home_viewmodel.dart';
+import '../../widgets/common_snackbar.dart';
 
 class VisitorPage extends StatefulWidget {
   final bool isAppBarRequired;
@@ -41,8 +46,7 @@ class VisitorPageState extends State<VisitorPage>
       duration: const Duration(milliseconds: 400),
       vsync: this,
     );
-    _fadeAnim =
-        CurvedAnimation(parent: _animController, curve: Curves.easeOut);
+    _fadeAnim = CurvedAnimation(parent: _animController, curve: Curves.easeOut);
     _animController.forward();
     setupInitialData();
   }
@@ -56,7 +60,7 @@ class VisitorPageState extends State<VisitorPage>
 
     await homeVM.dashboardData(homeVM.selectedDuration);
 
-    visitorVM.setDashboardVisitors(homeVM.lastWeeklyData ?? {});
+    visitorVM.setDashboardVisitors(homeVM.lastMonthlyData ?? {});
   }
 
   @override
@@ -73,14 +77,14 @@ class VisitorPageState extends State<VisitorPage>
           backgroundColor: const Color(0xFFF4F6FB),
           appBar: widget.isAppBarRequired
               ? CommonAppBar(
-            title: Text(
-              "visitors".tr,
-              style: fontBold.copyWith(
-                fontSize: fontSize18,
-                color: Theme.of(context).textTheme.bodyLarge!.color,
-              ),
-            ),
-          )
+                  title: Text(
+                    "visitors".tr,
+                    style: fontBold.copyWith(
+                      fontSize: fontSize18,
+                      color: Theme.of(context).textTheme.bodyLarge!.color,
+                    ),
+                  ),
+                )
               : null,
           floatingActionButton: _buildFAB(visitorVM),
           body: FadeTransition(
@@ -98,24 +102,23 @@ class VisitorPageState extends State<VisitorPage>
 
                 visitorVM.visitorData.isNotEmpty
                     ? Expanded(
-                  child: LoadMore(
-                    isFinish: visitorVM.page.value ==
-                        visitorVM.totalPages.value,
-                    whenEmptyLoad: true,
-                    delegate: const DefaultLoadMoreDelegate(),
-                    textBuilder: DefaultLoadMoreTextBuilder.english,
-                    onLoadMore: visitorVM.loadMore,
-                    child: ListView.builder(
-                      physics: const BouncingScrollPhysics(),
-                      padding:
-                      const EdgeInsets.fromLTRB(16, 12, 16, 100),
-                      itemCount: visitorVM.visitorData.length,
-                      itemBuilder: (context, index) {
-                        return _visitorCard(index, visitorVM);
-                      },
-                    ),
-                  ),
-                )
+                        child: LoadMore(
+                          isFinish: visitorVM.page.value ==
+                              visitorVM.totalPages.value,
+                          whenEmptyLoad: true,
+                          delegate: const DefaultLoadMoreDelegate(),
+                          textBuilder: DefaultLoadMoreTextBuilder.english,
+                          onLoadMore: visitorVM.loadMore,
+                          child: ListView.builder(
+                            physics: const BouncingScrollPhysics(),
+                            padding: const EdgeInsets.fromLTRB(16, 12, 16, 100),
+                            itemCount: visitorVM.visitorData.length,
+                            itemBuilder: (context, index) {
+                              return _visitorCard(index, visitorVM);
+                            },
+                          ),
+                        ),
+                      )
                     : Expanded(child: _buildEmptyState()),
               ],
             ),
@@ -205,7 +208,7 @@ class VisitorPageState extends State<VisitorPage>
               splashColor: lavenderMist.withOpacity(0.4),
               child: Padding(
                 padding:
-                const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                 child: Row(
                   children: [
                     // ── Circular profile image ──
@@ -226,8 +229,9 @@ class VisitorPageState extends State<VisitorPage>
                             ),
                           ),
                           const SizedBox(height: 5),
-                          if(data.designation != "" && data.designation != null)
-                          _titleBadge(data.designation ?? ''),
+                          if (data.designation != "" &&
+                              data.designation != null)
+                            _titleBadge(data.designation ?? ''),
                         ],
                       ),
                     ),
@@ -277,12 +281,12 @@ class VisitorPageState extends State<VisitorPage>
       child: ClipOval(
         child: profileUrl != null && profileUrl.isNotEmpty
             ? CachedNetworkImage(
-          imageUrl: profileUrl,
-          width: 58,
-          height: 58,
-          fit: BoxFit.cover,
-          errorWidget: (context, url, error) => _avatarFallback(),
-        )
+                imageUrl: profileUrl,
+                width: 58,
+                height: 58,
+                fit: BoxFit.cover,
+                errorWidget: (context, url, error) => _avatarFallback(),
+              )
             : _avatarFallback(),
       ),
     );
@@ -363,6 +367,110 @@ class VisitorPageState extends State<VisitorPage>
           onTap: () {
             Get.toNamed(Routes.getVisitingCardPageRoute(visitorData: data));
           },
+        ),
+        _divider(),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: SizedBox(
+            width: double.infinity,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: const Color(0xFF101E57),
+                borderRadius: BorderRadius.circular(14),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF6F42E8).withValues(alpha: 0.35),
+                    blurRadius: 0,
+                    offset: const Offset(0, 4),
+                  ),
+                  BoxShadow(
+                    color: const Color(0xFF101E57).withValues(alpha: 0.28),
+                    blurRadius: 16,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+              ),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  elevation: 0,
+                  shadowColor: Colors.transparent,
+                  backgroundColor: Colors.transparent,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 14,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                ),
+                onPressed: () async {
+                  final String visitorUuid = (data.uuId ?? '').trim();
+                  if (visitorUuid.isEmpty) {
+                    showSnackBar("visitor_uuid_not_found".tr);
+                    return;
+                  }
+
+                  final String? scannedValue = await Get.to<String>(
+                    () => const AttendanceScannerPage(),
+                  );
+
+                  if (scannedValue == null || scannedValue.isEmpty) {
+                    return;
+                  }
+
+                  final _ScannedAttendanceLocation? scannedLocation =
+                      _parseScannedAttendanceLocation(scannedValue);
+
+                  if (scannedLocation == null) {
+                    showSnackBar("invalid_qr_message".tr);
+                    return;
+                  }
+
+                  final bool isMarked =
+                      await Get.find<VisitorsViewModel>().markVisitorAttendance(
+                    visitorUuid: visitorUuid,
+                    latitude: scannedLocation.latitude,
+                    longitude: scannedLocation.longitude,
+                  );
+
+                  if (!mounted || !isMarked) {
+                    return;
+                  }
+
+                  await showAttendanceSuccessDialog(
+                    context,
+                    visitorName: data.name,
+                  );
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 28,
+                      height: 28,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF8A5CF6),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(
+                        Icons.check_rounded,
+                        color: Colors.white,
+                        size: 18,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      "mark_attendance".tr,
+                      style: fontMedium.copyWith(
+                        color: ghostWhite,
+                        fontSize: fontSize16,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ),
       ],
     );
@@ -447,7 +555,12 @@ class VisitorPageState extends State<VisitorPage>
         borderRadius: BorderRadius.circular(9),
       ),
       child: Center(
-        child: Image.asset(assetPath, height: iconSize18, width: iconSize18,  color: bluishPurple,),
+        child: Image.asset(
+          assetPath,
+          height: iconSize18,
+          width: iconSize18,
+          color: bluishPurple,
+        ),
       ),
     );
   }
@@ -480,4 +593,38 @@ class VisitorPageState extends State<VisitorPage>
 
   Widget _divider() =>
       const Divider(height: 1, thickness: 1, color: Color(0xFFF0F3FA));
+
+  _ScannedAttendanceLocation? _parseScannedAttendanceLocation(String rawValue) {
+    try {
+      final dynamic decoded = jsonDecode(rawValue);
+
+      if (decoded is! Map<String, dynamic>) {
+        return null;
+      }
+
+      final double? latitude = (decoded['latitude'] as num?)?.toDouble();
+      final double? longitude = (decoded['longitude'] as num?)?.toDouble();
+
+      if (latitude == null || longitude == null) {
+        return null;
+      }
+
+      return _ScannedAttendanceLocation(
+        latitude: latitude,
+        longitude: longitude,
+      );
+    } catch (_) {
+      return null;
+    }
+  }
+}
+
+class _ScannedAttendanceLocation {
+  final double latitude;
+  final double longitude;
+
+  const _ScannedAttendanceLocation({
+    required this.latitude,
+    required this.longitude,
+  });
 }

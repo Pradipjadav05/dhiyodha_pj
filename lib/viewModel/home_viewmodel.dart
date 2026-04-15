@@ -192,7 +192,7 @@ class HomeViewModel extends GetxController implements GetxService {
 
   set reelList(List<String> value) => _reelList = value;
 
-  Map<String, dynamic>? lastWeeklyData;
+  Map<String, dynamic>? lastMonthlyData;
 
   List<Documents> meetingBannerList = [];
   List<Documents> businessPresentationBannerList = [];
@@ -428,27 +428,27 @@ class HomeViewModel extends GetxController implements GetxService {
     Response response = await homeRepo.dashboardData(duration);
     _isLoading = false;
     if (response.statusCode == 200) {
-      if (response.body['data']['weekly'] != null) {
-        final weekly = response.body['data']['weekly'];
-        lastWeeklyData = weekly;
+      if (response.body['data']['monthly'] != null) {
+        final monthly = response.body['data']['monthly'];
+        lastMonthlyData = monthly;
 
-        tyfcbCount = weekly['tyfcbReceived']?['count'] ?? 0;
-        referralCount = weekly['referralReceived']?['count'] ?? 0;
-        visitorsCount = weekly['visitors']?['count'] ?? 0;
-        oneToOneCount = weekly['oneToOne']?['count'] ?? 0;
-        trainingCount = weekly['training']?['count'] ?? 0;
-        testimonialsCount = weekly['testimonialReviewers']?['count'] ?? 0;
+        tyfcbCount = monthly['tyfcbReceived']?['count'] ?? 0;
+        referralCount = monthly['referralReceived']?['count'] ?? 0;
+        visitorsCount = monthly['visitors']?['count'] ?? 0;
+        oneToOneCount = monthly['oneToOne']?['count'] ?? 0;
+        trainingCount = monthly['training']?['count'] ?? 0;
+        testimonialsCount = monthly['testimonialReviewers']?['count'] ?? 0;
 
         referralGivenList = [];
         referralReceivedList = [];
 
-        if (weekly['referralGiven'] != null) {
-          for (var v in weekly['referralGiven']['list']) {
+        if (monthly['referralGiven'] != null) {
+          for (var v in monthly['referralGiven']['list']) {
             referralGivenList.add(_mapReferral(v));
           }
         }
-        if (weekly['referralReceived'] != null) {
-          for (var v in weekly['referralReceived']['list']) {
+        if (monthly['referralReceived'] != null) {
+          for (var v in monthly['referralReceived']['list']) {
             referralReceivedList.add(_mapReferral(v));
           }
         }
