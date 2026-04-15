@@ -20,6 +20,8 @@ class AddTyPage extends StatefulWidget {
 }
 
 class AddTyPageState extends State<AddTyPage> {
+  bool _isSubmitting = false;
+
   @override
   void initState() {
     super.initState();
@@ -44,268 +46,295 @@ class AddTyPageState extends State<AddTyPage> {
           ),
         ),
         body: GetBuilder<TyfcbViewModel>(builder: (addTyVM) {
-          return SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(14.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Visibility(
-                    visible: addTyVM.isLoading,
-                    child: LinearProgressIndicator(
-                      color: midnightBlue,
-                      backgroundColor: lavenderMist,
-                      borderRadius: BorderRadius.circular(radius20),
-                    ),
-                  ),
-                  SizedBox(height: paddingSize25),
-                  InkWell(
-                    onTap: () async {
-                      MembersChildData childData =
-                          await Get.toNamed(Routes.getMembersPageRoute("true"));
-                      addTyVM.selectedMemberId = childData.uuid ?? "";
-                      addTyVM.tyfcbToController.text =
-                          '${childData.firstName} ${childData.lastName}';
-                    },
-                    child: CommonTextFormField(
-                      isEnabled: false,
-                      controller: addTyVM.tyfcbToController,
-                      hintText: "thank_you_to".tr,
-                      textStyle: fontMedium.copyWith(
-                          fontSize: fontSize14, color: midnightBlue),
-                      hintColor: midnightBlue,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: paddingSize20, vertical: paddingSize20),
-                      suffixIcon: Image.asset(search),
-                    ),
-                  ),
-                  SizedBox(height: paddingSize25),
-                  CommonTextFormField(
-                    controller: addTyVM.amountController,
-                    hintText: "amount".tr,
-                    hintColor: midnightBlue,
-                    prefixIcon: Image.asset(
-                      rsSymbol,
-                      width: 18.0,
-                      height: 18.0,
-                      color: bluishPurple,
-                    ),
-                    isIconDivider: true,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: paddingSize20, vertical: paddingSize20),
-                  ),
-                  SizedBox(height: paddingSize25),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      CommonTextLabel(
-                        labelText: "business_type".tr,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: paddingSize25, vertical: paddingSize10),
-                      ),
-                      Expanded(
-                        child: Divider(
-                          height: 1.0,
-                          color: divider,
-                        ),
-                      )
-                    ],
-                  ),
-                  SizedBox(height: paddingSize15),
-                  Obx(
-                    () => Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          final bool isBusy = addTyVM.isLoading || _isSubmitting;
+
+          return Stack(
+            children: [
+              AbsorbPointer(
+                absorbing: isBusy,
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(14.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(
-                          child: CommonCard(
-                            elevation: 2.0,
-                            bgColor: addTyVM.businessTypeNew.value
-                                ? bluishPurple
-                                : lavenderMist,
-                            onTap: () async {
-                              addTyVM.businessTypeRepeat.value = false;
-                              addTyVM.businessTypeNew.value = true;
-                            },
-                            cardChild: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: paddingSize15,
-                                  vertical: paddingSize10),
-                              child: Center(
-                                child: Text(
-                                  "new".tr,
-                                  style: fontMedium.copyWith(
-                                      color: addTyVM.businessTypeNew.value
-                                          ? white
-                                          : midnightBlue,
-                                      fontSize: fontSize14),
-                                ),
-                              ),
-                            ),
+                        Visibility(
+                          visible: isBusy,
+                          child: LinearProgressIndicator(
+                            color: midnightBlue,
+                            backgroundColor: lavenderMist,
+                            borderRadius: BorderRadius.circular(radius20),
                           ),
                         ),
-                        Expanded(
-                          child: CommonCard(
-                            elevation: 2.0,
-                            bgColor: addTyVM.businessTypeRepeat.value
-                                ? bluishPurple
-                                : lavenderMist,
-                            onTap: () {
-                              addTyVM.businessTypeRepeat.value = true;
-                              addTyVM.businessTypeNew.value = false;
-                            },
-                            cardChild: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: paddingSize15,
-                                  vertical: paddingSize10),
-                              child: Center(
-                                child: Text(
-                                  "repeat".tr,
-                                  style: fontMedium.copyWith(
-                                      color: addTyVM.businessTypeRepeat.value
-                                          ? white
-                                          : midnightBlue,
-                                      fontSize: fontSize14),
-                                ),
-                              ),
-                            ),
+                        SizedBox(height: paddingSize25),
+                        InkWell(
+                          onTap: () async {
+                            MembersChildData childData = await Get.toNamed(
+                                Routes.getMembersPageRoute("true"));
+                            addTyVM.selectedMemberId = childData.uuid ?? "";
+                            addTyVM.tyfcbToController.text =
+                                '${childData.firstName} ${childData.lastName}';
+                          },
+                          child: CommonTextFormField(
+                            isEnabled: false,
+                            controller: addTyVM.tyfcbToController,
+                            hintText: "thank_you_to".tr,
+                            textStyle: fontMedium.copyWith(
+                                fontSize: fontSize14, color: midnightBlue),
+                            hintColor: midnightBlue,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: paddingSize20,
+                                vertical: paddingSize20),
+                            suffixIcon: Image.asset(search),
                           ),
                         ),
+                        SizedBox(height: paddingSize25),
+                        CommonTextFormField(
+                          controller: addTyVM.amountController,
+                          hintText: "amount".tr,
+                          hintColor: midnightBlue,
+                          prefixIcon: Image.asset(
+                            rsSymbol,
+                            width: 18.0,
+                            height: 18.0,
+                            color: bluishPurple,
+                          ),
+                          isIconDivider: true,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: paddingSize20,
+                              vertical: paddingSize20),
+                        ),
+                        SizedBox(height: paddingSize25),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            CommonTextLabel(
+                              labelText: "business_type".tr,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: paddingSize25,
+                                  vertical: paddingSize10),
+                            ),
+                            Expanded(
+                              child: Divider(
+                                height: 1.0,
+                                color: divider,
+                              ),
+                            )
+                          ],
+                        ),
+                        SizedBox(height: paddingSize15),
+                        Obx(
+                          () => Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: CommonCard(
+                                  elevation: 2.0,
+                                  bgColor: addTyVM.businessTypeNew.value
+                                      ? bluishPurple
+                                      : lavenderMist,
+                                  onTap: () async {
+                                    addTyVM.businessTypeRepeat.value = false;
+                                    addTyVM.businessTypeNew.value = true;
+                                  },
+                                  cardChild: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: paddingSize15,
+                                        vertical: paddingSize10),
+                                    child: Center(
+                                      child: Text(
+                                        "new".tr,
+                                        style: fontMedium.copyWith(
+                                            color: addTyVM.businessTypeNew.value
+                                                ? white
+                                                : midnightBlue,
+                                            fontSize: fontSize14),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: CommonCard(
+                                  elevation: 2.0,
+                                  bgColor: addTyVM.businessTypeRepeat.value
+                                      ? bluishPurple
+                                      : lavenderMist,
+                                  onTap: () {
+                                    addTyVM.businessTypeRepeat.value = true;
+                                    addTyVM.businessTypeNew.value = false;
+                                  },
+                                  cardChild: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: paddingSize15,
+                                        vertical: paddingSize10),
+                                    child: Center(
+                                      child: Text(
+                                        "repeat".tr,
+                                        style: fontMedium.copyWith(
+                                            color:
+                                                addTyVM.businessTypeRepeat.value
+                                                    ? white
+                                                    : midnightBlue,
+                                            fontSize: fontSize14),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: paddingSize15),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            CommonTextLabel(
+                              labelText: "referral_type".tr,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: paddingSize25,
+                                  vertical: paddingSize10),
+                            ),
+                            Expanded(
+                              child: Divider(
+                                height: 1.0,
+                                color: divider,
+                              ),
+                            )
+                          ],
+                        ),
+                        SizedBox(height: paddingSize15),
+                        Obx(
+                          () => Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: CommonCard(
+                                  elevation: 2.0,
+                                  bgColor: addTyVM.referralTypeInside.value
+                                      ? bluishPurple
+                                      : lavenderMist,
+                                  onTap: () {
+                                    addTyVM.referralTypeInside.value = true;
+                                    addTyVM.referralTypeOutside.value = false;
+                                    addTyVM.referralTypeTire.value = false;
+                                  },
+                                  cardChild: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: paddingSize15,
+                                        vertical: paddingSize10),
+                                    child: Center(
+                                      child: Text(
+                                        "inside".tr,
+                                        style: fontMedium.copyWith(
+                                            color:
+                                                addTyVM.referralTypeInside.value
+                                                    ? white
+                                                    : midnightBlue,
+                                            fontSize: fontSize14),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: CommonCard(
+                                  elevation: 2.0,
+                                  bgColor: addTyVM.referralTypeOutside.value
+                                      ? bluishPurple
+                                      : lavenderMist,
+                                  onTap: () {
+                                    addTyVM.referralTypeInside.value = false;
+                                    addTyVM.referralTypeOutside.value = true;
+                                    addTyVM.referralTypeTire.value = false;
+                                  },
+                                  cardChild: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: paddingSize15,
+                                        vertical: paddingSize10),
+                                    child: Center(
+                                      child: Text(
+                                        "outside".tr,
+                                        style: fontMedium.copyWith(
+                                            color:
+                                                addTyVM.referralTypeOutside.value
+                                                    ? white
+                                                    : midnightBlue,
+                                            fontSize: fontSize14),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: CommonCard(
+                                  elevation: 2.0,
+                                  bgColor: addTyVM.referralTypeTire.value
+                                      ? bluishPurple
+                                      : lavenderMist,
+                                  onTap: () {
+                                    addTyVM.referralTypeInside.value = false;
+                                    addTyVM.referralTypeOutside.value = false;
+                                    addTyVM.referralTypeTire.value = true;
+                                  },
+                                  cardChild: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: paddingSize15,
+                                        vertical: paddingSize10),
+                                    child: Center(
+                                      child: Text(
+                                        "tire3+".tr,
+                                        style: fontMedium.copyWith(
+                                            color:
+                                                addTyVM.referralTypeTire.value
+                                                    ? white
+                                                    : midnightBlue,
+                                            fontSize: fontSize14),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: paddingSize25),
+                        CommonTextFormField(
+                          controller: addTyVM.commentsController,
+                          maxLines: 4,
+                          hintText: "comments".tr,
+                          hintColor: midnightBlue,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: paddingSize20,
+                              vertical: paddingSize20),
+                        ),
+                        SizedBox(height: paddingSize25),
+                        CommonButton(
+                          buttonText: "confirm".tr,
+                          bgColor: midnightBlue,
+                          textColor: periwinkle,
+                          onPressed: isBusy
+                              ? null
+                              : () async {
+                                  await _collectDataAndSave(addTyVM);
+                                },
+                        )
                       ],
                     ),
                   ),
-                  SizedBox(height: paddingSize15),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      CommonTextLabel(
-                        labelText: "referral_type".tr,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: paddingSize25, vertical: paddingSize10),
-                      ),
-                      Expanded(
-                        child: Divider(
-                          height: 1.0,
-                          color: divider,
-                        ),
-                      )
-                    ],
-                  ),
-                  SizedBox(height: paddingSize15),
-                  Obx(
-                    () => Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: CommonCard(
-                            elevation: 2.0,
-                            bgColor: addTyVM.referralTypeInside.value
-                                ? bluishPurple
-                                : lavenderMist,
-                            onTap: () {
-                              addTyVM.referralTypeInside.value = true;
-                              addTyVM.referralTypeOutside.value = false;
-                              addTyVM.referralTypeTire.value = false;
-                            },
-                            cardChild: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: paddingSize15,
-                                  vertical: paddingSize10),
-                              child: Center(
-                                child: Text(
-                                  "inside".tr,
-                                  style: fontMedium.copyWith(
-                                      color: addTyVM.referralTypeInside.value
-                                          ? white
-                                          : midnightBlue,
-                                      fontSize: fontSize14),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: CommonCard(
-                            elevation: 2.0,
-                            bgColor: addTyVM.referralTypeOutside.value
-                                ? bluishPurple
-                                : lavenderMist,
-                            onTap: () {
-                              addTyVM.referralTypeInside.value = false;
-                              addTyVM.referralTypeOutside.value = true;
-                              addTyVM.referralTypeTire.value = false;
-                            },
-                            cardChild: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: paddingSize15,
-                                  vertical: paddingSize10),
-                              child: Center(
-                                child: Text(
-                                  "outside".tr,
-                                  style: fontMedium.copyWith(
-                                      color: addTyVM.referralTypeOutside.value
-                                          ? white
-                                          : midnightBlue,
-                                      fontSize: fontSize14),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: CommonCard(
-                            elevation: 2.0,
-                            bgColor: addTyVM.referralTypeTire.value
-                                ? bluishPurple
-                                : lavenderMist,
-                            onTap: () {
-                              addTyVM.referralTypeInside.value = false;
-                              addTyVM.referralTypeOutside.value = false;
-                              addTyVM.referralTypeTire.value = true;
-                            },
-                            cardChild: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: paddingSize15,
-                                  vertical: paddingSize10),
-                              child: Center(
-                                child: Text(
-                                  "tire3+".tr,
-                                  style: fontMedium.copyWith(
-                                      color: addTyVM.referralTypeTire.value
-                                          ? white
-                                          : midnightBlue,
-                                      fontSize: fontSize14),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: paddingSize25),
-                  CommonTextFormField(
-                    controller: addTyVM.commentsController,
-                    maxLines: 4,
-                    hintText: "comments".tr,
-                    hintColor: midnightBlue,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: paddingSize20, vertical: paddingSize20),
-                  ),
-                  SizedBox(height: paddingSize25),
-                  CommonButton(
-                    buttonText: "confirm".tr,
-                    bgColor: midnightBlue,
-                    textColor: periwinkle,
-                    onPressed: () async {
-                      await _collectDataAndSave(addTyVM);
-                    },
-                  )
-                ],
+                ),
               ),
-            ),
+              if (isBusy)
+                Positioned.fill(
+                  child: ColoredBox(
+                    color: Colors.transparent,
+                    child: SizedBox.shrink()
+                  ),
+                ),
+            ],
           );
         }),
       ),
@@ -313,30 +342,47 @@ class AddTyPageState extends State<AddTyPage> {
   }
 
   Future<void> _collectDataAndSave(TyfcbViewModel addTyVM) async {
-    var selectedBusinessType = addTyVM.businessTypeNew.value ? "New" : "Repeat";
-    var selectedReferralsType = addTyVM.referralTypeInside.value
-        ? "Inside"
-        : addTyVM.referralTypeOutside.value
-            ? "Outside"
-            : "Tire3+";
-    if (addTyVM.tyfcbToController.text.isEmpty) {
-      showSnackBar("add_person".tr);
-    } else if (addTyVM.amountController.text.isEmpty) {
-      showSnackBar("enter_amount".tr);
-    } else if (addTyVM.commentsController.text.isEmpty) {
-      showSnackBar("please_enter_comment".tr);
-    } else {
-      ResponseModel resp = await addTyVM.createAppreciateNote(
-          addTyVM.selectedMemberId,
-          addTyVM.amountController.text,
-          selectedBusinessType.toUpperCase(),
-          selectedReferralsType.toUpperCase(),
-          addTyVM.commentsController.text);
-      if (resp.isSuccess) {
-        Get.back(result: true, canPop: true, closeOverlays: true);
-        showSnackBar(resp.message, isError: false);
+    if (_isSubmitting || addTyVM.isLoading) {
+      return;
+    }
+
+    _isSubmitting = true;
+    if (mounted) {
+      setState(() {});
+    }
+
+    try {
+      var selectedBusinessType =
+          addTyVM.businessTypeNew.value ? "New" : "Repeat";
+      var selectedReferralsType = addTyVM.referralTypeInside.value
+          ? "Inside"
+          : addTyVM.referralTypeOutside.value
+              ? "Outside"
+              : "Tire3+";
+      if (addTyVM.tyfcbToController.text.isEmpty) {
+        showSnackBar("add_person".tr);
+      } else if (addTyVM.amountController.text.isEmpty) {
+        showSnackBar("enter_amount".tr);
+      } else if (addTyVM.commentsController.text.isEmpty) {
+        showSnackBar("please_enter_comment".tr);
       } else {
-        showSnackBar('errorMessage'.tr);
+        ResponseModel resp = await addTyVM.createAppreciateNote(
+            addTyVM.selectedMemberId,
+            addTyVM.amountController.text,
+            selectedBusinessType.toUpperCase(),
+            selectedReferralsType.toUpperCase(),
+            addTyVM.commentsController.text);
+        if (resp.isSuccess) {
+          Get.back(result: true, canPop: true, closeOverlays: true);
+          showSnackBar(resp.message, isError: false);
+        } else {
+          showSnackBar('errorMessage'.tr);
+        }
+      }
+    } finally {
+      _isSubmitting = false;
+      if (mounted) {
+        setState(() {});
       }
     }
   }
