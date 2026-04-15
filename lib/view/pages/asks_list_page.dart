@@ -228,32 +228,7 @@ class AsksListPageState extends State<AsksListPage> {
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  item.profileUrl != null && item.profileUrl!.isNotEmpty
-                      ? CachedNetworkImage(
-                          imageUrl: item.profileUrl!,
-                          width: 42.0,
-                          height: 42.0,
-                          fit: BoxFit.cover,
-                          placeholder: (context, url) => const SizedBox(
-                            width: 42,
-                            height: 42,
-                            child: Center(
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            ),
-                          ),
-                          errorWidget: (context, url, error) => Image.asset(
-                            profileImage,
-                            width: 42.0,
-                            height: 42.0,
-                            fit: BoxFit.cover,
-                          ),
-                        )
-                      : Image.asset(
-                          profileImage,
-                          width: 42.0,
-                          height: 42.0,
-                          fit: BoxFit.cover,
-                        ),
+                  _profileAvatar(item.profileUrl),
                   SizedBox(width: paddingSize10),
                   Expanded(
                     child: Row(
@@ -348,6 +323,51 @@ class AsksListPageState extends State<AsksListPage> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _profileAvatar(String? profileUrl) {
+    return Container(
+      width: 42,
+      height: 42,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: Colors.white, width: 2.5),
+        boxShadow: [
+          BoxShadow(
+            color: midnightBlue.withOpacity(0.15),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: ClipOval(
+        child: profileUrl != null && profileUrl.isNotEmpty
+            ? CachedNetworkImage(
+          imageUrl: profileUrl,
+          width: 42,
+          height: 42,
+          fit: BoxFit.cover,
+          errorWidget: (context, url, error) => _avatarFallback(),
+        )
+            : _avatarFallback(),
+      ),
+    );
+  }
+
+  Widget _avatarFallback() {
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          colors: [midnightBlue, const Color(0xFF4A6FA5)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: ClipOval(
+        child: Icon(Icons.person, color: Colors.white),
       ),
     );
   }
