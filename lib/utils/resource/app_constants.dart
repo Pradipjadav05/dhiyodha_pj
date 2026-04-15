@@ -28,7 +28,7 @@ const String queryWebUrl = 'https://dhiyodha.com/';
 const String storedEmail = 'username';
 const String storedPassword = 'password';
 // const String baseUrl = 'http://13.234.19.67:8097/'; LocalHost URL
-const String baseUrl = /*'http://13.202.103.22:8097/'; */ 'https://api.socialclub.dhiyodha.com:8097/';
+const String baseUrl = 'http://13.202.103.22:8097/';  /*'https://api.socialclub.dhiyodha.com:8097/';*/
 const String playStoreUrl =
     'https://play.google.com/store/apps/details?id=app.alphaabit.dhiyodha.dhiyodha';
 
@@ -99,6 +99,7 @@ const String guestDashboardUrl = baseUrl + 'api/users/guest-dashboard';
 const String updatePasswordUrl = baseUrl + 'api/users/update-password';
 const String getMembersUrl = baseUrl + 'api/users/';
 const String filtersUrl = baseUrl + 'api/users/filter';
+const String markAttendanceUrl = baseUrl + 'api/attendance';
 
 /** DOCUMENT APIs*/
 const String uploadDocumentUrl = baseUrl + 'api/document/upload';
