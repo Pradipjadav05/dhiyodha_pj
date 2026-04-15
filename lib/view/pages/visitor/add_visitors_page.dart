@@ -13,7 +13,6 @@ import 'package:get/get.dart';
 import 'package:getwidget/components/checkbox/gf_checkbox.dart';
 
 import '../../../utils/resource/app_constants.dart';
-import '../../widgets/searchable_dropdown.dart';
 
 class AddVisitorFormWidget extends StatefulWidget {
   final VisitorsViewModel visitorsViewModel;
@@ -31,6 +30,7 @@ class AddVisitorFormWidget extends StatefulWidget {
 
 class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
   VisitorsViewModel get vvm => widget.visitorsViewModel;
+  bool _isSubmitting = false;
   final TextEditingController _countryController = TextEditingController();
   final TextEditingController _stateController = TextEditingController();
   final TextEditingController _cityController = TextEditingController();
@@ -41,21 +41,27 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Obx(() => Padding(
-            padding: const EdgeInsets.all(14.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Visibility(
-                  visible: vvm.isLoading,
-                  child: LinearProgressIndicator(
-                    color: midnightBlue,
-                    backgroundColor: lavenderMist,
-                    borderRadius: BorderRadius.circular(radius20),
-                  ),
-                ),
+    final bool isBusy = vvm.isLoading || _isSubmitting;
+
+    return Stack(
+      children: [
+        AbsorbPointer(
+          absorbing: isBusy,
+          child: SingleChildScrollView(
+            child: Obx(() => Padding(
+                  padding: const EdgeInsets.all(14.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Visibility(
+                        visible: isBusy,
+                        child: LinearProgressIndicator(
+                          color: midnightBlue,
+                          backgroundColor: lavenderMist,
+                          borderRadius: BorderRadius.circular(radius20),
+                        ),
+                      ),
                 _autocompleteField(
                   label: 'select_country'.tr,
                   icon: Icons.public_outlined,
@@ -355,19 +361,31 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
                   ],
                 ),
                 SizedBox(height: paddingSize25),
-                vvm.isLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : CommonButton(
+                CommonButton(
                         buttonText: "confirm".tr,
                         bgColor: bluishPurple,
                         textColor: periwinkle,
-                        onPressed: () async {
-                          await _collectDataAndAddVisitors();
-                        },
+                        onPressed: isBusy
+                            ? null
+                            : () async {
+                                await _collectDataAndAddVisitors();
+                              },
                       )
-              ],
+                    ],
+                  ),
+                )),
+          ),
+        ),
+        if (isBusy)
+          Positioned.fill(
+            child: ColoredBox(
+              color: Colors.black.withValues(alpha: 0.16),
+              child: const Center(
+                child: CircularProgressIndicator(),
+              ),
             ),
-          )),
+          ),
+      ],
     );
   }
 
@@ -450,59 +468,75 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
   }
 
   Future<void> _collectDataAndAddVisitors() async {
-    if (vvm.selectedCountry.isEmpty ||
-        vvm.selectedCountry == vvm.countryList[0]) {
-      showSnackBar("select_country".tr);
-    } else if (vvm.selectedState.isEmpty ||
-        vvm.selectedState == vvm.stateList[0]) {
-      showSnackBar("select_state".tr);
-    } else if (vvm.selectedCity.isEmpty ||
-        vvm.selectedCity == vvm.cityList[0]) {
-      showSnackBar("select_city".tr);
-    } else if (vvm.selectedChapter.isEmpty) {
-      showSnackBar("select_chapter".tr);
-    } else if (vvm.selectedMeeting.isEmpty) {
-      showSnackBar("select_meeting".tr);
-    } else if (vvm.dateController.text.isEmpty) {
-      showSnackBar("enter_date".tr);
-    } else if (vvm.selectedBusinessCategory.isEmpty ||
-        vvm.selectedBusinessCategory == vvm.chapterList[0]) {
-      showSnackBar("select_business_category".tr);
-    } else if (vvm.nameController.text.isEmpty) {
-      showSnackBar("enter_name".tr);
-    } else if (vvm.emailController.text.isEmpty) {
-      showSnackBar("enter_email".tr);
-    } else if (vvm.contactNumberController.text.isEmpty) {
-      showSnackBar("enter_contact_no".tr);
-    } else if (vvm.companyNameController.text.isEmpty) {
-      showSnackBar("enter_cmp_name".tr);
-    } else if (!vvm.isAgreeTerms.value) {
-      showSnackBar("agree_terms".tr);
-    } else if (!vvm.isImageUploadSuccess.value) {
-      showSnackBar("upload_photo".tr);
-    } else {
-      bool isSuccess = await vvm.addVisitors(
-          vvm.selectedCountry.toString(),
-          vvm.selectedState.toString(),
-          vvm.selectedCity.toString(),
-          vvm.selectedChapter.toString(),
-          vvm.selectedMeetingCode.toString(),
-          vvm.selectedMeeting.toString(),
-          vvm.dateController.text.toString(),
-          vvm.selectedBusinessCategory.toString(),
-          vvm.nameController.text.toString(),
-          vvm.emailController.text.toString(),
-          vvm.contactNumberController.text.toString(),
-          vvm.companyNameController.text.toString(),
-          globalCurrentUserData.uuid,
-          vvm.profileUrl.toString(),
-          vvm.uploadFrontVisitingCard.toString(),
-          vvm.uploadBackVisitingCard.toString());
-      if (isSuccess) {
-        Get.back(closeOverlays: true, canPop: true);
-        showSnackBar("visitor_added".tr, isError: false);
+    if (_isSubmitting || vvm.isLoading) {
+      return;
+    }
+
+    _isSubmitting = true;
+    if (mounted) {
+      setState(() {});
+    }
+
+    try {
+      if (vvm.selectedCountry.isEmpty ||
+          vvm.selectedCountry == vvm.countryList[0]) {
+        showSnackBar("select_country".tr);
+      } else if (vvm.selectedState.isEmpty ||
+          vvm.selectedState == vvm.stateList[0]) {
+        showSnackBar("select_state".tr);
+      } else if (vvm.selectedCity.isEmpty ||
+          vvm.selectedCity == vvm.cityList[0]) {
+        showSnackBar("select_city".tr);
+      } else if (vvm.selectedChapter.isEmpty) {
+        showSnackBar("select_chapter".tr);
+      } else if (vvm.selectedMeeting.isEmpty) {
+        showSnackBar("select_meeting".tr);
+      } else if (vvm.dateController.text.isEmpty) {
+        showSnackBar("enter_date".tr);
+      } else if (vvm.selectedBusinessCategory.isEmpty ||
+          vvm.selectedBusinessCategory == vvm.chapterList[0]) {
+        showSnackBar("select_business_category".tr);
+      } else if (vvm.nameController.text.isEmpty) {
+        showSnackBar("enter_name".tr);
+      } else if (vvm.emailController.text.isEmpty) {
+        showSnackBar("enter_email".tr);
+      } else if (vvm.contactNumberController.text.isEmpty) {
+        showSnackBar("enter_contact_no".tr);
+      } else if (vvm.companyNameController.text.isEmpty) {
+        showSnackBar("enter_cmp_name".tr);
+      } else if (!vvm.isAgreeTerms.value) {
+        showSnackBar("agree_terms".tr);
+      } else if (!vvm.isImageUploadSuccess.value) {
+        showSnackBar("upload_photo".tr);
       } else {
-        showSnackBar('errorMessage'.tr);
+        bool isSuccess = await vvm.addVisitors(
+            vvm.selectedCountry.toString(),
+            vvm.selectedState.toString(),
+            vvm.selectedCity.toString(),
+            vvm.selectedChapter.toString(),
+            vvm.selectedMeetingCode.toString(),
+            vvm.selectedMeeting.toString(),
+            vvm.dateController.text.toString(),
+            vvm.selectedBusinessCategory.toString(),
+            vvm.nameController.text.toString(),
+            vvm.emailController.text.toString(),
+            vvm.contactNumberController.text.toString(),
+            vvm.companyNameController.text.toString(),
+            globalCurrentUserData.uuid,
+            vvm.profileUrl.toString(),
+            vvm.uploadFrontVisitingCard.toString(),
+            vvm.uploadBackVisitingCard.toString());
+        if (isSuccess) {
+          Get.back(closeOverlays: true, canPop: true);
+          showSnackBar("visitor_added".tr, isError: false);
+        } else {
+          showSnackBar('errorMessage'.tr);
+        }
+      }
+    } finally {
+      _isSubmitting = false;
+      if (mounted) {
+        setState(() {});
       }
     }
   }
