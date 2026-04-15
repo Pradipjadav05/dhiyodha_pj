@@ -511,14 +511,16 @@ class HomeViewModel extends GetxController implements GetxService {
   }
 
   ReferralChildData _mapReferral(Map<String, dynamic> json) {
+    final String fullName = (json['fullName'] ?? '').toString().trim();
+    final List<String> nameParts =
+        fullName.isEmpty ? <String>[] : fullName.split(RegExp(r'\s+'));
+
     return ReferralChildData(
       uuid: json['userUuid'],
       referralTo: ReferralUser(
         uuid: json['userUuid'],
-        firstName: json['fullName']?.split(" ").first,
-        lastName: json['fullName']?.split(" ").length > 1
-            ? json['fullName']?.split(" ").last
-            : "",
+        firstName: nameParts.isNotEmpty ? nameParts.first : "",
+        lastName: nameParts.length > 1 ? nameParts.sublist(1).join(" ") : "",
         profileUrl: json['profileImage'],
       ),
       telephone: json['number'],
