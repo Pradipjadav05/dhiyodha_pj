@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dhiyodha/model/response_model/current_user_response_model.dart';
 import 'package:dhiyodha/model/response_model/response_model.dart';
 import 'package:dhiyodha/utils/resource/app_colors.dart';
@@ -16,7 +17,8 @@ import 'package:get/get.dart';
 class AddPostPage extends StatefulWidget {
   final CurrentUserData currentUserData;
 
-  const AddPostPage({Key? key, required this.currentUserData}) : super(key: key);
+  const AddPostPage({Key? key, required this.currentUserData})
+      : super(key: key);
 
   @override
   AddPostPageState createState() => AddPostPageState();
@@ -63,7 +65,8 @@ class AddPostPageState extends State<AddPostPage> {
                       mainAxisSize: MainAxisSize.max,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Image.asset(profileImage, width: 42.0, height: 42.0),
+                        _profileAvatar(widget.currentUserData.profileUrl),
+                        // Image.asset(profileImage, width: 42.0, height: 42.0),
                         const SizedBox(width: paddingSize10),
                         Expanded(
                           child: Text(
@@ -86,50 +89,50 @@ class AddPostPageState extends State<AddPostPage> {
                     const SizedBox(height: paddingSize5),
 
                     Obx(() => Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Radio(
-                          materialTapTargetSize:
-                          MaterialTapTargetSize.shrinkWrap,
-                          value: 1,
-                          groupValue: postVM.selectedRegionVal.value,
-                          onChanged: (int? value) {
-                            postVM.setSelectedRegionVal(value!);
-                            postVM.regionValue.value =
-                                'Chapter'.toUpperCase();
-                          },
-                          activeColor: bluishPurple,
-                        ),
-                        Text(
-                          'chapter'.tr,
-                          style: fontBold.copyWith(
-                              color: midnightBlue, fontSize: fontSize14),
-                        ),
-                      ],
-                    )),
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Radio(
+                              materialTapTargetSize:
+                                  MaterialTapTargetSize.shrinkWrap,
+                              value: 1,
+                              groupValue: postVM.selectedRegionVal.value,
+                              onChanged: (int? value) {
+                                postVM.setSelectedRegionVal(value!);
+                                postVM.regionValue.value =
+                                    'Chapter'.toUpperCase();
+                              },
+                              activeColor: bluishPurple,
+                            ),
+                            Text(
+                              'chapter'.tr,
+                              style: fontBold.copyWith(
+                                  color: midnightBlue, fontSize: fontSize14),
+                            ),
+                          ],
+                        )),
 
                     Obx(() => Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Radio(
-                          materialTapTargetSize:
-                          MaterialTapTargetSize.shrinkWrap,
-                          value: 2,
-                          groupValue: postVM.selectedRegionVal.value,
-                          onChanged: (int? value) {
-                            postVM.setSelectedRegionVal(value!);
-                            postVM.regionValue.value =
-                                'City_region'.toUpperCase();
-                          },
-                          activeColor: bluishPurple,
-                        ),
-                        Text(
-                          'city'.tr,
-                          style: fontBold.copyWith(
-                              color: midnightBlue, fontSize: fontSize14),
-                        ),
-                      ],
-                    )),
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Radio(
+                              materialTapTargetSize:
+                                  MaterialTapTargetSize.shrinkWrap,
+                              value: 2,
+                              groupValue: postVM.selectedRegionVal.value,
+                              onChanged: (int? value) {
+                                postVM.setSelectedRegionVal(value!);
+                                postVM.regionValue.value =
+                                    'City_region'.toUpperCase();
+                              },
+                              activeColor: bluishPurple,
+                            ),
+                            Text(
+                              'city'.tr,
+                              style: fontBold.copyWith(
+                                  color: midnightBlue, fontSize: fontSize14),
+                            ),
+                          ],
+                        )),
 
                     const SizedBox(height: paddingSize20),
 
@@ -166,30 +169,32 @@ class AddPostPageState extends State<AddPostPage> {
                     postVM.isLoading
                         ? const Center(child: CircularProgressIndicator())
                         : CommonButton(
-                      buttonText: 'upload'.tr,
-                      bgColor: midnightBlue,
-                      textColor: periwinkle,
-                      onPressed: () async {
-                        if (postVM.contentController.text.trim().isEmpty) {
-                          showSnackBar('enter_post_content'.tr);
-                        } else {
-                          ResponseModel resp = await postVM.addPost(
-                            postVM.contentController.text,
-                            postVM.regionValue.value,
-                            true,
-                          );
-                          if (resp.isSuccess) {
-                            showSnackBar(resp.message, isError: false);
-                            Get.back(
-                                result: true,
-                                canPop: true,
-                                closeOverlays: true);
-                          } else {
-                            showSnackBar('errorMessage'.tr);
-                          }
-                        }
-                      },
-                    ),
+                            buttonText: 'upload'.tr,
+                            bgColor: midnightBlue,
+                            textColor: periwinkle,
+                            onPressed: () async {
+                              if (postVM.contentController.text
+                                  .trim()
+                                  .isEmpty) {
+                                showSnackBar('enter_post_content'.tr);
+                              } else {
+                                ResponseModel resp = await postVM.addPost(
+                                  postVM.contentController.text,
+                                  postVM.regionValue.value,
+                                  true,
+                                );
+                                if (resp.isSuccess) {
+                                  showSnackBar(resp.message, isError: false);
+                                  Get.back(
+                                      result: true,
+                                      canPop: true,
+                                      closeOverlays: true);
+                                } else {
+                                  showSnackBar('errorMessage'.tr);
+                                }
+                              }
+                            },
+                          ),
 
                     const SizedBox(height: paddingSize20),
                   ],
@@ -202,22 +207,67 @@ class AddPostPageState extends State<AddPostPage> {
     );
   }
 
+  Widget _profileAvatar(String? profileUrl) {
+    return Container(
+      width: 42,
+      height: 42,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: Colors.white, width: 2.5),
+        boxShadow: [
+          BoxShadow(
+            color: midnightBlue.withOpacity(0.15),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: ClipOval(
+        child: profileUrl != null && profileUrl.isNotEmpty
+            ? CachedNetworkImage(
+                imageUrl: profileUrl,
+                width: 42,
+                height: 42,
+                fit: BoxFit.cover,
+                errorWidget: (context, url, error) => _avatarFallback(),
+              )
+            : _avatarFallback(),
+      ),
+    );
+  }
+
+  Widget _avatarFallback() {
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          colors: [midnightBlue, const Color(0xFF4A6FA5)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: ClipOval(
+        child: Icon(Icons.person, color: Colors.white),
+      ),
+    );
+  }
+
   // ────────────────────────────────────────────────────────────
   // Content box — multiline TextField at top, image preview below
   // Matches design: text flows above the selected image inside
   // a single rounded white card.
   // ────────────────────────────────────────────────────────────
   Widget _buildContentBox(PostsViewModel postVM) {
-    final bool hasImage = postVM.postImageFile != null &&
-        postVM.isImageUploadSuccess.isTrue;
+    final bool hasImage =
+        postVM.postImageFile != null && postVM.isImageUploadSuccess.isTrue;
 
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        // color: white,
-        // borderRadius: BorderRadius.circular(radius10),
-        // border: Border.all(color: greyText.withOpacity(0.25)),
-      ),
+          // color: white,
+          // borderRadius: BorderRadius.circular(radius10),
+          // border: Border.all(color: greyText.withOpacity(0.25)),
+          ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -227,15 +277,16 @@ class AddPostPageState extends State<AddPostPage> {
             child: TextField(
               controller: postVM.contentController,
               minLines: 1,
-              maxLines: null, // grows with content, no scroll cap
+              maxLines: null,
+              // grows with content, no scroll cap
               keyboardType: TextInputType.multiline,
               textInputAction: TextInputAction.newline,
               style: fontMedium.copyWith(
                   fontSize: fontSize14, color: midnightBlue),
               decoration: InputDecoration(
                 hintText: 'say_something_photo'.tr,
-                hintStyle: fontRegular.copyWith(
-                    fontSize: fontSize14, color: greyText),
+                hintStyle:
+                    fontRegular.copyWith(fontSize: fontSize14, color: greyText),
                 border: InputBorder.none,
                 enabledBorder: InputBorder.none,
                 focusedBorder: InputBorder.none,
@@ -339,8 +390,7 @@ class AddPostPageState extends State<AddPostPage> {
         borderRadius: BorderRadius.circular(8.0),
         child: Container(
           width: double.infinity,
-          padding: const EdgeInsets.symmetric(
-              horizontal: 14.0, vertical: 14.0),
+          padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 14.0),
           decoration: BoxDecoration(
             border: Border.all(color: midnightBlue),
             borderRadius: BorderRadius.circular(8.0),
