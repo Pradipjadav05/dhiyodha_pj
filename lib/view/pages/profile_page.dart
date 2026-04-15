@@ -365,6 +365,12 @@ class ProfilePageState extends State<ProfilePage> {
                   style: fontRegular.copyWith(
                       fontSize: fontSize12, color: periwinkle),
                 ),
+                const SizedBox(height: 4.0),
+                Text(
+                 "${ user.currentUserAddress?.city ?? ''} ${ user.currentUserAddress?.state ?? ''}",
+                  style: fontRegular.copyWith(
+                      fontSize: fontSize12, color: periwinkle),
+                ),
               ],
             ),
           ],
