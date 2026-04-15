@@ -376,7 +376,7 @@ class VisitorsViewModel extends GetxController implements GetxService {
         .toList();
     _teamWiseMeetingList.addAll(groupNames);
     // _selectedMeeting =  _teamWiseMeetingList[0].toString();
-    _teamWiseMeetingList.length;
+    // _teamWiseMeetingList.length;
   }
 
   void autoFillSelectedMeetingDate(String selectedMeetingName) {
@@ -597,16 +597,9 @@ class VisitorsViewModel extends GetxController implements GetxService {
       _groupChildData = [];
       response.body['data']['data'].forEach((order) {
         GroupChildData groups = GroupChildData.fromJson(order);
-        print("Chapter Meet -> ${order["uuid"]}");
         _groupChildData.add(groups);
+        _chapterList.add(groups.groupName ?? '');
       });
-      if (groupChildData.isNotEmpty) {
-        _chapterList.add("Select Chapter");
-        for (var childData in groupChildData) {
-          _chapterList.add(childData.groupName ?? "");
-        }
-        _selectedChapter = _chapterList[0];
-      }
     } else {
       ApiChecker.checkApi(response);
     }
