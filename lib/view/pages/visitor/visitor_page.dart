@@ -74,7 +74,7 @@ class VisitorPageState extends State<VisitorPage>
     return SafeArea(
       child: GetBuilder<VisitorsViewModel>(builder: (visitorVM) {
         return Scaffold(
-          backgroundColor: const Color(0xFFF4F6FB),
+          backgroundColor: pageBackground,
           appBar: widget.isAppBarRequired
               ? CommonAppBar(
                   title: Text(
@@ -154,7 +154,7 @@ class VisitorPageState extends State<VisitorPage>
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.person_add_alt_outlined,
-              size: 72, color: bluishPurple.withOpacity(0.18)),
+              size: 72, color: bluishPurple.withValues(alpha: 0.18)),
           const SizedBox(height: 14),
           Text(
             'no_visitors'.tr,
@@ -162,9 +162,9 @@ class VisitorPageState extends State<VisitorPage>
           ),
           const SizedBox(height: 6),
           Text(
-            'Tap + to add your first Visitor',
+            "tap_to_add_first_visitor".tr,
             style: fontRegular.copyWith(
-                color: greyText.withOpacity(0.7), fontSize: fontSize13),
+                color: greyText.withValues(alpha: 0.7), fontSize: fontSize13),
           ),
         ],
       ),
@@ -183,12 +183,12 @@ class VisitorPageState extends State<VisitorPage>
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF1E3A5F).withOpacity(0.08),
+                color: visitorAccent.withValues(alpha: 0.08),
             blurRadius: 16,
             offset: const Offset(0, 4),
           ),
         ],
-        border: Border.all(color: const Color(0xFFEAEEF8), width: 1),
+        border: Border.all(color: visitorCardBorder, width: 1),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(18),
@@ -205,7 +205,7 @@ class VisitorPageState extends State<VisitorPage>
                 bottomLeft: Radius.circular(isExpanded ? 0 : 18),
                 bottomRight: Radius.circular(isExpanded ? 0 : 18),
               ),
-              splashColor: lavenderMist.withOpacity(0.4),
+              splashColor: lavenderMist.withValues(alpha: 0.4),
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
@@ -272,7 +272,7 @@ class VisitorPageState extends State<VisitorPage>
         border: Border.all(color: Colors.white, width: 2.5),
         boxShadow: [
           BoxShadow(
-            color: midnightBlue.withOpacity(0.15),
+            color: midnightBlue.withValues(alpha: 0.15),
             blurRadius: 8,
             offset: const Offset(0, 3),
           ),
@@ -297,7 +297,7 @@ class VisitorPageState extends State<VisitorPage>
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         gradient: LinearGradient(
-          colors: [midnightBlue, const Color(0xFF4A6FA5)],
+          colors: [midnightBlue, visitorAccentSoft],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -313,16 +313,16 @@ class VisitorPageState extends State<VisitorPage>
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFFE8F0FE), Color(0xFFD6E4FF)],
+          colors: [visitorSoftStart, visitorSoftEnd],
         ),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: midnightBlue.withOpacity(0.12)),
+        border: Border.all(color: midnightBlue.withValues(alpha: 0.12)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(Icons.work_outline_rounded,
-              size: 13, color: midnightBlue.withOpacity(0.7)),
+              size: 13, color: midnightBlue.withValues(alpha: 0.7)),
           const SizedBox(width: 4),
           Text(
             title.isNotEmpty ? title : '',
@@ -336,10 +336,10 @@ class VisitorPageState extends State<VisitorPage>
   Widget _expandedDetails(VisitorChildData data) {
     return Column(
       children: [
-        const Divider(height: 1, thickness: 1, color: Color(0xFFEAEEF8)),
+        const Divider(height: 1, thickness: 1, color: visitorCardBorder),
         _detailRow(
           assetPath: meeting,
-          label: 'Meeting Chapter Name',
+          label: "meeting_chapter_name".tr,
           value: data.chapterName?.toString() ?? '—',
         ),
         _detailRow(
@@ -375,16 +375,16 @@ class VisitorPageState extends State<VisitorPage>
             width: double.infinity,
             child: DecoratedBox(
               decoration: BoxDecoration(
-                color: const Color(0xFF101E57),
+                color: brandNavy,
                 borderRadius: BorderRadius.circular(14),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFF6F42E8).withValues(alpha: 0.35),
+                    color: scannerPurple.withValues(alpha: 0.35),
                     blurRadius: 0,
                     offset: const Offset(0, 4),
                   ),
                   BoxShadow(
-                    color: const Color(0xFF101E57).withValues(alpha: 0.28),
+                    color: brandNavy.withValues(alpha: 0.28),
                     blurRadius: 16,
                     offset: const Offset(0, 8),
                   ),
@@ -449,7 +449,7 @@ class VisitorPageState extends State<VisitorPage>
                       width: 28,
                       height: 28,
                       decoration: BoxDecoration(
-                        color: const Color(0xFF8A5CF6),
+                        color: scannerPurple,
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: const Icon(
@@ -534,7 +534,7 @@ class VisitorPageState extends State<VisitorPage>
                         ),
                       ),
                       Icon(Icons.open_in_new_rounded,
-                          size: 14, color: midnightBlue.withOpacity(0.4)),
+                          size: 14, color: midnightBlue.withValues(alpha: 0.4)),
                     ],
                   ),
                 ],
@@ -551,7 +551,7 @@ class VisitorPageState extends State<VisitorPage>
       width: 34,
       height: 34,
       decoration: BoxDecoration(
-        color: bluishPurple.withOpacity(0.08),
+        color: bluishPurple.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(9),
       ),
       child: Center(
@@ -592,7 +592,7 @@ class VisitorPageState extends State<VisitorPage>
   }
 
   Widget _divider() =>
-      const Divider(height: 1, thickness: 1, color: Color(0xFFF0F3FA));
+      const Divider(height: 1, thickness: 1, color: screenDivider);
 
   _ScannedAttendanceLocation? _parseScannedAttendanceLocation(String rawValue) {
     try {

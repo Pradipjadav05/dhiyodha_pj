@@ -113,6 +113,7 @@ const String deleteVisitorsUrl = baseUrl + 'api/visitors/';
 const String addVisitorsUrl = baseUrl + 'api/visitors/create';
 const String editVisitorUrl = baseUrl + 'api/visitors/';
 const String getVisitorByIdUrl = baseUrl + 'api/visitors/';
+const String visitorAttendanceUrl = baseUrl + 'api/visitors/attendance';
 
 /** TESTIMONIAL APIs*/
 const String testimonialListUrl = baseUrl + 'api/testimonials';

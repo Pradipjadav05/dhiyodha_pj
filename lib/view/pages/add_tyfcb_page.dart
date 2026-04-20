@@ -376,7 +376,7 @@ class AddTyPageState extends State<AddTyPage> {
           Get.back(result: true, canPop: true, closeOverlays: true);
           showSnackBar(resp.message, isError: false);
         } else {
-          showSnackBar('errorMessage'.tr);
+          showSnackBar("errorMessage".tr);
         }
       }
     } finally {

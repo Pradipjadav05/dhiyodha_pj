@@ -17,7 +17,7 @@ void showSnackBar(String? message, {bool isError = true}) {
       content: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          color: isError ? Colors.redAccent : Colors.green,
+          color: isError ? dangerRed : successGreen,
         ),
 
           // margin: const EdgeInsets.all(16),

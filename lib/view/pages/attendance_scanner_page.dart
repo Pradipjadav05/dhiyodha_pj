@@ -1,3 +1,4 @@
+import 'package:dhiyodha/utils/resource/app_colors.dart';
 import 'package:dhiyodha/utils/resource/app_dimensions.dart';
 import 'package:dhiyodha/utils/resource/app_font_size.dart';
 import 'package:flutter/material.dart';
@@ -105,7 +106,7 @@ class _AttendanceScannerPageState extends State<AttendanceScannerPage> {
                       width: 42,
                       height: 42,
                       decoration: BoxDecoration(
-                        color: const Color(0xFF8557F7),
+                        color: scannerPurple,
                         borderRadius: BorderRadius.circular(21),
                       ),
                       child: const Icon(
@@ -137,7 +138,7 @@ class _AttendanceScannerPageState extends State<AttendanceScannerPage> {
                     Container(
                       width: 210,
                       height: 2.5,
-                      color: const Color(0xFF8557F7),
+                      color: scannerPurple,
                     ),
                   ],
                 ),
@@ -148,7 +149,7 @@ class _AttendanceScannerPageState extends State<AttendanceScannerPage> {
               right: 24,
               bottom: 58,
               child: Text(
-                'align_qr_code_inside_frame'.tr,
+                "align_qr_code_inside_frame".tr,
                 textAlign: TextAlign.center,
                 style: fontRegular.copyWith(
                   color: Colors.white.withValues(alpha: 0.92),
@@ -179,7 +180,7 @@ class _ScannerCorner extends StatelessWidget {
       height: 54,
       child: CustomPaint(
         painter: _ScannerCornerPainter(
-          color: const Color(0xFF8557F7),
+          color: scannerPurple,
           top: top,
           left: left,
         ),

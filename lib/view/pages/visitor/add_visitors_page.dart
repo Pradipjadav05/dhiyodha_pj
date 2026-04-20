@@ -121,7 +121,7 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
 
                 SizedBox(height: paddingSize25),
                 _autocompleteField(
-                  label: 'Select Meeting'.tr,
+                  label: "select_meeting".tr,
                   icon: Icons.groups_outlined,
                   controller: _teamWiseMeetingController,
                   options: vvm.teamWiseMeetingList
@@ -150,10 +150,10 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
                 //     widget.onStateChanged();
                 //   },
                 // ),
-                CommonTextFormField(
+                  CommonTextFormField(
                   // isEnabled: false,
                   controller: vvm.dateController,
-                  hintText: "select_date".tr,
+                  hintText: "enter_date".tr,
                   hintColor: midnightBlue,
                   bgColor: white,
                   textStyle: fontRegular.copyWith(
@@ -267,7 +267,7 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
                   },
                   child: CommonTextFormField(
                     isEnabled: false,
-                    hintText: "upload_visiting_card".tr + " Front",
+                    hintText: "${"upload_visiting_card".tr} ${"front".tr}",
                     bgColor: white,
                     hintColor: bluishPurple,
                     textStyle: fontRegular.copyWith(
@@ -302,7 +302,7 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
                   },
                   child: CommonTextFormField(
                     isEnabled: false,
-                    hintText: "upload_visiting_card".tr + " Back",
+                    hintText: "${"upload_visiting_card".tr} ${"back".tr}",
                     hintColor: midnightBlue,
                     bgColor: white,
                     textStyle: fontRegular.copyWith(
@@ -362,7 +362,7 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
                 ),
                 SizedBox(height: paddingSize25),
                 CommonButton(
-                        buttonText: "confirm".tr,
+                  buttonText: "confirm".tr,
                         bgColor: bluishPurple,
                         textColor: periwinkle,
                         onPressed: isBusy
@@ -480,34 +480,34 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
     try {
       if (vvm.selectedCountry.isEmpty ||
           vvm.selectedCountry == vvm.countryList[0]) {
-        showSnackBar("select_country".tr);
-      } else if (vvm.selectedState.isEmpty ||
-          vvm.selectedState == vvm.stateList[0]) {
-        showSnackBar("select_state".tr);
-      } else if (vvm.selectedCity.isEmpty ||
-          vvm.selectedCity == vvm.cityList[0]) {
-        showSnackBar("select_city".tr);
-      } else if (vvm.selectedChapter.isEmpty) {
-        showSnackBar("select_chapter".tr);
-      } else if (vvm.selectedMeeting.isEmpty) {
-        showSnackBar("select_meeting".tr);
-      } else if (vvm.dateController.text.isEmpty) {
-        showSnackBar("enter_date".tr);
-      } else if (vvm.selectedBusinessCategory.isEmpty ||
-          vvm.selectedBusinessCategory == vvm.chapterList[0]) {
-        showSnackBar("select_business_category".tr);
-      } else if (vvm.nameController.text.isEmpty) {
-        showSnackBar("enter_name".tr);
-      } else if (vvm.emailController.text.isEmpty) {
-        showSnackBar("enter_email".tr);
-      } else if (vvm.contactNumberController.text.isEmpty) {
-        showSnackBar("enter_contact_no".tr);
-      } else if (vvm.companyNameController.text.isEmpty) {
-        showSnackBar("enter_cmp_name".tr);
-      } else if (!vvm.isAgreeTerms.value) {
-        showSnackBar("agree_terms".tr);
-      } else if (!vvm.isImageUploadSuccess.value) {
-        showSnackBar("upload_photo".tr);
+      showSnackBar("select_country".tr);
+    } else if (vvm.selectedState.isEmpty ||
+        vvm.selectedState == vvm.stateList[0]) {
+      showSnackBar("select_state".tr);
+    } else if (vvm.selectedCity.isEmpty ||
+        vvm.selectedCity == vvm.cityList[0]) {
+      showSnackBar("select_city".tr);
+    } else if (vvm.selectedChapter.isEmpty) {
+      showSnackBar("select_chapter".tr);
+    } else if (vvm.selectedMeeting.isEmpty) {
+      showSnackBar("select_meeting".tr);
+    } else if (vvm.dateController.text.isEmpty) {
+      showSnackBar("enter_date".tr);
+    } else if (vvm.selectedBusinessCategory.isEmpty ||
+        vvm.selectedBusinessCategory == vvm.chapterList[0]) {
+      showSnackBar("select_business_category".tr);
+    } else if (vvm.nameController.text.isEmpty) {
+      showSnackBar("enter_name".tr);
+    } else if (vvm.emailController.text.isEmpty) {
+      showSnackBar("enter_email".tr);
+    } else if (vvm.contactNumberController.text.isEmpty) {
+      showSnackBar("enter_contact_no".tr);
+    } else if (vvm.companyNameController.text.isEmpty) {
+      showSnackBar("enter_cmp_name".tr);
+    } else if (!vvm.isAgreeTerms.value) {
+      showSnackBar("agree_terms".tr);
+    } else if (!vvm.isImageUploadSuccess.value) {
+      showSnackBar("upload_photo".tr);
       } else {
         bool isSuccess = await vvm.addVisitors(
             vvm.selectedCountry.toString(),
@@ -528,10 +528,10 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
             vvm.uploadBackVisitingCard.toString());
         if (isSuccess) {
           Get.back(closeOverlays: true, canPop: true);
-          showSnackBar("visitor_added".tr, isError: false);
-        } else {
-          showSnackBar('errorMessage'.tr);
-        }
+        showSnackBar("visitor_added".tr, isError: false);
+      } else {
+        showSnackBar("errorMessage".tr);
+      }
       }
     } finally {
       _isSubmitting = false;
@@ -577,15 +577,14 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
               color: white,
               borderRadius: BorderRadius.circular(14),
               border: Border.all(
-                color:
-                    focusNode.hasFocus ? bluishPurple : const Color(0xFFE3E8F4),
+                color: focusNode.hasFocus ? bluishPurple : inputBorder,
                 width: focusNode.hasFocus ? 1.8 : 1.5,
               ),
               boxShadow: [
                 BoxShadow(
                   color: focusNode.hasFocus
-                      ? bluishPurple.withOpacity(0.1)
-                      : const Color(0xFF1E3A5F).withOpacity(0.05),
+                      ? bluishPurple.withValues(alpha: 0.1)
+                      : visitorAccent.withValues(alpha: 0.05),
                   blurRadius: focusNode.hasFocus ? 12 : 8,
                   offset: const Offset(0, 3),
                 ),
@@ -597,7 +596,7 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
                 Icon(icon,
                     color: focusNode.hasFocus
                         ? bluishPurple
-                        : bluishPurple.withOpacity(0.45),
+                        : bluishPurple.withValues(alpha: 0.45),
                     size: 20),
                 const SizedBox(width: 10),
                 Expanded(
@@ -609,7 +608,7 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
                     decoration: InputDecoration(
                       hintText: label,
                       hintStyle: fontRegular.copyWith(
-                          color: midnightBlue.withOpacity(0.4),
+                          color: midnightBlue.withValues(alpha: 0.4),
                           fontSize: fontSize14),
                       border: InputBorder.none,
                       enabledBorder: InputBorder.none,
@@ -626,7 +625,7 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
                     duration: const Duration(milliseconds: 200),
                     child: Icon(
                       Icons.keyboard_arrow_down_rounded,
-                      color: bluishPurple.withOpacity(0.6),
+                      color: bluishPurple.withValues(alpha: 0.6),
                       size: 22,
                     ),
                   ),
@@ -651,10 +650,10 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
               decoration: BoxDecoration(
                 color: white,
                 borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: const Color(0xFFE3E8F4), width: 1.5),
+                border: Border.all(color: inputBorder, width: 1.5),
                 boxShadow: [
                   BoxShadow(
-                    color: bluishPurple.withOpacity(0.1),
+                    color: bluishPurple.withValues(alpha: 0.1),
                     blurRadius: 20,
                     offset: const Offset(0, 8),
                   ),
@@ -669,7 +668,7 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
                   itemCount: options.length,
                   separatorBuilder: (_, __) => Divider(
                     height: 1,
-                    color: const Color(0xFFEAEEF8),
+                    color: visitorCardBorder,
                   ),
                   itemBuilder: (BuildContext context, int index) {
                     final String option = options.elementAt(index);
@@ -688,7 +687,7 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
                               ),
                             ),
                             Icon(Icons.check_rounded,
-                                size: 16, color: bluishPurple.withOpacity(0.3)),
+                                size: 16, color: bluishPurple.withValues(alpha: 0.3)),
                           ],
                         ),
                       ),
