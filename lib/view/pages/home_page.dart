@@ -1506,72 +1506,69 @@ class HomePageState extends State<HomePage> {
               );
             }
           },
-          child: Hero(
-            tag: i.url ?? "",
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(18),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.15),
-                    blurRadius: 10,
-                    offset: const Offset(0, 5),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(18),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.15),
+                  blurRadius: 10,
+                  offset: const Offset(0, 5),
+                ),
+              ],
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(18),
+              child: Stack(
+                children: [
+                  /// Image
+                  Positioned.fill(
+                    child: CachedNetworkImage(
+                      imageUrl: i.url ?? "",
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => Container(
+                        color: Colors.grey.shade200,
+                        child: const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.image_not_supported),
+                    ),
+                  ),
+
+                  /// Gradient
+                  Positioned.fill(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Colors.black.withOpacity(0.6),
+                            Colors.transparent,
+                          ],
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  /// Title
+                  Positioned(
+                    left: 16,
+                    bottom: 16,
+                    right: 16,
+                    child: Text(
+                      i.fileName ?? "",
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: fontBold.copyWith(
+                        color: Colors.white,
+                        fontSize: fontSize16,
+                      ),
+                    ),
                   ),
                 ],
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(18),
-                child: Stack(
-                  children: [
-                    /// Image
-                    Positioned.fill(
-                      child: CachedNetworkImage(
-                        imageUrl: i.url ?? "",
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) => Container(
-                          color: Colors.grey.shade200,
-                          child: const Center(
-                            child: CircularProgressIndicator(),
-                          ),
-                        ),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.image_not_supported),
-                      ),
-                    ),
-
-                    /// Gradient
-                    Positioned.fill(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              Colors.black.withOpacity(0.6),
-                              Colors.transparent,
-                            ],
-                            begin: Alignment.bottomCenter,
-                            end: Alignment.topCenter,
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    /// Title
-                    Positioned(
-                      left: 16,
-                      bottom: 16,
-                      right: 16,
-                      child: Text(
-                        i.fileName ?? "",
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: fontBold.copyWith(
-                          color: Colors.white,
-                          fontSize: fontSize16,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
               ),
             ),
           ),
@@ -1580,7 +1577,11 @@ class HomePageState extends State<HomePage> {
     );
   }
 
-  void _openBannerViewer(BuildContext context, String imageUrl, String title) {
+  void _openBannerViewer(
+    BuildContext context,
+    String imageUrl,
+    String title,
+  ) {
     Navigator.of(context).push(
       PageRouteBuilder(
         opaque: false,
@@ -2849,18 +2850,15 @@ class _FullScreenBannerView extends StatelessWidget {
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          Hero(
-            tag: imageUrl,
-            child: PhotoView(
-              imageProvider: NetworkImage(imageUrl),
-              minScale: PhotoViewComputedScale.contained,
-              maxScale: PhotoViewComputedScale.covered * 3,
-              backgroundDecoration: const BoxDecoration(
-                color: Colors.black,
-              ),
-              loadingBuilder: (context, event) => const Center(
-                child: CircularProgressIndicator(),
-              ),
+          PhotoView(
+            imageProvider: NetworkImage(imageUrl),
+            minScale: PhotoViewComputedScale.contained,
+            maxScale: PhotoViewComputedScale.covered * 3,
+            backgroundDecoration: const BoxDecoration(
+              color: Colors.black,
+            ),
+            loadingBuilder: (context, event) => const Center(
+              child: CircularProgressIndicator(),
             ),
           ),
           Positioned(

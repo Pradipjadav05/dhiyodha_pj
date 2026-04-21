@@ -20,7 +20,7 @@ class TestimonialPageState extends State<TestimonialPage> {
 
   final RxBool isSenderTab = true.obs;
 
-  late TestimonialViewModel testimonialVM;
+  final TestimonialViewModel testimonialVM = Get.find<TestimonialViewModel>();
   @override
   void initState() {
     super.initState();
@@ -29,7 +29,6 @@ class TestimonialPageState extends State<TestimonialPage> {
 
   Future<void> initData() async {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      testimonialVM = Get.find<TestimonialViewModel>();
       testimonialVM.initData();
 
       getTestimonialData();
