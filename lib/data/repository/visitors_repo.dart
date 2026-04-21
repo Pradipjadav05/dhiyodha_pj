@@ -109,6 +109,7 @@ class VisitorsRepo {
   }
 
   Future<Response> markVisitorAttendance({
+    required String qrToken,
     required String visitorUuid,
     required double latitude,
     required double longitude,
@@ -116,6 +117,7 @@ class VisitorsRepo {
     return await apiClient.postData(
       visitorAttendanceUrl,
       {
+        "qrToken": qrToken,
         "visitorUuid": visitorUuid,
         "latitude": latitude,
         "longitude": longitude,

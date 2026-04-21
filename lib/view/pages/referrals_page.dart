@@ -225,7 +225,7 @@ class ReferralsPageState extends State<ReferralsPage> {
                     const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                 child: Row(
                   children: [
-                    _profileAvatar(data.referralTo?.profileUrl),
+                    _profileAvatar(data.referralTo?.profileUrl ?? ""),
                     const SizedBox(width: 14),
                     Expanded(
                       child: Column(

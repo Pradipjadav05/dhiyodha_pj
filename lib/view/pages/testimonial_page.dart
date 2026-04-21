@@ -179,7 +179,7 @@ class TestimonialPageState extends State<TestimonialPage> {
             }
           });
         },
-        leading: _profileAvatar(data.reviewerPofileUrl),
+        leading: _profileAvatar(data.reviewerPofileUrl ?? ""),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

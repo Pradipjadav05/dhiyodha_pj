@@ -65,7 +65,7 @@ class AddPostPageState extends State<AddPostPage> {
                       mainAxisSize: MainAxisSize.max,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        _profileAvatar(widget.currentUserData.profileUrl),
+                        _profileAvatar(widget.currentUserData.profileUrl ?? ""),
                         // Image.asset(profileImage, width: 42.0, height: 42.0),
                         const SizedBox(width: paddingSize10),
                         Expanded(

@@ -130,7 +130,8 @@ class HomePageState extends State<HomePage> {
                                     ClipRRect(
                                       borderRadius: BorderRadius.circular(50),
                                       child: _profileAvatar(
-                                          homeVM.currentUserData.profileUrl!, size: 68.0),
+                                          homeVM.currentUserData.profileUrl ?? '',
+                                          size: 68.0),
                                     ),
                                     Text(
                                       '${homeVM.currentUserData.firstName} ${homeVM.currentUserData.lastName}',

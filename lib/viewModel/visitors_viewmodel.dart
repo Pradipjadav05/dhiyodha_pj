@@ -716,6 +716,7 @@ class VisitorsViewModel extends GetxController implements GetxService {
   }
 
   Future<bool> markVisitorAttendance({
+    required String qrToken,
     required String visitorUuid,
     required double latitude,
     required double longitude,
@@ -725,6 +726,7 @@ class VisitorsViewModel extends GetxController implements GetxService {
 
     try {
       final Response response = await visitorsRepo.markVisitorAttendance(
+        qrToken: qrToken,
         visitorUuid: visitorUuid,
         latitude: latitude,
         longitude: longitude,
@@ -760,8 +762,7 @@ class VisitorsViewModel extends GetxController implements GetxService {
     if (weekly['visitors'] != null) {
       for (var v in weekly['visitors']['list']) {
         _visitorData.add(VisitorChildData(
-          // todo: uuId not getting from API
-          uuId: v['uuId'],
+          uuId: v['visitorUuid'],
           name: v['fullName'],
           designation: v['designation'],
           profileUrl: v['profileImage'],

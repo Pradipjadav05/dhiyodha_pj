@@ -297,7 +297,7 @@ class ProfilePageState extends State<ProfilePage> {
                             width: 68.0,
                             fit: BoxFit.cover,
                           )
-                        : _profileAvatar(user.profileUrl, size: 68.0),
+                        : _profileAvatar(user.profileUrl ?? "", size: 68.0),
                   ),
                   Positioned(
                     left: 44,

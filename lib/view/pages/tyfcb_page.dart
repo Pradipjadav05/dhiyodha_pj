@@ -264,7 +264,7 @@ class TyfcbPageState extends State<TyfcbPage>
                 child: Row(
                   children: [
                     // ── Circular profile image ──
-                    _profileAvatar(profileUrl),
+                    _profileAvatar(profileUrl ?? ""),
                     const SizedBox(width: 14),
 
                     // ── Name + gift amount ──

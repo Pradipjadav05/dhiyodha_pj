@@ -228,7 +228,7 @@ class AsksListPageState extends State<AsksListPage> {
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _profileAvatar(item.profileUrl),
+                  _profileAvatar(item.profileUrl ?? ""),
                   SizedBox(width: paddingSize10),
                   Expanded(
                     child: Row(

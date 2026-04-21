@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dhiyodha/model/response_model/visitor_response_model.dart';
 import 'package:dhiyodha/utils/helper/routes.dart';
@@ -12,6 +10,7 @@ import 'package:dhiyodha/view/widgets/common_app_bar.dart';
 import 'package:dhiyodha/view/widgets/attendance_success_dialog.dart';
 import 'package:dhiyodha/viewModel/visitors_viewmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:loadmore/loadmore.dart';
 
@@ -36,6 +35,7 @@ class VisitorPageState extends State<VisitorPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _animController;
   late Animation<double> _fadeAnim;
+  final RxBool _isMarkingAttendance = false.obs;
 
   final Map<int, bool> _expandedMap = {};
 
@@ -67,65 +67,6 @@ class VisitorPageState extends State<VisitorPage>
   void dispose() {
     _animController.dispose();
     super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: GetBuilder<VisitorsViewModel>(builder: (visitorVM) {
-        return Scaffold(
-          backgroundColor: pageBackground,
-          appBar: widget.isAppBarRequired
-              ? CommonAppBar(
-                  title: Text(
-                    "visitors".tr,
-                    style: fontBold.copyWith(
-                      fontSize: fontSize18,
-                      color: Theme.of(context).textTheme.bodyLarge!.color,
-                    ),
-                  ),
-                )
-              : null,
-          floatingActionButton: _buildFAB(visitorVM),
-          body: FadeTransition(
-            opacity: _fadeAnim,
-            child: Column(
-              children: [
-                // Loading bar
-                if (visitorVM.isLoading)
-                  LinearProgressIndicator(
-                    color: midnightBlue,
-                    backgroundColor: lavenderMist,
-                    minHeight: 3,
-                    borderRadius: BorderRadius.circular(radius20),
-                  ),
-
-                visitorVM.visitorData.isNotEmpty
-                    ? Expanded(
-                        child: LoadMore(
-                          isFinish: visitorVM.page.value ==
-                              visitorVM.totalPages.value,
-                          whenEmptyLoad: true,
-                          delegate: const DefaultLoadMoreDelegate(),
-                          textBuilder: DefaultLoadMoreTextBuilder.english,
-                          onLoadMore: visitorVM.loadMore,
-                          child: ListView.builder(
-                            physics: const BouncingScrollPhysics(),
-                            padding: const EdgeInsets.fromLTRB(16, 12, 16, 100),
-                            itemCount: visitorVM.visitorData.length,
-                            itemBuilder: (context, index) {
-                              return _visitorCard(index, visitorVM);
-                            },
-                          ),
-                        ),
-                      )
-                    : Expanded(child: _buildEmptyState()),
-              ],
-            ),
-          ),
-        );
-      }),
-    );
   }
 
   Widget _buildFAB(VisitorsViewModel visitorVM) {
@@ -212,7 +153,7 @@ class VisitorPageState extends State<VisitorPage>
                 child: Row(
                   children: [
                     // ── Circular profile image ──
-                    _profileAvatar(profileUrl),
+                    _profileAvatar(profileUrl ?? ""),
                     const SizedBox(width: 14),
 
                     // ── Name + title badge ──
@@ -370,7 +311,7 @@ class VisitorPageState extends State<VisitorPage>
         ),
         _divider(),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          padding: const EdgeInsets.symmetric(horizontal: 8.0,),
           child: SizedBox(
             width: double.infinity,
             child: DecoratedBox(
@@ -397,60 +338,76 @@ class VisitorPageState extends State<VisitorPage>
                   backgroundColor: Colors.transparent,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,
-                    vertical: 14,
+                    vertical: 12,
                   ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(14),
                   ),
                 ),
                 onPressed: () async {
+                  if (_isMarkingAttendance.value) {
+                    return;
+                  }
+
                   final String visitorUuid = (data.uuId ?? '').trim();
                   if (visitorUuid.isEmpty) {
                     showSnackBar("visitor_uuid_not_found".tr);
                     return;
                   }
 
-                  final String? scannedValue = await Get.to<String>(
-                    () => const AttendanceScannerPage(),
-                  );
+                  _isMarkingAttendance.value = true;
 
-                  if (scannedValue == null || scannedValue.isEmpty) {
-                    return;
+                  try {
+                    final String? scannedValue = await Get.to<String>(
+                      () => const AttendanceScannerPage(),
+                    );
+
+                    if (scannedValue == null || scannedValue.isEmpty) {
+                      showSnackBar("scan_qr_code_message".tr);
+                      return;
+                    }
+
+                    final String? qrToken = _extractQrToken(scannedValue);
+                    if (qrToken == null || qrToken.isEmpty) {
+                      showSnackBar("invalid_qr_message".tr);
+                      return;
+                    }
+
+                    final Position? currentPosition =
+                        await _getCurrentPosition();
+                    if (currentPosition == null) {
+                      return;
+                    }
+
+                    final bool isMarked =
+                        await Get.find<VisitorsViewModel>().markVisitorAttendance(
+                      qrToken: qrToken,
+                      visitorUuid: visitorUuid,
+                      latitude: currentPosition.latitude,
+                      longitude: currentPosition.longitude,
+                    );
+
+                    if (!mounted || !isMarked) {
+                      return;
+                    }
+
+                    await showAttendanceSuccessDialog(
+                      context,
+                      visitorName: data.name,
+                    );
+                  } finally {
+                    _isMarkingAttendance.value = false;
                   }
-
-                  final _ScannedAttendanceLocation? scannedLocation =
-                      _parseScannedAttendanceLocation(scannedValue);
-
-                  if (scannedLocation == null) {
-                    showSnackBar("invalid_qr_message".tr);
-                    return;
-                  }
-
-                  final bool isMarked =
-                      await Get.find<VisitorsViewModel>().markVisitorAttendance(
-                    visitorUuid: visitorUuid,
-                    latitude: scannedLocation.latitude,
-                    longitude: scannedLocation.longitude,
-                  );
-
-                  if (!mounted || !isMarked) {
-                    return;
-                  }
-
-                  await showAttendanceSuccessDialog(
-                    context,
-                    visitorName: data.name,
-                  );
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      width: 28,
-                      height: 28,
+                      width: 20,
+                      height: 20,
                       decoration: BoxDecoration(
                         color: scannerPurple,
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(4),
                       ),
                       child: const Icon(
                         Icons.check_rounded,
@@ -594,37 +551,104 @@ class VisitorPageState extends State<VisitorPage>
   Widget _divider() =>
       const Divider(height: 1, thickness: 1, color: screenDivider);
 
-  _ScannedAttendanceLocation? _parseScannedAttendanceLocation(String rawValue) {
-    try {
-      final dynamic decoded = jsonDecode(rawValue);
+  String? _extractQrToken(String rawValue) {
+    final RegExpMatch? match =
+        RegExp(r'token=([A-Za-z0-9-]+)').firstMatch(rawValue.trim());
+    return match?.group(1);
+  }
 
-      if (decoded is! Map<String, dynamic>) {
-        return null;
-      }
+  Future<Position?> _getCurrentPosition() async {
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
 
-      final double? latitude = (decoded['latitude'] as num?)?.toDouble();
-      final double? longitude = (decoded['longitude'] as num?)?.toDouble();
-
-      if (latitude == null || longitude == null) {
-        return null;
-      }
-
-      return _ScannedAttendanceLocation(
-        latitude: latitude,
-        longitude: longitude,
-      );
-    } catch (_) {
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
+      showSnackBar("Location permission denied");
       return null;
     }
+
+    return Geolocator.getCurrentPosition(
+      locationSettings:
+          const LocationSettings(accuracy: LocationAccuracy.high),
+    );
   }
-}
 
-class _ScannedAttendanceLocation {
-  final double latitude;
-  final double longitude;
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: GetBuilder<VisitorsViewModel>(builder: (visitorVM) {
+        return Obx(() {
+          final bool isBusy =
+              _isMarkingAttendance.value || visitorVM.isLoading;
 
-  const _ScannedAttendanceLocation({
-    required this.latitude,
-    required this.longitude,
-  });
+          return Scaffold(
+            backgroundColor: pageBackground,
+            appBar: widget.isAppBarRequired
+                ? CommonAppBar(
+                    title: Text(
+                      "visitors".tr,
+                      style: fontBold.copyWith(
+                        fontSize: fontSize18,
+                        color: Theme.of(context).textTheme.bodyLarge!.color,
+                      ),
+                    ),
+                  )
+                : null,
+            floatingActionButton: _buildFAB(visitorVM),
+            body: Stack(
+              children: [
+                FadeTransition(
+                  opacity: _fadeAnim,
+                  child: Column(
+                    children: [
+                      if (visitorVM.isLoading)
+                        LinearProgressIndicator(
+                          color: midnightBlue,
+                          backgroundColor: lavenderMist,
+                          minHeight: 3,
+                          borderRadius: BorderRadius.circular(radius20),
+                        ),
+
+                      visitorVM.visitorData.isNotEmpty
+                          ? Expanded(
+                              child: LoadMore(
+                                isFinish: visitorVM.page.value ==
+                                    visitorVM.totalPages.value,
+                                whenEmptyLoad: true,
+                                delegate: const DefaultLoadMoreDelegate(),
+                                textBuilder: DefaultLoadMoreTextBuilder.english,
+                                onLoadMore: visitorVM.loadMore,
+                                child: ListView.builder(
+                                  physics: const BouncingScrollPhysics(),
+                                  padding: const EdgeInsets.fromLTRB(
+                                      16, 12, 16, 100),
+                                  itemCount: visitorVM.visitorData.length,
+                                  itemBuilder: (context, index) {
+                                    return _visitorCard(index, visitorVM);
+                                  },
+                                ),
+                              ),
+                            )
+                          : Expanded(child: _buildEmptyState()),
+                    ],
+                  ),
+                ),
+                if (isBusy)
+                  Positioned.fill(
+                    child: ColoredBox(
+                      color: Colors.black.withValues(alpha: 0.16),
+                      child: const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          );
+        });
+      }),
+    );
+  }
 }
