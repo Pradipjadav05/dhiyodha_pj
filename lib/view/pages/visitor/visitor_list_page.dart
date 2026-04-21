@@ -23,7 +23,7 @@ class _ListVisitorsPageState extends State<ListVisitorsPage> {
   VisitorsViewModel get vvm => widget.visitorsViewModel;
 
   // Track which item is expanded (-1 means none)
-  int expandedIndex = -1;
+  final RxInt expandedIndex = (-1).obs;
 
   // Sample data for testing - replace with actual data later
   final List<String> sampleVisitors = [
@@ -68,91 +68,92 @@ class _ListVisitorsPageState extends State<ListVisitorsPage> {
                   itemCount: sampleVisitors.length,
                   itemBuilder: (context, index) {
                     final visitorName = sampleVisitors[index];
-                    final isExpanded = expandedIndex == index;
+                    return Obx(() {
+                      final isExpanded = expandedIndex.value == index;
 
-                    return Container(
-                      margin: const EdgeInsets.only(bottom: paddingSize10),
-                      decoration: BoxDecoration(
-                        color: white,
-                        borderRadius: BorderRadius.circular(radius10),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withValues(alpha: 0.1),
-                            spreadRadius: 1,
-                            blurRadius: 5,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        children: [
-                          ListTile(
-                            contentPadding: const EdgeInsets.symmetric(
-                                horizontal: paddingSize15, vertical: paddingSize10),
-                            leading: CircleAvatar(
-                              backgroundColor: midnightBlue.withValues(alpha: 0.1),
-                              radius: 25,
-                              child: Text(
-                                visitorName[0].toUpperCase(),
-                                style: fontBold.copyWith(
-                                    color: midnightBlue, fontSize: fontSize18),
-                              ),
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: paddingSize10),
+                        decoration: BoxDecoration(
+                          color: white,
+                          borderRadius: BorderRadius.circular(radius10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withValues(alpha: 0.1),
+                              spreadRadius: 1,
+                              blurRadius: 5,
+                              offset: const Offset(0, 2),
                             ),
-                            title: Text(
-                              visitorName,
-                              style: fontMedium.copyWith(
-                                  color: midnightBlue, fontSize: fontSize16),
-                            ),
-                            subtitle: Text(
-                              visitorName,
-                              style: fontMedium.copyWith(
-                                  color: greyText, fontSize: fontSize14),
-                            ),
-                            trailing: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                IconButton(
-                                  onPressed: () {
-                                    // Call action
-                                  },
-                                  icon: Icon(Icons.call,
-                                      color: Colors.green, size: iconSize22),
-                                ),
-                                IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      if (expandedIndex == index) {
-                                        expandedIndex = -1; // Collapse
-                                      } else {
-                                        expandedIndex = index; // Expand
-                                      }
-                                    });
-                                  },
-                                  icon: AnimatedRotation(
-                                    turns: isExpanded ? 0.25 : 0, // 0.25 = 90 degrees
-                                    duration: const Duration(milliseconds: 200),
-                                    child: Icon(
-                                      Icons.arrow_forward_ios,
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                            ListTile(
+                              contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: paddingSize15,
+                                  vertical: paddingSize10),
+                              leading: CircleAvatar(
+                                backgroundColor:
+                                    midnightBlue.withValues(alpha: 0.1),
+                                radius: 25,
+                                child: Text(
+                                  visitorName[0].toUpperCase(),
+                                  style: fontBold.copyWith(
                                       color: midnightBlue,
-                                      size: iconSize18,
+                                      fontSize: fontSize18),
+                                ),
+                              ),
+                              title: Text(
+                                visitorName,
+                                style: fontMedium.copyWith(
+                                    color: midnightBlue, fontSize: fontSize16),
+                              ),
+                              subtitle: Text(
+                                visitorName,
+                                style: fontMedium.copyWith(
+                                    color: greyText, fontSize: fontSize14),
+                              ),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    onPressed: () {
+                                      // Call action
+                                    },
+                                    icon: Icon(Icons.call,
+                                        color: Colors.green, size: iconSize22),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      expandedIndex.value =
+                                          isExpanded ? -1 : index;
+                                    },
+                                    icon: AnimatedRotation(
+                                      turns: isExpanded ? 0.25 : 0,
+                                      duration:
+                                          const Duration(milliseconds: 200),
+                                      child: Icon(
+                                        Icons.arrow_forward_ios,
+                                        color: midnightBlue,
+                                        size: iconSize18,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                          // Expandable Section
-                          AnimatedCrossFade(
-                            firstChild: const SizedBox.shrink(),
-                            secondChild: _buildExpandedDetails(index),
-                            crossFadeState: isExpanded
-                                ? CrossFadeState.showSecond
-                                : CrossFadeState.showFirst,
-                            duration: const Duration(milliseconds: 200),
-                          ),
-                        ],
-                      ),
-                    );
+                            // Expandable Section
+                            AnimatedCrossFade(
+                              firstChild: const SizedBox.shrink(),
+                              secondChild: _buildExpandedDetails(index),
+                              crossFadeState: isExpanded
+                                  ? CrossFadeState.showSecond
+                                  : CrossFadeState.showFirst,
+                              duration: const Duration(milliseconds: 200),
+                            ),
+                          ],
+                        ),
+                      );
+                    });
                   },
                 ),
         ),

@@ -57,7 +57,6 @@ class MyBioPagePageState extends State<MyBioPage> {
         widget.currentUserData.somethingNoOneKnowsAboutMe ?? '';
     vvm.keyToSuccessController.text = widget.currentUserData.keyToSuccess ?? '';
 
-    setState(() {});
   }
 
   @override

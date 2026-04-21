@@ -9,11 +9,7 @@ import 'package:dhiyodha/utils/resource/app_dimensions.dart';
 import 'package:dhiyodha/utils/resource/app_font_size.dart';
 import 'package:dhiyodha/utils/resource/app_media_assets.dart';
 import 'package:dhiyodha/view/widgets/common_app_bar.dart';
-import 'package:dhiyodha/view/widgets/common_button.dart';
-import 'package:dhiyodha/view/widgets/common_card.dart';
-import 'package:dhiyodha/view/widgets/common_snackbar.dart';
 import 'package:dhiyodha/view/widgets/common_text_form_field.dart';
-import 'package:dhiyodha/view/widgets/common_text_label.dart';
 import 'package:dhiyodha/viewModel/members_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -658,7 +654,7 @@ class MembersPageState extends State<MembersPage>
                   ? membersVM.cityList[0]
                   : 'Select City';
               await membersVM.getStates(val);
-              setState(() {});
+              membersVM.update();
             },
           ),
           const SizedBox(height: 12),
@@ -676,7 +672,7 @@ class MembersPageState extends State<MembersPage>
                   ? membersVM.cityList[0]
                   : 'Select City';
               await membersVM.getCities(val);
-              setState(() {});
+              membersVM.update();
             },
           ),
           const SizedBox(height: 12),
@@ -689,7 +685,7 @@ class MembersPageState extends State<MembersPage>
                 membersVM.cityList.where((c) => c != 'Select City').toList(),
             onSelected: (val) {
               membersVM.selectedCity = val;
-              setState(() {});
+              membersVM.update();
             },
           ),
           const SizedBox(height: 12),
@@ -703,7 +699,7 @@ class MembersPageState extends State<MembersPage>
                 .toList(),
             onSelected: (val) {
               membersVM.selectedChapter = val;
-              setState(() {});
+              membersVM.update();
             },
           ),
           const SizedBox(height: 20),
@@ -729,7 +725,7 @@ class MembersPageState extends State<MembersPage>
                 .toList(),
             onSelected: (val) {
               membersVM.selectedBusinessCategory = val;
-              setState(() {});
+              membersVM.update();
             },
           ),
           const SizedBox(height: 28),
@@ -845,7 +841,8 @@ class MembersPageState extends State<MembersPage>
           fieldController.clear();
         }
         return Focus(
-          onFocusChange: (hasFocus) => setState(() {}),
+          onFocusChange: (hasFocus) =>
+              Get.find<MembersViewmodel>().update(),
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 200),
             decoration: BoxDecoration(

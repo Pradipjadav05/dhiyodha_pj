@@ -20,7 +20,8 @@ class ForgotPasswordPage extends StatefulWidget {
 }
 
 class ForgotPasswordPageState extends State<ForgotPasswordPage> {
-  ForgotPasswordStep _step = ForgotPasswordStep.enterEmail;
+  final Rx<ForgotPasswordStep> _step =
+      ForgotPasswordStep.enterEmail.obs;
 
   // Email controller (step 1)
   final TextEditingController _emailController = TextEditingController();
@@ -87,35 +88,37 @@ class ForgotPasswordPageState extends State<ForgotPasswordPage> {
             padding: const EdgeInsets.all(24.0),
             child: GetBuilder<LoginViewModel>(
               builder: (loginVM) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'forgot_password'.tr,
-                      style: fontBold.copyWith(
-                          color: midnightBlue, fontSize: fontSize18),
-                    ),
-                    const SizedBox(height: paddingSize8),
-                    Text(
-                      _stepSubtitle(),
-                      style: fontRegular.copyWith(
-                          color: greyText, fontSize: fontSize14),
-                    ),
-                    const SizedBox(height: paddingSize40),
+                return Obx(() {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'forgot_password'.tr,
+                        style: fontBold.copyWith(
+                            color: midnightBlue, fontSize: fontSize18),
+                      ),
+                      const SizedBox(height: paddingSize8),
+                      Text(
+                        _stepSubtitle(),
+                        style: fontRegular.copyWith(
+                            color: greyText, fontSize: fontSize14),
+                      ),
+                      const SizedBox(height: paddingSize40),
 
-                    // ── Step indicator ──
-                    _buildStepIndicator(),
-                    const SizedBox(height: paddingSize40),
+                      // ── Step indicator ──
+                      _buildStepIndicator(),
+                      const SizedBox(height: paddingSize40),
 
-                    // ── Step content ──
-                    if (_step == ForgotPasswordStep.enterEmail)
-                      _buildEnterEmailStep(loginVM),
-                    if (_step == ForgotPasswordStep.verifyOtp)
-                      _buildVerifyOtpStep(loginVM),
-                    if (_step == ForgotPasswordStep.resetPassword)
-                      _buildResetPasswordStep(loginVM),
-                  ],
-                );
+                      // ── Step content ──
+                      if (_step.value == ForgotPasswordStep.enterEmail)
+                        _buildEnterEmailStep(loginVM),
+                      if (_step.value == ForgotPasswordStep.verifyOtp)
+                        _buildVerifyOtpStep(loginVM),
+                      if (_step.value == ForgotPasswordStep.resetPassword)
+                        _buildResetPasswordStep(loginVM),
+                    ],
+                  );
+                });
               },
             ),
           ),
@@ -125,7 +128,7 @@ class ForgotPasswordPageState extends State<ForgotPasswordPage> {
   }
 
   String _stepSubtitle() {
-    switch (_step) {
+    switch (_step.value) {
       case ForgotPasswordStep.enterEmail:
         return 'enter_email_to_reset'.tr;
       case ForgotPasswordStep.verifyOtp:
@@ -139,11 +142,11 @@ class ForgotPasswordPageState extends State<ForgotPasswordPage> {
   Widget _buildStepIndicator() {
     return Row(
       children: [
-        _stepCircle(1, _step.index >= 0),
-        _stepLine(_step.index >= 1),
-        _stepCircle(2, _step.index >= 1),
-        _stepLine(_step.index >= 2),
-        _stepCircle(3, _step.index >= 2),
+        _stepCircle(1, _step.value.index >= 0),
+        _stepLine(_step.value.index >= 1),
+        _stepCircle(2, _step.value.index >= 1),
+        _stepLine(_step.value.index >= 2),
+        _stepCircle(3, _step.value.index >= 2),
       ],
     );
   }
@@ -448,7 +451,7 @@ class ForgotPasswordPageState extends State<ForgotPasswordPage> {
     final bool isOTPSent = await loginVM.forgotSendOtp(email);
     if (isOTPSent) {
       if (!isResend) {
-        setState(() => _step = ForgotPasswordStep.verifyOtp);
+        _step.value = ForgotPasswordStep.verifyOtp;
       } else {
         // Clear OTP boxes on resend
         _otp1Controller.clear();
@@ -487,7 +490,7 @@ class ForgotPasswordPageState extends State<ForgotPasswordPage> {
     await loginVM.forgotVerifyOtp(_emailController.text.trim(), otp);
 
     if (isVerified) {
-      setState(() => _step = ForgotPasswordStep.resetPassword);
+      _step.value = ForgotPasswordStep.resetPassword;
     } else {
       showSnackBar('invalid_OTP'.tr);
     }

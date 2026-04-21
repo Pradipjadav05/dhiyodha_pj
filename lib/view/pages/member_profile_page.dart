@@ -19,7 +19,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class MemberProfilePage extends StatefulWidget {
-  MembersChildData membersChildData;
+  final MembersChildData membersChildData;
 
   MemberProfilePageState createState() => MemberProfilePageState();
 
@@ -27,7 +27,7 @@ class MemberProfilePage extends StatefulWidget {
 }
 
 class MemberProfilePageState extends State<MemberProfilePage> {
-  int _currentIndex = 0;
+  final RxInt _currentIndex = 0.obs;
 
   @override
   void initState() {
@@ -94,23 +94,28 @@ class MemberProfilePageState extends State<MemberProfilePage> {
                     children: List.generate(
                       _getVisibleDotCount(memberVM.testimonialDataList.length),
                           (index) {
-                        int realIndex = _getRealIndex(
-                            index, _currentIndex, memberVM.testimonialDataList.length);
+                        return Obx(() {
+                          final int currentIndex = _currentIndex.value;
+                          final int realIndex = _getRealIndex(
+                              index,
+                              currentIndex,
+                              memberVM.testimonialDataList.length);
 
-                        bool isActive = realIndex == _currentIndex;
+                          final bool isActive = realIndex == currentIndex;
 
-                        return AnimatedContainer(
-                          duration: Duration(milliseconds: 300),
-                          margin: EdgeInsets.symmetric(horizontal: 4),
-                          width: isActive ? 14 : 8,
-                          height: isActive ? 14 : 8,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: isActive
-                                ? bluishPurple
-                                : bluishPurple.withOpacity(0.3),
-                          ),
-                        );
+                          return AnimatedContainer(
+                            duration: const Duration(milliseconds: 300),
+                            margin: const EdgeInsets.symmetric(horizontal: 4),
+                            width: isActive ? 14 : 8,
+                            height: isActive ? 14 : 8,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: isActive
+                                  ? bluishPurple
+                                  : bluishPurple.withOpacity(0.3),
+                            ),
+                          );
+                        });
                       },
                     ),
                   )
@@ -616,9 +621,7 @@ class MemberProfilePageState extends State<MemberProfilePage> {
             height: 250,
             viewportFraction: 1.0,
             onPageChanged: (index, reason) {
-              setState(() {
-                _currentIndex = index;
-              });
+              _currentIndex.value = index;
             },
           ),
           items: memberVM.testimonialDataList.map((i) {

@@ -75,7 +75,8 @@ class VisitingCardViewModel extends GetxController implements GetxService {
 
   // ── Setters ──
   set contactController(TextEditingController v) => _contactController = v;
-  set meetingChapterNameController(TextEditingController v) => meetingChapterNameController = v;
+  set meetingChapterNameController(TextEditingController v) =>
+      _meetingChapterNameController = v;
   set companyNameController(TextEditingController v) => _companyNameController = v;
   set designationController(TextEditingController v) => _designationController = v;
   set businessCategoryController(TextEditingController v) => _businessCategoryController = v;
@@ -112,7 +113,8 @@ class VisitingCardViewModel extends GetxController implements GetxService {
     _cityController.text = value.city ?? '';
     _stateController.text = value.state ?? '';
     _countryController.text = value.country ?? '';
-    _isVisitorData = true.obs;
+    _isVisitorData.value = true;
+    update();
   }
 
   // ────────────────────────────────────────────────────────────
@@ -121,6 +123,8 @@ class VisitingCardViewModel extends GetxController implements GetxService {
   set currentUserData(CurrentUserData value) {
     _currentUserData = value;
     _refreshControllers(value);
+    _isVisitorData.value = false;
+    update();
   }
 
   // ── Refresh each controller from its own dedicated field ──
@@ -139,8 +143,8 @@ class VisitingCardViewModel extends GetxController implements GetxService {
   // initData
   // ────────────────────────────────────────────────────────────
   Future<void> initData() async {
-    _isEditData = false.obs;
-    _isVisitorData = false.obs;
+    _isEditData.value = false;
+    _isVisitorData.value = false;
     _currentUserData = CurrentUserData();
     _visitorData = VisitorChildData();
     _contactController = TextEditingController();
@@ -163,6 +167,7 @@ class VisitingCardViewModel extends GetxController implements GetxService {
     _burningDesireController = TextEditingController();
     _knowAboutMeController = TextEditingController();
     _keyToSuccessController = TextEditingController();
+    update();
   }
 
   // ────────────────────────────────────────────────────────────
@@ -191,7 +196,7 @@ class VisitingCardViewModel extends GetxController implements GetxService {
 
       _currentUserData = updatedData;
       _refreshControllers(updatedData);
-      _isEditData = false.obs;
+      _isEditData.value = false;
       isSuccess = true;
     } else {
       isSuccess = false;

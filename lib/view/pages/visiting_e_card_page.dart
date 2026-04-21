@@ -54,7 +54,6 @@ class VisitingECardPageState extends State<VisitingECardPage> {
       vvm.visitorData = widget.visitorChildData!;
     }
 
-    setState(() {});
   }
 
   @override

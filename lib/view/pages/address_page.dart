@@ -14,7 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AddressPage extends StatefulWidget {
-  CurrentUserData currentUserData;
+  final CurrentUserData currentUserData;
 
   AddressPageState createState() => AddressPageState();
 
@@ -160,7 +160,7 @@ class AddressPageState extends State<AddressPage> {
                           addressVM.countryList[0]) {
                         await addressVM.getStates(addressVM.selectedCountry);
                       }
-                      setState(() {});
+                      addressVM.update();
                     },
                   ),
                   SizedBox(height: paddingSize25),
@@ -179,7 +179,7 @@ class AddressPageState extends State<AddressPage> {
                       if (addressVM.selectedState != addressVM.stateList[0]) {
                         await addressVM.getCities(addressVM.selectedState);
                       }
-                      setState(() {});
+                      addressVM.update();
                     },
                   ),
                   SizedBox(height: paddingSize25),
@@ -194,7 +194,7 @@ class AddressPageState extends State<AddressPage> {
                     ),
                     onChanged: (val) {
                       addressVM.selectedCity = val!;
-                      setState(() {});
+                      addressVM.update();
                     },
                   ),
                   // CommonTextFormField(

@@ -371,8 +371,8 @@ Widget _profileAvatar(String? profileUrl, { double size = 42}) {
       child: profileUrl != null && profileUrl.isNotEmpty
           ? CachedNetworkImage(
         imageUrl: profileUrl,
-        width: 42,
-        height: 42,
+        width: size,
+        height: size,
         fit: BoxFit.cover,
         errorWidget: (context, url, error) => _avatarFallback(),
       )

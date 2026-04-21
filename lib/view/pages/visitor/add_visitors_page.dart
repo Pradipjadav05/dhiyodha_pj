@@ -554,7 +554,7 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
           fieldController.clear();
         }
         return Focus(
-          onFocusChange: (hasFocus) => setState(() {}),
+          onFocusChange: (hasFocus) => Get.find<VisitorsViewModel>().update(),
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 200),
             decoration: BoxDecoration(

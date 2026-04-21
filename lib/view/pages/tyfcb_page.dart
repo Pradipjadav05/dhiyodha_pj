@@ -23,7 +23,7 @@ class TyfcbPageState extends State<TyfcbPage>
   late Animation<double> _fadeAnim;
 
   // Track each tile's expansion independently
-  final Map<int, bool> _expandedMap = {};
+  final RxMap<int, bool> _expandedMap = <int, bool>{}.obs;
 
   @override
   void initState() {
@@ -223,94 +223,98 @@ class TyfcbPageState extends State<TyfcbPage>
 
   Widget _tyfcbCard(int index, TyfcbViewModel tyVM, List list) {
     final TyfcbChildData tyfcbData = list[index];
-    final bool isExpanded = _expandedMap[index] ?? false;
     final String fullName =
     '${tyfcbData.recipient?.firstName ?? ""} ${tyfcbData.recipient?.lastName ?? ""}'.trim();
     final String? profileUrl = tyfcbData.recipient?.profileUrl;
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF1E3A5F).withOpacity(0.08),
-            blurRadius: 16,
-            offset: const Offset(0, 4),
-          ),
-        ],
-        border: Border.all(color: const Color(0xFFEAEEF8), width: 1),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(18),
-        child: Column(
-          children: [
-            // ── Header row (always visible) ──
-            InkWell(
-              onTap: () => setState(() {
-                _expandedMap[index] = !isExpanded;
-              }),
-              borderRadius: BorderRadius.only(
-                topLeft: const Radius.circular(18),
-                topRight: const Radius.circular(18),
-                bottomLeft: Radius.circular(isExpanded ? 0 : 18),
-                bottomRight: Radius.circular(isExpanded ? 0 : 18),
-              ),
-              splashColor: lavenderMist.withOpacity(0.4),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 14, vertical: 12),
-                child: Row(
-                  children: [
-                    // ── Circular profile image ──
-                    _profileAvatar(profileUrl ?? ""),
-                    const SizedBox(width: 14),
+    return Obx(() {
+      final bool isExpanded = _expandedMap[index] ?? false;
 
-                    // ── Name + gift amount ──
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            fullName.isNotEmpty ? fullName : 'Unknown',
-                            style: fontBold.copyWith(
-                              fontSize: fontSize16,
-                              color: midnightBlue,
-                              letterSpacing: 0.1,
-                            ),
-                          ),
-                          const SizedBox(height: 5),
-                          _giftAmountBadge((tyfcbData.giftAmount ?? '0.0').toString()),
-                        ],
-                      ),
-                    ),
-
-                    // ── Expand / collapse arrow ──
-                    Image.asset(
-                      isExpanded ? nextArrow : dropDownArrow,
-                      height: iconSize18,
-                      width: iconSize18,
-                      color: bluishPurple,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            // ── Expandable detail rows ──
-            AnimatedCrossFade(
-              duration: const Duration(milliseconds: 280),
-              crossFadeState: isExpanded
-                  ? CrossFadeState.showSecond
-                  : CrossFadeState.showFirst,
-              firstChild: const SizedBox.shrink(),
-              secondChild: _expandedDetails(tyfcbData),
+      return Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(18),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFF1E3A5F).withOpacity(0.08),
+              blurRadius: 16,
+              offset: const Offset(0, 4),
             ),
           ],
+          border: Border.all(color: const Color(0xFFEAEEF8), width: 1),
         ),
-      ),
-    );
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(18),
+          child: Column(
+            children: [
+              // ── Header row (always visible) ──
+              InkWell(
+                onTap: () {
+                  _expandedMap[index] = !isExpanded;
+                },
+                borderRadius: BorderRadius.only(
+                  topLeft: const Radius.circular(18),
+                  topRight: const Radius.circular(18),
+                  bottomLeft: Radius.circular(isExpanded ? 0 : 18),
+                  bottomRight: Radius.circular(isExpanded ? 0 : 18),
+                ),
+                splashColor: lavenderMist.withOpacity(0.4),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 14, vertical: 12),
+                  child: Row(
+                    children: [
+                      // ── Circular profile image ──
+                      _profileAvatar(profileUrl ?? ""),
+                      const SizedBox(width: 14),
+
+                      // ── Name + gift amount ──
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              fullName.isNotEmpty ? fullName : 'Unknown',
+                              style: fontBold.copyWith(
+                                fontSize: fontSize16,
+                                color: midnightBlue,
+                                letterSpacing: 0.1,
+                              ),
+                            ),
+                            const SizedBox(height: 5),
+                            _giftAmountBadge(
+                                (tyfcbData.giftAmount ?? '0.0').toString()),
+                          ],
+                        ),
+                      ),
+
+                      // ── Expand / collapse arrow ──
+                      Image.asset(
+                        isExpanded ? nextArrow : dropDownArrow,
+                        height: iconSize18,
+                        width: iconSize18,
+                        color: bluishPurple,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              // ── Expandable detail rows ──
+              AnimatedCrossFade(
+                duration: const Duration(milliseconds: 280),
+                crossFadeState: isExpanded
+                    ? CrossFadeState.showSecond
+                    : CrossFadeState.showFirst,
+                firstChild: const SizedBox.shrink(),
+                secondChild: _expandedDetails(tyfcbData),
+              ),
+            ],
+          ),
+        ),
+      );
+    });
   }
 
   Widget _profileAvatar(String? profileUrl) {

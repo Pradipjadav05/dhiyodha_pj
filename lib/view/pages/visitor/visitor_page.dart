@@ -37,7 +37,7 @@ class VisitorPageState extends State<VisitorPage>
   late Animation<double> _fadeAnim;
   final RxBool _isMarkingAttendance = false.obs;
 
-  final Map<int, bool> _expandedMap = {};
+  final RxMap<int, bool> _expandedMap = <int, bool>{}.obs;
 
   @override
   void initState() {
@@ -114,10 +114,12 @@ class VisitorPageState extends State<VisitorPage>
 
   Widget _visitorCard(int index, VisitorsViewModel visitorVM) {
     final VisitorChildData data = visitorVM.visitorData[index];
-    final bool isExpanded = _expandedMap[index] ?? false;
-    final String? profileUrl = data.profileUrl;
 
-    return Container(
+    return Obx(() {
+      final bool isExpanded = _expandedMap[index] ?? false;
+      final String? profileUrl = data.profileUrl;
+
+      return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -137,9 +139,9 @@ class VisitorPageState extends State<VisitorPage>
           children: [
             // ── Header row ──
             InkWell(
-              onTap: () => setState(() {
+              onTap: () {
                 _expandedMap[index] = !isExpanded;
-              }),
+              },
               borderRadius: BorderRadius.only(
                 topLeft: const Radius.circular(18),
                 topRight: const Radius.circular(18),
@@ -201,7 +203,8 @@ class VisitorPageState extends State<VisitorPage>
           ],
         ),
       ),
-    );
+      );
+    });
   }
 
   Widget _profileAvatar(String? profileUrl) {

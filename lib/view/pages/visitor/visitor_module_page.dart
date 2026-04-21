@@ -15,8 +15,7 @@ class AddVisitorsPage extends StatefulWidget {
 }
 
 class AddVisitorsPageState extends State<AddVisitorsPage> {
-
-  var isListScreen = true;
+  final RxBool isListScreen = true.obs;
 
   @override
   void initState() {
@@ -58,9 +57,7 @@ class AddVisitorsPageState extends State<AddVisitorsPage> {
                       bgColor: midnightBlue,
                       textColor: periwinkle,
                       onPressed: () async {
-                        setState(() {
-                          isListScreen = true;
-                        });
+                        isListScreen.value = true;
                       },
                     ),
                   ),
@@ -74,36 +71,30 @@ class AddVisitorsPageState extends State<AddVisitorsPage> {
                       textColor: periwinkle,
                       onPressed: () async {
                         await initData();
-                        setState(() {
-                          isListScreen = false;
-                        });
+                        isListScreen.value = false;
                       },
                     ),
                   )
                 ],
               ),
             ),
-            Visibility(
-              visible: isListScreen,
+            Obx(() => Visibility(
+              visible: isListScreen.value,
               child: Expanded(child: VisitorPage(
                 isAppBarRequired: false,
                 onStateChanged: () async {
                   await initData();
-                  setState(()  {
-                    isListScreen = false;
-                  });
+                  isListScreen.value = false;
                 },
               )),
-            ),
-            Visibility(
-              visible: !isListScreen,
+            )),
+            Obx(() => Visibility(
+              visible: !isListScreen.value,
               child: Expanded(child: AddVisitorFormWidget(
                 visitorsViewModel: vvm,
-                onStateChanged: () {
-                  setState(() {});
-                },
+                onStateChanged: () {},
               )),
-            ),
+            )),
           ],
         ),
       );

@@ -90,8 +90,7 @@ class AddOneToOneSlipPageState extends State<AddOneToOneSlipPage> {
                             '${childData.firstName} ${childData.lastName}';
 
                         addOVM.connectedWith = childData.uuid!;
-
-                        setState(() {});
+                        addOVM.update();
                       },
                       child: CommonTextFormField(
                         isEnabled: false,
@@ -132,7 +131,7 @@ class AddOneToOneSlipPageState extends State<AddOneToOneSlipPage> {
                         } else {
                           addOVM.initiatedBy = "OTHER";
                         }
-                        setState(() {});
+                        addOVM.update();
                       },
                       child: CommonTextFormField(
                         isEnabled: false,
@@ -193,7 +192,7 @@ class AddOneToOneSlipPageState extends State<AddOneToOneSlipPage> {
                     InkWell(
                       onTap: () async {
                         await addOVM.selectDate(context);
-                        setState(() {});
+                        addOVM.update();
                       },
                       child: CommonTextFormField(
                         isEnabled: false,

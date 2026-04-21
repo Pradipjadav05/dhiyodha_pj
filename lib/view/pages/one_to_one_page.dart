@@ -24,7 +24,7 @@ class OneToOnePageState extends State<OneToOnePage>
   late AnimationController _animController;
   late Animation<double> _fadeAnim;
 
-  final Map<int, bool> _expandedMap = {};
+  final RxMap<int, bool> _expandedMap = <int, bool>{}.obs;
 
   @override
   void initState() {
@@ -138,7 +138,6 @@ class OneToOnePageState extends State<OneToOnePage>
 
   Widget _oneToOneCard(int index, OneToOneSlipViewModel oVM) {
     final OneToOneChildData data = oVM.oneToOneDataList[index];
-    final bool isExpanded = _expandedMap[index] ?? false;
 
     final String connectedWithName =
     '${data.connectedWith?.firstName ?? ''} ${data.connectedWith?.lastName ?? ''}'
@@ -153,97 +152,103 @@ class OneToOnePageState extends State<OneToOnePage>
     final String date = data.oneToOneDate ?? '';
     final String? profileUrl = data.connectedWith?.profileUrl;
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF1E3A5F).withOpacity(0.08),
-            blurRadius: 16,
-            offset: const Offset(0, 4),
-          ),
-        ],
-        border: Border.all(color: const Color(0xFFEAEEF8), width: 1),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(18),
-        child: Column(
-          children: [
-            // ── Header row ──
-            InkWell(
-              onTap: () => setState(() {
-                _expandedMap[index] = !isExpanded;
-              }),
-              borderRadius: BorderRadius.only(
-                topLeft: const Radius.circular(18),
-                topRight: const Radius.circular(18),
-                bottomLeft: Radius.circular(isExpanded ? 0 : 18),
-                bottomRight: Radius.circular(isExpanded ? 0 : 18),
-              ),
-              splashColor: lavenderMist.withOpacity(0.4),
-              child: Padding(
-                padding:
-                const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                child: Row(
-                  children: [
-                    // ── Circular profile image ──
-                    _profileAvatar(profileUrl ?? ""),
-                    const SizedBox(width: 14),
+    return Obx(() {
+      final bool isExpanded = _expandedMap[index] ?? false;
 
-                    // ── Name + date badge ──
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            connectedWithName.isNotEmpty
-                                ? connectedWithName
-                                : 'Unknown',
-                            style: fontBold.copyWith(
-                              fontSize: fontSize16,
-                              color: midnightBlue,
-                              letterSpacing: 0.1,
-                            ),
-                          ),
-                          const SizedBox(height: 5),
-                          _dateBadge(date),
-                        ],
-                      ),
-                    ),
-
-                    // ── Expand / collapse arrow ──
-                    Image.asset(
-                      isExpanded ? nextArrow : dropDownArrow,
-                      height: iconSize18,
-                      width: iconSize18,
-                        color: midnightBlue
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            // ── Expandable detail rows ──
-            AnimatedCrossFade(
-              duration: const Duration(milliseconds: 280),
-              crossFadeState: isExpanded
-                  ? CrossFadeState.showSecond
-                  : CrossFadeState.showFirst,
-              firstChild: const SizedBox.shrink(),
-              secondChild: _expandedDetails(
-                data: data,
-                mobileNo: mobileNo,
-                initiatedByName: initiatedByName,
-                notes: notes,
-                connectedWithName: connectedWithName, location: location, topicOfConversation: topicOfConversation,
-              ),
+      return Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(18),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFF1E3A5F).withOpacity(0.08),
+              blurRadius: 16,
+              offset: const Offset(0, 4),
             ),
           ],
+          border: Border.all(color: const Color(0xFFEAEEF8), width: 1),
         ),
-      ),
-    );
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(18),
+          child: Column(
+            children: [
+              // ── Header row ──
+              InkWell(
+                onTap: () {
+                  _expandedMap[index] = !isExpanded;
+                },
+                borderRadius: BorderRadius.only(
+                  topLeft: const Radius.circular(18),
+                  topRight: const Radius.circular(18),
+                  bottomLeft: Radius.circular(isExpanded ? 0 : 18),
+                  bottomRight: Radius.circular(isExpanded ? 0 : 18),
+                ),
+                splashColor: lavenderMist.withOpacity(0.4),
+                child: Padding(
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                  child: Row(
+                    children: [
+                      // ── Circular profile image ──
+                      _profileAvatar(profileUrl ?? ""),
+                      const SizedBox(width: 14),
+
+                      // ── Name + date badge ──
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              connectedWithName.isNotEmpty
+                                  ? connectedWithName
+                                  : 'Unknown',
+                              style: fontBold.copyWith(
+                                fontSize: fontSize16,
+                                color: midnightBlue,
+                                letterSpacing: 0.1,
+                              ),
+                            ),
+                            const SizedBox(height: 5),
+                            _dateBadge(date),
+                          ],
+                        ),
+                      ),
+
+                      // ── Expand / collapse arrow ──
+                      Image.asset(
+                        isExpanded ? nextArrow : dropDownArrow,
+                        height: iconSize18,
+                        width: iconSize18,
+                        color: midnightBlue,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              // ── Expandable detail rows ──
+              AnimatedCrossFade(
+                duration: const Duration(milliseconds: 280),
+                crossFadeState: isExpanded
+                    ? CrossFadeState.showSecond
+                    : CrossFadeState.showFirst,
+                firstChild: const SizedBox.shrink(),
+                secondChild: _expandedDetails(
+                  data: data,
+                  mobileNo: mobileNo,
+                  initiatedByName: initiatedByName,
+                  notes: notes,
+                  connectedWithName: connectedWithName,
+                  location: location,
+                  topicOfConversation: topicOfConversation,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    });
   }
 
   Widget _profileAvatar(String? profileUrl) {

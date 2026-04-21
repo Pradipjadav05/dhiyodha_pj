@@ -2,9 +2,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:dhiyodha/model/response_model/dashboard_response_model.dart';
 import 'package:dhiyodha/model/response_model/posts_model.dart';
-import 'package:dhiyodha/utils/helper/date_converter.dart';
 import 'package:dhiyodha/utils/helper/routes.dart';
 import 'package:dhiyodha/utils/resource/app_colors.dart';
 import 'package:dhiyodha/utils/resource/app_constants.dart';
@@ -24,8 +22,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '../../utils/resource/app_constants.dart';
-
 class HomePage extends StatefulWidget {
   HomePageState createState() => HomePageState();
 }
@@ -34,7 +30,10 @@ class HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    callInitAPIs();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      callInitAPIs();
+    });
   }
 
   @override
@@ -1619,7 +1618,6 @@ class HomePageState extends State<HomePage> {
                 onTap: () async {
                   await Get.toNamed(Routes.getTYFCBsPageRoute());
                   await getDashboardData(homeVM.selectedDuration);
-                  setState(() {});
                 },
                 cardChild: Padding(
                   padding: const EdgeInsets.only(
@@ -1658,7 +1656,6 @@ class HomePageState extends State<HomePage> {
                   await Get.toNamed(Routes.getReferralsPageRoute());
 
                   await getDashboardData(homeVM.selectedDuration);
-                  setState(() {});
                 },
                 cardChild: Padding(
                   padding: const EdgeInsets.only(
@@ -1704,7 +1701,6 @@ class HomePageState extends State<HomePage> {
                   // await Get.toNamed(Routes.getVisitorPageRoute());
                   await Get.toNamed(Routes.getAddVisitorPageRoute());
                   await getDashboardData(homeVM.selectedDuration);
-                  setState(() {});
                 },
                 cardChild: Padding(
                   padding: const EdgeInsets.only(
@@ -1745,7 +1741,6 @@ class HomePageState extends State<HomePage> {
                 onTap: () async {
                   await Get.toNamed(Routes.getOneToOnePageRoute());
                   await getDashboardData(homeVM.selectedDuration);
-                  setState(() {});
                 },
                 cardChild: Padding(
                   padding: const EdgeInsets.only(
@@ -1922,7 +1917,6 @@ class HomePageState extends State<HomePage> {
                     homeVM.selectedDataLifeTime.value = false;
                     homeVM.select6Month();
                     await getDashboardData("SIX_MONTH");
-                    setState(() {});
                   },
                   cardChild: Padding(
                     padding: const EdgeInsets.symmetric(
@@ -1949,7 +1943,6 @@ class HomePageState extends State<HomePage> {
                     homeVM.selectedDataLifeTime.value = false;
                     homeVM.select12Month();
                     await getDashboardData("ONE_YEAR");
-                    setState(() {});
                   },
                   cardChild: Padding(
                     padding: const EdgeInsets.symmetric(
@@ -1976,7 +1969,6 @@ class HomePageState extends State<HomePage> {
                     homeVM.selectedDataLifeTime.value = true;
                     homeVM.selectLifeTime();
                     await getDashboardData("ALL");
-                    setState(() {});
                   },
                   cardChild: Padding(
                     padding: const EdgeInsets.symmetric(
@@ -2386,8 +2378,8 @@ class HomePageState extends State<HomePage> {
         child: profileUrl != null && profileUrl.isNotEmpty
             ? CachedNetworkImage(
                 imageUrl: profileUrl,
-                width: 42,
-                height: 42,
+                width: size,
+                height: size,
                 fit: BoxFit.cover,
                 errorWidget: (context, url, error) => _avatarFallback(),
               )

@@ -59,26 +59,8 @@ class TestimonialDetailsPageState extends State<TestimonialDetailsPage> {
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // widget.myTestimonialChildData.reviewerPofileUrl !=
-                          //             null &&
-                          //         widget.myTestimonialChildData.reviewerPofileUrl!
-                          //             .isNotEmpty
-                          //     ? CachedNetworkImage(
-                          //         imageUrl: widget
-                          //             .myTestimonialChildData.reviewerPofileUrl!,
-                          //         width: 42.0,
-                          //         height: 42.0,
-                          //         fit: BoxFit.cover,
-                          //         placeholder: (context, url) =>
-                          //             const SizedBox.shrink(),
-                          //         errorWidget: (context, url, error) =>
-                          //             _placeholderAvatar(),
-                          //       )
-                          //     : _placeholderAvatar(),
-                          // Avatar
-                          _Avatar(
-                              profileUrl: widget
-                                  .myTestimonialChildData.reviewerPofileUrl),
+                          _profileAvatar(widget
+                              .myTestimonialChildData.reviewerPofileUrl, size: 68),
                           SizedBox(width: paddingSize10),
                           // Info
                           Expanded(
@@ -309,46 +291,49 @@ class TestimonialDetailsPageState extends State<TestimonialDetailsPage> {
   }
 }
 
-class _Avatar extends StatelessWidget {
-  final String? profileUrl;
-
-  const _Avatar({this.profileUrl});
-
-  @override
-  Widget build(BuildContext context) {
-    const double size = 68;
-    if (profileUrl != null && profileUrl!.isNotEmpty) {
-      return ClipRRect(
-        borderRadius: BorderRadius.circular(50),
-        child: CachedNetworkImage(
-          imageUrl: profileUrl!,
-          width: size,
-          height: size,
-          fit: BoxFit.cover,
-          placeholder: (_, __) => _fallback(size),
-          errorWidget: (_, __, ___) => _fallback(size),
+Widget _profileAvatar(String? profileUrl, { double size = 42}) {
+  return Container(
+    width: size,
+    height: size,
+    decoration: BoxDecoration(
+      shape: BoxShape.circle,
+      border: Border.all(color: Colors.white, width: 2.5),
+      boxShadow: [
+        BoxShadow(
+          color: midnightBlue.withOpacity(0.15),
+          blurRadius: 8,
+          offset: const Offset(0, 3),
         ),
-      );
-    }
-    return _fallback(size);
-  }
+      ],
+    ),
+    child: ClipOval(
+      child: profileUrl != null && profileUrl.isNotEmpty
+          ? CachedNetworkImage(
+        imageUrl: profileUrl,
+        width: size,
+        height: size,
+        fit: BoxFit.cover,
+        errorWidget: (context, url, error) => _avatarFallback(),
+      )
+          : _avatarFallback(),
+    ),
+  );
+}
 
-  Widget _fallback(double size) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        borderRadius: BorderRadius.circular(16),
-        gradient: LinearGradient(
-          colors: [midnightBlue, const Color(0xFF4A6FA5)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+Widget _avatarFallback() {
+  return Container(
+    decoration: BoxDecoration(
+      shape: BoxShape.circle,
+      gradient: LinearGradient(
+        colors: [midnightBlue, const Color(0xFF4A6FA5)],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
       ),
-      child: Icon(Icons.person_rounded, color: Colors.white, size: size),
-    );
-  }
+    ),
+    child: ClipOval(
+      child: Icon(Icons.person, color: Colors.white),
+    ),
+  );
 }
 
 // ─────────────────────────────────────────────

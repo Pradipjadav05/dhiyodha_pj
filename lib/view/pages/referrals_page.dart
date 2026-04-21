@@ -17,7 +17,7 @@ class ReferralsPage extends StatefulWidget {
 }
 
 class ReferralsPageState extends State<ReferralsPage> {
-  final Map<int, bool> _expandedMap = {};
+  final RxMap<int, bool> _expandedMap = <int, bool>{}.obs;
 
   final RxBool isGivenTab = true.obs;
 
@@ -190,84 +190,84 @@ class ReferralsPageState extends State<ReferralsPage> {
 
   Widget _referralCard(int index, List<ReferralChildData> list) {
     final data = list[index];
-    final bool isExpanded = _expandedMap[index] ?? false;
-
     final String fullName =
         '${data.referralTo?.firstName ?? ""} ${data.referralTo?.lastName ?? ""}'
             .trim();
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF1E3A5F).withOpacity(0.08),
-            blurRadius: 16,
-            offset: const Offset(0, 4),
-          ),
-        ],
-        border: Border.all(color: const Color(0xFFEAEEF8), width: 1),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(18),
-        child: Column(
-          children: [
-            InkWell(
-              onTap: () {
-                setState(() {
-                  _expandedMap[index] = !isExpanded;
-                });
-              },
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                child: Row(
-                  children: [
-                    _profileAvatar(data.referralTo?.profileUrl ?? ""),
-                    const SizedBox(width: 14),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(fullName,
-                              style: fontBold.copyWith(
-                                fontSize: fontSize16,
-                                color: midnightBlue,
-                                letterSpacing: 0.1,
-                              )),
-                          const SizedBox(height: 5),
-                          _typeBadge(data.type ?? ""),
-                        ],
-                      ),
-                    ),
+    return Obx(() {
+      final bool isExpanded = _expandedMap[index] ?? false;
 
-                    // ── Expand / collapse arrow ──
-                    Image.asset(
-                      isExpanded ? nextArrow : dropDownArrow,
-                      height: iconSize18,
-                      width: iconSize18,
-                      color: bluishPurple,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            // ── Expandable detail rows ──
-            AnimatedCrossFade(
-              duration: const Duration(milliseconds: 280),
-              crossFadeState: isExpanded
-                  ? CrossFadeState.showSecond
-                  : CrossFadeState.showFirst,
-              firstChild: const SizedBox.shrink(),
-              secondChild: _expandedDetails(data),
+      return Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(18),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFF1E3A5F).withOpacity(0.08),
+              blurRadius: 16,
+              offset: const Offset(0, 4),
             ),
           ],
+          border: Border.all(color: const Color(0xFFEAEEF8), width: 1),
         ),
-      ),
-    );
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(18),
+          child: Column(
+            children: [
+              InkWell(
+                onTap: () {
+                  _expandedMap[index] = !isExpanded;
+                },
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                  child: Row(
+                    children: [
+                      _profileAvatar(data.referralTo?.profileUrl ?? ""),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(fullName,
+                                style: fontBold.copyWith(
+                                  fontSize: fontSize16,
+                                  color: midnightBlue,
+                                  letterSpacing: 0.1,
+                                )),
+                            const SizedBox(height: 5),
+                            _typeBadge(data.type ?? ""),
+                          ],
+                        ),
+                      ),
+
+                      // ── Expand / collapse arrow ──
+                      Image.asset(
+                        isExpanded ? nextArrow : dropDownArrow,
+                        height: iconSize18,
+                        width: iconSize18,
+                        color: bluishPurple,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              // ── Expandable detail rows ──
+              AnimatedCrossFade(
+                duration: const Duration(milliseconds: 280),
+                crossFadeState: isExpanded
+                    ? CrossFadeState.showSecond
+                    : CrossFadeState.showFirst,
+                firstChild: const SizedBox.shrink(),
+                secondChild: _expandedDetails(data),
+              ),
+            ],
+          ),
+        ),
+      );
+    });
   }
 
   Widget _profileAvatar(String? profileUrl) {

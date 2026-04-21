@@ -115,7 +115,7 @@ class AddReferralSlipPageState extends State<AddReferralSlipPage> {
 
                         referralTypeInsideOrOutside(addReferralsVM,
                             addReferralsVM.selectedMeetingId.isNotEmpty);
-                        setState(() {});
+                        addReferralsVM.update();
                       },
                     ),
 
@@ -138,6 +138,7 @@ class AddReferralSlipPageState extends State<AddReferralSlipPage> {
                               childData.email.toString();
                           addReferralsVM.addressController.text =
                               '${childData.address} ${childData.address?.city ?? ''}';
+                          addReferralsVM.update();
                         },
                         child: CommonTextFormField(
                           isEnabled: false,
@@ -174,7 +175,7 @@ class AddReferralSlipPageState extends State<AddReferralSlipPage> {
                               teamUser.email.toString();
                           addReferralsVM.addressController.text =
                               '${teamUser.address} ${teamUser.address?.city ?? ''}';
-                          setState(() {});
+                          addReferralsVM.update();
                         },
                       ),
                     ),

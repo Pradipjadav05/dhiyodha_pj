@@ -105,19 +105,20 @@ class AsksListPageState extends State<AsksListPage> {
                       ResponseModel resp = await Get.toNamed(
                         Routes.getAddAskPageRoute(),
                       );
-                      if (resp.isSuccess) {
-                        showSnackBar(resp.message, isError: false);
-                        askVM.asksList = [];
-                        askVM.page.value = 0;
-                        askVM.totalPages.value = 0;
-                        await askVM.getAsksList(
-                            Get.find<AsksViewModel>().page.value,
-                            Get.find<AsksViewModel>().size.value,
-                            "",
-                            "",
-                            "");
-                      }
-                    },
+                  if (resp.isSuccess) {
+                    showSnackBar(resp.message, isError: false);
+                    askVM.asksList = [];
+                    askVM.page.value = 0;
+                    askVM.totalPages.value = 0;
+                    await askVM.getAsksList(
+                        Get.find<AsksViewModel>().page.value,
+                        Get.find<AsksViewModel>().size.value,
+                        "",
+                        "",
+                        "");
+                    askVM.update();
+                  }
+                },
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: paddingSize10, vertical: paddingSize15),
@@ -315,7 +316,7 @@ class AsksListPageState extends State<AsksListPage> {
                               e.createdBy.toString() ==
                               globalCurrentUserData.uuid)
                           .toList();
-                      setState(() {});
+                      askVM.update();
                     }
                   }
                 },
@@ -393,14 +394,15 @@ class AsksListPageState extends State<AsksListPage> {
                       Get.back();
                       if (askVM.selectedFilter.isNotEmpty &&
                           askVM.selectedFilter.value == "My") {
-                        askVM.selectedFilter.value = "";
-                        askVM.asksList = [];
-                        askVM.page.value = 0;
-                        askVM.totalPages.value = 0;
-                        await askVM.getAsksList(
-                            askVM.page.value, askVM.size.value, "", "", "");
-                      }
-                    },
+                      askVM.selectedFilter.value = "";
+                      askVM.asksList = [];
+                      askVM.page.value = 0;
+                      askVM.totalPages.value = 0;
+                      await askVM.getAsksList(
+                          askVM.page.value, askVM.size.value, "", "", "");
+                      askVM.update();
+                    }
+                  },
                     child: Row(
                       children: [
                         Image.asset(ask,
@@ -430,7 +432,7 @@ class AsksListPageState extends State<AsksListPage> {
                                 e.createdBy.toString() ==
                                 globalCurrentUserData.uuid)
                             .toList();
-                        setState(() {});
+                        askVM.update();
                       }
                     },
                     child: Row(
