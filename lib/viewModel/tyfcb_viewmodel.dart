@@ -58,6 +58,18 @@ class TyfcbViewModel extends GetxController implements GetxService {
     _isLoading = value;
   }
 
+  final RxBool _isSubmitting = false.obs;
+
+  RxBool get isSubmitting => _isSubmitting;
+
+  void setSubmitting(bool value) {
+    if (_isSubmitting.value == value) {
+      return;
+    }
+    _isSubmitting.value = value;
+    update();
+  }
+
   set isExpanded(value) {
     _isExpanded = value;
   }
@@ -117,6 +129,7 @@ class TyfcbViewModel extends GetxController implements GetxService {
     _referralTypeOutside = true.obs;
     _referralTypeTire = false.obs;
     _isExpanded = false.obs;
+    _isSubmitting.value = false;
     _selectedMemberId = "";
     _tyfcbList = [];
     _amountController = TextEditingController();
@@ -127,6 +140,15 @@ class TyfcbViewModel extends GetxController implements GetxService {
     _page = 0.obs;
     _size = 10.obs;
     _totalDataSize = 0.obs;
+  }
+
+  @override
+  void onClose() {
+    _tyfcbToController.dispose();
+    _amountController.dispose();
+    _commentsController.dispose();
+    _scrollController.dispose();
+    super.onClose();
   }
 
   Future<ResponseModel> createAppreciateNote(

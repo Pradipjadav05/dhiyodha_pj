@@ -30,7 +30,6 @@ class AddVisitorFormWidget extends StatefulWidget {
 
 class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
   VisitorsViewModel get vvm => widget.visitorsViewModel;
-  bool _isSubmitting = false;
   final TextEditingController _countryController = TextEditingController();
   final TextEditingController _stateController = TextEditingController();
   final TextEditingController _cityController = TextEditingController();
@@ -41,7 +40,7 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final bool isBusy = vvm.isLoading || _isSubmitting;
+    final bool isBusy = vvm.isLoading || vvm.isSubmitting.value;
 
     return Stack(
       children: [
@@ -242,20 +241,17 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
                         horizontal: paddingSize20, vertical: paddingSize20),
                   ),
                 ),
-                if (!(vvm.uploadedProfilePictureFile == null &&
-                    vvm.isImageUploadSuccess.isFalse)) ...[
+                if (vvm.uploadedProfilePictureFile != null &&
+                    vvm.isImageUploadSuccess.isTrue) ...[
                   SizedBox(height: paddingSize25),
                   ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(radius10)),
-                    child: vvm.uploadedProfilePictureFile == null &&
-                            vvm.isImageUploadSuccess.isFalse
-                        ? Container()
-                        : Image.file(
-                            height: 200.0,
-                            width: double.infinity,
-                            File(vvm.uploadedProfilePictureFile!.path),
-                            fit: BoxFit.fitWidth,
-                          ),
+                    child: Image.file(
+                      height: 200.0,
+                      width: double.infinity,
+                      File(vvm.uploadedProfilePictureFile!.path),
+                      fit: BoxFit.fitWidth,
+                    ),
                   ),
                 ],
 
@@ -277,20 +273,17 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
                         horizontal: paddingSize20, vertical: paddingSize20),
                   ),
                 ),
-                if (!(vvm.uploadedVCardFrontFile == null &&
-                    vvm.isVCardFrontSuccess.isFalse)) ...[
+                if (vvm.uploadedVCardFrontFile != null &&
+                    vvm.isVCardFrontSuccess.isTrue) ...[
                   SizedBox(height: paddingSize25),
                   ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(radius10)),
-                    child: vvm.uploadedVCardFrontFile == null &&
-                            vvm.isVCardFrontSuccess.isFalse
-                        ? Container()
-                        : Image.file(
-                            height: 200.0,
-                            width: double.infinity,
-                            File(vvm.uploadedVCardFrontFile!.path),
-                            fit: BoxFit.fitWidth,
-                          ),
+                    child: Image.file(
+                      height: 200.0,
+                      width: double.infinity,
+                      File(vvm.uploadedVCardFrontFile!.path),
+                      fit: BoxFit.fitWidth,
+                    ),
                   ),
                 ],
 
@@ -312,20 +305,17 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
                         horizontal: paddingSize20, vertical: paddingSize20),
                   ),
                 ),
-                if (!(vvm.uploadedVCardBackFile == null &&
-                    vvm.isVCardBackSuccess.isFalse)) ...[
+                if (vvm.uploadedVCardBackFile != null &&
+                    vvm.isVCardBackSuccess.isTrue) ...[
                   SizedBox(height: paddingSize25),
                   ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(radius10)),
-                    child: vvm.uploadedVCardBackFile == null &&
-                            vvm.isVCardBackSuccess.isFalse
-                        ? Container()
-                        : Image.file(
-                            height: 200.0,
-                            width: double.infinity,
-                            File(vvm.uploadedVCardBackFile!.path),
-                            fit: BoxFit.fitWidth,
-                          ),
+                    child: Image.file(
+                      height: 200.0,
+                      width: double.infinity,
+                      File(vvm.uploadedVCardBackFile!.path),
+                      fit: BoxFit.fitWidth,
+                    ),
                   ),
                 ],
 
@@ -468,14 +458,11 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
   }
 
   Future<void> _collectDataAndAddVisitors() async {
-    if (_isSubmitting || vvm.isLoading) {
+    if (vvm.isSubmitting.value || vvm.isLoading) {
       return;
     }
 
-    _isSubmitting = true;
-    if (mounted) {
-      setState(() {});
-    }
+    vvm.setSubmitting(true);
 
     try {
       if (vvm.selectedCountry.isEmpty ||
@@ -534,10 +521,7 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
       }
       }
     } finally {
-      _isSubmitting = false;
-      if (mounted) {
-        setState(() {});
-      }
+      vvm.setSubmitting(false);
     }
   }
 

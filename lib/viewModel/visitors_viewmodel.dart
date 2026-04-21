@@ -26,6 +26,7 @@ class VisitorsViewModel extends GetxController implements GetxService {
   VisitorsViewModel({required this.visitorsRepo, required this.referralRepo}) {}
 
   bool _isLoading = false;
+  final RxBool _isSubmitting = false.obs;
   RxBool _isExpanded = false.obs;
   RxBool _isAgreeTerms = false.obs;
   RxBool _isProfileImageUploadSuccess = false.obs;
@@ -86,6 +87,16 @@ class VisitorsViewModel extends GetxController implements GetxService {
 
   set isLoading(bool value) {
     _isLoading = value;
+  }
+
+  RxBool get isSubmitting => _isSubmitting;
+
+  void setSubmitting(bool value) {
+    if (_isSubmitting.value == value) {
+      return;
+    }
+    _isSubmitting.value = value;
+    update();
   }
 
   RxBool get isImageUploadSuccess => _isProfileImageUploadSuccess;
@@ -298,8 +309,11 @@ class VisitorsViewModel extends GetxController implements GetxService {
 
   Future<void> initData() async {
     _isLoading = false;
+    _isSubmitting.value = false;
     _isExpanded = false.obs;
     _isProfileImageUploadSuccess = false.obs;
+    _isVCardFrontSuccess = false.obs;
+    _isVCardBackSuccess = false.obs;
     _isAgreeTerms = false.obs;
     _referralTypeInside = false.obs;
     _referralTypeOutside = true.obs;
@@ -308,6 +322,7 @@ class VisitorsViewModel extends GetxController implements GetxService {
     _totalPages = 0.obs;
     _dateController = TextEditingController();
     _nameController = TextEditingController();
+    _emailController = TextEditingController();
     _contactNumberController = TextEditingController();
     _companyNameController = TextEditingController();
     _visitorData = [];
@@ -323,12 +338,26 @@ class VisitorsViewModel extends GetxController implements GetxService {
     _selectedChapter = "Select Chapter";
     _businessCatList = [];
     _selectedBusinessCategory = "";
+    _selectedMeetingCode = "";
+    profileUrl = "";
+    uploadFrontVisitingCard = "";
+    uploadBackVisitingCard = "";
     _uploadedDocRespModel = new UploadedDocRespModel();
     _uploadedProfilePictureFile = null;
     _uploadedVCardFrontFile = null;
     _uploadedVCardBackFile = null;
 
     ///await getVisitors(page.value, size.value, "", "", "");
+  }
+
+  @override
+  void onClose() {
+    _dateController.dispose();
+    _nameController.dispose();
+    _emailController.dispose();
+    _contactNumberController.dispose();
+    _companyNameController.dispose();
+    super.onClose();
   }
 
   Future<void> getMeetingsList() async {

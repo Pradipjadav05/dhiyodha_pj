@@ -1,7 +1,6 @@
 import 'package:dhiyodha/utils/resource/app_colors.dart';
 import 'package:dhiyodha/utils/resource/app_dimensions.dart';
 import 'package:dhiyodha/utils/resource/app_font_size.dart';
-import 'package:dhiyodha/view/pages/visitor/visitor_list_page.dart';
 import 'package:dhiyodha/view/pages/visitor/visitor_page.dart';
 import 'package:dhiyodha/view/widgets/common_app_bar.dart';
 import 'package:dhiyodha/viewModel/visitors_viewmodel.dart';

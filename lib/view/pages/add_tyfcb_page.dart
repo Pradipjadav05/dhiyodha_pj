@@ -20,8 +20,6 @@ class AddTyPage extends StatefulWidget {
 }
 
 class AddTyPageState extends State<AddTyPage> {
-  bool _isSubmitting = false;
-
   @override
   void initState() {
     super.initState();
@@ -46,7 +44,7 @@ class AddTyPageState extends State<AddTyPage> {
           ),
         ),
         body: GetBuilder<TyfcbViewModel>(builder: (addTyVM) {
-          final bool isBusy = addTyVM.isLoading || _isSubmitting;
+          final bool isBusy = addTyVM.isLoading || addTyVM.isSubmitting.value;
 
           return Stack(
             children: [
@@ -342,14 +340,11 @@ class AddTyPageState extends State<AddTyPage> {
   }
 
   Future<void> _collectDataAndSave(TyfcbViewModel addTyVM) async {
-    if (_isSubmitting || addTyVM.isLoading) {
+    if (addTyVM.isSubmitting.value || addTyVM.isLoading) {
       return;
     }
 
-    _isSubmitting = true;
-    if (mounted) {
-      setState(() {});
-    }
+    addTyVM.setSubmitting(true);
 
     try {
       var selectedBusinessType =
@@ -380,10 +375,7 @@ class AddTyPageState extends State<AddTyPage> {
         }
       }
     } finally {
-      _isSubmitting = false;
-      if (mounted) {
-        setState(() {});
-      }
+      addTyVM.setSubmitting(false);
     }
   }
 

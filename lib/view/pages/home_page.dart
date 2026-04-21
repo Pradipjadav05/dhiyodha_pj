@@ -1059,12 +1059,12 @@ class HomePageState extends State<HomePage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '${homeVM.nextMeeting?.day ?? ""}',
+                                '${homeVM.nextMeeting?.day ?? "-"}',
                                 style: fontRegular.copyWith(
                                     color: midnightBlue, fontSize: fontSize14),
                               ),
                               Text(
-                                '${homeVM.nextMeeting?.date ?? ""}',
+                                '${homeVM.nextMeeting?.date ?? "-"}',
                                 style: fontBold.copyWith(
                                     color: midnightBlue, fontSize: fontSize16),
                               ),
@@ -1092,7 +1092,7 @@ class HomePageState extends State<HomePage> {
                                     color: midnightBlue, fontSize: fontSize14),
                               ),
                               Text(
-                                '${homeVM.nextMeeting?.startTime ?? ""}',
+                                '${homeVM.nextMeeting?.startTime ?? "-"}',
                                 style: fontBold.copyWith(
                                     color: midnightBlue, fontSize: fontSize16),
                               ),
