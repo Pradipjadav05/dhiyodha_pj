@@ -43,7 +43,7 @@ class MemberProfilePageState extends State<MemberProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(child: GetBuilder<MembersViewmodel>(
+    return GetBuilder<MembersViewmodel>(
       builder: (memberVM) {
         return Scaffold(
           backgroundColor: ghostWhite,
@@ -68,64 +68,66 @@ class MemberProfilePageState extends State<MemberProfilePage> {
               ),
             ),
           ),
-          body: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(14.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox(height: paddingSize20),
-                  _personProfileCard(),
-                  SizedBox(height: paddingSize20),
-                  _contactWays(),
-                  SizedBox(height: paddingSize20),
-                  _businessProfileCard(),
-                  SizedBox(height: paddingSize25),
-                  _testimonialActionButtons(),
-                  SizedBox(height: paddingSize40),
-                  _businessCardDetails(),
-                  SizedBox(height: paddingSize40),
-                  _testimonialCardDetails(memberVM),
-                  SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(
-                      _getVisibleDotCount(memberVM.testimonialDataList.length),
-                          (index) {
-                        return Obx(() {
-                          final int currentIndex = _currentIndex.value;
-                          final int realIndex = _getRealIndex(
-                              index,
-                              currentIndex,
-                              memberVM.testimonialDataList.length);
-
-                          final bool isActive = realIndex == currentIndex;
-
-                          return AnimatedContainer(
-                            duration: const Duration(milliseconds: 300),
-                            margin: const EdgeInsets.symmetric(horizontal: 4),
-                            width: isActive ? 14 : 8,
-                            height: isActive ? 14 : 8,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: isActive
-                                  ? bluishPurple
-                                  : bluishPurple.withOpacity(0.3),
-                            ),
-                          );
-                        });
-                      },
-                    ),
-                  )
-                ],
+          body: SafeArea(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(14.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(height: paddingSize20),
+                    _personProfileCard(),
+                    SizedBox(height: paddingSize20),
+                    _contactWays(),
+                    SizedBox(height: paddingSize20),
+                    _businessProfileCard(),
+                    SizedBox(height: paddingSize25),
+                    _testimonialActionButtons(),
+                    SizedBox(height: paddingSize40),
+                    _businessCardDetails(),
+                    SizedBox(height: paddingSize40),
+                    _testimonialCardDetails(memberVM),
+                    SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(
+                        _getVisibleDotCount(memberVM.testimonialDataList.length),
+                            (index) {
+                          return Obx(() {
+                            final int currentIndex = _currentIndex.value;
+                            final int realIndex = _getRealIndex(
+                                index,
+                                currentIndex,
+                                memberVM.testimonialDataList.length);
+                
+                            final bool isActive = realIndex == currentIndex;
+                
+                            return AnimatedContainer(
+                              duration: const Duration(milliseconds: 300),
+                              margin: const EdgeInsets.symmetric(horizontal: 4),
+                              width: isActive ? 14 : 8,
+                              height: isActive ? 14 : 8,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: isActive
+                                    ? bluishPurple
+                                    : bluishPurple.withOpacity(0.3),
+                              ),
+                            );
+                          });
+                        },
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           ),
         );
       },
-    ));
+    );
   }
 
   int _getVisibleDotCount(int total) {

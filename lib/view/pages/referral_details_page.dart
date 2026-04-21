@@ -22,8 +22,7 @@ class ReferralDetailsPageState extends State<ReferralDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
+    return Scaffold(
       backgroundColor: ghostWhite,
       appBar: CommonAppBar(
         title: Text("Referral Slip",
@@ -44,437 +43,439 @@ class ReferralDetailsPageState extends State<ReferralDetailsPage> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(radius10),
-                  image: DecorationImage(
-                    image: AssetImage(profileBg),
-                    fit: BoxFit.cover,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(radius10),
+                    image: DecorationImage(
+                      image: AssetImage(profileBg),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: paddingSize15, horizontal: paddingSize30),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          referrals,
+                          height: iconSize26,
+                          width: iconSize26,
+                          color: ghostWhite,
+                        ),
+                        SizedBox(width: paddingSize20),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "From : Priya Patel",
+                              style: fontBold.copyWith(
+                                  fontSize: fontSize14, color: ghostWhite),
+                            ),
+                            Text(
+                              "date: 29 October 2024",
+                              style: fontBold.copyWith(
+                                  fontSize: fontSize14, color: lavenderMist),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: paddingSize15, horizontal: paddingSize30),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        referrals,
-                        height: iconSize26,
-                        width: iconSize26,
-                        color: ghostWhite,
+                SizedBox(height: paddingSize10),
+                Divider(),
+                SizedBox(height: paddingSize20),
+                Row(
+                  children: [
+                    Container(
+                      height: 24.0,
+                      width: 24.0,
+                      decoration: BoxDecoration(
+                        color: bluishPurple,
+                        borderRadius: BorderRadius.circular(40.0),
                       ),
-                      SizedBox(width: paddingSize20),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(paddingSize10),
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "From : Priya Patel",
-                            style: fontBold.copyWith(
-                                fontSize: fontSize14, color: ghostWhite),
+                            "30 October 2024",
+                            style: fontMedium.copyWith(
+                                color: greyText, fontSize: fontSize14),
                           ),
                           Text(
-                            "date: 29 October 2024",
+                            "Got The Business",
                             style: fontBold.copyWith(
-                                fontSize: fontSize14, color: lavenderMist),
-                          ),
+                                color: midnightBlue, fontSize: fontSize18),
+                          )
                         ],
                       ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(height: paddingSize10),
-              Divider(),
-              SizedBox(height: paddingSize20),
-              Row(
-                children: [
-                  Container(
-                    height: 24.0,
-                    width: 24.0,
-                    decoration: BoxDecoration(
-                      color: bluishPurple,
-                      borderRadius: BorderRadius.circular(40.0),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(paddingSize10),
-                    child: Column(
+                  ],
+                ),
+                Divider(),
+                SizedBox(height: paddingSize20),
+                Row(
+                  children: [
+                    Image.asset(profileImage, width: 62.0, height: 62.0),
+                    SizedBox(width: paddingSize20),
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "30 October 2024",
+                          "To:",
                           style: fontMedium.copyWith(
                               color: greyText, fontSize: fontSize14),
                         ),
                         Text(
-                          "Got The Business",
+                          "Nice Umang ",
                           style: fontBold.copyWith(
                               color: midnightBlue, fontSize: fontSize18),
                         )
                       ],
-                    ),
-                  ),
-                ],
-              ),
-              Divider(),
-              SizedBox(height: paddingSize20),
-              Row(
-                children: [
-                  Image.asset(profileImage, width: 62.0, height: 62.0),
-                  SizedBox(width: paddingSize20),
-                  Column(
+                    )
+                  ],
+                ),
+                SizedBox(height: paddingSize20),
+                Divider(),
+                Padding(
+                  padding: const EdgeInsets.all(paddingSize10),
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "To:",
+                        "Referral Type:",
                         style: fontMedium.copyWith(
                             color: greyText, fontSize: fontSize14),
                       ),
                       Text(
-                        "Nice Umang ",
+                        "Inside",
                         style: fontBold.copyWith(
                             color: midnightBlue, fontSize: fontSize18),
                       )
                     ],
-                  )
-                ],
-              ),
-              SizedBox(height: paddingSize20),
-              Divider(),
-              Padding(
-                padding: const EdgeInsets.all(paddingSize10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  ),
+                ),
+                Divider(),
+                Padding(
+                  padding: const EdgeInsets.all(paddingSize10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Referral Status:",
+                        style: fontMedium.copyWith(
+                            color: greyText, fontSize: fontSize14),
+                      ),
+                      Text(
+                        "Told Them You Would Call",
+                        style: fontBold.copyWith(
+                            color: midnightBlue, fontSize: fontSize18),
+                      )
+                    ],
+                  ),
+                ),
+                Divider(),
+                Padding(
+                  padding: const EdgeInsets.all(paddingSize10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Contact Details:",
+                        style: fontMedium.copyWith(
+                            color: greyText, fontSize: fontSize14),
+                      ),
+                      SizedBox(height: paddingSize10),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: paddingSize10, horizontal: paddingSize5),
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            color: lavenderMist,
+                            borderRadius: BorderRadius.circular(radius10)),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Nice Umang",
+                                style: fontBold.copyWith(
+                                    color: midnightBlue, fontSize: fontSize16),
+                              ),
+                              SizedBox(height: paddingSize10),
+                              Row(
+                                mainAxisSize: MainAxisSize.max,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Image.asset(call,
+                                      height: iconSize18, width: iconSize18),
+                                  SizedBox(width: paddingSize5),
+                                  Text(
+                                    "+91 98989 51211",
+                                    style: fontMedium.copyWith(
+                                        fontSize: fontSize12,
+                                        color: midnightBlue),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: paddingSize10),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: paddingSize10, horizontal: paddingSize5),
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            color: lavenderMist,
+                            borderRadius: BorderRadius.circular(radius10)),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Image.asset(mail,
+                                  height: iconSize18, width: iconSize18),
+                              SizedBox(width: paddingSize5),
+                              Text(
+                                "alphabitinfoway@gmail.com",
+                                style: fontRegular.copyWith(
+                                    fontSize: fontSize12, color: midnightBlue),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: paddingSize10),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: paddingSize10, horizontal: paddingSize5),
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            color: lavenderMist,
+                            borderRadius: BorderRadius.circular(radius10)),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Image.asset(location,
+                                  height: iconSize18, width: iconSize18),
+                              SizedBox(width: paddingSize5),
+                              Text(
+                                "1036-RK World Tower, Shital Park,\n150 Ft. Ring Road, Rajkot - 360002",
+                                style: fontRegular.copyWith(
+                                    fontSize: fontSize12, color: midnightBlue),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Divider(),
+                Padding(
+                  padding: const EdgeInsets.all(paddingSize10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Comments:",
+                        style: fontMedium.copyWith(
+                            color: greyText, fontSize: fontSize14),
+                      ),
+                      Text(
+                        "For Graphic Design",
+                        style: fontBold.copyWith(
+                            color: midnightBlue, fontSize: fontSize18),
+                      )
+                    ],
+                  ),
+                ),
+                Divider(),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
-                      "Referral Type:",
-                      style: fontMedium.copyWith(
-                          color: greyText, fontSize: fontSize14),
-                    ),
-                    Text(
-                      "Inside",
-                      style: fontBold.copyWith(
-                          color: midnightBlue, fontSize: fontSize18),
+                    CommonTextLabel(
+                        labelText: "How hot is this referral?",
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: paddingSize25, vertical: paddingSize8)),
+                    Expanded(
+                      child: Divider(
+                        height: 1.0,
+                        color: divider,
+                      ),
                     )
                   ],
                 ),
-              ),
-              Divider(),
-              Padding(
-                padding: const EdgeInsets.all(paddingSize10),
-                child: Column(
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "Referral Status:",
-                      style: fontMedium.copyWith(
-                          color: greyText, fontSize: fontSize14),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        GFCheckbox(
+                          activeIcon: Icon(
+                            Icons.check,
+                            color: bluishPurple,
+                            size: iconSize20,
+                          ),
+                          inactiveBgColor: Colors.transparent,
+                          inactiveBorderColor: bluishPurple,
+                          activeBorderColor: bluishPurple,
+                          value: true,
+                          activeBgColor: Colors.transparent,
+                          size: 24.0,
+                          onChanged: (bool? value) {},
+                        ),
+                        Container(
+                          height: 20.0,
+                          width: 40.0,
+                          decoration: BoxDecoration(
+                              color: greyText,
+                              borderRadius: BorderRadius.circular(4.0)),
+                        )
+                      ],
                     ),
-                    Text(
-                      "Told Them You Would Call",
-                      style: fontBold.copyWith(
-                          color: midnightBlue, fontSize: fontSize18),
-                    )
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        GFCheckbox(
+                          activeIcon: Icon(
+                            Icons.check,
+                            color: bluishPurple,
+                            size: iconSize20,
+                          ),
+                          inactiveBgColor: Colors.transparent,
+                          inactiveBorderColor: bluishPurple,
+                          activeBorderColor: bluishPurple,
+                          value: true,
+                          activeBgColor: Colors.transparent,
+                          size: 24.0,
+                          onChanged: (bool? value) {},
+                        ),
+                        Container(
+                          height: 20.0,
+                          width: 80.0,
+                          decoration: BoxDecoration(
+                              color: greyText,
+                              borderRadius: BorderRadius.circular(4.0)),
+                        )
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        GFCheckbox(
+                          activeIcon: Icon(
+                            Icons.check,
+                            color: bluishPurple,
+                            size: iconSize20,
+                          ),
+                          inactiveBgColor: Colors.transparent,
+                          inactiveBorderColor: bluishPurple,
+                          activeBorderColor: bluishPurple,
+                          value: true,
+                          activeBgColor: Colors.transparent,
+                          size: 24.0,
+                          onChanged: (bool? value) {},
+                        ),
+                        Container(
+                          height: 20.0,
+                          width: 120.0,
+                          decoration: BoxDecoration(
+                              color: greyText,
+                              borderRadius: BorderRadius.circular(4.0)),
+                        )
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        GFCheckbox(
+                          activeIcon: Icon(
+                            Icons.check,
+                            color: bluishPurple,
+                            size: iconSize20,
+                          ),
+                          inactiveBgColor: Colors.transparent,
+                          inactiveBorderColor: bluishPurple,
+                          activeBorderColor: bluishPurple,
+                          value: true,
+                          activeBgColor: Colors.transparent,
+                          size: 24.0,
+                          onChanged: (bool? value) {},
+                        ),
+                        Container(
+                          height: 20.0,
+                          width: 160.0,
+                          decoration: BoxDecoration(
+                              color: Color(0xFFFF3400),
+                              borderRadius: BorderRadius.circular(4.0)),
+                        )
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        GFCheckbox(
+                          activeIcon: Icon(
+                            Icons.check,
+                            color: bluishPurple,
+                            size: iconSize20,
+                          ),
+                          inactiveBgColor: Colors.transparent,
+                          inactiveBorderColor: bluishPurple,
+                          activeBorderColor: bluishPurple,
+                          value: true,
+                          activeBgColor: Colors.transparent,
+                          size: 24.0,
+                          onChanged: (bool? value) {},
+                        ),
+                        Container(
+                          height: 20.0,
+                          width: 200.0,
+                          decoration: BoxDecoration(
+                              color: greyText,
+                              borderRadius: BorderRadius.circular(4.0)),
+                        )
+                      ],
+                    ),
                   ],
                 ),
-              ),
-              Divider(),
-              Padding(
-                padding: const EdgeInsets.all(paddingSize10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Contact Details:",
-                      style: fontMedium.copyWith(
-                          color: greyText, fontSize: fontSize14),
-                    ),
-                    SizedBox(height: paddingSize10),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: paddingSize10, horizontal: paddingSize5),
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                          color: lavenderMist,
-                          borderRadius: BorderRadius.circular(radius10)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Nice Umang",
-                              style: fontBold.copyWith(
-                                  color: midnightBlue, fontSize: fontSize16),
-                            ),
-                            SizedBox(height: paddingSize10),
-                            Row(
-                              mainAxisSize: MainAxisSize.max,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Image.asset(call,
-                                    height: iconSize18, width: iconSize18),
-                                SizedBox(width: paddingSize5),
-                                Text(
-                                  "+91 98989 51211",
-                                  style: fontMedium.copyWith(
-                                      fontSize: fontSize12,
-                                      color: midnightBlue),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: paddingSize10),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: paddingSize10, horizontal: paddingSize5),
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                          color: lavenderMist,
-                          borderRadius: BorderRadius.circular(radius10)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Image.asset(mail,
-                                height: iconSize18, width: iconSize18),
-                            SizedBox(width: paddingSize5),
-                            Text(
-                              "alphabitinfoway@gmail.com",
-                              style: fontRegular.copyWith(
-                                  fontSize: fontSize12, color: midnightBlue),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: paddingSize10),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: paddingSize10, horizontal: paddingSize5),
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                          color: lavenderMist,
-                          borderRadius: BorderRadius.circular(radius10)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Image.asset(location,
-                                height: iconSize18, width: iconSize18),
-                            SizedBox(width: paddingSize5),
-                            Text(
-                              "1036-RK World Tower, Shital Park,\n150 Ft. Ring Road, Rajkot - 360002",
-                              style: fontRegular.copyWith(
-                                  fontSize: fontSize12, color: midnightBlue),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Divider(),
-              Padding(
-                padding: const EdgeInsets.all(paddingSize10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Comments:",
-                      style: fontMedium.copyWith(
-                          color: greyText, fontSize: fontSize14),
-                    ),
-                    Text(
-                      "For Graphic Design",
-                      style: fontBold.copyWith(
-                          color: midnightBlue, fontSize: fontSize18),
-                    )
-                  ],
-                ),
-              ),
-              Divider(),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CommonTextLabel(
-                      labelText: "How hot is this referral?",
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: paddingSize25, vertical: paddingSize8)),
-                  Expanded(
-                    child: Divider(
-                      height: 1.0,
-                      color: divider,
-                    ),
-                  )
-                ],
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      GFCheckbox(
-                        activeIcon: Icon(
-                          Icons.check,
-                          color: bluishPurple,
-                          size: iconSize20,
-                        ),
-                        inactiveBgColor: Colors.transparent,
-                        inactiveBorderColor: bluishPurple,
-                        activeBorderColor: bluishPurple,
-                        value: true,
-                        activeBgColor: Colors.transparent,
-                        size: 24.0,
-                        onChanged: (bool? value) {},
-                      ),
-                      Container(
-                        height: 20.0,
-                        width: 40.0,
-                        decoration: BoxDecoration(
-                            color: greyText,
-                            borderRadius: BorderRadius.circular(4.0)),
-                      )
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      GFCheckbox(
-                        activeIcon: Icon(
-                          Icons.check,
-                          color: bluishPurple,
-                          size: iconSize20,
-                        ),
-                        inactiveBgColor: Colors.transparent,
-                        inactiveBorderColor: bluishPurple,
-                        activeBorderColor: bluishPurple,
-                        value: true,
-                        activeBgColor: Colors.transparent,
-                        size: 24.0,
-                        onChanged: (bool? value) {},
-                      ),
-                      Container(
-                        height: 20.0,
-                        width: 80.0,
-                        decoration: BoxDecoration(
-                            color: greyText,
-                            borderRadius: BorderRadius.circular(4.0)),
-                      )
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      GFCheckbox(
-                        activeIcon: Icon(
-                          Icons.check,
-                          color: bluishPurple,
-                          size: iconSize20,
-                        ),
-                        inactiveBgColor: Colors.transparent,
-                        inactiveBorderColor: bluishPurple,
-                        activeBorderColor: bluishPurple,
-                        value: true,
-                        activeBgColor: Colors.transparent,
-                        size: 24.0,
-                        onChanged: (bool? value) {},
-                      ),
-                      Container(
-                        height: 20.0,
-                        width: 120.0,
-                        decoration: BoxDecoration(
-                            color: greyText,
-                            borderRadius: BorderRadius.circular(4.0)),
-                      )
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      GFCheckbox(
-                        activeIcon: Icon(
-                          Icons.check,
-                          color: bluishPurple,
-                          size: iconSize20,
-                        ),
-                        inactiveBgColor: Colors.transparent,
-                        inactiveBorderColor: bluishPurple,
-                        activeBorderColor: bluishPurple,
-                        value: true,
-                        activeBgColor: Colors.transparent,
-                        size: 24.0,
-                        onChanged: (bool? value) {},
-                      ),
-                      Container(
-                        height: 20.0,
-                        width: 160.0,
-                        decoration: BoxDecoration(
-                            color: Color(0xFFFF3400),
-                            borderRadius: BorderRadius.circular(4.0)),
-                      )
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      GFCheckbox(
-                        activeIcon: Icon(
-                          Icons.check,
-                          color: bluishPurple,
-                          size: iconSize20,
-                        ),
-                        inactiveBgColor: Colors.transparent,
-                        inactiveBorderColor: bluishPurple,
-                        activeBorderColor: bluishPurple,
-                        value: true,
-                        activeBgColor: Colors.transparent,
-                        size: 24.0,
-                        onChanged: (bool? value) {},
-                      ),
-                      Container(
-                        height: 20.0,
-                        width: 200.0,
-                        decoration: BoxDecoration(
-                            color: greyText,
-                            borderRadius: BorderRadius.circular(4.0)),
-                      )
-                    ],
-                  ),
-                ],
-              ),
-              SizedBox(height: paddingSize25),
-            ],
+                SizedBox(height: paddingSize25),
+              ],
+            ),
           ),
         ),
       ),
-    ));
+    );
   }
 
   @override

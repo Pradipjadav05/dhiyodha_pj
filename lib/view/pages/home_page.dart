@@ -38,462 +38,462 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: GetBuilder<HomeViewModel>(builder: (homeVM) {
-        return Obx(
-          () => Scaffold(
-            backgroundColor: ghostWhite,
-            appBar: homeVM.isAllPostPage.value
-                ? AppBar(
-                    title: Image.asset(
-                      appLogoLong,
-                      width: 100.0,
-                    ),
-                    actions: [
-                      InkWell(
-                        onTap: () {
-                          Get.toNamed(Routes.getMembersPageRoute("false"));
-                        },
-                        child: Image.asset(
-                          search,
-                          height: iconSize20,
-                          width: iconSize20,
-                        ),
-                      ),
-                      SizedBox(width: paddingSize20),
-                      InkWell(
-                        onTap: () {
-                          Get.toNamed(Routes.getNotificationPageRoute());
-                        },
-                        child: Image.asset(
-                          notificationIcon,
-                          height: iconSize20,
-                          width: iconSize20,
-                        ),
-                      ),
-                      SizedBox(width: paddingSize20),
-                      InkWell(
-                        onTap: () async {
-                          await showFilterDialog(homeVM);
-                        },
-                        child: Image.asset(
-                          color: black,
-                          filter,
-                          height: iconSize20,
-                          width: iconSize20,
-                        ),
-                      ),
-                      SizedBox(width: paddingSize20),
-                    ],
-                  )
-                : AppBar(
-                    title: Image.asset(
-                      appLogoLong,
-                      width: 120.0,
-                    ),
+    return GetBuilder<HomeViewModel>(builder: (homeVM) {
+      return Obx(
+        () => Scaffold(
+          backgroundColor: ghostWhite,
+          appBar: homeVM.isAllPostPage.value
+              ? AppBar(
+                  title: Image.asset(
+                    appLogoLong,
+                    width: 100.0,
                   ),
-            drawer: Drawer(
-              elevation: 4.0,
-              child: Column(
-                children: [
-                  ListView(
-                    shrinkWrap: true,
-                    children: [
-                      InkWell(
-                        onTap: () async {
-                          Get.back();
-                          await Get.toNamed(Routes.getProfilePageRoute(
-                              homeVM.currentUserData));
-                          await getCurrentUser(homeVM);
-                          homeVM.update();
-                        },
-                        child: DrawerHeader(
-                          padding: EdgeInsets.zero,
-                          margin: EdgeInsets.zero,
-                          child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 18.0),
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: AssetImage(profileBg),
-                                fit: BoxFit.cover,
+                  actions: [
+                    InkWell(
+                      onTap: () {
+                        Get.toNamed(Routes.getMembersPageRoute("false"));
+                      },
+                      child: Image.asset(
+                        search,
+                        height: iconSize20,
+                        width: iconSize20,
+                      ),
+                    ),
+                    SizedBox(width: paddingSize20),
+                    InkWell(
+                      onTap: () {
+                        Get.toNamed(Routes.getNotificationPageRoute());
+                      },
+                      child: Image.asset(
+                        notificationIcon,
+                        height: iconSize20,
+                        width: iconSize20,
+                      ),
+                    ),
+                    SizedBox(width: paddingSize20),
+                    InkWell(
+                      onTap: () async {
+                        await showFilterDialog(homeVM);
+                      },
+                      child: Image.asset(
+                        color: black,
+                        filter,
+                        height: iconSize20,
+                        width: iconSize20,
+                      ),
+                    ),
+                    SizedBox(width: paddingSize20),
+                  ],
+                )
+              : AppBar(
+                  title: Image.asset(
+                    appLogoLong,
+                    width: 120.0,
+                  ),
+                ),
+          drawer: Drawer(
+            elevation: 4.0,
+            child: Column(
+              children: [
+                ListView(
+                  shrinkWrap: true,
+                  children: [
+                    InkWell(
+                      onTap: () async {
+                        Get.back();
+                        await Get.toNamed(Routes.getProfilePageRoute(
+                            homeVM.currentUserData));
+                        await getCurrentUser(homeVM);
+                        homeVM.update();
+                      },
+                      child: DrawerHeader(
+                        padding: EdgeInsets.zero,
+                        margin: EdgeInsets.zero,
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 18.0),
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage(profileBg),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(50),
+                                    child: _profileAvatar(
+                                        homeVM.currentUserData.profileUrl ?? '',
+                                        size: 68.0),
+                                  ),
+                                  Text(
+                                    '${homeVM.currentUserData.firstName} ${homeVM.currentUserData.lastName}',
+                                    style: fontBold.copyWith(
+                                        fontSize: fontSize22, color: white),
+                                  ),
+                                  Text(
+                                    '${homeVM.currentUserData.currentUserOrganization?.companyName ?? ""}',
+                                    style: fontRegular.copyWith(
+                                        fontSize: fontSize14,
+                                        color: lavenderMist),
+                                  ),
+                                ],
                               ),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(50),
-                                      child: _profileAvatar(
-                                          homeVM.currentUserData.profileUrl ?? '',
-                                          size: 68.0),
-                                    ),
-                                    Text(
-                                      '${homeVM.currentUserData.firstName} ${homeVM.currentUserData.lastName}',
-                                      style: fontBold.copyWith(
-                                          fontSize: fontSize22, color: white),
-                                    ),
-                                    Text(
-                                      '${homeVM.currentUserData.currentUserOrganization?.companyName ?? ""}',
-                                      style: fontRegular.copyWith(
-                                          fontSize: fontSize14,
-                                          color: lavenderMist),
-                                    ),
-                                  ],
-                                ),
-                                Spacer(),
-                                Image.asset(
-                                  color: lavenderMist,
-                                  nextArrow,
-                                  height: iconSize18,
-                                  width: iconSize18,
-                                )
-                              ],
-                            ),
+                              Spacer(),
+                              Image.asset(
+                                color: lavenderMist,
+                                nextArrow,
+                                height: iconSize18,
+                                width: iconSize18,
+                              )
+                            ],
                           ),
                         ),
                       ),
-                      SizedBox(height: paddingSize10),
-                      Container(
-                        padding: EdgeInsets.all(5.0),
-                        color: lavenderMist,
-                        child: Column(
-                          children: [
-                            // InkWell(
-                            //   onTap: () {
-                            //     Get.toNamed(
-                            //       Routes.getMyNetworkPageRoute(),
-                            //     );
-                            //   },
-                            //   child: Padding(
-                            //     padding: const EdgeInsets.symmetric(
-                            //         vertical: paddingSize10,
-                            //         horizontal: paddingSize10),
-                            //     child: Row(
-                            //       children: [
-                            //         Text(
-                            //           "My Network",
-                            //           style: fontMedium.copyWith(
-                            //               color: midnightBlue,
-                            //               fontSize: fontSize16),
-                            //         ),
-                            //         Spacer(),
-                            //         Image.asset(
-                            //           nextArrow,
-                            //           height: iconSize18,
-                            //           width: iconSize18,
-                            //         )
-                            //       ],
-                            //     ),
-                            //   ),
-                            // ),
-                            // Divider(),
-                            InkWell(
-                              onTap: () {
-                                Get.back();
-                                Get.toNamed(Routes.getLanguagePageRoute());
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: paddingSize10,
-                                    horizontal: paddingSize10),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      "language".tr,
-                                      style: fontMedium.copyWith(
-                                          color: midnightBlue,
-                                          fontSize: fontSize16),
-                                    ),
-                                    Spacer(),
-                                    Image.asset(
-                                      nextArrow,
-                                      height: iconSize18,
-                                      width: iconSize18,
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Divider(),
-                            InkWell(
-                              onTap: () async {
-                                Get.back();
-                                bool isResult = await Get.toNamed(
-                                  Routes.getMyBusinessPageRoute(
-                                      homeVM.currentUserData),
-                                );
-                                if (isResult ?? false) {
-                                  await getCurrentUser(homeVM);
-                                }
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: paddingSize10,
-                                    horizontal: paddingSize10),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      "my_business".tr,
-                                      style: fontMedium.copyWith(
-                                          color: midnightBlue,
-                                          fontSize: fontSize16),
-                                    ),
-                                    Spacer(),
-                                    Image.asset(
-                                      nextArrow,
-                                      height: iconSize18,
-                                      width: iconSize18,
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Divider(),
-                            InkWell(
-                              onTap: () async {
-                                Get.back();
-                                bool isResult = await Get.toNamed(
-                                    Routes.getAddressPageRoute(
-                                        homeVM.currentUserData));
-                                if (isResult ?? false) {
-                                  await getCurrentUser(homeVM);
-                                }
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: paddingSize10,
-                                    horizontal: paddingSize10),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      "address".tr,
-                                      style: fontMedium.copyWith(
-                                          color: midnightBlue,
-                                          fontSize: fontSize16),
-                                    ),
-                                    Spacer(),
-                                    Image.asset(
-                                      nextArrow,
-                                      height: iconSize18,
-                                      width: iconSize18,
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Divider(),
-                            InkWell(
-                              onTap: () async {
-                                Get.back();
-                                bool isResult = await Get.toNamed(
-                                    Routes.getContactPageRoute(
-                                        homeVM.currentUserData));
-                                if (isResult ?? false) {
-                                  await getCurrentUser(homeVM);
-                                }
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: paddingSize10,
-                                    horizontal: paddingSize10),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      "contact".tr,
-                                      style: fontMedium.copyWith(
-                                          color: midnightBlue,
-                                          fontSize: fontSize16),
-                                    ),
-                                    Spacer(),
-                                    Image.asset(
-                                      nextArrow,
-                                      height: iconSize18,
-                                      width: iconSize18,
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                            // Divider(),
-                            // InkWell(
-                            //   onTap: () {
-                            //     Get.toNamed(Routes.getActivityFeedsPage());
-                            //   },
-                            //   child: Padding(
-                            //     padding: const EdgeInsets.symmetric(
-                            //         vertical: paddingSize10,
-                            //         horizontal: paddingSize10),
-                            //     child: Row(
-                            //       children: [
-                            //         Text(
-                            //           "Activity Feed",
-                            //           style: fontMedium.copyWith(
-                            //               color: midnightBlue,
-                            //               fontSize: fontSize16),
-                            //         ),
-                            //         Spacer(),
-                            //         Image.asset(
-                            //           nextArrow,
-                            //           height: iconSize18,
-                            //           width: iconSize18,
-                            //         )
-                            //       ],
-                            //     ),
-                            //   ),
-                            // ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: paddingSize20,
-                      ),
-                      Container(
-                        padding: EdgeInsets.all(5.0),
-                        color: lavenderMist,
-                        child: Column(
-                          children: [
-                            // InkWell(
-                            //   onTap: () {
-                            //     Get.toNamed(
-                            //       Routes.getAccountSettingsPageRoute(),
-                            //     );
-                            //   },
-                            //   child: Padding(
-                            //     padding: const EdgeInsets.symmetric(
-                            //         vertical: paddingSize10,
-                            //         horizontal: paddingSize10),
-                            //     child: Row(
-                            //       children: [
-                            //         Text(
-                            //           "Account Settings",
-                            //           style: fontMedium.copyWith(
-                            //               color: midnightBlue,
-                            //               fontSize: fontSize16),
-                            //         ),
-                            //         Spacer(),
-                            //         Image.asset(
-                            //           nextArrow,
-                            //           height: iconSize18,
-                            //           width: iconSize18,
-                            //         )
-                            //       ],
-                            //     ),
-                            //   ),
-                            // ),
-                            // Divider(),
-                            // InkWell(
-                            //   onTap: () {
-                            //     Get.toNamed(Routes.getUpdateUsernameRoute());
-                            //   },
-                            //   child: Padding(
-                            //     padding: const EdgeInsets.symmetric(
-                            //         vertical: paddingSize10,
-                            //         horizontal: paddingSize10),
-                            //     child: Row(
-                            //       children: [
-                            //         Text(
-                            //           "Update Username",
-                            //           style: fontMedium.copyWith(
-                            //               color: midnightBlue,
-                            //               fontSize: fontSize16),
-                            //         ),
-                            //         Spacer(),
-                            //         Image.asset(
-                            //           nextArrow,
-                            //           height: iconSize18,
-                            //           width: iconSize18,
-                            //         )
-                            //       ],
-                            //     ),
-                            //   ),
-                            // ),
-                            // Divider(),
-                            InkWell(
-                              onTap: () async {
-                                Get.back();
-                                bool isResult = await Get.toNamed(
-                                  Routes.getUpdatePasswordPageRoute(),
-                                );
-                                if (isResult ?? false) {
-                                  await getCurrentUser(homeVM);
-                                }
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: paddingSize10,
-                                    horizontal: paddingSize10),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      "update_password".tr,
-                                      style: fontMedium.copyWith(
-                                          color: midnightBlue,
-                                          fontSize: fontSize16),
-                                    ),
-                                    Spacer(),
-                                    Image.asset(
-                                      nextArrow,
-                                      height: iconSize18,
-                                      width: iconSize18,
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Divider(),
-                            InkWell(
-                              onTap: () async {
-                                Get.back();
-                                await showLogoutDialog(homeVM);
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: paddingSize10,
-                                    horizontal: paddingSize10),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      "logout_title".tr,
-                                      style: fontMedium.copyWith(
-                                          color: midnightBlue,
-                                          fontSize: fontSize16),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerDocked,
-            floatingActionButton: homeVM.isAllPostPage.value
-                ? FloatingActionButton(
-                    tooltip: "Ask",
-                    elevation: 4.0,
-                    backgroundColor: midnightBlue,
-                    onPressed: () {
-                      Get.toNamed(Routes.getAskListPageRoute());
-                    },
-                    child: Image.asset(
-                      ask,
-                      color: periwinkle,
-                      height: iconSize24,
-                      width: iconSize24,
                     ),
-                  )
-                : Container(),
-            body: Column(
+                    SizedBox(height: paddingSize10),
+                    Container(
+                      padding: EdgeInsets.all(5.0),
+                      color: lavenderMist,
+                      child: Column(
+                        children: [
+                          // InkWell(
+                          //   onTap: () {
+                          //     Get.toNamed(
+                          //       Routes.getMyNetworkPageRoute(),
+                          //     );
+                          //   },
+                          //   child: Padding(
+                          //     padding: const EdgeInsets.symmetric(
+                          //         vertical: paddingSize10,
+                          //         horizontal: paddingSize10),
+                          //     child: Row(
+                          //       children: [
+                          //         Text(
+                          //           "My Network",
+                          //           style: fontMedium.copyWith(
+                          //               color: midnightBlue,
+                          //               fontSize: fontSize16),
+                          //         ),
+                          //         Spacer(),
+                          //         Image.asset(
+                          //           nextArrow,
+                          //           height: iconSize18,
+                          //           width: iconSize18,
+                          //         )
+                          //       ],
+                          //     ),
+                          //   ),
+                          // ),
+                          // Divider(),
+                          InkWell(
+                            onTap: () {
+                              Get.back();
+                              Get.toNamed(Routes.getLanguagePageRoute());
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: paddingSize10,
+                                  horizontal: paddingSize10),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "language".tr,
+                                    style: fontMedium.copyWith(
+                                        color: midnightBlue,
+                                        fontSize: fontSize16),
+                                  ),
+                                  Spacer(),
+                                  Image.asset(
+                                    nextArrow,
+                                    height: iconSize18,
+                                    width: iconSize18,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          Divider(),
+                          InkWell(
+                            onTap: () async {
+                              Get.back();
+                              bool isResult = await Get.toNamed(
+                                Routes.getMyBusinessPageRoute(
+                                    homeVM.currentUserData),
+                              );
+                              if (isResult ?? false) {
+                                await getCurrentUser(homeVM);
+                              }
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: paddingSize10,
+                                  horizontal: paddingSize10),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "my_business".tr,
+                                    style: fontMedium.copyWith(
+                                        color: midnightBlue,
+                                        fontSize: fontSize16),
+                                  ),
+                                  Spacer(),
+                                  Image.asset(
+                                    nextArrow,
+                                    height: iconSize18,
+                                    width: iconSize18,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          Divider(),
+                          InkWell(
+                            onTap: () async {
+                              Get.back();
+                              bool isResult = await Get.toNamed(
+                                  Routes.getAddressPageRoute(
+                                      homeVM.currentUserData));
+                              if (isResult ?? false) {
+                                await getCurrentUser(homeVM);
+                              }
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: paddingSize10,
+                                  horizontal: paddingSize10),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "address".tr,
+                                    style: fontMedium.copyWith(
+                                        color: midnightBlue,
+                                        fontSize: fontSize16),
+                                  ),
+                                  Spacer(),
+                                  Image.asset(
+                                    nextArrow,
+                                    height: iconSize18,
+                                    width: iconSize18,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          Divider(),
+                          InkWell(
+                            onTap: () async {
+                              Get.back();
+                              bool isResult = await Get.toNamed(
+                                  Routes.getContactPageRoute(
+                                      homeVM.currentUserData));
+                              if (isResult ?? false) {
+                                await getCurrentUser(homeVM);
+                              }
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: paddingSize10,
+                                  horizontal: paddingSize10),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "contact".tr,
+                                    style: fontMedium.copyWith(
+                                        color: midnightBlue,
+                                        fontSize: fontSize16),
+                                  ),
+                                  Spacer(),
+                                  Image.asset(
+                                    nextArrow,
+                                    height: iconSize18,
+                                    width: iconSize18,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          // Divider(),
+                          // InkWell(
+                          //   onTap: () {
+                          //     Get.toNamed(Routes.getActivityFeedsPage());
+                          //   },
+                          //   child: Padding(
+                          //     padding: const EdgeInsets.symmetric(
+                          //         vertical: paddingSize10,
+                          //         horizontal: paddingSize10),
+                          //     child: Row(
+                          //       children: [
+                          //         Text(
+                          //           "Activity Feed",
+                          //           style: fontMedium.copyWith(
+                          //               color: midnightBlue,
+                          //               fontSize: fontSize16),
+                          //         ),
+                          //         Spacer(),
+                          //         Image.asset(
+                          //           nextArrow,
+                          //           height: iconSize18,
+                          //           width: iconSize18,
+                          //         )
+                          //       ],
+                          //     ),
+                          //   ),
+                          // ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: paddingSize20,
+                    ),
+                    Container(
+                      padding: EdgeInsets.all(5.0),
+                      color: lavenderMist,
+                      child: Column(
+                        children: [
+                          // InkWell(
+                          //   onTap: () {
+                          //     Get.toNamed(
+                          //       Routes.getAccountSettingsPageRoute(),
+                          //     );
+                          //   },
+                          //   child: Padding(
+                          //     padding: const EdgeInsets.symmetric(
+                          //         vertical: paddingSize10,
+                          //         horizontal: paddingSize10),
+                          //     child: Row(
+                          //       children: [
+                          //         Text(
+                          //           "Account Settings",
+                          //           style: fontMedium.copyWith(
+                          //               color: midnightBlue,
+                          //               fontSize: fontSize16),
+                          //         ),
+                          //         Spacer(),
+                          //         Image.asset(
+                          //           nextArrow,
+                          //           height: iconSize18,
+                          //           width: iconSize18,
+                          //         )
+                          //       ],
+                          //     ),
+                          //   ),
+                          // ),
+                          // Divider(),
+                          // InkWell(
+                          //   onTap: () {
+                          //     Get.toNamed(Routes.getUpdateUsernameRoute());
+                          //   },
+                          //   child: Padding(
+                          //     padding: const EdgeInsets.symmetric(
+                          //         vertical: paddingSize10,
+                          //         horizontal: paddingSize10),
+                          //     child: Row(
+                          //       children: [
+                          //         Text(
+                          //           "Update Username",
+                          //           style: fontMedium.copyWith(
+                          //               color: midnightBlue,
+                          //               fontSize: fontSize16),
+                          //         ),
+                          //         Spacer(),
+                          //         Image.asset(
+                          //           nextArrow,
+                          //           height: iconSize18,
+                          //           width: iconSize18,
+                          //         )
+                          //       ],
+                          //     ),
+                          //   ),
+                          // ),
+                          // Divider(),
+                          InkWell(
+                            onTap: () async {
+                              Get.back();
+                              bool isResult = await Get.toNamed(
+                                Routes.getUpdatePasswordPageRoute(),
+                              );
+                              if (isResult ?? false) {
+                                await getCurrentUser(homeVM);
+                              }
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: paddingSize10,
+                                  horizontal: paddingSize10),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "update_password".tr,
+                                    style: fontMedium.copyWith(
+                                        color: midnightBlue,
+                                        fontSize: fontSize16),
+                                  ),
+                                  Spacer(),
+                                  Image.asset(
+                                    nextArrow,
+                                    height: iconSize18,
+                                    width: iconSize18,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          Divider(),
+                          InkWell(
+                            onTap: () async {
+                              Get.back();
+                              await showLogoutDialog(homeVM);
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: paddingSize10,
+                                  horizontal: paddingSize10),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "logout_title".tr,
+                                    style: fontMedium.copyWith(
+                                        color: midnightBlue,
+                                        fontSize: fontSize16),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
+          floatingActionButton: homeVM.isAllPostPage.value
+              ? FloatingActionButton(
+                  tooltip: "Ask",
+                  elevation: 4.0,
+                  backgroundColor: midnightBlue,
+                  onPressed: () {
+                    Get.toNamed(Routes.getAskListPageRoute());
+                  },
+                  child: Image.asset(
+                    ask,
+                    color: periwinkle,
+                    height: iconSize24,
+                    width: iconSize24,
+                  ),
+                )
+              : Container(),
+          body: SafeArea(
+            child: Column(
               children: [
                 Visibility(
                   visible: homeVM.isLoading,
@@ -508,47 +508,47 @@ class HomePageState extends State<HomePage> {
                     : Expanded(child: _homeDataWidget(homeVM)),
               ],
             ),
-            bottomNavigationBar: BottomNavigationBar(
-              showSelectedLabels: true,
-              landscapeLayout: BottomNavigationBarLandscapeLayout.centered,
-              type: BottomNavigationBarType.fixed,
-              useLegacyColorScheme: false,
-              elevation: 4.0,
-              currentIndex: homeVM.selectedIndex.value,
-              backgroundColor: ghostWhite,
-              selectedItemColor: midnightBlue,
-              items: [
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.home),
-                    label: "home".tr,
-                    tooltip: "home".tr),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.home_repair_service),
-                    label: "dashboard".tr,
-                    tooltip: "dashboard".tr),
-              ],
-              onTap: (label) async {
-                switch (label) {
-                  case 0:
-                    debugPrint("Home");
-                    homeVM.isAllPostPage.value = true;
-                    homeVM.selectedIndex.value = 0;
-                    break;
-                  case 1:
-                    debugPrint("Dashboard");
-                    homeVM.isAllPostPage.value = false;
-                    homeVM.selectedIndex.value = 1;
-                    await homeVM.getMeetingsList();
-                    break;
-                  default:
-                    debugPrint("Home Default");
-                }
-              },
-            ),
           ),
-        );
-      }),
-    );
+          bottomNavigationBar: BottomNavigationBar(
+            showSelectedLabels: true,
+            landscapeLayout: BottomNavigationBarLandscapeLayout.centered,
+            type: BottomNavigationBarType.fixed,
+            useLegacyColorScheme: false,
+            elevation: 4.0,
+            currentIndex: homeVM.selectedIndex.value,
+            backgroundColor: ghostWhite,
+            selectedItemColor: midnightBlue,
+            items: [
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  label: "home".tr,
+                  tooltip: "home".tr),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.home_repair_service),
+                  label: "dashboard".tr,
+                  tooltip: "dashboard".tr),
+            ],
+            onTap: (label) async {
+              switch (label) {
+                case 0:
+                  debugPrint("Home");
+                  homeVM.isAllPostPage.value = true;
+                  homeVM.selectedIndex.value = 0;
+                  break;
+                case 1:
+                  debugPrint("Dashboard");
+                  homeVM.isAllPostPage.value = false;
+                  homeVM.selectedIndex.value = 1;
+                  await homeVM.getMeetingsList();
+                  break;
+                default:
+                  debugPrint("Home Default");
+              }
+            },
+          ),
+        ),
+      );
+    });
   }
 
   Future<void> showFilterDialog(HomeViewModel homeVM) async {

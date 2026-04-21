@@ -35,18 +35,18 @@ class ContactPageState extends State<ContactPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: ghostWhite,
-        appBar: CommonAppBar(
-          title: Text(
-            "contact".tr,
-            style: fontBold.copyWith(
-                fontSize: fontSize18,
-                color: Theme.of(context).textTheme.bodyLarge!.color),
-          ),
+    return Scaffold(
+      backgroundColor: ghostWhite,
+      appBar: CommonAppBar(
+        title: Text(
+          "contact".tr,
+          style: fontBold.copyWith(
+              fontSize: fontSize18,
+              color: Theme.of(context).textTheme.bodyLarge!.color),
         ),
-        body: GetBuilder<ContactViewmodel>(builder: (contactVM) {
+      ),
+      body: SafeArea(
+        child: GetBuilder<ContactViewmodel>(builder: (contactVM) {
           return SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(14.0),

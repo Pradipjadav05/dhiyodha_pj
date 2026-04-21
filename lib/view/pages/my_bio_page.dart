@@ -66,19 +66,19 @@ class MyBioPagePageState extends State<MyBioPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: ghostWhite,
-        appBar: CommonAppBar(
-          title: Text(
-            'my_bio'.tr,
-            style: fontBold.copyWith(
-              fontSize: fontSize18,
-              color: Theme.of(context).textTheme.bodyLarge!.color,
-            ),
+    return Scaffold(
+      backgroundColor: ghostWhite,
+      appBar: CommonAppBar(
+        title: Text(
+          'my_bio'.tr,
+          style: fontBold.copyWith(
+            fontSize: fontSize18,
+            color: Theme.of(context).textTheme.bodyLarge!.color,
           ),
         ),
-        body: SingleChildScrollView(
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: GetBuilder<VisitingCardViewModel>(
             builder: (vvm) {

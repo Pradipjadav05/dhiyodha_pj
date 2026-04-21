@@ -33,19 +33,19 @@ class AsksAnswerListPageState extends State<AsksAnswerListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: GetBuilder<AsksViewModel>(builder: (askVM) {
-        return Scaffold(
-          backgroundColor: ghostWhite,
-          appBar: CommonAppBar(
-            title: Text(
-              "answers".tr,
-              style: fontBold.copyWith(
-                  fontSize: fontSize18,
-                  color: Theme.of(context).textTheme.bodyLarge!.color),
-            ),
+    return GetBuilder<AsksViewModel>(builder: (askVM) {
+      return Scaffold(
+        backgroundColor: ghostWhite,
+        appBar: CommonAppBar(
+          title: Text(
+            "answers".tr,
+            style: fontBold.copyWith(
+                fontSize: fontSize18,
+                color: Theme.of(context).textTheme.bodyLarge!.color),
           ),
-          body: Column(
+        ),
+        body: SafeArea(
+          child: Column(
             children: [
               Visibility(
                 visible: askVM.isLoading,
@@ -77,9 +77,9 @@ class AsksAnswerListPageState extends State<AsksAnswerListPage> {
                     )
             ],
           ),
-        );
-      }),
-    );
+        ),
+      );
+    });
   }
 
   @override

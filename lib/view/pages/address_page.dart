@@ -105,18 +105,18 @@ class AddressPageState extends State<AddressPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: ghostWhite,
-        appBar: CommonAppBar(
-          title: Text(
-            "address".tr,
-            style: fontBold.copyWith(
-                fontSize: fontSize18,
-                color: Theme.of(context).textTheme.bodyLarge!.color),
-          ),
+    return Scaffold(
+      backgroundColor: ghostWhite,
+      appBar: CommonAppBar(
+        title: Text(
+          "address".tr,
+          style: fontBold.copyWith(
+              fontSize: fontSize18,
+              color: Theme.of(context).textTheme.bodyLarge!.color),
         ),
-        body: GetBuilder<AddressViewmodel>(builder: (addressVM) {
+      ),
+      body: SafeArea(
+        child: GetBuilder<AddressViewmodel>(builder: (addressVM) {
           return SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(14.0),
@@ -215,7 +215,7 @@ class AddressPageState extends State<AddressPage> {
                   //       horizontal: paddingSize20, vertical: paddingSize20),
                   // ),
                   // SizedBox(height: paddingSize25),
-
+            
                   // CountryStateCityPicker(
                   //   country: addressVM.countryController,
                   //   state: TextEditingController(),

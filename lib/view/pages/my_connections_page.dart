@@ -20,19 +20,19 @@ class MyConnectionsPageState extends State<MyConnectionsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: GetBuilder<MembersViewmodel>(builder: (membersVM) {
-        return Scaffold(
-          backgroundColor: ghostWhite,
-          appBar: CommonAppBar(
-            title: Text(
-              "My Connections".tr,
-              style: fontBold.copyWith(
-                  fontSize: fontSize18,
-                  color: Theme.of(context).textTheme.bodyLarge!.color),
-            ),
+    return GetBuilder<MembersViewmodel>(builder: (membersVM) {
+      return Scaffold(
+        backgroundColor: ghostWhite,
+        appBar: CommonAppBar(
+          title: Text(
+            "My Connections".tr,
+            style: fontBold.copyWith(
+                fontSize: fontSize18,
+                color: Theme.of(context).textTheme.bodyLarge!.color),
           ),
-          body: SingleChildScrollView(
+        ),
+        body: SafeArea(
+          child: SingleChildScrollView(
             child: Column(
               children: [
                 Padding(
@@ -53,9 +53,9 @@ class MyConnectionsPageState extends State<MyConnectionsPage> {
               ],
             ),
           ),
-        );
-      }),
-    );
+        ),
+      );
+    });
   }
 
   @override

@@ -580,27 +580,27 @@ class VisitorPageState extends State<VisitorPage>
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: GetBuilder<VisitorsViewModel>(builder: (visitorVM) {
-        return Obx(() {
-          final bool isBusy =
-              _isMarkingAttendance.value || visitorVM.isLoading;
-
-          return Scaffold(
-            backgroundColor: pageBackground,
-            appBar: widget.isAppBarRequired
-                ? CommonAppBar(
-                    title: Text(
-                      "visitors".tr,
-                      style: fontBold.copyWith(
-                        fontSize: fontSize18,
-                        color: Theme.of(context).textTheme.bodyLarge!.color,
-                      ),
+    return GetBuilder<VisitorsViewModel>(builder: (visitorVM) {
+      return Obx(() {
+        final bool isBusy =
+            _isMarkingAttendance.value || visitorVM.isLoading;
+    
+        return Scaffold(
+          backgroundColor: pageBackground,
+          appBar: widget.isAppBarRequired
+              ? CommonAppBar(
+                  title: Text(
+                    "visitors".tr,
+                    style: fontBold.copyWith(
+                      fontSize: fontSize18,
+                      color: Theme.of(context).textTheme.bodyLarge!.color,
                     ),
-                  )
-                : null,
-            floatingActionButton: _buildFAB(visitorVM),
-            body: Stack(
+                  ),
+                )
+              : null,
+          floatingActionButton: _buildFAB(visitorVM),
+          body: SafeArea(
+            child: Stack(
               children: [
                 FadeTransition(
                   opacity: _fadeAnim,
@@ -613,7 +613,7 @@ class VisitorPageState extends State<VisitorPage>
                           minHeight: 3,
                           borderRadius: BorderRadius.circular(radius20),
                         ),
-
+                
                       visitorVM.visitorData.isNotEmpty
                           ? Expanded(
                               child: LoadMore(
@@ -649,9 +649,9 @@ class VisitorPageState extends State<VisitorPage>
                   ),
               ],
             ),
-          );
-        });
-      }),
-    );
+          ),
+        );
+      });
+    });
   }
 }

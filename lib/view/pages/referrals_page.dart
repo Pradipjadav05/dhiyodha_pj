@@ -38,36 +38,36 @@ class ReferralsPageState extends State<ReferralsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: GetBuilder<HomeViewModel>(builder: (homeVM) {
-        return WillPopScope(
-          onWillPop: () async {
-            Get.back(result: true);
-            return false;
-          },
-          child: Scaffold(
-            backgroundColor: const Color(0xFFF4F6FB),
-            appBar: CommonAppBar(
-              title: Text(
-                "Referrals".tr,
-                style: fontBold.copyWith(
-                  fontSize: fontSize18,
-                  color: Theme.of(context).textTheme.bodyLarge!.color,
-                ),
+    return GetBuilder<HomeViewModel>(builder: (homeVM) {
+      return WillPopScope(
+        onWillPop: () async {
+          Get.back(result: true);
+          return false;
+        },
+        child: Scaffold(
+          backgroundColor: const Color(0xFFF4F6FB),
+          appBar: CommonAppBar(
+            title: Text(
+              "Referrals".tr,
+              style: fontBold.copyWith(
+                fontSize: fontSize18,
+                color: Theme.of(context).textTheme.bodyLarge!.color,
               ),
             ),
-            floatingActionButton: FloatingActionButton(
-              backgroundColor: bluishPurple,
-              onPressed: () async {
-                final result = await Get.toNamed(Routes.getAddSlipPageRoute());
+          ),
+          floatingActionButton: FloatingActionButton(
+            backgroundColor: bluishPurple,
+            onPressed: () async {
+              final result = await Get.toNamed(Routes.getAddSlipPageRoute());
 
-                if (result == true) {
-                  await getReferralData();
-                }
-              },
-              child: const Icon(Icons.add, color: Colors.white),
-            ),
-            body: Column(
+              if (result == true) {
+                await getReferralData();
+              }
+            },
+            child: const Icon(Icons.add, color: Colors.white),
+          ),
+          body: SafeArea(
+            child: Column(
               children: [
                 Visibility(
                   visible: homeVM.isLoading,
@@ -90,9 +90,9 @@ class ReferralsPageState extends State<ReferralsPage> {
               ],
             ),
           ),
-        );
-      }),
-    );
+        ),
+      );
+    });
   }
 
   Widget _buildTabSwitcher() {

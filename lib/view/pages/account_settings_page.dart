@@ -22,31 +22,31 @@ class AccountSettingsPageState extends State<AccountSettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: ghostWhite,
-        appBar: CommonAppBar(
-          title: Text(
-            "account_settings".tr,
-            style: fontBold.copyWith(
-                fontSize: fontSize18,
-                color: Theme.of(context).textTheme.bodyLarge!.color),
-          ),
-          menuWidget: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: InkWell(
-              customBorder: new CircleBorder(),
-              onTap: () {
-                Get.toNamed(Routes.getWebViewPageRoute(queryWebUrl));
-              },
-              child: Image.asset(
-                query,
-                width: 24.0,
-              ),
+    return Scaffold(
+      backgroundColor: ghostWhite,
+      appBar: CommonAppBar(
+        title: Text(
+          "account_settings".tr,
+          style: fontBold.copyWith(
+              fontSize: fontSize18,
+              color: Theme.of(context).textTheme.bodyLarge!.color),
+        ),
+        menuWidget: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: InkWell(
+            customBorder: new CircleBorder(),
+            onTap: () {
+              Get.toNamed(Routes.getWebViewPageRoute(queryWebUrl));
+            },
+            child: Image.asset(
+              query,
+              width: 24.0,
             ),
           ),
         ),
-        body: SingleChildScrollView(
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(
                 vertical: paddingSize10, horizontal: paddingSize15),

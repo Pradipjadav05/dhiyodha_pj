@@ -20,28 +20,28 @@ class NotificationPageState extends State<NotificationPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: GetBuilder<AsksViewModel>(builder: (askVM) {
-        return Scaffold(
-          backgroundColor: ghostWhite,
-          appBar: CommonAppBar(
-            title: Text(
-              "notification".tr,
-              style: fontBold.copyWith(
-                  fontSize: fontSize18,
-                  color: Theme.of(context).textTheme.bodyLarge!.color),
-            ),
+    return GetBuilder<AsksViewModel>(builder: (askVM) {
+      return Scaffold(
+        backgroundColor: ghostWhite,
+        appBar: CommonAppBar(
+          title: Text(
+            "notification".tr,
+            style: fontBold.copyWith(
+                fontSize: fontSize18,
+                color: Theme.of(context).textTheme.bodyLarge!.color),
           ),
-          body: ListView.builder(
+        ),
+        body: SafeArea(
+          child: ListView.builder(
             shrinkWrap: true,
             itemBuilder: (context, index) {
               return _notificationListItems(index);
             },
             itemCount: 8,
           ),
-        );
-      }),
-    );
+        ),
+      );
+    });
   }
 
   @override

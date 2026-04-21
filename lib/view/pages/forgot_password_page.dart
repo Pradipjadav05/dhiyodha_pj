@@ -76,13 +76,13 @@ class ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: ghostWhite,
-        appBar: CommonAppBar(
-          title: Image.asset(appLogoLong, width: 120.0),
-        ),
-        body: GestureDetector(
+    return Scaffold(
+      backgroundColor: ghostWhite,
+      appBar: CommonAppBar(
+        title: Image.asset(appLogoLong, width: 120.0),
+      ),
+      body: SafeArea(
+        child: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(24.0),

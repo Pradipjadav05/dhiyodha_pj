@@ -36,53 +36,53 @@ class AsksListPageState extends State<AsksListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: GetBuilder<AsksViewModel>(builder: (askVM) {
-        return Scaffold(
-          backgroundColor: ghostWhite,
-          appBar: AppBar(
-            title: Image.asset(
-              appLogoLong,
-              width: 100.0,
-            ),
-            actions: [
-              InkWell(
-                onTap: () async {
-                  await Get.toNamed(Routes.getMembersPageRoute("false"));
-                },
-                child: Image.asset(
-                  search,
-                  height: iconSize20,
-                  width: iconSize20,
-                ),
-              ),
-              SizedBox(width: paddingSize20),
-              InkWell(
-                onTap: () {
-                  Get.toNamed(Routes.getNotificationPageRoute());
-                },
-                child: Image.asset(
-                  notificationIcon,
-                  height: iconSize20,
-                  width: iconSize20,
-                ),
-              ),
-              SizedBox(width: paddingSize20),
-              InkWell(
-                onTap: () async {
-                  await showFilterDialog(askVM);
-                },
-                child: Image.asset(
-                  filter,
-                  color: black,
-                  height: iconSize20,
-                  width: iconSize20,
-                ),
-              ),
-              SizedBox(width: paddingSize20),
-            ],
+    return GetBuilder<AsksViewModel>(builder: (askVM) {
+      return Scaffold(
+        backgroundColor: ghostWhite,
+        appBar: AppBar(
+          title: Image.asset(
+            appLogoLong,
+            width: 100.0,
           ),
-          body: Column(
+          actions: [
+            InkWell(
+              onTap: () async {
+                await Get.toNamed(Routes.getMembersPageRoute("false"));
+              },
+              child: Image.asset(
+                search,
+                height: iconSize20,
+                width: iconSize20,
+              ),
+            ),
+            SizedBox(width: paddingSize20),
+            InkWell(
+              onTap: () {
+                Get.toNamed(Routes.getNotificationPageRoute());
+              },
+              child: Image.asset(
+                notificationIcon,
+                height: iconSize20,
+                width: iconSize20,
+              ),
+            ),
+            SizedBox(width: paddingSize20),
+            InkWell(
+              onTap: () async {
+                await showFilterDialog(askVM);
+              },
+              child: Image.asset(
+                filter,
+                color: black,
+                height: iconSize20,
+                width: iconSize20,
+              ),
+            ),
+            SizedBox(width: paddingSize20),
+          ],
+        ),
+        body: SafeArea(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -180,9 +180,9 @@ class AsksListPageState extends State<AsksListPage> {
                     )
             ],
           ),
-        );
-      }),
-    );
+        ),
+      );
+    });
   }
 
   @override

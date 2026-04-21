@@ -35,13 +35,13 @@ class LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: ghostWhite,
-        appBar: CommonAppBar(
-          title: Image.asset(appLogoLong, width: 120.0),
-        ),
-        body: GestureDetector(
+    return Scaffold(
+      backgroundColor: ghostWhite,
+      appBar: CommonAppBar(
+        title: Image.asset(appLogoLong, width: 120.0),
+      ),
+      body: SafeArea(
+        child: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: SingleChildScrollView(
             child: Padding(
@@ -57,9 +57,9 @@ class LoginPageState extends State<LoginPage> {
                       style: fontBold.copyWith(
                           color: midnightBlue, fontSize: fontSize18),
                     ),
-
+            
                     const SizedBox(height: paddingSize40),
-
+            
                     // ── Email ──
                     CommonTextFormField(
                       controller: loginVM.emailController,
@@ -67,9 +67,9 @@ class LoginPageState extends State<LoginPage> {
                       inputType: TextInputType.emailAddress,
                       padding: EdgeInsets.all(paddingSize20),
                     ),
-
+            
                     const SizedBox(height: paddingSize25),
-
+            
                     // ── Password ──
                     CommonTextFormField(
                       controller: loginVM.passwordController,
@@ -77,9 +77,9 @@ class LoginPageState extends State<LoginPage> {
                       isPassword: true,
                       padding: EdgeInsets.all(paddingSize20),
                     ),
-
+            
                     const SizedBox(height: paddingSize10),
-
+            
                     // ── Forgot Password link ──
                     Align(
                       alignment: Alignment.centerRight,
@@ -101,9 +101,9 @@ class LoginPageState extends State<LoginPage> {
                         ),
                       ),
                     ),
-
+            
                     const SizedBox(height: paddingSize25),
-
+            
                     // ── Terms & Conditions ──
                     Obx(
                       () => Row(
@@ -149,9 +149,9 @@ class LoginPageState extends State<LoginPage> {
                         ],
                       ),
                     ),
-
+            
                     const SizedBox(height: paddingSize40),
-
+            
                     // ── Login button ──
                     Obx(
                       () => loginVM.isLoading

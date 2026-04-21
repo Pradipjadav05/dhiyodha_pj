@@ -17,10 +17,10 @@ class _WebViewPageState extends State<WebViewPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: ghostWhite,
-        body: InAppWebView(
+    return Scaffold(
+      backgroundColor: ghostWhite,
+      body: SafeArea(
+        child: InAppWebView(
           initialUrlRequest: URLRequest(
             url: WebUri(widget.launchUrl),
           ),

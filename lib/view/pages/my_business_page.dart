@@ -34,32 +34,32 @@ class MyBusinessPageState extends State<MyBusinessPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: GetBuilder<MyBusinessViewModel>(builder: (myBusinessVM) {
-        return Scaffold(
-          backgroundColor: ghostWhite,
-          appBar: CommonAppBar(
-            title: Text(
-              "my_business".tr,
-              style: fontBold.copyWith(
-                  fontSize: fontSize18,
-                  color: Theme.of(context).textTheme.bodyLarge!.color),
-            ),
-            menuWidget: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: InkWell(
-                customBorder: new CircleBorder(),
-                onTap: () {
-                  Get.toNamed(Routes.getWebViewPageRoute(queryWebUrl));
-                },
-                child: Image.asset(
-                  query,
-                  width: 24.0,
-                ),
+    return GetBuilder<MyBusinessViewModel>(builder: (myBusinessVM) {
+      return Scaffold(
+        backgroundColor: ghostWhite,
+        appBar: CommonAppBar(
+          title: Text(
+            "my_business".tr,
+            style: fontBold.copyWith(
+                fontSize: fontSize18,
+                color: Theme.of(context).textTheme.bodyLarge!.color),
+          ),
+          menuWidget: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: InkWell(
+              customBorder: new CircleBorder(),
+              onTap: () {
+                Get.toNamed(Routes.getWebViewPageRoute(queryWebUrl));
+              },
+              child: Image.asset(
+                query,
+                width: 24.0,
               ),
             ),
           ),
-          body: SingleChildScrollView(
+        ),
+        body: SafeArea(
+          child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.symmetric(
                   vertical: paddingSize10, horizontal: paddingSize15),
@@ -93,9 +93,9 @@ class MyBusinessPageState extends State<MyBusinessPage> {
               ),
             ),
           ),
-        );
-      }),
-    );
+        ),
+      );
+    });
   }
 
   Future<void> collectDataAndSaveProfile(

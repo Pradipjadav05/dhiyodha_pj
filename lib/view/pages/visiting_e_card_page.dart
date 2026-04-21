@@ -63,27 +63,27 @@ class VisitingECardPageState extends State<VisitingECardPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: ghostWhite,
-        appBar: CommonAppBar(
-          title: Text(
-            'v_card'.tr,
-            style: fontBold.copyWith(
-              fontSize: fontSize18,
-              color: Theme.of(context).textTheme.bodyLarge!.color,
-            ),
-          ),
-          menuWidget: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: InkWell(
-              customBorder: const CircleBorder(),
-              onTap: () => Get.toNamed(Routes.getWebViewPageRoute(queryWebUrl)),
-              child: Image.asset(query, width: 24.0),
-            ),
+    return Scaffold(
+      backgroundColor: ghostWhite,
+      appBar: CommonAppBar(
+        title: Text(
+          'v_card'.tr,
+          style: fontBold.copyWith(
+            fontSize: fontSize18,
+            color: Theme.of(context).textTheme.bodyLarge!.color,
           ),
         ),
-        body: SingleChildScrollView(
+        menuWidget: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: InkWell(
+            customBorder: const CircleBorder(),
+            onTap: () => Get.toNamed(Routes.getWebViewPageRoute(queryWebUrl)),
+            child: Image.asset(query, width: 24.0),
+          ),
+        ),
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: GetBuilder<VisitingCardViewModel>(
             builder: (vvm) {
@@ -95,11 +95,11 @@ class VisitingECardPageState extends State<VisitingECardPage> {
                         // ── Profile header ──
                         _buildProfileHeader(vvm),
                         const SizedBox(height: paddingSize20),
-
+            
                         // ── Details card ──
                         _buildDetailsCard(vvm),
                         const SizedBox(height: paddingSize25),
-
+            
                         // ── Share + Edit ──
                         Visibility(
                           visible: !vvm.isVisitorData.value,
@@ -140,9 +140,9 @@ class VisitingECardPageState extends State<VisitingECardPage> {
                             ],
                           ),
                         ),
-
+            
                         const SizedBox(height: paddingSize15),
-
+            
                         // ── Submit ──
                         Visibility(
                           visible: vvm.isEditData.value,

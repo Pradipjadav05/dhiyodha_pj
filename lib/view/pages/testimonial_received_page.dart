@@ -19,28 +19,28 @@ class TestimonialReceivedPageState extends State<TestimonialReceivedPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: GetBuilder<MembersViewmodel>(builder: (membersVM) {
-        return Scaffold(
-          backgroundColor: ghostWhite,
-          appBar: CommonAppBar(
-            title: Text(
-              "testimonials_received".tr,
-              style: fontBold.copyWith(
-                  fontSize: fontSize18,
-                  color: Theme.of(context).textTheme.bodyLarge!.color),
-            ),
+    return GetBuilder<MembersViewmodel>(builder: (membersVM) {
+      return Scaffold(
+        backgroundColor: ghostWhite,
+        appBar: CommonAppBar(
+          title: Text(
+            "testimonials_received".tr,
+            style: fontBold.copyWith(
+                fontSize: fontSize18,
+                color: Theme.of(context).textTheme.bodyLarge!.color),
           ),
-          body: ListView.builder(
+        ),
+        body: SafeArea(
+          child: ListView.builder(
             shrinkWrap: true,
             itemBuilder: (context, index) {
               return _receivedTestimonialListItems(index, membersVM);
             },
             itemCount: 30,
           ),
-        );
-      }),
-    );
+        ),
+      );
+    });
   }
 
   @override

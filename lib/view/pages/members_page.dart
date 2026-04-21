@@ -78,20 +78,20 @@ class MembersPageState extends State<MembersPage>
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: GetBuilder<MembersViewmodel>(builder: (membersVM) {
-        return Scaffold(
-          backgroundColor: const Color(0xFFF4F6FB),
-          appBar: CommonAppBar(
-            title: Text(
-              'members'.tr,
-              style: fontBold.copyWith(
-                fontSize: fontSize18,
-                color: Theme.of(context).textTheme.bodyLarge!.color,
-              ),
+    return GetBuilder<MembersViewmodel>(builder: (membersVM) {
+      return Scaffold(
+        backgroundColor: const Color(0xFFF4F6FB),
+        appBar: CommonAppBar(
+          title: Text(
+            'members'.tr,
+            style: fontBold.copyWith(
+              fontSize: fontSize18,
+              color: Theme.of(context).textTheme.bodyLarge!.color,
             ),
           ),
-          body: Obx(
+        ),
+        body: SafeArea(
+          child: Obx(
             () => FadeTransition(
               opacity: _fadeAnim,
               child: Column(
@@ -104,10 +104,10 @@ class MembersPageState extends State<MembersPage>
                       minHeight: 3,
                       borderRadius: BorderRadius.circular(radius20),
                     ),
-
+              
                   // ── Tab switcher ──
                   _buildTabSwitcher(membersVM),
-
+              
                   // ── Body ──
                   if (membersVM.isChapterRoster.value)
                     Expanded(child: _buildChapterRosterTab(membersVM))
@@ -117,9 +117,9 @@ class MembersPageState extends State<MembersPage>
               ),
             ),
           ),
-        );
-      }),
-    );
+        ),
+      );
+    });
   }
 
   // ── Pill-style tab switcher ──
@@ -357,7 +357,9 @@ class MembersPageState extends State<MembersPage>
       onArrowTap: () async {
         await Get.toNamed(Routes.getMembersProfilePageRoute(member));
       },
-      teamName: member.userGroups![0].groupName ?? "",
+      teamName: member.userGroups?.isNotEmpty == true
+          ? member.userGroups![0].groupName ?? ""
+          : "",
       city: member.address?.city ?? '',
       state: member.address?.state ?? '',
     );

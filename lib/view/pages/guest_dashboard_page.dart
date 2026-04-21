@@ -37,30 +37,30 @@ class GuestDashboardPageState extends State<GuestDashboardPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: GetBuilder<HomeViewModel>(builder: (homeVM) {
-        return Scaffold(
+    return GetBuilder<HomeViewModel>(builder: (homeVM) {
+      return Scaffold(
+        backgroundColor: ghostWhite,
+        appBar: AppBar(
           backgroundColor: ghostWhite,
-          appBar: AppBar(
-            backgroundColor: ghostWhite,
-            elevation: 0,
-            automaticallyImplyLeading: false,
-            centerTitle: true,
-            title: Image.asset(appLogoLong, width: 120.0),
-            actions: [
-              Padding(
-                padding: const EdgeInsets.all(paddingSize15),
-                child: InkWell(
-                  onTap: () async {
-                    await homeVM.clearSharedPreferenceAndLogout();
-                    Get.offAll(AuthenticationPage());
-                  },
-                  child: Image.asset(logout, height: 24.0, width: 24.0),
-                ),
+          elevation: 0,
+          automaticallyImplyLeading: false,
+          centerTitle: true,
+          title: Image.asset(appLogoLong, width: 120.0),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(paddingSize15),
+              child: InkWell(
+                onTap: () async {
+                  await homeVM.clearSharedPreferenceAndLogout();
+                  Get.offAll(AuthenticationPage());
+                },
+                child: Image.asset(logout, height: 24.0, width: 24.0),
               ),
-            ],
-          ),
-          body: SingleChildScrollView(
+            ),
+          ],
+        ),
+        body: SafeArea(
+          child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -82,9 +82,9 @@ class GuestDashboardPageState extends State<GuestDashboardPage> {
               ],
             ),
           ),
-        );
-      }),
-    );
+        ),
+      );
+    });
   }
 
   // ────────────────────────────────────────────

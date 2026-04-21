@@ -63,21 +63,21 @@ class TyfcbPageState extends State<TyfcbPage>
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: GetBuilder<TyfcbViewModel>(builder: (tyVM) {
-        return Scaffold(
-          backgroundColor: const Color(0xFFF4F6FB),
-          appBar: CommonAppBar(
-            title: Text(
-              "TYFCBs".tr,
-              style: fontBold.copyWith(
-                fontSize: fontSize18,
-                color: Theme.of(context).textTheme.bodyLarge!.color,
-              ),
+    return GetBuilder<TyfcbViewModel>(builder: (tyVM) {
+      return Scaffold(
+        backgroundColor: const Color(0xFFF4F6FB),
+        appBar: CommonAppBar(
+          title: Text(
+            "TYFCBs".tr,
+            style: fontBold.copyWith(
+              fontSize: fontSize18,
+              color: Theme.of(context).textTheme.bodyLarge!.color,
             ),
           ),
-          floatingActionButton: _buildFAB(tyVM),
-          body: FadeTransition(
+        ),
+        floatingActionButton: _buildFAB(tyVM),
+        body: SafeArea(
+          child: FadeTransition(
             opacity: _fadeAnim,
             child: Column(
               children: [
@@ -114,9 +114,9 @@ class TyfcbPageState extends State<TyfcbPage>
               ],
             ),
           ),
-        );
-      }),
-    );
+        ),
+      );
+    });
   }
 
   Widget _buildTabSwitcher(TyfcbViewModel tyVM) {

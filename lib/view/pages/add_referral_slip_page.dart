@@ -56,18 +56,18 @@ class AddReferralSlipPageState extends State<AddReferralSlipPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: ghostWhite,
-        appBar: CommonAppBar(
-          title: Text(
-            'referral_slip'.tr,
-            style: fontBold.copyWith(
-                fontSize: fontSize18,
-                color: Theme.of(context).textTheme.bodyLarge!.color),
-          ),
+    return Scaffold(
+      backgroundColor: ghostWhite,
+      appBar: CommonAppBar(
+        title: Text(
+          'referral_slip'.tr,
+          style: fontBold.copyWith(
+              fontSize: fontSize18,
+              color: Theme.of(context).textTheme.bodyLarge!.color),
         ),
-        body: GetBuilder<ReferralSlipViewModel>(
+      ),
+      body: SafeArea(
+        child: GetBuilder<ReferralSlipViewModel>(
           builder: (addReferralsVM) {
             final bool isBusy =
                 addReferralsVM.isLoading || addReferralsVM.isSubmitting.value;

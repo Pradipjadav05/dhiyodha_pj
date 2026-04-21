@@ -46,21 +46,21 @@ class TestimonialPageState extends State<TestimonialPage> {
   }
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: GetBuilder<HomeViewModel>(builder: (homeVM) {
-        return Scaffold(
-          backgroundColor: ghostWhite,
-          appBar: CommonAppBar(
-            title: Text(
-              isSenderTab.value
-                  ? "Testimonials Sent"
-                  : "Testimonials Received",
-              style: fontBold.copyWith(
-                  fontSize: fontSize18,
-                  color: Theme.of(context).textTheme.bodyLarge!.color),
-            ),
+    return GetBuilder<HomeViewModel>(builder: (homeVM) {
+      return Scaffold(
+        backgroundColor: ghostWhite,
+        appBar: CommonAppBar(
+          title: Text(
+            isSenderTab.value
+                ? "Testimonials Sent"
+                : "Testimonials Received",
+            style: fontBold.copyWith(
+                fontSize: fontSize18,
+                color: Theme.of(context).textTheme.bodyLarge!.color),
           ),
-          body: Column(
+        ),
+        body: SafeArea(
+          child: Column(
             children: [
               Visibility(
                 visible: homeVM.isLoading,
@@ -71,18 +71,18 @@ class TestimonialPageState extends State<TestimonialPage> {
                 ),
               ),
               _buildTabSwitcher(),
-
+              
               Expanded(
                 child: Obx(() {
-
+              
                   final list = isSenderTab.value
                       ? testimonialVM.testimonialSenderList
                       : testimonialVM.testimonialReceiverList;
-
+              
                   if (list.isEmpty) {
                     return Center(child: Text("no_test_found".tr));
                   }
-
+              
                   return ListView.builder(
                     shrinkWrap: true,
                     itemCount: list.length,
@@ -94,9 +94,9 @@ class TestimonialPageState extends State<TestimonialPage> {
               ),
             ],
           ),
-        );
-      }),
-    );
+        ),
+      );
+    });
   }
 
   Widget _buildTabSwitcher() {

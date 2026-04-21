@@ -51,23 +51,23 @@ class _AttendanceScannerPageState extends State<AttendanceScannerPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        iconTheme: const IconThemeData(color: Colors.white),
+        centerTitle: true,
         backgroundColor: Colors.black,
-        appBar: AppBar(
-          iconTheme: const IconThemeData(color: Colors.white),
-          centerTitle: true,
-          backgroundColor: Colors.black,
-          elevation: 0,
-          title: Text(
-            "scan_qr_code_for_attendance".tr,
-            style: fontBold.copyWith(
-              color: Colors.white,
-              fontSize: fontSize16,
-            ),
+        elevation: 0,
+        title: Text(
+          "scan_qr_code_for_attendance".tr,
+          style: fontBold.copyWith(
+            color: Colors.white,
+            fontSize: fontSize16,
           ),
         ),
-        body: Stack(
+      ),
+      body: SafeArea(
+        child: Stack(
           children: [
             MobileScanner(
               controller: _scannerController,

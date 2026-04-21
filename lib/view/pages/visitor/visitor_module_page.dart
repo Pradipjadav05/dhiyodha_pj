@@ -34,7 +34,7 @@ class AddVisitorsPageState extends State<AddVisitorsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(child: GetBuilder<VisitorsViewModel>(builder: (vvm) {
+    return GetBuilder<VisitorsViewModel>(builder: (vvm) {
       return Scaffold(
         backgroundColor: ghostWhite,
         appBar: CommonAppBar(
@@ -45,60 +45,62 @@ class AddVisitorsPageState extends State<AddVisitorsPage> {
                 color: Theme.of(context).textTheme.bodyLarge!.color),
           ),
         ),
-        body: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.all(paddingSize10),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: CommonButton(
-                      buttonText: "meeting_visitor".tr,
-                      bgColor: midnightBlue,
-                      textColor: periwinkle,
-                      onPressed: () async {
-                        isListScreen.value = true;
-                      },
+        body: SafeArea(
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.all(paddingSize10),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: CommonButton(
+                        buttonText: "meeting_visitor".tr,
+                        bgColor: midnightBlue,
+                        textColor: periwinkle,
+                        onPressed: () async {
+                          isListScreen.value = true;
+                        },
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    width: paddingSize10,
-                  ),
-                  Expanded(
-                    child: CommonButton(
-                      buttonText: "add_visitor".tr,
-                      bgColor: midnightBlue,
-                      textColor: periwinkle,
-                      onPressed: () async {
-                        await initData();
-                        isListScreen.value = false;
-                      },
+                    SizedBox(
+                      width: paddingSize10,
                     ),
-                  )
-                ],
+                    Expanded(
+                      child: CommonButton(
+                        buttonText: "add_visitor".tr,
+                        bgColor: midnightBlue,
+                        textColor: periwinkle,
+                        onPressed: () async {
+                          await initData();
+                          isListScreen.value = false;
+                        },
+                      ),
+                    )
+                  ],
+                ),
               ),
-            ),
-            Obx(() => Visibility(
-              visible: isListScreen.value,
-              child: Expanded(child: VisitorPage(
-                isAppBarRequired: false,
-                onStateChanged: () async {
-                  await initData();
-                  isListScreen.value = false;
-                },
+              Obx(() => Visibility(
+                visible: isListScreen.value,
+                child: Expanded(child: VisitorPage(
+                  isAppBarRequired: false,
+                  onStateChanged: () async {
+                    await initData();
+                    isListScreen.value = false;
+                  },
+                )),
               )),
-            )),
-            Obx(() => Visibility(
-              visible: !isListScreen.value,
-              child: Expanded(child: AddVisitorFormWidget(
-                visitorsViewModel: vvm,
-                onStateChanged: () {},
+              Obx(() => Visibility(
+                visible: !isListScreen.value,
+                child: Expanded(child: AddVisitorFormWidget(
+                  visitorsViewModel: vvm,
+                  onStateChanged: () {},
+                )),
               )),
-            )),
-          ],
+            ],
+          ),
         ),
       );
-    }));
+    });
   }
 
   @override

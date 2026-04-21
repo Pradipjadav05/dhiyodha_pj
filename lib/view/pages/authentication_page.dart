@@ -19,11 +19,11 @@ class AuthenticationPageState extends State<AuthenticationPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: true,
-        backgroundColor: midnightBlue,
-        body: SingleChildScrollView(
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      backgroundColor: midnightBlue,
+      body: SafeArea(
+        child: SingleChildScrollView(
           child: Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -85,10 +85,10 @@ class AuthenticationPageState extends State<AuthenticationPage> {
             ),
           ),
         ),
-        bottomNavigationBar: Image.asset(
-          womenBg,
-          fit: BoxFit.fitWidth,
-        ),
+      ),
+      bottomNavigationBar: Image.asset(
+        womenBg,
+        fit: BoxFit.fitWidth,
       ),
     );
   }

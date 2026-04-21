@@ -32,20 +32,20 @@ class AddTyPageState extends State<AddTyPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: ghostWhite,
-        appBar: CommonAppBar(
-          title: Text(
-            "add_tyfcb".tr,
-            style: fontBold.copyWith(
-                fontSize: fontSize18,
-                color: Theme.of(context).textTheme.bodyLarge!.color),
-          ),
+    return Scaffold(
+      backgroundColor: ghostWhite,
+      appBar: CommonAppBar(
+        title: Text(
+          "add_tyfcb".tr,
+          style: fontBold.copyWith(
+              fontSize: fontSize18,
+              color: Theme.of(context).textTheme.bodyLarge!.color),
         ),
-        body: GetBuilder<TyfcbViewModel>(builder: (addTyVM) {
+      ),
+      body: SafeArea(
+        child: GetBuilder<TyfcbViewModel>(builder: (addTyVM) {
           final bool isBusy = addTyVM.isLoading || addTyVM.isSubmitting.value;
-
+            
           return Stack(
             children: [
               AbsorbPointer(

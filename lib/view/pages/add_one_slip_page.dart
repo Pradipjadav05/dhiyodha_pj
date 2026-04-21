@@ -39,22 +39,22 @@ class AddOneToOneSlipPageState extends State<AddOneToOneSlipPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: ghostWhite,
-        appBar: CommonAppBar(
-          title: Text(
-            'one_to_one_slip'.tr,
-            style: fontBold.copyWith(
-                fontSize: fontSize18,
-                color: Theme.of(context).textTheme.bodyLarge!.color),
-          ),
+    return Scaffold(
+      backgroundColor: ghostWhite,
+      appBar: CommonAppBar(
+        title: Text(
+          'one_to_one_slip'.tr,
+          style: fontBold.copyWith(
+              fontSize: fontSize18,
+              color: Theme.of(context).textTheme.bodyLarge!.color),
         ),
-        body: GetBuilder<OneToOneSlipViewModel>(
+      ),
+      body: SafeArea(
+        child: GetBuilder<OneToOneSlipViewModel>(
           builder: (addOVM) {
             final bool isBusy =
                 addOVM.isLoading || addOVM.isSubmitting.value;
-
+            
             return Stack(
               children: [
                 AbsorbPointer(
@@ -67,7 +67,7 @@ class AddOneToOneSlipPageState extends State<AddOneToOneSlipPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                     const SizedBox(height: paddingSize20),
-
+            
                     // ── Met With ──
                     Row(
                       mainAxisSize: MainAxisSize.min,
@@ -88,7 +88,7 @@ class AddOneToOneSlipPageState extends State<AddOneToOneSlipPage> {
                             Routes.getMembersPageRoute('true'));
                         addOVM.metWithController.text =
                             '${childData.firstName} ${childData.lastName}';
-
+            
                         addOVM.connectedWith = childData.uuid!;
                         addOVM.update();
                       },
@@ -102,9 +102,9 @@ class AddOneToOneSlipPageState extends State<AddOneToOneSlipPage> {
                             horizontal: paddingSize20, vertical: paddingSize20),
                       ),
                     ),
-
+            
                     const SizedBox(height: paddingSize25),
-
+            
                     // ── Initiated By ──
                     Row(
                       mainAxisSize: MainAxisSize.min,
@@ -148,9 +148,9 @@ class AddOneToOneSlipPageState extends State<AddOneToOneSlipPage> {
                             horizontal: paddingSize20, vertical: paddingSize20),
                       ),
                     ),
-
+            
                     const SizedBox(height: paddingSize25),
-
+            
                     // ── Where ──
                     Row(
                       mainAxisSize: MainAxisSize.min,
@@ -172,9 +172,9 @@ class AddOneToOneSlipPageState extends State<AddOneToOneSlipPage> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: paddingSize20, vertical: paddingSize20),
                     ),
-
+            
                     const SizedBox(height: paddingSize25),
-
+            
                     // ── When ──
                     Row(
                       mainAxisSize: MainAxisSize.min,
@@ -205,9 +205,9 @@ class AddOneToOneSlipPageState extends State<AddOneToOneSlipPage> {
                             horizontal: paddingSize20, vertical: paddingSize20),
                       ),
                     ),
-
+            
                     const SizedBox(height: paddingSize25),
-
+            
                     // ── Conversation Topics ──
                     Row(
                       mainAxisSize: MainAxisSize.min,
@@ -230,9 +230,9 @@ class AddOneToOneSlipPageState extends State<AddOneToOneSlipPage> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: paddingSize20, vertical: paddingSize20),
                     ),
-
+            
                     const SizedBox(height: paddingSize25),
-
+            
                     // ── Submit ──
                     CommonButton(
                       buttonText: 'confirm'.tr,
@@ -244,7 +244,7 @@ class AddOneToOneSlipPageState extends State<AddOneToOneSlipPage> {
                               await _submit(addOVM);
                             },
                     ),
-
+            
                     const SizedBox(height: paddingSize25),
                         ],
                       ),

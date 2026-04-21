@@ -62,21 +62,21 @@ class OneToOnePageState extends State<OneToOnePage>
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: GetBuilder<OneToOneSlipViewModel>(builder: (oVM) {
-        return Scaffold(
-          backgroundColor: const Color(0xFFF4F6FB),
-          appBar: CommonAppBar(
-            title: Text(
-              "One-to-One Slip".tr,
-              style: fontBold.copyWith(
-                fontSize: fontSize18,
-                color: Theme.of(context).textTheme.bodyLarge!.color,
-              ),
+    return GetBuilder<OneToOneSlipViewModel>(builder: (oVM) {
+      return Scaffold(
+        backgroundColor: const Color(0xFFF4F6FB),
+        appBar: CommonAppBar(
+          title: Text(
+            "One-to-One Slip".tr,
+            style: fontBold.copyWith(
+              fontSize: fontSize18,
+              color: Theme.of(context).textTheme.bodyLarge!.color,
             ),
           ),
-          floatingActionButton: _buildFAB(),
-          body: FadeTransition(
+        ),
+        floatingActionButton: _buildFAB(),
+        body: SafeArea(
+          child: FadeTransition(
             opacity: _fadeAnim,
             child: oVM.isLoading
                 ? Center(
@@ -92,9 +92,9 @@ class OneToOnePageState extends State<OneToOnePage>
               },
             ),
           ),
-        );
-      }),
-    );
+        ),
+      );
+    });
   }
 
   Widget _buildFAB() {

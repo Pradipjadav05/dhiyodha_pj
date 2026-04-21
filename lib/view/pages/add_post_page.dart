@@ -38,19 +38,19 @@ class AddPostPageState extends State<AddPostPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: ghostWhite,
-        appBar: CommonAppBar(
-          title: Text(
-            'add_post'.tr,
-            style: fontBold.copyWith(
-              fontSize: fontSize18,
-              color: Theme.of(context).textTheme.bodyLarge!.color,
-            ),
+    return Scaffold(
+      backgroundColor: ghostWhite,
+      appBar: CommonAppBar(
+        title: Text(
+          'add_post'.tr,
+          style: fontBold.copyWith(
+            fontSize: fontSize18,
+            color: Theme.of(context).textTheme.bodyLarge!.color,
           ),
         ),
-        body: SingleChildScrollView(
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Padding(
             padding: const EdgeInsets.all(14.0),
@@ -77,9 +77,9 @@ class AddPostPageState extends State<AddPostPage> {
                         ),
                       ],
                     ),
-
+            
                     const SizedBox(height: paddingSize20),
-
+            
                     // ── Region selection ──
                     Text(
                       'select_region'.tr,
@@ -87,7 +87,7 @@ class AddPostPageState extends State<AddPostPage> {
                           color: bluishPurple, fontSize: fontSize14),
                     ),
                     const SizedBox(height: paddingSize5),
-
+            
                     Obx(() => Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -110,7 +110,7 @@ class AddPostPageState extends State<AddPostPage> {
                             ),
                           ],
                         )),
-
+            
                     Obx(() => Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -133,14 +133,14 @@ class AddPostPageState extends State<AddPostPage> {
                             ),
                           ],
                         )),
-
+            
                     const SizedBox(height: paddingSize20),
-
+            
                     // ── Content box: TextField on top + Image below ──
                     _buildContentBox(postVM),
-
+            
                     const SizedBox(height: paddingSize20),
-
+            
                     // ── Photo picker row ──
                     InkWell(
                       onTap: () async {
@@ -162,9 +162,9 @@ class AddPostPageState extends State<AddPostPage> {
                         ],
                       ),
                     ),
-
+            
                     const SizedBox(height: paddingSize25),
-
+            
                     // ── Upload button ──
                     postVM.isLoading
                         ? const Center(child: CircularProgressIndicator())
@@ -195,7 +195,7 @@ class AddPostPageState extends State<AddPostPage> {
                               }
                             },
                           ),
-
+            
                     const SizedBox(height: paddingSize20),
                   ],
                 );

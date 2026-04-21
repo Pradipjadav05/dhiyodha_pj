@@ -66,29 +66,29 @@ class ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: ghostWhite,
-        appBar: CommonAppBar(
-          title: Text(
-            'profile'.tr,
-            style: fontBold.copyWith(
-              fontSize: fontSize18,
-              color: Theme.of(context).textTheme.bodyLarge!.color,
-            ),
-          ),
-          menuWidget: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: InkWell(
-              customBorder: const CircleBorder(),
-              onTap: () {
-                Get.toNamed(Routes.getWebViewPageRoute(queryWebUrl));
-              },
-              child: Image.asset(query, width: 24.0),
-            ),
+    return Scaffold(
+      backgroundColor: ghostWhite,
+      appBar: CommonAppBar(
+        title: Text(
+          'profile'.tr,
+          style: fontBold.copyWith(
+            fontSize: fontSize18,
+            color: Theme.of(context).textTheme.bodyLarge!.color,
           ),
         ),
-        body: SingleChildScrollView(
+        menuWidget: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: InkWell(
+            customBorder: const CircleBorder(),
+            onTap: () {
+              Get.toNamed(Routes.getWebViewPageRoute(queryWebUrl));
+            },
+            child: Image.asset(query, width: 24.0),
+          ),
+        ),
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: GetBuilder<PostsViewModel>(
             builder: (postVM) {
