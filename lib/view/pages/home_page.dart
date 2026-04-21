@@ -2501,46 +2501,9 @@ class HomePageState extends State<HomePage> {
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,
                                                   children: [
-                                                    globalCurrentUserData
-                                                                    .profileUrl !=
-                                                                null &&
-                                                            globalCurrentUserData
-                                                                .profileUrl!
-                                                                .isNotEmpty
-                                                        ? CachedNetworkImage(
-                                                            imageUrl:
-                                                                globalCurrentUserData
-                                                                    .profileUrl!,
-                                                            height: 40.0,
-                                                            width: 40.0,
-                                                            fit: BoxFit.cover,
-                                                            placeholder: (context,
-                                                                    url) =>
-                                                                const SizedBox(
-                                                              height: 40.0,
-                                                              width: 40.0,
-                                                              child: Center(
-                                                                child: CircularProgressIndicator(
-                                                                    strokeWidth:
-                                                                        2),
-                                                              ),
-                                                            ),
-                                                            errorWidget:
-                                                                (context, url,
-                                                                        error) =>
-                                                                    Image.asset(
-                                                              profileImage,
-                                                              height: 40.0,
-                                                              width: 40.0,
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                          )
-                                                        : Image.asset(
-                                                            profileImage,
-                                                            height: 40.0,
-                                                            width: 40.0,
-                                                            fit: BoxFit.cover,
-                                                          ),
+                                                    _profileAvatar(
+                                                        data.profileUrl ?? '',
+                                                        size: 40.0),
                                                     SizedBox(
                                                         width: paddingSize10),
                                                     Expanded(
@@ -2571,44 +2534,6 @@ class HomePageState extends State<HomePage> {
                                                                 color:
                                                                     midnightBlue),
                                                           ),
-                                                          // Text(
-                                                          //   "Beautiful place.",
-                                                          //   style: fontRegular
-                                                          //       .copyWith(
-                                                          //           fontSize:
-                                                          //               fontSize8,
-                                                          //           color:
-                                                          //               midnightBlue),
-                                                          // ),
-                                                          // Row(
-                                                          //   mainAxisSize: MainAxisSize.max,
-                                                          //   mainAxisAlignment:
-                                                          //       MainAxisAlignment.start,
-                                                          //   crossAxisAlignment:
-                                                          //       CrossAxisAlignment.center,
-                                                          //   children: [
-                                                          //     Text(
-                                                          //       "1h",
-                                                          //       style: fontRegular.copyWith(
-                                                          //           fontSize: fontSize10,
-                                                          //           color: spunPearl),
-                                                          //     ),
-                                                          //     SizedBox(width: paddingSize8),
-                                                          //     Text(
-                                                          //       "Like",
-                                                          //       style: fontRegular.copyWith(
-                                                          //           fontSize: fontSize10,
-                                                          //           color: spunPearl),
-                                                          //     ),
-                                                          //     SizedBox(width: paddingSize8),
-                                                          //     Text(
-                                                          //       "Reply",
-                                                          //       style: fontRegular.copyWith(
-                                                          //           fontSize: fontSize10,
-                                                          //           color: spunPearl),
-                                                          //     ),
-                                                          //   ],
-                                                          // )
                                                         ],
                                                       ),
                                                     ),
@@ -2655,38 +2580,9 @@ class HomePageState extends State<HomePage> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               mainAxisSize: MainAxisSize.max,
                               children: [
-                                globalCurrentUserData.profileUrl != null &&
-                                        globalCurrentUserData
-                                            .profileUrl!.isNotEmpty
-                                    ? CachedNetworkImage(
-                                        imageUrl:
-                                            globalCurrentUserData.profileUrl!,
-                                        height: 40.0,
-                                        width: 40.0,
-                                        fit: BoxFit.cover,
-                                        placeholder: (context, url) =>
-                                            const SizedBox(
-                                          height: 40.0,
-                                          width: 40.0,
-                                          child: Center(
-                                            child: CircularProgressIndicator(
-                                                strokeWidth: 2),
-                                          ),
-                                        ),
-                                        errorWidget: (context, url, error) =>
-                                            Image.asset(
-                                          profileImage,
-                                          height: 40.0,
-                                          width: 40.0,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      )
-                                    : Image.asset(
-                                        profileImage,
-                                        height: 40.0,
-                                        width: 40.0,
-                                        fit: BoxFit.cover,
-                                      ),
+                                _profileAvatar(
+                                    globalCurrentUserData.profileUrl ?? '',
+                                    size: 40.0),
                                 SizedBox(width: 5.0),
                                 Expanded(
                                   child: CommonTextFormField(
