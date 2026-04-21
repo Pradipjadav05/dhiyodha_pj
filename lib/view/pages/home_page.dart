@@ -129,39 +129,8 @@ class HomePageState extends State<HomePage> {
                                   children: [
                                     ClipRRect(
                                       borderRadius: BorderRadius.circular(50),
-                                      child:
-                                          homeVM.currentUserData.profileUrl !=
-                                                      null &&
-                                                  homeVM.currentUserData
-                                                      .profileUrl!.isNotEmpty
-                                              ? CachedNetworkImage(
-                                                  height: 68.0,
-                                                  width: 68.0,
-                                                  imageUrl: homeVM
-                                                      .currentUserData
-                                                      .profileUrl!,
-                                                  fit: BoxFit.fill,
-                                                  placeholder: (context, url) =>
-                                                      const Center(
-                                                    child:
-                                                        CircularProgressIndicator(
-                                                            strokeWidth: 2),
-                                                  ),
-                                                  errorWidget:
-                                                      (context, url, error) =>
-                                                          Image.asset(
-                                                    logoRound,
-                                                    height: 68.0,
-                                                    width: 68.0,
-                                                    fit: BoxFit.fill,
-                                                  ),
-                                                )
-                                              : Image.asset(
-                                                  logoRound,
-                                                  height: 68.0,
-                                                  width: 68.0,
-                                                  fit: BoxFit.fill,
-                                                ),
+                                      child: _profileAvatar(
+                                          homeVM.currentUserData.profileUrl!, size: 68.0),
                                     ),
                                     Text(
                                       '${homeVM.currentUserData.firstName} ${homeVM.currentUserData.lastName}',
@@ -2397,10 +2366,10 @@ class HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _profileAvatar(String? profileUrl) {
+  Widget _profileAvatar(String? profileUrl, { double size = 42}) {
     return Container(
-      width: 42,
-      height: 42,
+      width: size,
+      height: size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         border: Border.all(color: Colors.white, width: 2.5),

@@ -297,35 +297,7 @@ class ProfilePageState extends State<ProfilePage> {
                             width: 68.0,
                             fit: BoxFit.cover,
                           )
-                        : (user.profileUrl != null &&
-                                user.profileUrl!.isNotEmpty)
-                            ? CachedNetworkImage(
-                                imageUrl: user.profileUrl!,
-                                height: 68.0,
-                                width: 68.0,
-                                fit: BoxFit.cover,
-                                placeholder: (context, url) => const SizedBox(
-                                  height: 68,
-                                  width: 68,
-                                  child: Center(
-                                    child: CircularProgressIndicator(
-                                        strokeWidth: 2),
-                                  ),
-                                ),
-                                errorWidget: (context, url, error) =>
-                                    Image.asset(
-                                  logoRound,
-                                  height: 68.0,
-                                  width: 68.0,
-                                  fit: BoxFit.cover,
-                                ),
-                              )
-                            : Image.asset(
-                                logoRound,
-                                height: 68.0,
-                                width: 68.0,
-                                fit: BoxFit.cover,
-                              ),
+                        : _profileAvatar(user.profileUrl, size: 68.0),
                   ),
                   Positioned(
                     left: 44,
@@ -378,4 +350,49 @@ class ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
+}
+
+Widget _profileAvatar(String? profileUrl, { double size = 42}) {
+  return Container(
+    width: size,
+    height: size,
+    decoration: BoxDecoration(
+      shape: BoxShape.circle,
+      border: Border.all(color: Colors.white, width: 2.5),
+      boxShadow: [
+        BoxShadow(
+          color: midnightBlue.withOpacity(0.15),
+          blurRadius: 8,
+          offset: const Offset(0, 3),
+        ),
+      ],
+    ),
+    child: ClipOval(
+      child: profileUrl != null && profileUrl.isNotEmpty
+          ? CachedNetworkImage(
+        imageUrl: profileUrl,
+        width: 42,
+        height: 42,
+        fit: BoxFit.cover,
+        errorWidget: (context, url, error) => _avatarFallback(),
+      )
+          : _avatarFallback(),
+    ),
+  );
+}
+
+Widget _avatarFallback() {
+  return Container(
+    decoration: BoxDecoration(
+      shape: BoxShape.circle,
+      gradient: LinearGradient(
+        colors: [midnightBlue, const Color(0xFF4A6FA5)],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ),
+    ),
+    child: ClipOval(
+      child: Icon(Icons.person, color: Colors.white),
+    ),
+  );
 }
