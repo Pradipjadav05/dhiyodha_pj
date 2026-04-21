@@ -1,5 +1,4 @@
 import 'package:dhiyodha/model/response_model/members_list_response_model.dart';
-import 'package:dhiyodha/model/response_model/tyfcb_response_model.dart';
 import 'package:dhiyodha/utils/helper/routes.dart';
 import 'package:dhiyodha/utils/resource/app_colors.dart';
 import 'package:dhiyodha/utils/resource/app_dimensions.dart';
@@ -53,13 +52,20 @@ class AddOneToOneSlipPageState extends State<AddOneToOneSlipPage> {
         ),
         body: GetBuilder<OneToOneSlipViewModel>(
           builder: (addOVM) {
-            return SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(14.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+            final bool isBusy =
+                addOVM.isLoading || addOVM.isSubmitting.value;
+
+            return Stack(
+              children: [
+                AbsorbPointer(
+                  absorbing: isBusy,
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.all(14.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                     const SizedBox(height: paddingSize20),
 
                     // ── Met With ──
@@ -233,15 +239,29 @@ class AddOneToOneSlipPageState extends State<AddOneToOneSlipPage> {
                       buttonText: 'confirm'.tr,
                       bgColor: midnightBlue,
                       textColor: periwinkle,
-                      onPressed: () async {
-                        await _submit(addOVM);
-                      },
+                      onPressed: isBusy
+                          ? null
+                          : () async {
+                              await _submit(addOVM);
+                            },
                     ),
 
                     const SizedBox(height: paddingSize25),
-                  ],
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+                if (isBusy)
+                  Positioned.fill(
+                    child: ColoredBox(
+                      color: Colors.black.withValues(alpha: 0.16),
+                      child: const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                  ),
+              ],
             );
           },
         ),
@@ -250,6 +270,10 @@ class AddOneToOneSlipPageState extends State<AddOneToOneSlipPage> {
   }
 
   Future<void> _submit(OneToOneSlipViewModel addOVM) async {
+    if (addOVM.isSubmitting.value || addOVM.isLoading) {
+      return;
+    }
+
     if (addOVM.metWithController.text.isEmpty) {
       showSnackBar('select_met_with'.tr);
     } else if (addOVM.selectedInitiatedBy == 'Initiated By' ||
@@ -261,7 +285,7 @@ class AddOneToOneSlipPageState extends State<AddOneToOneSlipPage> {
       showSnackBar('select_when'.tr);
     } else if (addOVM.conversionTopicController.text.isEmpty) {
       showSnackBar('enter_topics'.tr);
-    } else {
+      } else {
       final bool isSuccess = await addOVM.addOneToOneData(
         //todo: meetingUuid
         // "",

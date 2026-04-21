@@ -1,13 +1,9 @@
 import 'package:dhiyodha/data/api/api_checker.dart';
 import 'package:dhiyodha/data/repository/one_to_one_repo.dart';
 import 'package:dhiyodha/model/response_model/one_to_one_response_model.dart';
-import 'package:dhiyodha/model/response_model/tyfcb_response_model.dart';
 import 'package:dhiyodha/utils/helper/date_converter.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../model/response_model/current_user_response_model.dart';
-import '../utils/resource/app_constants.dart';
 
 class OneToOneSlipViewModel extends GetxController implements GetxService {
   final OneToOneRepo oneToOneRepo;
@@ -16,11 +12,11 @@ class OneToOneSlipViewModel extends GetxController implements GetxService {
 
   // ── State ──
   RxBool _isExpanded = false.obs;
+  final RxBool _isSubmitting = false.obs;
   bool _isLoading = false;
   DateTime _selectedDate = DateTime.now();
   TimeOfDay _selectedTime = TimeOfDay.now();
   String _selectedInitiatedBy = "Initiated By".tr;
-  Location _location = Location(latitude: 0, longitude: 0);
 
   // ── Controllers ──
   TextEditingController _metWithController = TextEditingController();
@@ -34,6 +30,8 @@ class OneToOneSlipViewModel extends GetxController implements GetxService {
   // ── Getters ──
   bool get isLoading => _isLoading;
 
+  RxBool get isSubmitting => _isSubmitting;
+
   get isExpanded => _isExpanded;
 
   DateTime get selectedDate => _selectedDate;
@@ -41,8 +39,6 @@ class OneToOneSlipViewModel extends GetxController implements GetxService {
   TimeOfDay get selectedTime => _selectedTime;
 
   String get selectedInitiatedBy => _selectedInitiatedBy;
-
-  Location get location => _location;
 
   List<OneToOneChildData> get oneToOneDataList => _oneToOneDataList;
 
@@ -58,6 +54,14 @@ class OneToOneSlipViewModel extends GetxController implements GetxService {
   // ── Setters ──
   set isLoading(bool v) => _isLoading = v;
 
+  void setSubmitting(bool value) {
+    if (_isSubmitting.value == value) {
+      return;
+    }
+    _isSubmitting.value = value;
+    update();
+  }
+
   set isExpanded(v) => _isExpanded = v;
 
   set selectedDate(DateTime v) => _selectedDate = v;
@@ -65,8 +69,6 @@ class OneToOneSlipViewModel extends GetxController implements GetxService {
   set selectedTime(TimeOfDay v) => _selectedTime = v;
 
   set selectedInitiatedBy(String v) => _selectedInitiatedBy = v;
-
-  set location(Location v) => _location = v;
 
   set oneToOneDataList(List<OneToOneChildData> v) => _oneToOneDataList = v;
 
@@ -81,13 +83,13 @@ class OneToOneSlipViewModel extends GetxController implements GetxService {
 
   String initiatedBy = "";
   String connectedWith = "";
-  CurrentUserData _currentUserData = CurrentUserData();
 
   // ────────────────────────────────────────────────────────────
   // initData — resets ADD FORM state only, never clears the list
   // ────────────────────────────────────────────────────────────
   Future<void> initData() async {
     _isExpanded = false.obs;
+    _isSubmitting.value = false;
     _selectedDate = DateTime.now();
     _selectedTime = TimeOfDay.now();
     _selectedInitiatedBy = "Initiated By".tr;
@@ -95,8 +97,16 @@ class OneToOneSlipViewModel extends GetxController implements GetxService {
     _whereMeetController = TextEditingController();
     _whenMeetController = TextEditingController();
     _conversionTopicController = TextEditingController();
-    _location = Location(latitude: 0, longitude: 0);
     resetForm();
+  }
+
+  @override
+  void onClose() {
+    _metWithController.dispose();
+    _whereMeetController.dispose();
+    _whenMeetController.dispose();
+    _conversionTopicController.dispose();
+    super.onClose();
   }
 
   // ────────────────────────────────────────────────────────────
@@ -134,30 +144,35 @@ class OneToOneSlipViewModel extends GetxController implements GetxService {
     String? locationName,
     String? senderName,
   ) async {
+    if (_isSubmitting.value || _isLoading) {
+      return false;
+    }
+    _isSubmitting.value = true;
     _isLoading = true;
     bool isSuccess = false;
     update();
+    try {
+      final Response response = await oneToOneRepo.addOneToOneData(
+        // meetingUuid,
+        connectedWith,
+        initiatedBy,
+        // oneToOneLocation,
+        oneToOneDate,
+        oneToOneNotes,
+        locationName,
+        senderName,
+      );
 
-    final Response response = await oneToOneRepo.addOneToOneData(
-      // meetingUuid,
-      connectedWith,
-      initiatedBy,
-      // oneToOneLocation,
-      oneToOneDate,
-      oneToOneNotes,
-      locationName,
-      senderName,
-    );
-
-    _isLoading = false;
-
-    if (response.statusCode == 201) {
-      isSuccess = true;
-    } else {
-      ApiChecker.checkApi(response);
+      if (response.statusCode == 201) {
+        isSuccess = true;
+      } else {
+        ApiChecker.checkApi(response);
+      }
+    } finally {
+      _isLoading = false;
+      _isSubmitting.value = false;
+      update();
     }
-
-    update();
     return isSuccess;
   }
 

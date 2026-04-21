@@ -22,6 +22,7 @@ class ReferralSlipViewModel extends GetxController implements GetxService {
   RxBool _referralStatusByHotness5 = false.obs;
   RxBool _isExpanded = false.obs;
   RxInt _referralHotnessRate = 0.obs;
+  final RxBool _isSubmitting = false.obs;
 
   String _selectedMemberId = '';
   String _selectedMeetingId = '';
@@ -54,6 +55,8 @@ class ReferralSlipViewModel extends GetxController implements GetxService {
   List<ReferralChildData> get referralDataList => _referralDataList;
 
   bool get isLoading => _isLoading;
+
+  RxBool get isSubmitting => _isSubmitting;
 
   RxInt get referralHotnessRate => _referralHotnessRate;
 
@@ -104,6 +107,14 @@ class ReferralSlipViewModel extends GetxController implements GetxService {
 
   set isLoading(bool v) => _isLoading = v;
 
+  void setSubmitting(bool value) {
+    if (_isSubmitting.value == value) {
+      return;
+    }
+    _isSubmitting.value = value;
+    update();
+  }
+
   set referralHotnessRate(RxInt v) => _referralHotnessRate = v;
 
   set referralTypeInside(v) => _referralTypeInside = v;
@@ -143,6 +154,7 @@ class ReferralSlipViewModel extends GetxController implements GetxService {
     _referralTypeInside = false.obs;
     _referralTypeOutside = true.obs;
     _isExpanded = false.obs;
+    _isSubmitting.value = false;
     _selectedMemberId = '';
     _selectedMeetingId = '';
     _selectedMeetingName = 'Select Meeting (Optional)';
@@ -167,6 +179,17 @@ class ReferralSlipViewModel extends GetxController implements GetxService {
     _commentController = TextEditingController();
 
     await getMeetingsList();
+  }
+
+  @override
+  void onClose() {
+    _toController.dispose();
+    _referralsController.dispose();
+    _telephoneController.dispose();
+    _emailController.dispose();
+    _addressController.dispose();
+    _commentController.dispose();
+    super.onClose();
   }
 
   // ────────────────────────────────────────────────────────────
@@ -311,28 +334,36 @@ class ReferralSlipViewModel extends GetxController implements GetxService {
       String? address,
       String? comment,
       int? rate) async {
+    if (_isSubmitting.value || _isLoading) {
+      return false;
+    }
+    _isSubmitting.value = true;
     _isLoading = true;
     bool isSuccess = false;
     update();
-    final Response response = await referralRepo.addReferralsData(
-        referralTo,
-        meetingUuid,
-        type,
-        status,
-        referral,
-        telephone,
-        email,
-        address,
-        comment,
-        NumberConverter.convertToWord(rate ?? 1),
-        rate);
-    _isLoading = false;
-    if (response.statusCode == 201) {
-      isSuccess = true;
-    } else {
-      ApiChecker.checkApi(response);
+    try {
+      final Response response = await referralRepo.addReferralsData(
+          referralTo,
+          meetingUuid,
+          type,
+          status,
+          referral,
+          telephone,
+          email,
+          address,
+          comment,
+          NumberConverter.convertToWord(rate ?? 1),
+          rate);
+      if (response.statusCode == 201) {
+        isSuccess = true;
+      } else {
+        ApiChecker.checkApi(response);
+      }
+    } finally {
+      _isLoading = false;
+      _isSubmitting.value = false;
+      update();
     }
-    update();
     return isSuccess;
   }
 }

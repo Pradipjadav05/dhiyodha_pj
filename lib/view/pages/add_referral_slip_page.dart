@@ -69,13 +69,20 @@ class AddReferralSlipPageState extends State<AddReferralSlipPage> {
         ),
         body: GetBuilder<ReferralSlipViewModel>(
           builder: (addReferralsVM) {
-            return SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(14.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+            final bool isBusy =
+                addReferralsVM.isLoading || addReferralsVM.isSubmitting.value;
+
+            return Stack(
+              children: [
+                AbsorbPointer(
+                  absorbing: isBusy,
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.all(14.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                     const SizedBox(height: paddingSize20),
 
                     // ── Meeting Selection Dropdown ──
@@ -424,13 +431,27 @@ class AddReferralSlipPageState extends State<AddReferralSlipPage> {
                       buttonText: 'confirm'.tr,
                       bgColor: midnightBlue,
                       textColor: periwinkle,
-                      onPressed: () async {
-                        await _collectDataAndAddReferrals(addReferralsVM);
-                      },
+                      onPressed: isBusy
+                          ? null
+                          : () async {
+                              await _collectDataAndAddReferrals(addReferralsVM);
+                            },
                     ),
-                  ],
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+                if (isBusy)
+                  Positioned.fill(
+                    child: ColoredBox(
+                      color: Colors.black.withValues(alpha: 0.16),
+                      child: const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                  ),
+              ],
             );
           },
         ),
@@ -517,6 +538,10 @@ class AddReferralSlipPageState extends State<AddReferralSlipPage> {
 
   Future<void> _collectDataAndAddReferrals(
       ReferralSlipViewModel addReferralsVM) async {
+    if (addReferralsVM.isSubmitting.value || addReferralsVM.isLoading) {
+      return;
+    }
+
     if (addReferralsVM.toController.text.isEmpty) {
       showSnackBar('select_referral_user'.tr);
     } else if (addReferralsVM.referralsController.text.isEmpty) {
