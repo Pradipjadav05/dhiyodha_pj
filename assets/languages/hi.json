@@ -296,5 +296,6 @@
   "visitor": "विज़िटर",
   "attendance_recorded_for": "@name के लिए उपस्थिति\nदर्ज कर ली गई है।",
   "visitor_uuid_not_found": "विज़िटर UUID नहीं मिला",
+  "scan_qr_code_message": "कृपया आगे बढ़ने के लिए QR कोड स्कैन करें।",
   "invalid_qr_message": "QR कोड में latitude और longitude होना चाहिए।"
 }

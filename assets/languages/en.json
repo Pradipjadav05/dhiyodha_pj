@@ -295,5 +295,6 @@
   "visitor": "Visitor",
   "attendance_recorded_for": "Attendance for @name has\nbeen recorded.",
   "visitor_uuid_not_found": "Visitor UUID not found",
+  "scan_qr_code_message": "Please scan a QR code to continue.",
   "invalid_qr_message": "QR code must contain latitude and longitude."
 }
