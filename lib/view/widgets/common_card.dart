@@ -24,15 +24,17 @@ class CommonCard extends StatefulWidget {
 class CommonCardState extends State<CommonCard> {
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: widget.elevation,
-      semanticContainer: false,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(widget.radius ?? radius10),
+    return GestureDetector(
+      onTap: widget.onTap as void Function()?,
+      child: Card(
+        elevation: widget.elevation,
+        semanticContainer: false,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(widget.radius ?? radius10),
+        ),
+        color: widget.bgColor ?? null,
+        child: widget.cardChild,
       ),
-      color: widget.bgColor ?? null,
-      child: GestureDetector(
-          onTap: widget.onTap as void Function()?, child: widget.cardChild),
     );
   }
 }

@@ -404,6 +404,7 @@ class VisitorsViewModel extends GetxController implements GetxService {
         .map((item) => item["title"].toString())
         .toList();
     _teamWiseMeetingList.addAll(groupNames);
+    update();
     // _selectedMeeting =  _teamWiseMeetingList[0].toString();
     // _teamWiseMeetingList.length;
   }

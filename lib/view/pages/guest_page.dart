@@ -78,19 +78,19 @@ class GuestPage extends StatelessWidget {
                     ],
                   ),
                   // Meeting Media Id
-                  Row(
-                    children: [
-                      Text(
-                        "Meeting Media Id: ",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      Expanded(
-                        child: Text(
-                          item["meetingMediaId"].toString() ?? "-",
-                        ),
-                      ),
-                    ],
-                  ),
+                  // Row(
+                  //   children: [
+                  //     Text(
+                  //       "Meeting Media Id: ",
+                  //       style: TextStyle(fontWeight: FontWeight.bold),
+                  //     ),
+                  //     Expanded(
+                  //       child: Text(
+                  //         item["meetingMediaId"].toString() ?? "-",
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                 ],
               ),
             ),
