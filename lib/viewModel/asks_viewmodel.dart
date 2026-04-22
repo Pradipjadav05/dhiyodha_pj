@@ -7,6 +7,7 @@ import 'package:dhiyodha/model/response_model/ask_list_response_model.dart';
 import 'package:dhiyodha/model/response_model/response_model.dart';
 import 'package:dhiyodha/utils/resource/app_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:get/get.dart';
 
 class AsksViewModel extends GetxController implements GetxService {
@@ -27,6 +28,9 @@ class AsksViewModel extends GetxController implements GetxService {
   RxString askTypeValue = "".obs;
   RxString regionValue = "".obs;
   RxBool _isAllPostPage = true.obs;
+  RxBool _isContactLoading = false.obs;
+  RxString _contactSearchQuery = ''.obs;
+  final List<Contact> _contacts = [];
   bool _isLoading = false;
 
   RxInt get size => _size;
@@ -93,6 +97,20 @@ class AsksViewModel extends GetxController implements GetxService {
     _isLoading = value;
   }
 
+  RxBool get isContactLoading => _isContactLoading;
+
+  set isContactLoading(RxBool value) {
+    _isContactLoading = value;
+  }
+
+  RxString get contactSearchQuery => _contactSearchQuery;
+
+  set contactSearchQuery(RxString value) {
+    _contactSearchQuery = value;
+  }
+
+  List<Contact> get contacts => _contacts;
+
   TextEditingController get contactController => _contactController;
 
   set contactController(TextEditingController value) {
@@ -125,6 +143,79 @@ class AsksViewModel extends GetxController implements GetxService {
     _page = 0.obs;
     _size = 10.obs;
     _totalPages = 0.obs;
+    _isContactLoading.value = false;
+    _contactSearchQuery.value = '';
+    _contacts.clear();
+    update();
+  }
+
+  Future<bool> loadContacts() async {
+    _isContactLoading.value = true;
+    update();
+    try {
+      final bool granted = await FlutterContacts.requestPermission(
+        readonly: true,
+      );
+      if (!granted) {
+        _contacts.clear();
+        return false;
+      }
+
+      final List<Contact> phoneContacts = await FlutterContacts.getContacts(
+        withProperties: true,
+      );
+      _contacts
+        ..clear()
+        ..addAll(
+          phoneContacts.where(
+            (contact) =>
+                contact.displayName.trim().isNotEmpty &&
+                contact.phones.isNotEmpty,
+          ),
+        );
+      _contactSearchQuery.value = '';
+      update();
+      return true;
+    } finally {
+      _isContactLoading.value = false;
+      update();
+    }
+  }
+
+  void setContactSearchQuery(String value) {
+    _contactSearchQuery.value = value;
+    update();
+  }
+
+  List<Contact> get filteredContacts {
+    final String query = _contactSearchQuery.value.trim().toLowerCase();
+    if (query.isEmpty) {
+      return _contacts;
+    }
+
+    return _contacts.where((contact) {
+      final String name = contact.displayName.toLowerCase();
+      final String number = contact.phones
+          .map((phone) => phone.number.toLowerCase())
+          .join(' ');
+      return name.contains(query) || number.contains(query);
+    }).toList();
+  }
+
+  void applyContact(Contact contact) {
+    nameController.text = contact.displayName;
+    contactController.text = _normalizePhoneNumber(
+      contact.phones.first.number,
+    );
+    update();
+  }
+
+  String _normalizePhoneNumber(String value) {
+    final String digitsOnly = value.replaceAll(RegExp(r'\D'), '');
+    if (digitsOnly.length <= 10) {
+      return digitsOnly;
+    }
+    return digitsOnly.substring(digitsOnly.length - 10);
   }
 
   Future<bool> loadMore() async {

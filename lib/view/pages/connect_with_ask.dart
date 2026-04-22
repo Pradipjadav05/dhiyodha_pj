@@ -8,6 +8,7 @@ import 'package:dhiyodha/view/widgets/common_button.dart';
 import 'package:dhiyodha/view/widgets/common_snackbar.dart';
 import 'package:dhiyodha/view/widgets/common_text_form_field.dart';
 import 'package:dhiyodha/viewModel/asks_viewmodel.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -23,7 +24,10 @@ class ConnectWithAskPageState extends State<ConnectWithAskPage> {
   @override
   void initState() {
     super.initState();
-    Get.find<AsksViewModel>().initData();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Get.find<AsksViewModel>().initData();
+    });
   }
 
   @override
@@ -78,7 +82,26 @@ class ConnectWithAskPageState extends State<ConnectWithAskPage> {
                     hintColor: midnightBlue,
                     padding: const EdgeInsets.symmetric(
                         horizontal: paddingSize20, vertical: paddingSize20),
-                    // suffixIcon: Image.asset(contact),
+                    suffixIcon: IconButton(
+                      tooltip: "pick_from_contacts".tr,
+                      padding: EdgeInsets.only(right: 10),
+                      onPressed: askVM.isContactLoading.value
+                          ? null
+                          : () => _openContactPicker(askVM),
+                      icon: askVM.isContactLoading.value
+                          ? SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: midnightBlue,
+                              ),
+                            )
+                          : Icon(
+                              Icons.contacts_outlined,
+                              color: midnightBlue,
+                            ),
+                    ),
                   ),
                   SizedBox(height: paddingSize15),
                   Text(
@@ -135,6 +158,182 @@ class ConnectWithAskPageState extends State<ConnectWithAskPage> {
     } else {
       showSnackBar(responseModel.message);
     }
+  }
+
+  Future<void> _openContactPicker(AsksViewModel askVM) async {
+    final bool granted = await askVM.loadContacts();
+    if (!mounted) {
+      return;
+    }
+    if (!granted) {
+      showSnackBar("contact_permission_denied".tr);
+      return;
+    }
+
+    if (askVM.contacts.isEmpty) {
+      showSnackBar("no_contacts_found".tr);
+      return;
+    }
+
+    askVM.setContactSearchQuery('');
+    await Get.bottomSheet(
+      Container(
+        decoration: const BoxDecoration(
+          color: ghostWhite,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(radius20)),
+        ),
+        padding: EdgeInsets.only(
+          left: paddingSize14,
+          right: paddingSize14,
+          top: paddingSize14,
+          bottom: MediaQuery.of(context).viewInsets.bottom + paddingSize14,
+        ),
+        child: SafeArea(
+          top: false,
+          child: GetBuilder<AsksViewModel>(builder: (sheetVM) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "pick_from_contacts".tr,
+                        style: fontBold.copyWith(
+                          fontSize: fontSize18,
+                          color: midnightBlue,
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: Get.back,
+                      icon: Icon(Icons.close, color: midnightBlue),
+                    )
+                  ],
+                ),
+                SizedBox(height: paddingSize10),
+                CommonTextFormField(
+                  hintText: "search_contacts".tr,
+                  prefixIcon: Icon(Icons.search, color: bluishPurple),
+                  bgColor: white,
+                  hintColor: midnightBlue,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: paddingSize20,
+                    vertical: paddingSize15,
+                  ),
+                  onChanged: (value) =>
+                      sheetVM.setContactSearchQuery(value.toString()),
+                ),
+                SizedBox(height: paddingSize10),
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: Get.height * 0.55,
+                  ),
+                  child: sheetVM.filteredContacts.isEmpty
+                      ? Center(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: paddingSize30,
+                            ),
+                            child: Text(
+                              "no_contacts_found".tr,
+                              style: fontRegular.copyWith(
+                                fontSize: fontSize14,
+                                color: midnightBlue,
+                              ),
+                            ),
+                          ),
+                        )
+                      : ListView.separated(
+                          shrinkWrap: true,
+                          itemCount: sheetVM.filteredContacts.length,
+                          separatorBuilder: (_, __) =>
+                              SizedBox(height: paddingSize10),
+                          itemBuilder: (context, index) {
+                            final Contact contact =
+                                sheetVM.filteredContacts[index];
+                            final String number = contact.phones.isNotEmpty
+                                ? contact.phones.first.number
+                                : '';
+                            final String initial = contact.displayName.isNotEmpty
+                                ? contact.displayName[0].toUpperCase()
+                                : '?';
+                            return InkWell(
+                              onTap: () {
+                                sheetVM.applyContact(contact);
+                                Get.back();
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: white,
+                                  borderRadius: BorderRadius.circular(radius15),
+                                  border: Border.all(color: lavenderMist),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: paddingSize14,
+                                  vertical: paddingSize10,
+                                ),
+                                child: Row(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 22,
+                                      backgroundColor: midnightBlue,
+                                      child: Text(
+                                        initial,
+                                        style: fontBold.copyWith(
+                                          color: periwinkle,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(width: paddingSize10),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            contact.displayName,
+                                            style: fontMedium.copyWith(
+                                              fontSize: fontSize14,
+                                              color: midnightBlue,
+                                            ),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          SizedBox(height: paddingSize5),
+                                          Text(
+                                            number,
+                                            style: fontRegular.copyWith(
+                                              fontSize: fontSize13,
+                                              color: bluishPurple,
+                                            ),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Icon(
+                                      Icons.arrow_forward_ios_rounded,
+                                      size: 16,
+                                      color: bluishPurple,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                ),
+              ],
+            );
+          }),
+        ),
+      ),
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+    );
   }
 
   @override
