@@ -198,6 +198,7 @@ class HomeViewModel extends GetxController implements GetxService {
   List<Documents> businessPresentationBannerList = [];
   List<Documents> trainingBannerList = [];
   List<Documents> additionalBannerList = [];
+  List<dynamic> gustList = [];
 
   Future<bool> loadMore() async {
     if (page.value < totalPages.value) {
@@ -401,6 +402,10 @@ class HomeViewModel extends GetxController implements GetxService {
               );
             }
           }
+        }
+
+        if (meeting['gustList'] != null) {
+          gustList = meeting['gustList'];
         }
 
         _bannerList = [

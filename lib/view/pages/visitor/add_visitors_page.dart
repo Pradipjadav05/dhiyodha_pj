@@ -369,7 +369,7 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
         if (isBusy)
           Positioned.fill(
             child: ColoredBox(
-              color: Colors.black.withValues(alpha: 0.16),
+              color: Colors.transparent,
               child: const Center(
                 child: CircularProgressIndicator(),
               ),

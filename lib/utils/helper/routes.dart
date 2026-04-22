@@ -60,6 +60,9 @@ import 'package:dhiyodha/view/pages/webview_page.dart';
 import 'package:get/get.dart';
 
 import '../../view/pages/forgot_password_page.dart';
+import '../../view/pages/guest_page.dart';
+import '../../view/pages/speaker_page.dart';
+import '../../view/pages/trainer_page.dart';
 
 class Routes {
   static const String initial = '/';
@@ -87,6 +90,9 @@ class Routes {
   static const String connectAsk = '/connectAsk';
   static const String notification = '/notification';
   static const String visitor = '/visitor';
+  static const String speaker = '/speaker';
+  static const String trainer = '/trainer';
+  static const String guest = '/guest';
   static const String training = '/training';
   static const String addVisitor = '/addVisitor';
   static const String tyfcbPage = '/tyfcbPage';
@@ -195,6 +201,12 @@ class Routes {
   static String getNotificationPageRoute() => notification;
 
   static String getVisitorPageRoute() => visitor;
+
+  static String getSpeakerPageRoute() => speaker;
+
+  static String getTrainerPageRoute() => trainer;
+
+  static String getGuestPageRoute() => guest;
 
   static String getTrainingPageRoute() => training;
 
@@ -373,6 +385,9 @@ class Routes {
     GetPage(name: visitor, page: () => VisitorPage(isAppBarRequired: true,
       onStateChanged: () {
       },)),
+    GetPage(name: speaker, page: () => SpeakerPage()),
+    GetPage(name: trainer, page: () => TrainerPage()),
+    GetPage(name: guest, page: () => GuestPage()),
     GetPage(name: training, page: () => TrainingPage()),
     GetPage(name: addVisitor, page: () => AddVisitorsPage()),
     GetPage(name: tyfcbPage, page: () => TyfcbPage()),

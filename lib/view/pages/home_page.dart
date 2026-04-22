@@ -19,8 +19,9 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:loadmore/loadmore.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:photo_view/photo_view.dart';
 import 'package:share_plus/share_plus.dart';
+
+import '../widgets/image_zoom_in_out.dart';
 
 class HomePage extends StatefulWidget {
   HomePageState createState() => HomePageState();
@@ -1028,9 +1029,6 @@ class HomePageState extends State<HomePage> {
       clipBehavior: Clip.none,
       children: [
         CommonCard(
-          onTap: () {
-            // Get.toNamed(Routes.getCeuSlipPageRoute());
-          },
           elevation: 0.0,
           bgColor: lavenderMist,
           cardChild: Padding(
@@ -1118,7 +1116,7 @@ class HomePageState extends State<HomePage> {
                       Expanded(
                         child: InkWell(
                           onTap: () {
-                            Get.toNamed(Routes.getVisitorPageRoute());
+                            Get.toNamed(Routes.getAddVisitorPageRoute());
                           },
                           child: Padding(
                             padding:
@@ -1148,23 +1146,28 @@ class HomePageState extends State<HomePage> {
                       Container(color: bluishPurple, width: 1.5),
                       // Speaker
                       Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "speakers".tr,
-                                style: fontRegular.copyWith(
-                                    color: midnightBlue, fontSize: fontSize12),
-                              ),
-                              Text(
-                                '${homeVM.nextMeetingCountData?.speakers ?? "00"}',
-                                style: fontBold.copyWith(
-                                    color: midnightBlue, fontSize: fontSize16),
-                              ),
-                            ],
+                        child: GestureDetector(
+                          onTap: () async {
+                            await Get.toNamed(Routes.getSpeakerPageRoute());
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "speakers".tr,
+                                  style: fontRegular.copyWith(
+                                      color: midnightBlue, fontSize: fontSize12),
+                                ),
+                                Text(
+                                  '${homeVM.nextMeetingCountData?.speakers ?? "00"}',
+                                  style: fontBold.copyWith(
+                                      color: midnightBlue, fontSize: fontSize16),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -1173,8 +1176,8 @@ class HomePageState extends State<HomePage> {
                       // Trainer
                       Expanded(
                         child: InkWell(
-                          onTap: () {
-                            Get.toNamed(Routes.getTrainingPageRoute());
+                          onTap: () async {
+                            await Get.toNamed(Routes.getTrainerPageRoute());
                           },
                           child: Padding(
                             padding:
@@ -1204,23 +1207,28 @@ class HomePageState extends State<HomePage> {
                       Container(color: bluishPurple, width: 1.5),
                       // Guest
                       Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "guest".tr,
-                                style: fontRegular.copyWith(
-                                    color: midnightBlue, fontSize: fontSize12),
-                              ),
-                              Text(
-                                '${homeVM.nextMeetingCountData?.guest ?? "00"}',
-                                style: fontBold.copyWith(
-                                    color: midnightBlue, fontSize: fontSize16),
-                              ),
-                            ],
+                        child: GestureDetector(
+                          onTap: () async {
+                            await Get.toNamed(Routes.getGuestPageRoute());
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "guest".tr,
+                                  style: fontRegular.copyWith(
+                                      color: midnightBlue, fontSize: fontSize12),
+                                ),
+                                Text(
+                                  '${homeVM.nextMeetingCountData?.guest ?? "00"}',
+                                  style: fontBold.copyWith(
+                                      color: midnightBlue, fontSize: fontSize16),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -1587,7 +1595,7 @@ class HomePageState extends State<HomePage> {
         opaque: false,
         barrierColor: Colors.black,
         pageBuilder: (_, __, ___) {
-          return _FullScreenBannerView(
+          return FullScreenBannerView(
             imageUrl: imageUrl,
             title: title,
           );
@@ -1699,7 +1707,6 @@ class HomePageState extends State<HomePage> {
                 elevation: 0.0,
                 bgColor: lavenderMist,
                 onTap: () async {
-                  // await Get.toNamed(Routes.getVisitorPageRoute());
                   await Get.toNamed(Routes.getAddVisitorPageRoute());
                   await getDashboardData(homeVM.selectedDuration);
                 },
@@ -2835,64 +2842,3 @@ class _ModernCheckState extends State<_ModernCheck>
   }
 }
 
-class _FullScreenBannerView extends StatelessWidget {
-  final String imageUrl;
-  final String title;
-
-  const _FullScreenBannerView({
-    required this.imageUrl,
-    required this.title,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: Stack(
-        children: [
-          PhotoView(
-            imageProvider: NetworkImage(imageUrl),
-            minScale: PhotoViewComputedScale.contained,
-            maxScale: PhotoViewComputedScale.covered * 3,
-            backgroundDecoration: const BoxDecoration(
-              color: Colors.black,
-            ),
-            loadingBuilder: (context, event) => const Center(
-              child: CircularProgressIndicator(),
-            ),
-          ),
-          Positioned(
-            top: 40,
-            right: 20,
-            child: GestureDetector(
-              onTap: () => Navigator.pop(context),
-              child: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: const BoxDecoration(
-                  color: Colors.black54,
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(Icons.close, color: Colors.white),
-              ),
-            ),
-          ),
-          if (title.isNotEmpty)
-            Positioned(
-              bottom: 30,
-              left: 20,
-              right: 20,
-              child: Text(
-                title,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-}

@@ -18,6 +18,8 @@ import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
+import '../widgets/image_zoom_in_out.dart';
+
 class MemberProfilePage extends StatefulWidget {
   final MembersChildData membersChildData;
 
@@ -241,7 +243,7 @@ class MemberProfilePageState extends State<MemberProfilePage> {
               onTap: () {
                 if (widget.membersChildData.profileUrl != null &&
                     widget.membersChildData.profileUrl!.isNotEmpty) {
-                  _openImageViewer(widget.membersChildData.profileUrl!);
+                  _openImageViewer( context,widget.membersChildData.profileUrl!);
                 }
               },
               child: Hero(
@@ -723,48 +725,67 @@ class MemberProfilePageState extends State<MemberProfilePage> {
     );
   }
 
-  void _openImageViewer(String imageUrl) {
+  void _openImageViewer( BuildContext context,String imageUrl) {
+    // Navigator.of(context).push(
+    //   PageRouteBuilder(
+    //     opaque: false,
+    //     barrierColor: Colors.black,
+    //     pageBuilder: (_, __, ___) {
+    //       return Scaffold(
+    //         backgroundColor: Colors.black,
+    //         body: Stack(
+    //           children: [
+    //             Center(
+    //               child: Hero(
+    //                 tag: imageUrl,
+    //                 child: InteractiveViewer(
+    //                   minScale: 0.5,
+    //                   maxScale: 4,
+    //                   child: CachedNetworkImage(
+    //                     imageUrl: imageUrl,
+    //                     fit: BoxFit.contain,
+    //                     errorWidget: (context, url, error) =>
+    //                         _placeholderAvatar(),
+    //                   ),
+    //                 ),
+    //               ),
+    //             ),
+    //             Positioned(
+    //               top: 40,
+    //               right: 20,
+    //               child: GestureDetector(
+    //                 onTap: () => Navigator.pop(context),
+    //                 child: Container(
+    //                   padding: const EdgeInsets.all(8),
+    //                   decoration: BoxDecoration(
+    //                     color: Colors.black54,
+    //                     shape: BoxShape.circle,
+    //                   ),
+    //                   child: const Icon(Icons.close, color: Colors.white),
+    //                 ),
+    //               ),
+    //             ),
+    //           ],
+    //         ),
+    //       );
+    //     },
+    //     transitionsBuilder: (_, animation, __, child) {
+    //       return FadeTransition(
+    //         opacity: animation,
+    //         child: child,
+    //       );
+    //     },
+    //     transitionDuration: const Duration(milliseconds: 300),
+    //   ),
+    // );
     Navigator.of(context).push(
       PageRouteBuilder(
         opaque: false,
         barrierColor: Colors.black,
         pageBuilder: (_, __, ___) {
-          return Scaffold(
-            backgroundColor: Colors.black,
-            body: Stack(
-              children: [
-                Center(
-                  child: Hero(
-                    tag: imageUrl,
-                    child: InteractiveViewer(
-                      minScale: 0.5,
-                      maxScale: 4,
-                      child: CachedNetworkImage(
-                        imageUrl: imageUrl,
-                        fit: BoxFit.contain,
-                        errorWidget: (context, url, error) =>
-                            _placeholderAvatar(),
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 40,
-                  right: 20,
-                  child: GestureDetector(
-                    onTap: () => Navigator.pop(context),
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.black54,
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(Icons.close, color: Colors.white),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+          return FullScreenBannerView(
+            imageUrl: imageUrl,
+            title: "",
           );
         },
         transitionsBuilder: (_, animation, __, child) {

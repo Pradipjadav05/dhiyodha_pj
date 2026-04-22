@@ -31,7 +31,7 @@ class CommonCardState extends State<CommonCard> {
         borderRadius: BorderRadius.circular(widget.radius ?? radius10),
       ),
       color: widget.bgColor ?? null,
-      child: InkWell(
+      child: GestureDetector(
           onTap: widget.onTap as void Function()?, child: widget.cardChild),
     );
   }
