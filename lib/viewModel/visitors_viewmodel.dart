@@ -625,6 +625,7 @@ class VisitorsViewModel extends GetxController implements GetxService {
     _isLoading = false;
     if (response.statusCode == 200) {
       _groupChildData = [];
+      _chapterList = [];
       response.body['data']['data'].forEach((order) {
         GroupChildData groups = GroupChildData.fromJson(order);
         _groupChildData.add(groups);
@@ -708,6 +709,7 @@ class VisitorsViewModel extends GetxController implements GetxService {
   Future<void> getBusinessCategories() async {
     final Response response = await visitorsRepo.getBusinessCategories();
     if (response.statusCode == 200) {
+      _businessCatList = [];
       response.body["data"].forEach((c) => _businessCatList.add(c));
       _selectedBusinessCategory = _businessCatList[0];
     } else {
