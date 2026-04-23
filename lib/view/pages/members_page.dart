@@ -275,20 +275,19 @@ class MembersPageState extends State<MembersPage>
                 contentPadding: const EdgeInsets.symmetric(vertical: 10),
               ),
               onChanged: (value) async {
-                if (value.isNotEmpty) {
-                  if (_debounce?.isActive ?? false) _debounce?.cancel();
-                  _debounce =
-                      Timer(const Duration(milliseconds: 700), () async {
+                if (_debounce?.isActive ?? false) _debounce?.cancel();
+                _debounce = Timer(const Duration(milliseconds: 700), () async {
+                  if (value.isNotEmpty) {
                     await membersVM.searchType('GLOBAL', value);
-                  });
-                } else {
-                  membersVM.memberSearchController.text = '';
-                  membersVM.page.value = 0;
-                  membersVM.totalPages.value = 0;
-                  membersVM.membersData = [];
-                  await membersVM.getUsersOrMembers(
-                      0, membersVM.size.value, '', '', '');
-                }
+                  } else {
+                    membersVM.memberSearchController.text = '';
+                    membersVM.page.value = 0;
+                    membersVM.totalPages.value = 0;
+                    membersVM.membersData = [];
+                    await membersVM.getUsersOrMembers(
+                        0, membersVM.size.value, '', '', '');
+                  }
+                });
               },
             ),
           ),
@@ -315,6 +314,7 @@ class MembersPageState extends State<MembersPage>
               membersVM.page.value = 0;
               membersVM.totalPages.value = 0;
               membersVM.membersData = [];
+              print("**** Reload");
               await membersVM.getUsersOrMembers(
                   0, membersVM.size.value, '', '', '');
             },
