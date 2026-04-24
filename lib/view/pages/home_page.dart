@@ -1116,7 +1116,7 @@ class HomePageState extends State<HomePage> {
                       Expanded(
                         child: InkWell(
                           onTap: () {
-                            Get.toNamed(Routes.getAddVisitorPageRoute());
+                            Get.toNamed(Routes.getAddVisitorPageRoute(isFromMeeting: true));
                           },
                           child: Padding(
                             padding:
@@ -1707,7 +1707,7 @@ class HomePageState extends State<HomePage> {
                 elevation: 0.0,
                 bgColor: lavenderMist,
                 onTap: () async {
-                  await Get.toNamed(Routes.getAddVisitorPageRoute());
+                  await Get.toNamed(Routes.getAddVisitorPageRoute(isFromMeeting: false));
                   await getDashboardData(homeVM.selectedDuration);
                 },
                 cardChild: Padding(

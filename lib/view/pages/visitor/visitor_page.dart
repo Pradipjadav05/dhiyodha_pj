@@ -19,11 +19,13 @@ import '../../widgets/common_snackbar.dart';
 
 class VisitorPage extends StatefulWidget {
   final bool isAppBarRequired;
+  final bool isFromMeeting;
   final VoidCallback onStateChanged;
 
   const VisitorPage({
     Key? key,
     required this.isAppBarRequired,
+    this.isFromMeeting = false,
     required this.onStateChanged,
   }) : super(key: key);
 
@@ -56,11 +58,14 @@ class VisitorPageState extends State<VisitorPage>
     final homeVM = Get.find<HomeViewModel>();
 
     await visitorVM.initData();
-    // await vvm.getVisitors(vvm.page.value, vvm.size.value, "", "", "");
 
-    await homeVM.dashboardData(homeVM.selectedDuration);
-
-    visitorVM.setDashboardVisitors(homeVM.lastMonthlyData ?? {});
+    if (widget.isFromMeeting) {
+      await visitorVM.getVisitors(
+          visitorVM.page.value, visitorVM.size.value, "", "", "");
+    } else {
+      await homeVM.dashboardData(homeVM.selectedDuration);
+      visitorVM.setDashboardVisitors(homeVM.lastMonthlyData ?? {});
+    }
   }
 
   @override
@@ -120,89 +125,130 @@ class VisitorPageState extends State<VisitorPage>
       final String? profileUrl = data.profileUrl;
 
       return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
-        boxShadow: [
-          BoxShadow(
-                color: visitorAccent.withValues(alpha: 0.08),
-            blurRadius: 16,
-            offset: const Offset(0, 4),
-          ),
-        ],
-        border: Border.all(color: visitorCardBorder, width: 1),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(18),
-        child: Column(
-          children: [
-            // ── Header row ──
-            InkWell(
-              onTap: () {
-                _expandedMap[index] = !isExpanded;
-              },
-              borderRadius: BorderRadius.only(
-                topLeft: const Radius.circular(18),
-                topRight: const Radius.circular(18),
-                bottomLeft: Radius.circular(isExpanded ? 0 : 18),
-                bottomRight: Radius.circular(isExpanded ? 0 : 18),
-              ),
-              splashColor: lavenderMist.withValues(alpha: 0.4),
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                child: Row(
-                  children: [
-                    // ── Circular profile image ──
-                    _profileAvatar(profileUrl ?? ""),
-                    const SizedBox(width: 14),
-
-                    // ── Name + title badge ──
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            data.name ?? '',
-                            style: fontBold.copyWith(
-                              fontSize: fontSize16,
-                              color: midnightBlue,
-                              letterSpacing: 0.1,
-                            ),
-                          ),
-                          const SizedBox(height: 5),
-                          if (data.designation != "" &&
-                              data.designation != null)
-                            _titleBadge(data.designation ?? ''),
-                        ],
-                      ),
-                    ),
-
-                    // ── Expand / collapse arrow ──
-                    Image.asset(
-                      isExpanded ? nextArrow : dropDownArrow,
-                      height: iconSize18,
-                      width: iconSize18,
-                      color: bluishPurple,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            // ── Expandable detail rows ──
-            AnimatedCrossFade(
-              duration: const Duration(milliseconds: 280),
-              crossFadeState: isExpanded
-                  ? CrossFadeState.showSecond
-                  : CrossFadeState.showFirst,
-              firstChild: const SizedBox.shrink(),
-              secondChild: _expandedDetails(data),
+        margin: const EdgeInsets.only(bottom: 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(18),
+          boxShadow: [
+            BoxShadow(
+              color: visitorAccent.withValues(alpha: 0.08),
+              blurRadius: 16,
+              offset: const Offset(0, 4),
             ),
           ],
+          border: Border.all(color: visitorCardBorder, width: 1),
         ),
-      ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(18),
+          child: Column(
+            children: [
+              // ── Header row ──
+              InkWell(
+                onTap: () {
+                  _expandedMap[index] = !isExpanded;
+                },
+                borderRadius: BorderRadius.only(
+                  topLeft: const Radius.circular(18),
+                  topRight: const Radius.circular(18),
+                  bottomLeft: Radius.circular(isExpanded ? 0 : 18),
+                  bottomRight: Radius.circular(isExpanded ? 0 : 18),
+                ),
+                splashColor: lavenderMist.withValues(alpha: 0.4),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                  child: Row(
+                    children: [
+                      // ── Circular profile image ──
+                      _profileAvatar(profileUrl ?? ""),
+                      const SizedBox(width: 14),
+
+                      // ── Name + title badge + status ──
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    data.name ?? '',
+                                    style: fontBold.copyWith(
+                                      fontSize: fontSize16,
+                                      color: midnightBlue,
+                                      letterSpacing: 0.1,
+                                    ),
+                                  ),
+                                ),
+                                if (data.attendanceStatus != null &&
+                                    data.attendanceStatus!.isNotEmpty)
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 4),
+                                    decoration: BoxDecoration(
+                                      color: data.attendanceStatus
+                                                  ?.toUpperCase() ==
+                                              "PRESENT"
+                                          ? Colors.green.withValues(alpha: 0.1)
+                                          : data.attendanceStatus
+                                                      ?.toUpperCase() ==
+                                                  "ABSENT"
+                                              ? requiredField.withValues(
+                                                  alpha: 0.1)
+                                              : bluishPurple.withValues(
+                                                  alpha: 0.1),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Text(
+                                      data.attendanceStatus ?? "",
+                                      style: fontMedium.copyWith(
+                                        fontSize: 10,
+                                        color: data.attendanceStatus
+                                                    ?.toUpperCase() ==
+                                                "PRESENT"
+                                            ? Colors.green
+                                            : data.attendanceStatus
+                                                        ?.toUpperCase() ==
+                                                    "ABSENT"
+                                                ? requiredField
+                                                : bluishPurple,
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                            const SizedBox(height: 5),
+                            if (data.designation != "" &&
+                                data.designation != null)
+                              _titleBadge(data.designation ?? ''),
+                          ],
+                        ),
+                      ),
+
+                      // ── Expand / collapse arrow ──
+                      Image.asset(
+                        isExpanded ? nextArrow : dropDownArrow,
+                        height: iconSize18,
+                        width: iconSize18,
+                        color: bluishPurple,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              // ── Expandable detail rows ──
+              AnimatedCrossFade(
+                duration: const Duration(milliseconds: 280),
+                crossFadeState: isExpanded
+                    ? CrossFadeState.showSecond
+                    : CrossFadeState.showFirst,
+                firstChild: const SizedBox.shrink(),
+                secondChild: _expandedDetails(data),
+              ),
+            ],
+          ),
+        ),
       );
     });
   }
@@ -314,7 +360,9 @@ class VisitorPageState extends State<VisitorPage>
         ),
         _divider(),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0,),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 8.0,
+          ),
           child: SizedBox(
             width: double.infinity,
             child: DecoratedBox(
@@ -382,8 +430,8 @@ class VisitorPageState extends State<VisitorPage>
                       return;
                     }
 
-                    final bool isMarked =
-                        await Get.find<VisitorsViewModel>().markVisitorAttendance(
+                    final bool isMarked = await Get.find<VisitorsViewModel>()
+                        .markVisitorAttendance(
                       qrToken: qrToken,
                       visitorUuid: visitorUuid,
                       latitude: currentPosition.latitude,
@@ -573,8 +621,7 @@ class VisitorPageState extends State<VisitorPage>
     }
 
     return Geolocator.getCurrentPosition(
-      locationSettings:
-          const LocationSettings(accuracy: LocationAccuracy.high),
+      locationSettings: const LocationSettings(accuracy: LocationAccuracy.high),
     );
   }
 
@@ -582,9 +629,8 @@ class VisitorPageState extends State<VisitorPage>
   Widget build(BuildContext context) {
     return GetBuilder<VisitorsViewModel>(builder: (visitorVM) {
       return Obx(() {
-        final bool isBusy =
-            _isMarkingAttendance.value || visitorVM.isLoading;
-    
+        final bool isBusy = _isMarkingAttendance.value || visitorVM.isLoading;
+
         return Scaffold(
           backgroundColor: pageBackground,
           appBar: widget.isAppBarRequired
@@ -613,7 +659,6 @@ class VisitorPageState extends State<VisitorPage>
                           minHeight: 3,
                           borderRadius: BorderRadius.circular(radius20),
                         ),
-                
                       visitorVM.visitorData.isNotEmpty
                           ? Expanded(
                               child: LoadMore(

@@ -11,6 +11,8 @@ import '../../widgets/common_button.dart';
 import 'add_visitors_page.dart';
 
 class AddVisitorsPage extends StatefulWidget {
+  final bool isFromMeeting;
+  const AddVisitorsPage({Key? key, this.isFromMeeting = false}) : super(key: key);
   AddVisitorsPageState createState() => AddVisitorsPageState();
 }
 
@@ -82,6 +84,7 @@ class AddVisitorsPageState extends State<AddVisitorsPage> {
               Obx(() => Visibility(
                 visible: isListScreen.value,
                 child: Expanded(child: VisitorPage(
+                  isFromMeeting: widget.isFromMeeting,
                   isAppBarRequired: false,
                   onStateChanged: () async {
                     await initData();

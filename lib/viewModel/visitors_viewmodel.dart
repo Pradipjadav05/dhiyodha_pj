@@ -780,6 +780,7 @@ class VisitorsViewModel extends GetxController implements GetxService {
           country: v['country'],
           pinCode: v['pinCode'],
           vcard: v['vcard'],
+          attendanceStatus: v['attendanceStatus'],
         ));
       }
     }

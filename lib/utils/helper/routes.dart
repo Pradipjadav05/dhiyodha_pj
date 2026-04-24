@@ -210,7 +210,7 @@ class Routes {
 
   static String getTrainingPageRoute() => training;
 
-  static String getAddVisitorPageRoute() => addVisitor;
+  static String getAddVisitorPageRoute({bool isFromMeeting = false}) => '$addVisitor?isFromMeeting=$isFromMeeting';
 
   static String getTYFCBsPageRoute() => tyfcbPage;
 
@@ -389,7 +389,12 @@ class Routes {
     GetPage(name: trainer, page: () => TrainerPage()),
     GetPage(name: guest, page: () => GuestPage()),
     GetPage(name: training, page: () => TrainingPage()),
-    GetPage(name: addVisitor, page: () => AddVisitorsPage()),
+    GetPage(
+        name: addVisitor,
+        page: () {
+          bool isFromMeeting = Get.parameters['isFromMeeting'] == 'true';
+          return AddVisitorsPage(isFromMeeting: isFromMeeting);
+        }),
     GetPage(name: tyfcbPage, page: () => TyfcbPage()),
     GetPage(name: referralsPage, page: () => ReferralsPage()),
     GetPage(name: oneToOnePage, page: () => OneToOnePage()),
