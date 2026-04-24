@@ -57,6 +57,7 @@ import 'package:dhiyodha/view/pages/update_username_page.dart';
 import 'package:dhiyodha/view/pages/visiting_e_card_page.dart';
 import 'package:dhiyodha/view/pages/visitor/visitor_page.dart';
 import 'package:dhiyodha/view/pages/webview_page.dart';
+import 'package:dhiyodha/view/pages/attendance_page.dart';
 import 'package:get/get.dart';
 
 import '../../view/pages/forgot_password_page.dart';
@@ -98,6 +99,7 @@ class Routes {
   static const String tyfcbPage = '/tyfcbPage';
   static const String referralsPage = '/referralsPage';
   static const String oneToOnePage = '/oneToOnePage';
+  static const String attendance = '/attendance';
   static const String addressPage = '/addressPage';
   static const String contactPage = '/contactPage';
   static const String myBio = '/myBio';
@@ -217,6 +219,8 @@ class Routes {
   static String getReferralsPageRoute() => referralsPage;
 
   static String getOneToOnePageRoute() => oneToOnePage;
+
+  static String getAttendanceRoute() => '$attendance';
 
   static String getAddressPageRoute(CurrentUserData? currentUserData) {
     List<int> encoded = utf8.encode(jsonEncode(currentUserData?.toJson()));
@@ -398,6 +402,7 @@ class Routes {
     GetPage(name: tyfcbPage, page: () => TyfcbPage()),
     GetPage(name: referralsPage, page: () => ReferralsPage()),
     GetPage(name: oneToOnePage, page: () => OneToOnePage()),
+    GetPage(name: attendance, page: () => const AttendancePage()),
     GetPage(
         name: addressPage,
         page: () {

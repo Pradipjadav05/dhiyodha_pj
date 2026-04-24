@@ -1821,7 +1821,7 @@ class HomePageState extends State<HomePage> {
                 elevation: 0.0,
                 bgColor: lavenderMist,
                 onTap: () {
-                  Get.toNamed(Routes.getTrainingPageRoute());
+                  Get.toNamed(Routes.getAttendanceRoute());
                 },
                 cardChild: Padding(
                   padding: const EdgeInsets.only(
@@ -1838,12 +1838,12 @@ class HomePageState extends State<HomePage> {
                         width: iconSize24,
                       ),
                       Text(
-                        "training".tr,
+                        "attendance".tr,
                         style: fontRegular.copyWith(
                             color: midnightBlue, fontSize: fontSize16),
                       ),
                       Text(
-                        '${homeVM.trainingCount}',
+                        '0', // No overall attendance count provided, set to 0
                         style: fontBold.copyWith(
                           color: bluishPurple,
                           fontSize: fontSize20,

@@ -20,6 +20,7 @@ import 'package:dhiyodha/data/repository/testimonial_repo.dart';
 import 'package:dhiyodha/data/repository/tyfcb_repo.dart';
 import 'package:dhiyodha/data/repository/visiting_card_repo.dart';
 import 'package:dhiyodha/data/repository/visitors_repo.dart';
+import 'package:dhiyodha/data/repository/attendance_repo.dart';
 import 'package:dhiyodha/model/language_model.dart';
 import 'package:dhiyodha/utils/resource/app_constants.dart';
 import 'package:dhiyodha/viewModel/account_settings_viewmodel.dart';
@@ -44,6 +45,7 @@ import 'package:dhiyodha/viewModel/testimonial_viewmodel.dart';
 import 'package:dhiyodha/viewModel/tyfcb_viewmodel.dart';
 import 'package:dhiyodha/viewModel/visiting_card_viewmodel.dart';
 import 'package:dhiyodha/viewModel/visitors_viewmodel.dart';
+import 'package:dhiyodha/viewModel/attendance_viewmodel.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -77,6 +79,7 @@ Future<Map<String, Map<String, String>>> init() async {
   Get.lazyPut(() => VisitingCardRepo(apiClient: Get.find(), sharedPreferences: Get.find()), fenix: true);
   Get.lazyPut(() => ProfileRepo(apiClient: Get.find(), sharedPreferences: Get.find()), fenix: true);
   Get.lazyPut(() => SplashRepo(apiClient: Get.find(), sharedPreferences: Get.find()), fenix: true);
+  Get.lazyPut(() => AttendanceRepo(apiClient: Get.find()), fenix: true);
 
   /** ViewModels **/
   Get.lazyPut(() => SplashViewModel(splashRepo: Get.find()), fenix: true);
@@ -101,6 +104,7 @@ Future<Map<String, Map<String, String>>> init() async {
   Get.lazyPut(() => ActivityFeedsViewmodel(activityFeedsRepo: Get.find()), fenix: true);
   Get.lazyPut(() => ReferralSlipViewModel(referralRepo: Get.find()), fenix: true);
   Get.lazyPut(() => VisitingCardViewModel(visitingCardRepo: Get.find()), fenix: true);
+  Get.lazyPut(() => AttendanceViewModel(attendanceRepo: Get.find()), fenix: true);
 
   /** Retrieving localized data **/
   Map<String, Map<String, String>> languages = {};
