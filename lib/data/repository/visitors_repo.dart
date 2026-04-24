@@ -118,9 +118,11 @@ class VisitorsRepo {
       visitorAttendanceUrl,
       {
         "qrToken": qrToken,
-        "visitorUuid": visitorUuid,
-        "latitude": latitude,
-        "longitude": longitude,
+        "visitorId": visitorUuid,
+        "location": {
+          "latitude": latitude,
+          "longitude": longitude,
+        },
       },
     );
   }
