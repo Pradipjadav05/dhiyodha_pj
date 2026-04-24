@@ -170,6 +170,7 @@ class NextMeeting {
   String? title;
   String? status;
   String? locationName;
+  String? locationLink;
   String? time;
   int? tyfcb;
   int? tyfcbReceived;
@@ -194,6 +195,7 @@ class NextMeeting {
     this.title,
     this.status,
     this.locationName,
+    this.locationLink,
     this.time,
   });
 
@@ -214,6 +216,7 @@ class NextMeeting {
     status = json['status'];
     locationName = json['locationName'];
     time = json['time'];
+    locationLink = json['locationLink'];
   }
 
   Map<String, dynamic> toJson() {
@@ -234,6 +237,7 @@ class NextMeeting {
     data['status'] = this.status;
     data['locationName'] = this.locationName;
     data['time'] = this.time;
+    data['locationLink'] = this.locationLink;
     return data;
   }
 }

@@ -346,6 +346,7 @@ class HomeViewModel extends GetxController implements GetxService {
           status: meeting['status'],
           locationName: meeting['locationName'],
           time: meeting['time'],
+          locationLink: meeting['locationLink'],
         );
 
         if (meeting['meetingBanner'] != null &&

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -1252,6 +1253,33 @@ class HomePageState extends State<HomePage> {
                   horizontal: paddingSize15, vertical: paddingSize5),
               child: Text(
                 "next_meeting".tr,
+                style: fontRegular.copyWith(
+                    color: ghostWhite, fontSize: fontSize14),
+              ),
+            ),
+          ),
+        ),
+
+        Positioned(
+          bottom: -15,
+          right: 20,
+          child: CommonCard(
+            elevation: 0.0,
+            bgColor: bluishPurple,
+            onTap: () async {
+              String? locationUrl = homeVM.nextMeeting?.locationLink;
+              if (locationUrl != null && locationUrl.isNotEmpty) {
+                final Uri url = Uri.parse(locationUrl);
+                if (!await launchUrl(url)) {
+                  debugPrint('Could not launch location link');
+                }
+              }
+            },
+            cardChild: Padding(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: paddingSize15, vertical: paddingSize5),
+              child: Text(
+                "location_link".tr,
                 style: fontRegular.copyWith(
                     color: ghostWhite, fontSize: fontSize14),
               ),
