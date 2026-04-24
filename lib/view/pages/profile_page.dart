@@ -210,7 +210,7 @@ class ProfilePageState extends State<ProfilePage> {
             InkWell(
               onTap: () async {
                 await postVM.pickImage('FACE_IMAGE');
-                if( postVM.uploadedDocumentUuid.isEmpty) return;
+                if (postVM.uploadedDocumentUuid.isEmpty) return;
                 UpdateProfileRequestModel userProfileRequestModel =
                     new UpdateProfileRequestModel(
                   firstName: widget.currentUserData.firstName ?? "",
@@ -218,8 +218,7 @@ class ProfilePageState extends State<ProfilePage> {
                   dob: widget.currentUserData.dob ?? "",
                   countryCode: widget.currentUserData.countryCode ?? "",
                   mobileNo: widget.currentUserData.mobileNo,
-                  uploadDocumentId:
-                      postVM.uploadedDocumentUuid ?? "",
+                  uploadDocumentId: postVM.uploadedDocumentUuid ?? "",
                   education: widget.currentUserData.education ?? "",
                   children: widget.currentUserData.children ?? 0,
                   pet: widget.currentUserData.pet ?? "",
@@ -326,23 +325,75 @@ class ProfilePageState extends State<ProfilePage> {
                     Image.asset(live),
                   ],
                 ),
-                Text(
-                  user.currentUserOrganization?.companyName ?? '',
-                  style: fontRegular.copyWith(
-                      fontSize: fontSize14, color: lavenderMist),
-                ),
-                const SizedBox(height: 4.0),
-                Text(
-                  user.currentUserOrganization?.businessCategory ?? '',
-                  style: fontRegular.copyWith(
-                      fontSize: fontSize12, color: periwinkle),
-                ),
-                const SizedBox(height: 4.0),
-                Text(
-                 "${ user.currentUserAddress?.city ?? ''} ${ user.currentUserAddress?.state ?? ''}",
-                  style: fontRegular.copyWith(
-                      fontSize: fontSize12, color: periwinkle),
-                ),
+                if ((user.currentUserOrganization?.companyName ?? '')
+                    .isNotEmpty) ...[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(Icons.business, color: lavenderMist, size: 14),
+                      const SizedBox(width: 4),
+                      Text(
+                        user.currentUserOrganization!.companyName!,
+                        style: fontRegular.copyWith(
+                            fontSize: fontSize14, color: lavenderMist),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4.0),
+                ],
+                if ((user.currentUserOrganization?.businessCategory ?? '')
+                    .isNotEmpty) ...[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(Icons.category, color: periwinkle, size: 12),
+                      const SizedBox(width: 4),
+                      Text(
+                        user.currentUserOrganization!.businessCategory!,
+                        style: fontRegular.copyWith(
+                            fontSize: fontSize12, color: periwinkle),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4.0),
+                ],
+                if (user.userGroups != null &&
+                    user.userGroups!.isNotEmpty &&
+                    (user.userGroups!.first.groupName ?? '').isNotEmpty) ...[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(Icons.group, color: periwinkle, size: 12),
+                      const SizedBox(width: 4),
+                      Text(
+                        user.userGroups!.first.groupName!,
+                        style: fontRegular.copyWith(
+                            fontSize: fontSize12, color: periwinkle),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4.0),
+                ],
+                if (("${user.currentUserAddress?.city ?? ''} ${user.currentUserAddress?.state ?? ''}")
+                    .trim()
+                    .isNotEmpty)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(Icons.location_on, color: periwinkle, size: 12),
+                      const SizedBox(width: 4),
+                      Text(
+                        "${user.currentUserAddress?.city ?? ''} ${user.currentUserAddress?.state ?? ''}"
+                            .trim(),
+                        style: fontRegular.copyWith(
+                            fontSize: fontSize12, color: periwinkle),
+                      ),
+                    ],
+                  ),
               ],
             ),
           ],
@@ -352,7 +403,7 @@ class ProfilePageState extends State<ProfilePage> {
   }
 }
 
-Widget _profileAvatar(String? profileUrl, { double size = 42}) {
+Widget _profileAvatar(String? profileUrl, {double size = 42}) {
   return Container(
     width: size,
     height: size,
@@ -370,12 +421,12 @@ Widget _profileAvatar(String? profileUrl, { double size = 42}) {
     child: ClipOval(
       child: profileUrl != null && profileUrl.isNotEmpty
           ? CachedNetworkImage(
-        imageUrl: profileUrl,
-        width: size,
-        height: size,
-        fit: BoxFit.cover,
-        errorWidget: (context, url, error) => _avatarFallback(),
-      )
+              imageUrl: profileUrl,
+              width: size,
+              height: size,
+              fit: BoxFit.cover,
+              errorWidget: (context, url, error) => _avatarFallback(),
+            )
           : _avatarFallback(),
     ),
   );

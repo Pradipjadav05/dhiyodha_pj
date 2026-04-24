@@ -56,6 +56,7 @@ class CurrentUserData {
   String? status;
   String? createdAt;
   String? updatedAt;
+  List<CurrentUserGroup>? userGroups;
 
   CurrentUserData(
       {this.uuid,
@@ -84,7 +85,8 @@ class CurrentUserData {
       this.currentUserOrganization,
       this.status,
       this.createdAt,
-      this.updatedAt});
+      this.updatedAt,
+      this.userGroups});
 
   CurrentUserData.fromJson(Map<String, dynamic> json) {
     uuid = json['uuid'];
@@ -123,6 +125,12 @@ class CurrentUserData {
     status = json['status'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
+    if (json['userGroups'] != null) {
+      userGroups = <CurrentUserGroup>[];
+      json['userGroups'].forEach((v) {
+        userGroups!.add(new CurrentUserGroup.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -160,6 +168,9 @@ class CurrentUserData {
     data['status'] = this.status;
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;
+    if (this.userGroups != null) {
+      data['userGroups'] = this.userGroups!.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }
@@ -328,6 +339,56 @@ class CurrentUserOrganization {
     data['aadharNo'] = this.aadharNo;
     data['uploadAadhar'] = this.uploadAadhar;
     data['yearOfBusiness'] = this.yearOfBusiness;
+    return data;
+  }
+}
+
+class CurrentUserGroup {
+  String? uuid;
+  String? groupName;
+  String? description;
+  int? groupLimit;
+  String? groupStatus;
+  String? meetingDay;
+  String? country;
+  String? state;
+  String? city;
+
+  CurrentUserGroup({
+    this.uuid,
+    this.groupName,
+    this.description,
+    this.groupLimit,
+    this.groupStatus,
+    this.meetingDay,
+    this.country,
+    this.state,
+    this.city,
+  });
+
+  CurrentUserGroup.fromJson(Map<String, dynamic> json) {
+    uuid = json['uuid'];
+    groupName = json['groupName'];
+    description = json['description'];
+    groupLimit = json['groupLimit'];
+    groupStatus = json['groupStatus'];
+    meetingDay = json['meetingDay'];
+    country = json['country'];
+    state = json['state'];
+    city = json['city'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['uuid'] = this.uuid;
+    data['groupName'] = this.groupName;
+    data['description'] = this.description;
+    data['groupLimit'] = this.groupLimit;
+    data['groupStatus'] = this.groupStatus;
+    data['meetingDay'] = this.meetingDay;
+    data['country'] = this.country;
+    data['state'] = this.state;
+    data['city'] = this.city;
     return data;
   }
 }
