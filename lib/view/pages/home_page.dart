@@ -103,8 +103,8 @@ class HomePageState extends State<HomePage> {
                     InkWell(
                       onTap: () async {
                         Get.back();
-                        await Get.toNamed(Routes.getProfilePageRoute(
-                            homeVM.currentUserData));
+                        await Get.toNamed(
+                            Routes.getProfilePageRoute(homeVM.currentUserData));
                         await getCurrentUser(homeVM);
                         homeVM.update();
                       },
@@ -522,9 +522,7 @@ class HomePageState extends State<HomePage> {
             selectedItemColor: midnightBlue,
             items: [
               BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
-                  label: "home".tr,
-                  tooltip: "home".tr),
+                  icon: Icon(Icons.home), label: "home".tr, tooltip: "home".tr),
               BottomNavigationBarItem(
                   icon: Icon(Icons.home_repair_service),
                   label: "dashboard".tr,
@@ -913,28 +911,48 @@ class HomePageState extends State<HomePage> {
           ),
           homeVM.postData.isNotEmpty
               ? Expanded(
-                  child: LoadMore(
-                      isFinish: homeVM.page.value == homeVM.totalPages.value,
-                      whenEmptyLoad: true,
-                      delegate: const DefaultLoadMoreDelegate(),
-                      textBuilder: DefaultLoadMoreTextBuilder.english,
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          return _postListItems(index, homeVM);
-                        },
-                        itemCount: homeVM.postData.length,
-                      ),
-                      onLoadMore: homeVM.loadMore),
+                  child: RefreshIndicator(
+                    onRefresh: () async {
+                      await callPostOrMyPostAPI(homeVM);
+                    },
+                    child: LoadMore(
+                        isFinish: homeVM.page.value == homeVM.totalPages.value,
+                        whenEmptyLoad: true,
+                        delegate: const DefaultLoadMoreDelegate(),
+                        textBuilder: DefaultLoadMoreTextBuilder.english,
+                        child: ListView.builder(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            return _postListItems(index, homeVM);
+                          },
+                          itemCount: homeVM.postData.length,
+                        ),
+                        onLoadMore: homeVM.loadMore),
+                  ),
                 )
               : homeVM.isLoading
                   ? Container()
                   : Expanded(
-                      child: Center(
-                        child: Text(
-                          "no_posts".tr,
-                          style: fontMedium.copyWith(
-                              color: midnightBlue, fontSize: fontSize18),
+                      child: RefreshIndicator(
+                        onRefresh: () async {
+                          await callPostOrMyPostAPI(homeVM);
+                        },
+                        child: ListView(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          children: [
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.5,
+                              child: Center(
+                                child: Text(
+                                  "no_posts".tr,
+                                  style: fontMedium.copyWith(
+                                      color: midnightBlue,
+                                      fontSize: fontSize18),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     )
@@ -952,74 +970,81 @@ class HomePageState extends State<HomePage> {
   }
 
   _homeDataWidget(HomeViewModel homeVM) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-            horizontal: paddingSize10, vertical: paddingSize15),
-        child: Column(
-          children: [
-            _bannerSlider(homeVM),
-            SizedBox(height: paddingSize15),
-            _currentMeetingStatus(homeVM),
-            // DotsIndicator(
-            //   dotsCount: homeVM.bannerList.length,
-            //   position: homeVM.currentDotPosition,
-            //   axis: Axis.horizontal,
-            //   onTap: (position) async {
-            //     if (position < homeVM.bannerList.length) {
-            //       await homeVM.nextSlide(position);
-            //     } else {
-            //       await homeVM.prevSlide(position);
-            //     }
-            //   },
-            // ),
-            SizedBox(height: paddingSize30),
-            _meetingCard(homeVM),
-            SizedBox(height: paddingSize15),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                CommonCard(
-                  bgColor: bluishPurple,
-                  cardChild: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      "this_week_slips".tr,
-                      style: fontRegular.copyWith(
-                          color: ghostWhite, fontSize: fontSize14),
+    return RefreshIndicator(
+      onRefresh: () async {
+        await homeVM.getMeetingsList();
+        await getDashboardData(homeVM.selectedDuration);
+      },
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+              horizontal: paddingSize10, vertical: paddingSize15),
+          child: Column(
+            children: [
+              _bannerSlider(homeVM),
+              SizedBox(height: paddingSize15),
+              _currentMeetingStatus(homeVM),
+              // DotsIndicator(
+              //   dotsCount: homeVM.bannerList.length,
+              //   position: homeVM.currentDotPosition,
+              //   axis: Axis.horizontal,
+              //   onTap: (position) async {
+              //     if (position < homeVM.bannerList.length) {
+              //       await homeVM.nextSlide(position);
+              //     } else {
+              //       await homeVM.prevSlide(position);
+              //     }
+              //   },
+              // ),
+              SizedBox(height: paddingSize30),
+              _meetingCard(homeVM),
+              SizedBox(height: paddingSize15),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CommonCard(
+                    bgColor: bluishPurple,
+                    cardChild: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "this_week_slips".tr,
+                        style: fontRegular.copyWith(
+                            color: ghostWhite, fontSize: fontSize14),
+                      ),
                     ),
                   ),
-                ),
-                Spacer(),
-                // Image.asset(
-                //   printerBlue,
-                //   width: iconSize24,
-                //   height: iconSize24,
-                // ),
-                // CommonCard(
-                //   bgColor: lavenderMist,
-                //   elevation: 0.0,
-                //   cardChild: Padding(
-                //     padding:
-                //         const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                //     child: InkWell(
-                //       child: Image.asset(
-                //         viewBlue,
-                //         width: iconSize24,
-                //         height: iconSize24,
-                //       ),
-                //     ),
-                //   ),
-                // ),
-                // SizedBox(width: 5.0),
-              ],
-            ),
-            SizedBox(height: paddingSize15),
-            _otherFunctions(homeVM),
-            SizedBox(height: paddingSize25),
-            _moreDataDetails(homeVM)
-          ],
+                  Spacer(),
+                  // Image.asset(
+                  //   printerBlue,
+                  //   width: iconSize24,
+                  //   height: iconSize24,
+                  // ),
+                  // CommonCard(
+                  //   bgColor: lavenderMist,
+                  //   elevation: 0.0,
+                  //   cardChild: Padding(
+                  //     padding:
+                  //         const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                  //     child: InkWell(
+                  //       child: Image.asset(
+                  //         viewBlue,
+                  //         width: iconSize24,
+                  //         height: iconSize24,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+                  // SizedBox(width: 5.0),
+                ],
+              ),
+              SizedBox(height: paddingSize15),
+              _otherFunctions(homeVM),
+              SizedBox(height: paddingSize25),
+              _moreDataDetails(homeVM)
+            ],
+          ),
         ),
       ),
     );
@@ -1117,7 +1142,8 @@ class HomePageState extends State<HomePage> {
                       Expanded(
                         child: InkWell(
                           onTap: () {
-                            Get.toNamed(Routes.getAddVisitorPageRoute(isFromMeeting: true));
+                            Get.toNamed(Routes.getAddVisitorPageRoute(
+                                isFromMeeting: true));
                           },
                           child: Padding(
                             padding:
@@ -1152,7 +1178,8 @@ class HomePageState extends State<HomePage> {
                             await Get.toNamed(Routes.getSpeakerPageRoute());
                           },
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 4.0),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1160,12 +1187,14 @@ class HomePageState extends State<HomePage> {
                                 Text(
                                   "speakers".tr,
                                   style: fontRegular.copyWith(
-                                      color: midnightBlue, fontSize: fontSize12),
+                                      color: midnightBlue,
+                                      fontSize: fontSize12),
                                 ),
                                 Text(
                                   '${homeVM.nextMeetingCountData?.speakers ?? "00"}',
                                   style: fontBold.copyWith(
-                                      color: midnightBlue, fontSize: fontSize16),
+                                      color: midnightBlue,
+                                      fontSize: fontSize16),
                                 ),
                               ],
                             ),
@@ -1213,7 +1242,8 @@ class HomePageState extends State<HomePage> {
                             await Get.toNamed(Routes.getGuestPageRoute());
                           },
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 4.0),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1221,12 +1251,14 @@ class HomePageState extends State<HomePage> {
                                 Text(
                                   "guest".tr,
                                   style: fontRegular.copyWith(
-                                      color: midnightBlue, fontSize: fontSize12),
+                                      color: midnightBlue,
+                                      fontSize: fontSize12),
                                 ),
                                 Text(
                                   '${homeVM.nextMeetingCountData?.guest ?? "00"}',
                                   style: fontBold.copyWith(
-                                      color: midnightBlue, fontSize: fontSize16),
+                                      color: midnightBlue,
+                                      fontSize: fontSize16),
                                 ),
                               ],
                             ),
@@ -1436,10 +1468,10 @@ class HomePageState extends State<HomePage> {
                         ),
                       ),
                       onPressed: () async {
-                       bool res = await homeVM.markAttendance();
-                       if(res) {
-                         await showAttendanceSuccessDialog(context);
-                       }
+                        bool res = await homeVM.markAttendance();
+                        if (res) {
+                          await showAttendanceSuccessDialog(context);
+                        }
                       },
                       child: Text(
                         "add_my_attendance".tr,
@@ -1735,7 +1767,8 @@ class HomePageState extends State<HomePage> {
                 elevation: 0.0,
                 bgColor: lavenderMist,
                 onTap: () async {
-                  await Get.toNamed(Routes.getAddVisitorPageRoute(isFromMeeting: false));
+                  await Get.toNamed(
+                      Routes.getAddVisitorPageRoute(isFromMeeting: false));
                   await getDashboardData(homeVM.selectedDuration);
                 },
                 cardChild: Padding(
@@ -2395,7 +2428,7 @@ class HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _profileAvatar(String? profileUrl, { double size = 42}) {
+  Widget _profileAvatar(String? profileUrl, {double size = 42}) {
     return Container(
       width: size,
       height: size,
@@ -2724,10 +2757,8 @@ class _ModernSuccessDialogState extends State<_ModernSuccessDialog>
       duration: const Duration(milliseconds: 700),
     );
 
-    scaleAnim =
-        CurvedAnimation(parent: _controller, curve: Curves.easeOutBack);
-    fadeAnim =
-        CurvedAnimation(parent: _controller, curve: Curves.easeIn);
+    scaleAnim = CurvedAnimation(parent: _controller, curve: Curves.easeOutBack);
+    fadeAnim = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
 
     _controller.forward();
 
@@ -2833,8 +2864,7 @@ class _ModernCheckState extends State<_ModernCheck>
       duration: const Duration(milliseconds: 600),
     );
 
-    scaleAnim =
-        CurvedAnimation(parent: _controller, curve: Curves.elasticOut);
+    scaleAnim = CurvedAnimation(parent: _controller, curve: Curves.elasticOut);
 
     _controller.forward();
   }
@@ -2869,4 +2899,3 @@ class _ModernCheckState extends State<_ModernCheck>
     );
   }
 }
-
