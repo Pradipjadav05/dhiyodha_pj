@@ -69,7 +69,7 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
                       .where((c) => c != 'Select Country')
                       .toList(),
                   onSelected: (val) async {
-                    vvm.selectedCountry = val ?? "";
+                    vvm.selectedCountry = val;
                     if (vvm.selectedCountry != vvm.countryList[0]) {
                       await vvm.getStates(vvm.selectedCountry);
                     }
@@ -84,7 +84,7 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
                   options:
                       vvm.stateList.where((s) => s != 'Select State').toList(),
                   onSelected: (val) async {
-                    vvm.selectedState = val ?? "";
+                    vvm.selectedState = val;
                     if (vvm.selectedState != vvm.stateList[0]) {
                       await vvm.getCities(vvm.selectedState);
                     }
@@ -99,7 +99,7 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
                   options:
                       vvm.cityList.where((c) => c != 'Select City').toList(),
                   onSelected: (val) {
-                    vvm.selectedCity = val ?? "";
+                    vvm.selectedCity = val;
                     widget.onStateChanged();
                   },
                 ),
@@ -112,7 +112,7 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
                       .where((c) => c != 'Select Chapter')
                       .toList(),
                   onSelected: (val) {
-                    vvm.selectedChapter = val ?? "";
+                    vvm.selectedChapter = val;
                     vvm.teamWiseFillMeeting(vvm.selectedChapter);
                     widget.onStateChanged();
                   },
@@ -127,7 +127,7 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
                       .where((c) => c != 'Select Meeting')
                       .toList(),
                   onSelected: (val) {
-                    vvm.selectedMeeting = val ?? "";
+                    vvm.selectedMeeting = val;
                     vvm.autoFillSelectedMeetingDate(vvm.selectedMeeting);
                     widget.onStateChanged();
                   },
@@ -173,7 +173,7 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
                       .where((b) => b != vvm.businessCatList[0])
                       .toList(),
                   onSelected: (val) {
-                    vvm.selectedBusinessCategory = val ?? "";
+                    vvm.selectedBusinessCategory = val;
                     widget.onStateChanged();
                   },
                 ),

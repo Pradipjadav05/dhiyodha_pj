@@ -217,7 +217,7 @@ class TestimonialPageState extends State<TestimonialPage> {
         border: Border.all(color: Colors.white, width: 2.5),
         boxShadow: [
           BoxShadow(
-            color: midnightBlue.withOpacity(0.15),
+            color: midnightBlue.withValues(alpha:0.15),
             blurRadius: 8,
             offset: const Offset(0, 3),
           ),

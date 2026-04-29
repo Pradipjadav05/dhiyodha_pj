@@ -134,9 +134,7 @@ class ContactPageState extends State<ContactPage> {
         lastName: widget.currentUserData.lastName ?? "",
         dob: widget.currentUserData.dob ?? "",
         countryCode: widget.currentUserData.countryCode ?? "",
-        mobileNo: contactVM.contactNum1Controller.text ??
-            widget?.currentUserData?.mobileNo ??
-            "",
+        mobileNo: contactVM.contactNum1Controller.text,
         uploadDocumentId: widget.currentUserData.uploadDocumentId ?? "",
         education: widget.currentUserData.education ?? "",
         children: widget.currentUserData.children ?? 0,
@@ -155,37 +153,33 @@ class ContactPageState extends State<ContactPage> {
         businessDetailsResponse: CompanyDetailsRequest(
             uuid: widget.currentUserData.uuid ?? "",
             companyName:
-                widget.currentUserData?.currentUserOrganization?.companyName ??
+                widget.currentUserData.currentUserOrganization?.companyName ??
                     "",
             companyEstablishment: widget.currentUserData
-                    ?.currentUserOrganization?.companyEstablishment ??
+                    .currentUserOrganization?.companyEstablishment ??
                 "",
             companyAddress:
-                widget.currentUserData?.currentUserOrganization?.companyAddress ??
+                widget.currentUserData.currentUserOrganization?.companyAddress ??
                     "",
             registeredType:
-                widget.currentUserData?.currentUserOrganization?.registeredType ??
+                widget.currentUserData.currentUserOrganization?.registeredType ??
                     "",
             numberOfEmployees: widget
-                .currentUserData?.currentUserOrganization?.numberOfEmployees,
+                .currentUserData.currentUserOrganization?.numberOfEmployees,
             yearlyTurnover: widget
-                    .currentUserData?.currentUserOrganization?.yearlyTurnover ??
+                    .currentUserData.currentUserOrganization?.yearlyTurnover ??
                 "",
-            companyEmail: contactVM.emailController.text ??
-                widget.currentUserData?.currentUserOrganization?.companyEmail ??
-                "",
-            companyWebsite: contactVM.websiteController.text ??
-                widget.currentUserData?.currentUserOrganization?.companyWebsite ??
-                "",
-            designation: widget.currentUserData?.currentUserOrganization?.designation ?? "",
-            companyContact: contactVM.contactNum2Controller.text ?? widget.currentUserData?.currentUserOrganization?.companyContact ?? "",
-            businessCategory: widget.currentUserData?.currentUserOrganization?.businessCategory ?? "",
-            businessDescription: widget.currentUserData?.currentUserOrganization?.businessDescription ?? "",
-            yearlyProfit: widget.currentUserData?.currentUserOrganization?.yearlyProfit ?? 0.0,
-            gstNumber: widget.currentUserData?.currentUserOrganization?.gstNumber ?? "",
-            uploadGst: widget.currentUserData?.currentUserOrganization?.uploadGst ?? "",
-            panNumber: widget.currentUserData?.currentUserOrganization?.panNumber ?? "",
-            uploadPan: widget.currentUserData?.currentUserOrganization?.uploadPan ?? ""),
+            companyEmail: contactVM.emailController.text,
+            companyWebsite: contactVM.websiteController.text,
+            designation: widget.currentUserData.currentUserOrganization?.designation ?? "",
+            companyContact: contactVM.contactNum2Controller.text,
+            businessCategory: widget.currentUserData.currentUserOrganization?.businessCategory ?? "",
+            businessDescription: widget.currentUserData.currentUserOrganization?.businessDescription ?? "",
+            yearlyProfit: widget.currentUserData.currentUserOrganization?.yearlyProfit ?? 0.0,
+            gstNumber: widget.currentUserData.currentUserOrganization?.gstNumber ?? "",
+            uploadGst: widget.currentUserData.currentUserOrganization?.uploadGst ?? "",
+            panNumber: widget.currentUserData.currentUserOrganization?.panNumber ?? "",
+            uploadPan: widget.currentUserData.currentUserOrganization?.uploadPan ?? ""),
         addressRequest: AddressRequest(
           city: widget.currentUserData.currentUserAddress?.city ?? "",
           state: widget.currentUserData.currentUserAddress?.state ?? "",

@@ -104,7 +104,7 @@ class ReferralsPageState extends State<ReferralsPage> {
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.06),
+            color: Colors.black.withValues(alpha:0.06),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -152,7 +152,7 @@ class ReferralsPageState extends State<ReferralsPage> {
             boxShadow: isActive
                 ? [
                     BoxShadow(
-                      color: midnightBlue.withOpacity(0.3),
+                      color: midnightBlue.withValues(alpha:0.3),
                       blurRadius: 10,
                       offset: const Offset(0, 3),
                     ),
@@ -204,7 +204,7 @@ class ReferralsPageState extends State<ReferralsPage> {
           borderRadius: BorderRadius.circular(18),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF1E3A5F).withOpacity(0.08),
+              color: const Color(0xFF1E3A5F).withValues(alpha:0.08),
               blurRadius: 16,
               offset: const Offset(0, 4),
             ),
@@ -279,7 +279,7 @@ class ReferralsPageState extends State<ReferralsPage> {
         border: Border.all(color: Colors.white, width: 2.5),
         boxShadow: [
           BoxShadow(
-            color: midnightBlue.withOpacity(0.15),
+            color: midnightBlue.withValues(alpha:0.15),
             blurRadius: 8,
             offset: const Offset(0, 3),
           ),
@@ -328,13 +328,13 @@ class ReferralsPageState extends State<ReferralsPage> {
           colors: [Color(0xFFE8F0FE), Color(0xFFD6E4FF)],
         ),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: midnightBlue.withOpacity(0.12)),
+        border: Border.all(color: midnightBlue.withValues(alpha:0.12)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(Icons.label_outline_rounded,
-              size: 13, color: midnightBlue.withOpacity(0.7)),
+              size: 13, color: midnightBlue.withValues(alpha:0.7)),
           const SizedBox(width: 4),
           Text(
             type.isNotEmpty ? type : '—',
@@ -396,7 +396,7 @@ class ReferralsPageState extends State<ReferralsPage> {
             width: 34,
             height: 34,
             decoration: BoxDecoration(
-              color: midnightBlue.withOpacity(0.08),
+              color: midnightBlue.withValues(alpha:0.08),
               borderRadius: BorderRadius.circular(9),
             ),
             child: Center(

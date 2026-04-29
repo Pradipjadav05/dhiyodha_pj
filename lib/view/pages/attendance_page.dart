@@ -107,10 +107,10 @@ class _AttendancePageState extends State<AttendancePage> {
                       padding: EdgeInsets.symmetric(horizontal: paddingSize8, vertical: paddingSize5),
                       decoration: BoxDecoration(
                         color: detail.status?.toLowerCase() == 'present'
-                            ? successGreen.withOpacity(0.1)
+                            ? successGreen.withValues(alpha:0.1)
                             : detail.status?.toLowerCase() == 'absent'
-                                ? dangerRed.withOpacity(0.1)
-                                : Colors.orange.withOpacity(0.1),
+                                ? dangerRed.withValues(alpha:0.1)
+                                : Colors.orange.withValues(alpha:0.1),
                         borderRadius: BorderRadius.circular(paddingSize5),
                       ),
                       child: Text(

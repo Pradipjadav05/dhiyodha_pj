@@ -216,7 +216,7 @@ class AddPostPageState extends State<AddPostPage> {
         border: Border.all(color: Colors.white, width: 2.5),
         boxShadow: [
           BoxShadow(
-            color: midnightBlue.withOpacity(0.15),
+            color: midnightBlue.withValues(alpha:0.15),
             blurRadius: 8,
             offset: const Offset(0, 3),
           ),
@@ -266,7 +266,7 @@ class AddPostPageState extends State<AddPostPage> {
       decoration: BoxDecoration(
           // color: white,
           // borderRadius: BorderRadius.circular(radius10),
-          // border: Border.all(color: greyText.withOpacity(0.25)),
+          // border: Border.all(color: greyText.withValues(alpha:0.25)),
           ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -301,7 +301,7 @@ class AddPostPageState extends State<AddPostPage> {
             Divider(
               height: 1,
               thickness: 1,
-              color: greyText.withOpacity(0.15),
+              color: greyText.withValues(alpha:0.15),
             ),
             // Image fills width, rounded bottom corners
             ClipRRect(

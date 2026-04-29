@@ -232,7 +232,7 @@ class HomePageState extends State<HomePage> {
                                 Routes.getMyBusinessPageRoute(
                                     homeVM.currentUserData),
                               );
-                              if (isResult ?? false) {
+                              if (isResult) {
                                 await getCurrentUser(homeVM);
                               }
                             },
@@ -265,7 +265,7 @@ class HomePageState extends State<HomePage> {
                               bool isResult = await Get.toNamed(
                                   Routes.getAddressPageRoute(
                                       homeVM.currentUserData));
-                              if (isResult ?? false) {
+                              if (isResult) {
                                 await getCurrentUser(homeVM);
                               }
                             },
@@ -298,7 +298,7 @@ class HomePageState extends State<HomePage> {
                               bool isResult = await Get.toNamed(
                                   Routes.getContactPageRoute(
                                       homeVM.currentUserData));
-                              if (isResult ?? false) {
+                              if (isResult) {
                                 await getCurrentUser(homeVM);
                               }
                             },
@@ -424,7 +424,7 @@ class HomePageState extends State<HomePage> {
                               bool isResult = await Get.toNamed(
                                 Routes.getUpdatePasswordPageRoute(),
                               );
-                              if (isResult ?? false) {
+                              if (isResult) {
                                 await getCurrentUser(homeVM);
                               }
                             },
@@ -896,7 +896,7 @@ class HomePageState extends State<HomePage> {
               onTap: () async {
                 bool result = await Get.toNamed(
                     Routes.getAddPostPageRoute(homeVM.currentUserData));
-                if (result ?? false) {
+                if (result) {
                   // showSnackBar(homeVM.isAllPost.value.toString(),
                   //     isError: false);
                   await callPostOrMyPostAPI(homeVM);
@@ -1583,7 +1583,7 @@ class HomePageState extends State<HomePage> {
               borderRadius: BorderRadius.circular(18),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.15),
+                  color: Colors.black.withValues(alpha:0.15),
                   blurRadius: 10,
                   offset: const Offset(0, 5),
                 ),
@@ -1615,7 +1615,7 @@ class HomePageState extends State<HomePage> {
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            Colors.black.withOpacity(0.6),
+                            Colors.black.withValues(alpha:0.6),
                             Colors.transparent,
                           ],
                           begin: Alignment.bottomCenter,
@@ -2091,7 +2091,7 @@ class HomePageState extends State<HomePage> {
   }
 
   Widget _divider() {
-    return Divider(color: bluishPurple.withOpacity(0.3));
+    return Divider(color: bluishPurple.withValues(alpha:0.3));
   }
 
   _postListItems(int index, HomeViewModel homeVM) {
@@ -2366,11 +2366,11 @@ class HomePageState extends State<HomePage> {
                         File file = File(path);
                         file.writeAsBytesSync(bytes);
                         XFile image = XFile(file.path);
-                        await Share.shareXFiles([image], text: shareString);
+                        await SharePlus.instance.share(ShareParams(text: shareString, files: [image]));
                         // final response = await Share.share(shareString);
                         // await Share.shareUri(Uri.parse(data.imageUrl.toString()));
                       } else {
-                        await Share.share(shareString);
+                        await SharePlus.instance.share(ShareParams(text: shareString));
                       }
                     },
                     customBorder: const CircleBorder(),
@@ -2441,7 +2441,7 @@ class HomePageState extends State<HomePage> {
         border: Border.all(color: Colors.white, width: 2.5),
         boxShadow: [
           BoxShadow(
-            color: midnightBlue.withOpacity(0.15),
+            color: midnightBlue.withValues(alpha:0.15),
             blurRadius: 8,
             offset: const Offset(0, 3),
           ),
@@ -2835,15 +2835,15 @@ class _ModernSuccessDialogState extends State<_ModernSuccessDialog>
               borderRadius: BorderRadius.circular(24),
               gradient: LinearGradient(
                 colors: [
-                  themeColor.withOpacity(0.95),
-                  themeColor.withOpacity(0.75),
+                  themeColor.withValues(alpha:0.95),
+                  themeColor.withValues(alpha:0.75),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: themeColor.withOpacity(0.4),
+                  color: themeColor.withValues(alpha:0.4),
                   blurRadius: 20,
                   offset: const Offset(0, 10),
                 )
@@ -2925,7 +2925,7 @@ class _ModernCheckState extends State<_ModernCheck>
         width: 90,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: Colors.white.withOpacity(0.15),
+          color: Colors.white.withValues(alpha:0.15),
         ),
         child: Center(
           child: Container(

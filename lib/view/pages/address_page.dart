@@ -174,7 +174,7 @@ class AddressPageState extends State<AddressPage> {
                       height: 18.0,
                     ),
                     onChanged: (val) async {
-                      addressVM.selectedState = val.toString() ?? "";
+                      addressVM.selectedState = val.toString();
                       addressVM.selectedCity = "Select City";
                       if (addressVM.selectedState != addressVM.stateList[0]) {
                         await addressVM.getCities(addressVM.selectedState);
@@ -339,7 +339,7 @@ class AddressPageState extends State<AddressPage> {
         lastName: widget.currentUserData.lastName ?? "",
         dob: widget.currentUserData.dob ?? "",
         countryCode: widget.currentUserData.countryCode ?? "",
-        mobileNo: widget?.currentUserData?.mobileNo ?? "",
+        mobileNo: widget.currentUserData.mobileNo ?? "",
         uploadDocumentId: widget.currentUserData.uploadDocumentId ?? "",
         education: widget.currentUserData.education ?? "",
         children: widget.currentUserData.children ?? 0,
@@ -350,12 +350,8 @@ class AddressPageState extends State<AddressPage> {
         somethingNoOneKnowsAboutMe:
             widget.currentUserData.somethingNoOneKnowsAboutMe ?? "",
         keyToSuccess: widget.currentUserData.keyToSuccess ?? "",
-        residentAddress: addressVM.addressLine1Controller.text ??
-            widget.currentUserData.permanentAddress ??
-            "",
-        permanentAddress: addressVM.addressLine1Controller.text ??
-            widget.currentUserData.permanentAddress ??
-            "",
+        residentAddress: addressVM.addressLine1Controller.text,
+        permanentAddress: addressVM.addressLine1Controller.text,
         maritalStatus: widget.currentUserData.maritalStatus ?? "",
         previousTypesOfJobs: widget.currentUserData.previousTypesOfJobs ?? "",
         partner: widget.currentUserData.partner ?? "",
@@ -365,52 +361,41 @@ class AddressPageState extends State<AddressPage> {
                 widget.currentUserData.currentUserOrganization?.companyName ??
                     "",
             companyEstablishment: widget.currentUserData
-                    ?.currentUserOrganization?.companyEstablishment ??
+                    .currentUserOrganization?.companyEstablishment ??
                 "",
-            companyAddress: addressVM.addressLine1Controller.text ??
-                widget
-                    .currentUserData?.currentUserOrganization?.companyAddress ??
-                "",
+            companyAddress: addressVM.addressLine1Controller.text,
             registeredType: widget
-                    .currentUserData?.currentUserOrganization?.registeredType ??
+                    .currentUserData.currentUserOrganization?.registeredType ??
                 "",
             numberOfEmployees: widget
-                .currentUserData?.currentUserOrganization?.numberOfEmployees,
+                .currentUserData.currentUserOrganization?.numberOfEmployees,
             yearlyTurnover:
-                widget.currentUserData?.currentUserOrganization?.yearlyTurnover ??
+                widget.currentUserData.currentUserOrganization?.yearlyTurnover ??
                     "",
             companyEmail:
-                widget.currentUserData?.currentUserOrganization?.companyEmail ??
+                widget.currentUserData.currentUserOrganization?.companyEmail ??
                     "",
             companyWebsite:
-                widget.currentUserData?.currentUserOrganization?.companyWebsite ??
+                widget.currentUserData.currentUserOrganization?.companyWebsite ??
                     "",
             designation:
-                widget.currentUserData?.currentUserOrganization?.designation ?? "",
-            companyContact: widget.currentUserData?.currentUserOrganization?.companyContact ?? "",
-            businessCategory: widget.currentUserData?.currentUserOrganization?.businessCategory ?? "",
-            businessDescription: widget.currentUserData?.currentUserOrganization?.businessDescription ?? "",
-            yearlyProfit: widget.currentUserData?.currentUserOrganization?.yearlyProfit,
-            gstNumber: widget.currentUserData?.currentUserOrganization?.gstNumber ?? "",
-            uploadGst: widget.currentUserData?.currentUserOrganization?.uploadGst ?? "",
-            panNumber: widget.currentUserData?.currentUserOrganization?.panNumber ?? "",
-            uploadPan: widget.currentUserData?.currentUserOrganization?.uploadPan ?? "",
-            aadharNo: widget.currentUserData?.currentUserOrganization?.aadharNo ?? "",
-          uploadAadhar: widget.currentUserData?.currentUserOrganization?.uploadAadhar ?? "",
+                widget.currentUserData.currentUserOrganization?.designation ?? "",
+            companyContact: widget.currentUserData.currentUserOrganization?.companyContact ?? "",
+            businessCategory: widget.currentUserData.currentUserOrganization?.businessCategory ?? "",
+            businessDescription: widget.currentUserData.currentUserOrganization?.businessDescription ?? "",
+            yearlyProfit: widget.currentUserData.currentUserOrganization?.yearlyProfit,
+            gstNumber: widget.currentUserData.currentUserOrganization?.gstNumber ?? "",
+            uploadGst: widget.currentUserData.currentUserOrganization?.uploadGst ?? "",
+            panNumber: widget.currentUserData.currentUserOrganization?.panNumber ?? "",
+            uploadPan: widget.currentUserData.currentUserOrganization?.uploadPan ?? "",
+            aadharNo: widget.currentUserData.currentUserOrganization?.aadharNo ?? "",
+          uploadAadhar: widget.currentUserData.currentUserOrganization?.uploadAadhar ?? "",
         ),
         addressRequest: AddressRequest(
-          city: addressVM.selectedCity ??
-              widget.currentUserData.currentUserAddress?.city ??
-              "",
-          state: addressVM.selectedState ??
-              widget.currentUserData.currentUserAddress?.state ??
-              "",
-          country: addressVM.selectedCountry ??
-              widget.currentUserData.currentUserAddress?.country ??
-              "",
-          pinCode: addressVM.pinCodeController.text ??
-              widget.currentUserData.currentUserAddress?.pinCode ??
-              "",
+          city: addressVM.selectedCity,
+          state: addressVM.selectedState,
+          country: addressVM.selectedCountry,
+          pinCode: addressVM.pinCodeController.text,
         ),
       );
       bool resp = await addressVM.updateProfile(userProfileRequestModel);

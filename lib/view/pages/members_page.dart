@@ -131,7 +131,7 @@ class MembersPageState extends State<MembersPage>
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.06),
+            color: Colors.black.withValues(alpha:0.06),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -186,7 +186,7 @@ class MembersPageState extends State<MembersPage>
             boxShadow: isActive
                 ? [
                     BoxShadow(
-                      color: midnightBlue.withOpacity(0.3),
+                      color: midnightBlue.withValues(alpha:0.3),
                       blurRadius: 10,
                       offset: const Offset(0, 3),
                     ),
@@ -246,7 +246,7 @@ class MembersPageState extends State<MembersPage>
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF1E3A5F).withOpacity(0.08),
+            color: const Color(0xFF1E3A5F).withValues(alpha:0.08),
             blurRadius: 16,
             offset: const Offset(0, 4),
           ),
@@ -256,7 +256,7 @@ class MembersPageState extends State<MembersPage>
       child: Row(
         children: [
           Icon(Icons.search_rounded,
-              color: midnightBlue.withOpacity(0.5), size: 22),
+              color: midnightBlue.withValues(alpha:0.5), size: 22),
           const SizedBox(width: 10),
           Expanded(
             child: TextField(
@@ -266,7 +266,7 @@ class MembersPageState extends State<MembersPage>
               decoration: InputDecoration(
                 hintText: 'search_member'.tr,
                 hintStyle: fontRegular.copyWith(
-                    color: midnightBlue.withOpacity(0.4), fontSize: fontSize14),
+                    color: midnightBlue.withValues(alpha:0.4), fontSize: fontSize14),
                 border: InputBorder.none,
                 enabledBorder: InputBorder.none,
                 focusedBorder: InputBorder.none,
@@ -408,7 +408,7 @@ class MembersPageState extends State<MembersPage>
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF1E3A5F).withOpacity(0.07),
+            color: const Color(0xFF1E3A5F).withValues(alpha:0.07),
             blurRadius: 14,
             offset: const Offset(0, 4),
           ),
@@ -421,7 +421,7 @@ class MembersPageState extends State<MembersPage>
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(16),
-          splashColor: lavenderMist.withOpacity(0.4),
+          splashColor: lavenderMist.withValues(alpha:0.4),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
             child: Row(
@@ -451,7 +451,7 @@ class MembersPageState extends State<MembersPage>
                         Row(
                           children: [
                             Icon(Icons.business_outlined,
-                                size: 12, color: greyText.withOpacity(0.7)),
+                                size: 12, color: greyText.withValues(alpha:0.7)),
                             const SizedBox(width: 4),
                             Expanded(
                               child: Text(
@@ -469,7 +469,7 @@ class MembersPageState extends State<MembersPage>
                         Row(
                           children: [
                             Icon(Icons.groups,
-                                size: 12, color: greyText.withOpacity(0.7)),
+                                size: 12, color: greyText.withValues(alpha:0.7)),
                             const SizedBox(width: 4),
                             Expanded(
                               child: Text(
@@ -487,7 +487,7 @@ class MembersPageState extends State<MembersPage>
                         Row(
                           children: [
                             Icon(Icons.location_on,
-                                size: 12, color: greyText.withOpacity(0.7)),
+                                size: 12, color: greyText.withValues(alpha:0.7)),
                             const SizedBox(width: 4),
                             Expanded(
                               child: Text(
@@ -511,7 +511,7 @@ class MembersPageState extends State<MembersPage>
                     width: 32,
                     height: 32,
                     decoration: BoxDecoration(
-                      color: midnightBlue.withOpacity(0.06),
+                      color: midnightBlue.withValues(alpha:0.06),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Icon(
@@ -541,7 +541,7 @@ class MembersPageState extends State<MembersPage>
         label,
         overflow: TextOverflow.ellipsis,
         style: fontRegular.copyWith(
-          color: midnightBlue.withOpacity(0.75),
+          color: midnightBlue.withValues(alpha:0.75),
           fontSize: 11,
         ),
       ),
@@ -557,7 +557,7 @@ class MembersPageState extends State<MembersPage>
         border: Border.all(color: white, width: 2.5),
         boxShadow: [
           BoxShadow(
-            color: midnightBlue.withOpacity(0.15),
+            color: midnightBlue.withValues(alpha:0.15),
             blurRadius: 8,
             offset: const Offset(0, 3),
           ),
@@ -611,7 +611,7 @@ class MembersPageState extends State<MembersPage>
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(Icons.person_search_outlined,
-                      size: 64, color: midnightBlue.withOpacity(0.2)),
+                      size: 64, color: midnightBlue.withValues(alpha:0.2)),
                   const SizedBox(height: 12),
                   Text(
                     'no_member_found'.tr,
@@ -746,7 +746,7 @@ class MembersPageState extends State<MembersPage>
                   borderRadius: BorderRadius.circular(14),
                 ),
                 elevation: 4,
-                shadowColor: bluishPurple.withOpacity(0.4),
+                shadowColor: bluishPurple.withValues(alpha:0.4),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -780,7 +780,7 @@ class MembersPageState extends State<MembersPage>
         border: Border.all(color: const Color(0xFFE3E8F4), width: 1.5),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF1E3A5F).withOpacity(0.05),
+            color: const Color(0xFF1E3A5F).withValues(alpha:0.05),
             blurRadius: 8,
             offset: const Offset(0, 3),
           ),
@@ -789,7 +789,7 @@ class MembersPageState extends State<MembersPage>
       child: Row(
         children: [
           const SizedBox(width: 14),
-          Icon(icon, color: bluishPurple.withOpacity(0.5), size: 20),
+          Icon(icon, color: bluishPurple.withValues(alpha:0.5), size: 20),
           const SizedBox(width: 10),
           Expanded(
             child: TextField(
@@ -799,7 +799,7 @@ class MembersPageState extends State<MembersPage>
               decoration: InputDecoration(
                 hintText: hintText,
                 hintStyle: fontRegular.copyWith(
-                    color: midnightBlue.withOpacity(0.4), fontSize: fontSize14),
+                    color: midnightBlue.withValues(alpha:0.4), fontSize: fontSize14),
                 border: InputBorder.none,
                 enabledBorder: InputBorder.none,
                 focusedBorder: InputBorder.none,
@@ -857,8 +857,8 @@ class MembersPageState extends State<MembersPage>
               boxShadow: [
                 BoxShadow(
                   color: focusNode.hasFocus
-                      ? midnightBlue.withOpacity(0.1)
-                      : const Color(0xFF1E3A5F).withOpacity(0.05),
+                      ? midnightBlue.withValues(alpha:0.1)
+                      : const Color(0xFF1E3A5F).withValues(alpha:0.05),
                   blurRadius: focusNode.hasFocus ? 12 : 8,
                   offset: const Offset(0, 3),
                 ),
@@ -870,7 +870,7 @@ class MembersPageState extends State<MembersPage>
                 Icon(icon,
                     color: focusNode.hasFocus
                         ? bluishPurple
-                        : bluishPurple.withOpacity(0.45),
+                        : bluishPurple.withValues(alpha:0.45),
                     size: 20),
                 const SizedBox(width: 10),
                 Expanded(
@@ -882,7 +882,7 @@ class MembersPageState extends State<MembersPage>
                     decoration: InputDecoration(
                       hintText: label,
                       hintStyle: fontRegular.copyWith(
-                          color: midnightBlue.withOpacity(0.4),
+                          color: midnightBlue.withValues(alpha:0.4),
                           fontSize: fontSize14),
                       border: InputBorder.none,
                       enabledBorder: InputBorder.none,
@@ -899,7 +899,7 @@ class MembersPageState extends State<MembersPage>
                     duration: const Duration(milliseconds: 200),
                     child: Icon(
                       Icons.keyboard_arrow_down_rounded,
-                      color: bluishPurple.withOpacity(0.6),
+                      color: bluishPurple.withValues(alpha:0.6),
                       size: 22,
                     ),
                   ),
@@ -927,7 +927,7 @@ class MembersPageState extends State<MembersPage>
                 border: Border.all(color: const Color(0xFFE3E8F4), width: 1.5),
                 boxShadow: [
                   BoxShadow(
-                    color: midnightBlue.withOpacity(0.1),
+                    color: midnightBlue.withValues(alpha:0.1),
                     blurRadius: 20,
                     offset: const Offset(0, 8),
                   ),
@@ -1000,7 +1000,7 @@ class MembersPageState extends State<MembersPage>
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  midnightBlue.withOpacity(0.25),
+                  midnightBlue.withValues(alpha:0.25),
                   Colors.transparent,
                 ],
               ),

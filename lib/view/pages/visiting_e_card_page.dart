@@ -120,7 +120,7 @@ class VisitingECardPageState extends State<VisitingECardPage> {
                                         '\n${vvm.businessCategoryController.text}';
                                     final String shareString =
                                         '${'checkout_profile'.tr} \n\n$data \n\nDownload Now : $playStoreUrl';
-                                    await Share.share(shareString);
+                                    await SharePlus.instance.share(ShareParams(text: shareString));
                                   },
                                 ),
                               ),
@@ -197,7 +197,7 @@ class VisitingECardPageState extends State<VisitingECardPage> {
             width: 68,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: white.withOpacity(0.6), width: 2.5),
+              border: Border.all(color: white.withValues(alpha:0.6), width: 2.5),
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(50),
@@ -317,7 +317,7 @@ class VisitingECardPageState extends State<VisitingECardPage> {
                   'location'.tr,
                   style: fontRegular.copyWith(
                       fontSize: fontSize12,
-                      color: midnightBlue.withOpacity(0.6)),
+                      color: midnightBlue.withValues(alpha:0.6)),
                 ),
               ],
             ),
@@ -405,7 +405,7 @@ class VisitingECardPageState extends State<VisitingECardPage> {
         Text(
           label,
           style: fontRegular.copyWith(
-              fontSize: fontSize12, color: midnightBlue.withOpacity(0.5)),
+              fontSize: fontSize12, color: midnightBlue.withValues(alpha:0.5)),
         ),
         const SizedBox(height: 2),
         isEnabled
@@ -456,7 +456,7 @@ class VisitingECardPageState extends State<VisitingECardPage> {
               Text(
                 label,
                 style: fontRegular.copyWith(
-                    fontSize: fontSize12, color: midnightBlue.withOpacity(0.6)),
+                    fontSize: fontSize12, color: midnightBlue.withValues(alpha:0.6)),
               ),
             ],
           ),
@@ -489,7 +489,7 @@ class VisitingECardPageState extends State<VisitingECardPage> {
     return Divider(
       height: 1,
       thickness: 1,
-      color: midnightBlue.withOpacity(0.1),
+      color: midnightBlue.withValues(alpha:0.1),
       indent: paddingSize20,
       endIndent: paddingSize20,
     );

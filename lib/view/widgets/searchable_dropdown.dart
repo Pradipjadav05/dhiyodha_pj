@@ -133,7 +133,7 @@ class _SearchDialogState extends State<_SearchDialog> {
                 hintText: 'Search ${widget.hintText}',
                 hintStyle: fontRegular.copyWith(
                   fontSize: fontSize14,
-                  color: midnightBlue.withOpacity(0.6),
+                  color: midnightBlue.withValues(alpha:0.6),
                 ),
                 prefixIcon: Icon(Icons.search, color: midnightBlue),
                 border: OutlineInputBorder(
@@ -142,7 +142,7 @@ class _SearchDialogState extends State<_SearchDialog> {
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(radius10),
-                  borderSide: BorderSide(color: midnightBlue.withOpacity(0.3)),
+                  borderSide: BorderSide(color: midnightBlue.withValues(alpha:0.3)),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(radius10),

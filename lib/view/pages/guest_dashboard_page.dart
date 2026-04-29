@@ -188,7 +188,7 @@ class GuestDashboardPageState extends State<GuestDashboardPage> {
               height: 36,
               width: 36,
               decoration: BoxDecoration(
-                color: white.withOpacity(0.85),
+                color: white.withValues(alpha:0.85),
                 shape: BoxShape.circle,
               ),
               child: const Icon(
@@ -215,7 +215,7 @@ class GuestDashboardPageState extends State<GuestDashboardPage> {
                 begin: Alignment.bottomCenter,
                 end: Alignment.topCenter,
                 colors: [
-                  midnightBlue.withOpacity(0.75),
+                  midnightBlue.withValues(alpha:0.75),
                   Colors.transparent,
                 ],
               ),

@@ -218,7 +218,7 @@ class ProfilePageState extends State<ProfilePage> {
                   dob: widget.currentUserData.dob ?? "",
                   countryCode: widget.currentUserData.countryCode ?? "",
                   mobileNo: widget.currentUserData.mobileNo,
-                  uploadDocumentId: postVM.uploadedDocumentUuid ?? "",
+                  uploadDocumentId: postVM.uploadedDocumentUuid,
                   education: widget.currentUserData.education ?? "",
                   children: widget.currentUserData.children ?? 0,
                   pet: widget.currentUserData.pet ?? "",
@@ -412,7 +412,7 @@ Widget _profileAvatar(String? profileUrl, {double size = 42}) {
       border: Border.all(color: Colors.white, width: 2.5),
       boxShadow: [
         BoxShadow(
-          color: midnightBlue.withOpacity(0.15),
+          color: midnightBlue.withValues(alpha:0.15),
           blurRadius: 8,
           offset: const Offset(0, 3),
         ),

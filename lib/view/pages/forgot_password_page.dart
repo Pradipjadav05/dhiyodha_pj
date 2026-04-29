@@ -159,7 +159,7 @@ class ForgotPasswordPageState extends State<ForgotPasswordPage> {
         shape: BoxShape.circle,
         color: isActive ? bluishPurple : lavenderMist,
         border: Border.all(
-          color: isActive ? bluishPurple : greyText.withOpacity(0.3),
+          color: isActive ? bluishPurple : greyText.withValues(alpha:0.3),
           width: 1.5,
         ),
       ),
@@ -179,7 +179,7 @@ class ForgotPasswordPageState extends State<ForgotPasswordPage> {
     return Expanded(
       child: Container(
         height: 2,
-        color: isActive ? bluishPurple : greyText.withOpacity(0.3),
+        color: isActive ? bluishPurple : greyText.withValues(alpha:0.3),
       ),
     );
   }

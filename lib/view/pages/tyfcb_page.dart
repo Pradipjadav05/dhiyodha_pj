@@ -203,7 +203,7 @@ class TyfcbPageState extends State<TyfcbPage>
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.handshake_outlined,
-              size: 72, color: bluishPurple.withOpacity(0.18)),
+              size: 72, color: bluishPurple.withValues(alpha:0.18)),
           const SizedBox(height: 14),
           Text(
             'No TYFCBs yet',
@@ -214,7 +214,7 @@ class TyfcbPageState extends State<TyfcbPage>
           Text(
             'Tap + to add your first TYFCB',
             style: fontRegular.copyWith(
-                color: greyText.withOpacity(0.7), fontSize: fontSize13),
+                color: greyText.withValues(alpha:0.7), fontSize: fontSize13),
           ),
         ],
       ),
@@ -237,7 +237,7 @@ class TyfcbPageState extends State<TyfcbPage>
           borderRadius: BorderRadius.circular(18),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF1E3A5F).withOpacity(0.08),
+              color: const Color(0xFF1E3A5F).withValues(alpha:0.08),
               blurRadius: 16,
               offset: const Offset(0, 4),
             ),
@@ -259,7 +259,7 @@ class TyfcbPageState extends State<TyfcbPage>
                   bottomLeft: Radius.circular(isExpanded ? 0 : 18),
                   bottomRight: Radius.circular(isExpanded ? 0 : 18),
                 ),
-                splashColor: lavenderMist.withOpacity(0.4),
+                splashColor: lavenderMist.withValues(alpha:0.4),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
                       horizontal: 14, vertical: 12),
@@ -326,7 +326,7 @@ class TyfcbPageState extends State<TyfcbPage>
         border: Border.all(color: Colors.white, width: 2.5),
         boxShadow: [
           BoxShadow(
-            color: midnightBlue.withOpacity(0.15),
+            color: midnightBlue.withValues(alpha:0.15),
             blurRadius: 8,
             offset: const Offset(0, 3),
           ),
@@ -373,13 +373,13 @@ class TyfcbPageState extends State<TyfcbPage>
           ],
         ),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: midnightBlue.withOpacity(0.12)),
+        border: Border.all(color: midnightBlue.withValues(alpha:0.12)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(Icons.card_giftcard_rounded,
-              size: 13, color: midnightBlue.withOpacity(0.7)),
+              size: 13, color: midnightBlue.withValues(alpha:0.7)),
           const SizedBox(width: 4),
           Text(
             'Gift: ₹$amount',
@@ -444,7 +444,7 @@ class TyfcbPageState extends State<TyfcbPage>
             width: 34,
             height: 34,
             decoration: BoxDecoration(
-              color: (assetColor ?? midnightBlue).withOpacity(0.08),
+              color: (assetColor ?? midnightBlue).withValues(alpha:0.08),
               borderRadius: BorderRadius.circular(9),
             ),
             child: Center(

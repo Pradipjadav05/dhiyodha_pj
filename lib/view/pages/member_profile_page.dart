@@ -115,7 +115,7 @@ class MemberProfilePageState extends State<MemberProfilePage> {
                                 shape: BoxShape.circle,
                                 color: isActive
                                     ? bluishPurple
-                                    : bluishPurple.withOpacity(0.3),
+                                    : bluishPurple.withValues(alpha:0.3),
                               ),
                             );
                           });
@@ -200,9 +200,9 @@ class MemberProfilePageState extends State<MemberProfilePage> {
             bgColor: lavenderMist,
             onTap: () async {
               String data =
-                  'Profile Information \n${widget.membersChildData?.firstName} ${widget.membersChildData?.lastName} \n${widget.membersChildData?.mobileNo} '
-                  '\n${widget.membersChildData?.organization?.companyName} \n${widget.membersChildData?.organization?.businessCategory} \n\n Download App Now - $playStoreUrl';
-              await Share.share(data);
+                  'Profile Information \n${widget.membersChildData.firstName} ${widget.membersChildData.lastName} \n${widget.membersChildData.mobileNo} '
+                  '\n${widget.membersChildData.organization?.companyName} \n${widget.membersChildData.organization?.businessCategory} \n\n Download App Now - $playStoreUrl';
+              await SharePlus.instance.share(ShareParams(text: data));
             },
           ),
           // CommonCard(
@@ -299,7 +299,7 @@ class MemberProfilePageState extends State<MemberProfilePage> {
                           Icon(
                             Icons.groups,
                             size: 14,
-                            color: white.withOpacity(0.85),
+                            color: white.withValues(alpha:0.85),
                           ),
                           const SizedBox(width: 6),
                           Expanded(
@@ -309,7 +309,7 @@ class MemberProfilePageState extends State<MemberProfilePage> {
                               overflow: TextOverflow.ellipsis,
                               style: fontRegular.copyWith(
                                 fontSize: fontSize12,
-                                color: white.withOpacity(0.85),
+                                color: white.withValues(alpha: 0.85),
                               ),
                             ),
                           ),
@@ -362,7 +362,7 @@ class MemberProfilePageState extends State<MemberProfilePage> {
                   // 📍 Location
                   Row(
                     children: [
-                      Icon(Icons.location_on, size: 14, color: white.withOpacity(0.85)),
+                      Icon(Icons.location_on, size: 14, color: white.withValues(alpha:0.85)),
                       const SizedBox(width: 6),
                       Expanded(
                         child: Text(
@@ -373,7 +373,7 @@ class MemberProfilePageState extends State<MemberProfilePage> {
                           overflow: TextOverflow.ellipsis,
                           style: fontRegular.copyWith(
                             fontSize: fontSize12,
-                            color: white.withOpacity(0.85),
+                            color: white.withValues(alpha:0.85),
                           ),
                         ),
                       ),
@@ -541,7 +541,7 @@ class MemberProfilePageState extends State<MemberProfilePage> {
             onPressed: () async {
               bool isResult = await Get.toNamed(
                   Routes.getAddTestimonialPageRoute(widget.membersChildData));
-              if (isResult ?? false) {
+              if (isResult) {
                 await Get.find<MembersViewmodel>()
                     .getUserWiseTestimonial(widget.membersChildData.uuid!);
               }

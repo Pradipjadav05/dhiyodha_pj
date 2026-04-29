@@ -119,7 +119,7 @@ class OneToOnePageState extends State<OneToOnePage>
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.people_outline_rounded,
-              size: 72, color: bluishPurple.withOpacity(0.18)),
+              size: 72, color: bluishPurple.withValues(alpha:0.18)),
           const SizedBox(height: 14),
           Text(
             'No records found',
@@ -129,7 +129,7 @@ class OneToOnePageState extends State<OneToOnePage>
           Text(
             'Tap + to add your first One-to-One',
             style: fontRegular.copyWith(
-                color: greyText.withOpacity(0.7), fontSize: fontSize13),
+                color: greyText.withValues(alpha:0.7), fontSize: fontSize13),
           ),
         ],
       ),
@@ -162,7 +162,7 @@ class OneToOnePageState extends State<OneToOnePage>
           borderRadius: BorderRadius.circular(18),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF1E3A5F).withOpacity(0.08),
+              color: const Color(0xFF1E3A5F).withValues(alpha:0.08),
               blurRadius: 16,
               offset: const Offset(0, 4),
             ),
@@ -184,7 +184,7 @@ class OneToOnePageState extends State<OneToOnePage>
                   bottomLeft: Radius.circular(isExpanded ? 0 : 18),
                   bottomRight: Radius.circular(isExpanded ? 0 : 18),
                 ),
-                splashColor: lavenderMist.withOpacity(0.4),
+                splashColor: lavenderMist.withValues(alpha:0.4),
                 child: Padding(
                   padding:
                   const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
@@ -260,7 +260,7 @@ class OneToOnePageState extends State<OneToOnePage>
         border: Border.all(color: Colors.white, width: 2.5),
         boxShadow: [
           BoxShadow(
-            color: midnightBlue.withOpacity(0.15),
+            color: midnightBlue.withValues(alpha:0.15),
             blurRadius: 8,
             offset: const Offset(0, 3),
           ),
@@ -304,13 +304,13 @@ class OneToOnePageState extends State<OneToOnePage>
           colors: [Color(0xFFE8F0FE), Color(0xFFD6E4FF)],
         ),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: midnightBlue.withOpacity(0.12)),
+        border: Border.all(color: midnightBlue.withValues(alpha:0.12)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(Icons.calendar_today_outlined,
-              size: 13, color: midnightBlue.withOpacity(0.7)),
+              size: 13, color: midnightBlue.withValues(alpha:0.7)),
           const SizedBox(width: 4),
           Text(
             date.isNotEmpty ? date : '—',
@@ -391,7 +391,7 @@ class OneToOnePageState extends State<OneToOnePage>
       width: 34,
       height: 34,
       decoration: BoxDecoration(
-        color: bluishPurple.withOpacity(0.08),
+        color: bluishPurple.withValues(alpha:0.08),
         borderRadius: BorderRadius.circular(9),
       ),
       child: Center(
