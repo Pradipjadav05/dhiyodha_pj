@@ -48,6 +48,21 @@ class AddAskPageState extends State<AddAskPage> {
                           color: bluishPurple, fontSize: fontSize14),
                     ),
                     SizedBox(height: paddingSize5),
+                    RadioGroup<int>(
+                      groupValue: askVM.selectedAsTypeVal.value,
+                      onChanged: (int? value) {
+                        if(value == 1) {
+                            askVM.setSelectedAsTypeVal(value!);
+                            askVM.askTypeValue.value = "Specific".toUpperCase();
+                        } else if(value == 2) {
+                            askVM.setSelectedAsTypeVal(value!);
+                            askVM.askTypeValue.value = "General".toUpperCase();
+                        } else if(value == 3) {
+                            askVM.setSelectedAsTypeVal(value!);
+                            askVM.askTypeValue.value = "Personal".toUpperCase();
+                        }
+                      },
+                      child: Column(children: [
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -55,11 +70,6 @@ class AddAskPageState extends State<AddAskPage> {
                           materialTapTargetSize:
                               MaterialTapTargetSize.shrinkWrap,
                           value: 1,
-                          groupValue: askVM.selectedAsTypeVal.value,
-                          onChanged: (int? value) {
-                            askVM.setSelectedAsTypeVal(value!);
-                            askVM.askTypeValue.value = "Specific".toUpperCase();
-                          },
                           activeColor: bluishPurple,
                         ),
                         Text(
@@ -76,11 +86,6 @@ class AddAskPageState extends State<AddAskPage> {
                           materialTapTargetSize:
                               MaterialTapTargetSize.shrinkWrap,
                           value: 2,
-                          groupValue: askVM.selectedAsTypeVal.value,
-                          onChanged: (int? value) {
-                            askVM.setSelectedAsTypeVal(value!);
-                            askVM.askTypeValue.value = "General".toUpperCase();
-                          },
                           activeColor: bluishPurple,
                         ),
                         Text(
@@ -97,11 +102,6 @@ class AddAskPageState extends State<AddAskPage> {
                           materialTapTargetSize:
                               MaterialTapTargetSize.shrinkWrap,
                           value: 3,
-                          groupValue: askVM.selectedAsTypeVal.value,
-                          onChanged: (int? value) {
-                            askVM.setSelectedAsTypeVal(value!);
-                            askVM.askTypeValue.value = "Personal".toUpperCase();
-                          },
                           activeColor: bluishPurple,
                         ),
                         Text(
@@ -111,6 +111,8 @@ class AddAskPageState extends State<AddAskPage> {
                         )
                       ],
                     ),
+                    ]),
+                    ),
                     SizedBox(height: paddingSize20),
                     Text(
                       "select_region".tr,
@@ -118,6 +120,18 @@ class AddAskPageState extends State<AddAskPage> {
                           color: bluishPurple, fontSize: fontSize14),
                     ),
                     SizedBox(height: paddingSize5),
+                    RadioGroup<int>(
+                      groupValue: askVM.selectedRegionVal.value,
+                      onChanged: (int? value) {
+                        if(value == 1) {
+                            askVM.setSelectedRegionVal(value!);
+                            askVM.regionValue.value = "Chapter".toUpperCase();
+                        } else if(value == 2) {
+                            askVM.setSelectedRegionVal(value!);
+                            askVM.regionValue.value = "City_region".toUpperCase();
+                        }
+                      },
+                      child: Column(children: [
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -125,11 +139,6 @@ class AddAskPageState extends State<AddAskPage> {
                           materialTapTargetSize:
                               MaterialTapTargetSize.shrinkWrap,
                           value: 1,
-                          groupValue: askVM.selectedRegionVal.value,
-                          onChanged: (int? value) {
-                            askVM.setSelectedRegionVal(value!);
-                            askVM.regionValue.value = "Chapter".toUpperCase();
-                          },
                           activeColor: bluishPurple,
                         ),
                         Text(
@@ -146,12 +155,6 @@ class AddAskPageState extends State<AddAskPage> {
                           materialTapTargetSize:
                               MaterialTapTargetSize.shrinkWrap,
                           value: 2,
-                          groupValue: askVM.selectedRegionVal.value,
-                          onChanged: (int? value) {
-                            askVM.setSelectedRegionVal(value!);
-                            askVM.regionValue.value =
-                                "City_region".toUpperCase();
-                          },
                           activeColor: bluishPurple,
                         ),
                         Text(
@@ -160,6 +163,8 @@ class AddAskPageState extends State<AddAskPage> {
                               color: midnightBlue, fontSize: fontSize14),
                         )
                       ],
+                    ),
+                    ]),
                     ),
                     SizedBox(height: paddingSize20),
                     CommonTextFormField(

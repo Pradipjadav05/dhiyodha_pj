@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 class WebViewPage extends StatefulWidget {
-  String launchUrl;
+  final String launchUrl;
   _WebViewPageState createState() => _WebViewPageState();
 
   WebViewPage({required this.launchUrl});

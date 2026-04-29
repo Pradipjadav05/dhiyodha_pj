@@ -15,7 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class MyBusinessPage extends StatefulWidget {
-  CurrentUserData currentUserData;
+  final CurrentUserData currentUserData;
 
   MyBusinessPageState createState() => MyBusinessPageState();
 

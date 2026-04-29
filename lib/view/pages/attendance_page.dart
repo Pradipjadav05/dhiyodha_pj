@@ -41,7 +41,7 @@ class _AttendancePageState extends State<AttendancePage> {
 
         if (attendanceVM.attendanceList.isEmpty) {
           return Center(
-            child: Text("no_data_found".tr, style: fontRegular.copyWith(fontSize: fontSize14)),
+            child: Text("No records found", style: fontRegular.copyWith(fontSize: fontSize14)),
           );
         }
 

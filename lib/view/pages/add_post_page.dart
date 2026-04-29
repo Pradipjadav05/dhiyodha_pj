@@ -88,50 +88,56 @@ class AddPostPageState extends State<AddPostPage> {
                     ),
                     const SizedBox(height: paddingSize5),
             
-                    Obx(() => Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Radio(
-                              materialTapTargetSize:
-                                  MaterialTapTargetSize.shrinkWrap,
-                              value: 1,
-                              groupValue: postVM.selectedRegionVal.value,
-                              onChanged: (int? value) {
-                                postVM.setSelectedRegionVal(value!);
-                                postVM.regionValue.value =
-                                    'Chapter'.toUpperCase();
-                              },
-                              activeColor: bluishPurple,
-                            ),
-                            Text(
-                              'chapter'.tr,
-                              style: fontBold.copyWith(
-                                  color: midnightBlue, fontSize: fontSize14),
-                            ),
-                          ],
-                        )),
-            
-                    Obx(() => Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Radio(
-                              materialTapTargetSize:
-                                  MaterialTapTargetSize.shrinkWrap,
-                              value: 2,
-                              groupValue: postVM.selectedRegionVal.value,
-                              onChanged: (int? value) {
-                                postVM.setSelectedRegionVal(value!);
-                                postVM.regionValue.value =
-                                    'City_region'.toUpperCase();
-                              },
-                              activeColor: bluishPurple,
-                            ),
-                            Text(
-                              'city'.tr,
-                              style: fontBold.copyWith(
-                                  color: midnightBlue, fontSize: fontSize14),
-                            ),
-                          ],
+                    Obx(() => RadioGroup<int>(
+                          groupValue: postVM.selectedRegionVal.value,
+                          onChanged: (int? value) {
+                            if (value == 1) {
+                              postVM.setSelectedRegionVal(value!);
+                              postVM.regionValue.value =
+                                  'Chapter'.toUpperCase();
+                            } else if (value == 2) {
+                              postVM.setSelectedRegionVal(value!);
+                              postVM.regionValue.value =
+                                  'City_region'.toUpperCase();
+                            }
+                          },
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Radio(
+                                    materialTapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                    value: 1,
+                                    activeColor: bluishPurple,
+                                  ),
+                                  Text(
+                                    'chapter'.tr,
+                                    style: fontBold.copyWith(
+                                        color: midnightBlue, fontSize: fontSize14),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Radio(
+                                    materialTapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                    value: 2,
+                                    activeColor: bluishPurple,
+                                  ),
+                                  Text(
+                                    'city'.tr,
+                                    style: fontBold.copyWith(
+                                        color: midnightBlue, fontSize: fontSize14),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         )),
             
                     const SizedBox(height: paddingSize20),

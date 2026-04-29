@@ -180,7 +180,34 @@ class AccountSettingsPageState extends State<AccountSettingsPage> {
         groupValues = settingsVM.showBioValue.value;
         break;
     }
-    return Column(
+    return RadioGroup<int>(
+      groupValue: groupValues,
+      onChanged: (value) {
+        switch (position) {
+          case 1:
+            settingsVM.setShowBioValue(value!);
+            break;
+          case 2:
+            settingsVM.setShowConnectionValue(value!);
+            break;
+          case 3:
+            settingsVM.setShowTestimonialValue(value!);
+            break;
+          case 4:
+            settingsVM.setShowGalleryValue(value!);
+            break;
+          case 5:
+            settingsVM.setShowEmailValue(value!);
+            break;
+          case 6:
+            settingsVM.setShowContactValue(value!);
+            break;
+          default:
+            settingsVM.setShowBioValue(value!);
+            break;
+        }
+      },
+      child: Column(
       children: [
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -188,32 +215,6 @@ class AccountSettingsPageState extends State<AccountSettingsPage> {
             Radio(
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               value: 1,
-              groupValue: groupValues,
-              onChanged: (value) {
-                switch (position) {
-                  case 1:
-                    settingsVM.setShowBioValue(value!);
-                    break;
-                  case 2:
-                    settingsVM.setShowConnectionValue(value!);
-                    break;
-                  case 3:
-                    settingsVM.setShowTestimonialValue(value!);
-                    break;
-                  case 4:
-                    settingsVM.setShowGalleryValue(value!);
-                    break;
-                  case 5:
-                    settingsVM.setShowEmailValue(value!);
-                    break;
-                  case 6:
-                    settingsVM.setShowContactValue(value!);
-                    break;
-                  default:
-                    settingsVM.setShowBioValue(value!);
-                    break;
-                }
-              },
               activeColor: bluishPurple,
             ),
             Text(
@@ -229,32 +230,6 @@ class AccountSettingsPageState extends State<AccountSettingsPage> {
             Radio(
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               value: 2,
-              groupValue: groupValues,
-              onChanged: (value) {
-                switch (position) {
-                  case 1:
-                    settingsVM.setShowBioValue(value!);
-                    break;
-                  case 2:
-                    settingsVM.setShowConnectionValue(value!);
-                    break;
-                  case 3:
-                    settingsVM.setShowTestimonialValue(value!);
-                    break;
-                  case 4:
-                    settingsVM.setShowGalleryValue(value!);
-                    break;
-                  case 5:
-                    settingsVM.setShowEmailValue(value!);
-                    break;
-                  case 6:
-                    settingsVM.setShowContactValue(value!);
-                    break;
-                  default:
-                    settingsVM.setShowBioValue(value!);
-                    break;
-                }
-              },
               activeColor: bluishPurple,
             ),
             Text(
@@ -270,32 +245,6 @@ class AccountSettingsPageState extends State<AccountSettingsPage> {
             Radio(
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               value: 3,
-              groupValue: groupValues,
-              onChanged: (value) {
-                switch (position) {
-                  case 1:
-                    settingsVM.setShowBioValue(value!);
-                    break;
-                  case 2:
-                    settingsVM.setShowConnectionValue(value!);
-                    break;
-                  case 3:
-                    settingsVM.setShowTestimonialValue(value!);
-                    break;
-                  case 4:
-                    settingsVM.setShowGalleryValue(value!);
-                    break;
-                  case 5:
-                    settingsVM.setShowEmailValue(value!);
-                    break;
-                  case 6:
-                    settingsVM.setShowContactValue(value!);
-                    break;
-                  default:
-                    settingsVM.setShowBioValue(value!);
-                    break;
-                }
-              },
               activeColor: bluishPurple,
             ),
             Text(
@@ -306,6 +255,7 @@ class AccountSettingsPageState extends State<AccountSettingsPage> {
           ],
         ),
       ],
+    ),
     );
   }
 
@@ -326,7 +276,25 @@ class AccountSettingsPageState extends State<AccountSettingsPage> {
         groupValues = settingsVM.showPublicSiteValue.value;
         break;
     }
-    return Column(
+    return RadioGroup<int>(
+      groupValue: groupValues,
+      onChanged: (value) {
+        switch (position) {
+          case 1:
+            settingsVM.setShowPublicSiteValue(value!);
+            break;
+          case 2:
+            settingsVM.setShowMarketingEmailsValue(value!);
+            break;
+          case 3:
+            settingsVM.setShowShareDataValue(value!);
+            break;
+          default:
+            settingsVM.setShowPublicSiteValue(value!);
+            break;
+        }
+      },
+      child: Column(
       children: [
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -334,23 +302,6 @@ class AccountSettingsPageState extends State<AccountSettingsPage> {
             Radio(
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               value: 1,
-              groupValue: groupValues,
-              onChanged: (value) {
-                switch (position) {
-                  case 1:
-                    settingsVM.setShowPublicSiteValue(value!);
-                    break;
-                  case 2:
-                    settingsVM.setShowMarketingEmailsValue(value!);
-                    break;
-                  case 3:
-                    settingsVM.setShowShareDataValue(value!);
-                    break;
-                  default:
-                    settingsVM.setShowPublicSiteValue(value!);
-                    break;
-                }
-              },
               activeColor: bluishPurple,
             ),
             Text(
@@ -366,23 +317,6 @@ class AccountSettingsPageState extends State<AccountSettingsPage> {
             Radio(
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               value: 2,
-              groupValue: groupValues,
-              onChanged: (value) {
-                switch (position) {
-                  case 1:
-                    settingsVM.setShowPublicSiteValue(value!);
-                    break;
-                  case 2:
-                    settingsVM.setShowMarketingEmailsValue(value!);
-                    break;
-                  case 3:
-                    settingsVM.setShowShareDataValue(value!);
-                    break;
-                  default:
-                    settingsVM.setShowPublicSiteValue(value!);
-                    break;
-                }
-              },
               activeColor: bluishPurple,
             ),
             Text(
@@ -393,6 +327,7 @@ class AccountSettingsPageState extends State<AccountSettingsPage> {
           ],
         ),
       ],
+    ),
     );
   }
 

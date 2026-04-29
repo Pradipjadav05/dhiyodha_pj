@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AsksAnswerListPage extends StatefulWidget {
-  AskListChild askChild;
+  final AskListChild askChild;
 
   AsksAnswerListPageState createState() => AsksAnswerListPageState();
 

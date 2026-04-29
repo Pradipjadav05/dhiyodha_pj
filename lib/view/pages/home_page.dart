@@ -2711,7 +2711,7 @@ class HomePageState extends State<HomePage> {
     await getDashboardData("ALL");
 
     // check and show rating dialog
-    // await checkAndShowRateUsDialog();
+    await checkAndShowRateUsDialog();
   }
 
   Future<void> getPosts(

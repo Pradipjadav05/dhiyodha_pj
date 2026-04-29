@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class TestimonialDetailsPage extends StatefulWidget {
-  MyTestimonialChildData myTestimonialChildData;
+  final MyTestimonialChildData myTestimonialChildData;
 
   TestimonialDetailsPageState createState() => TestimonialDetailsPageState();
 

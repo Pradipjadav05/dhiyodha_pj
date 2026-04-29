@@ -14,7 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AddTestimonialPage extends StatefulWidget {
-  MembersChildData membersChildData;
+  final MembersChildData membersChildData;
 
   AddTestimonialPageState createState() => AddTestimonialPageState();
 

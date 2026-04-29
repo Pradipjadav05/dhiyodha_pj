@@ -39,10 +39,11 @@ class ReferralsPageState extends State<ReferralsPage> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<HomeViewModel>(builder: (homeVM) {
-      return WillPopScope(
-        onWillPop: () async {
+      return PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (bool didPop, Object? result) {
+          if (didPop) return;
           Get.back(result: true);
-          return false;
         },
         child: Scaffold(
           backgroundColor: const Color(0xFFF4F6FB),
