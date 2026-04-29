@@ -384,57 +384,7 @@ class OneToOnePageState extends State<OneToOnePage>
     );
   }
 
-  Widget _detailRowTappable({
-    required String assetPath,
-    required String label,
-    required String value,
-    required VoidCallback onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _iconContainer(assetPath),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    label,
-                    style: fontRegular.copyWith(
-                      fontSize: 11,
-                      color: greyText,
-                      letterSpacing: 0.3,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          value.isEmpty ? '—' : value,
-                          style: fontMedium.copyWith(
-                            fontSize: fontSize14,
-                            color: midnightBlue,
-                          ),
-                        ),
-                      ),
-                      Icon(Icons.open_in_new_rounded,
-                          size: 14, color: midnightBlue.withOpacity(0.4)),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+
 
   Widget _iconContainer(String assetPath) {
     return Container(

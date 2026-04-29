@@ -1,4 +1,3 @@
-import 'package:dhiyodha/utils/resource/app_media_assets.dart';
 
 class PostsModel {
   String? timestamp;

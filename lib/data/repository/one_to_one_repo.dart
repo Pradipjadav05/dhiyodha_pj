@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:dhiyodha/data/api/api_client.dart';
-import 'package:dhiyodha/model/response_model/tyfcb_response_model.dart';
 import 'package:dhiyodha/utils/resource/app_constants.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
