@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -21,6 +22,7 @@ import 'package:http/http.dart' as http;
 import 'package:loadmore/loadmore.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../widgets/image_zoom_in_out.dart';
 
@@ -29,6 +31,8 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
+  final InAppReview _inAppReview = InAppReview.instance;
+
   @override
   void initState() {
     super.initState();
@@ -2705,6 +2709,9 @@ class HomePageState extends State<HomePage> {
     await getCurrentUser(Get.find<HomeViewModel>());
     await callPostOrMyPostAPI(Get.find<HomeViewModel>());
     await getDashboardData("ALL");
+
+    // check and show rating dialog
+    // await checkAndShowRateUsDialog();
   }
 
   Future<void> getPosts(
@@ -2730,6 +2737,46 @@ class HomePageState extends State<HomePage> {
       barrierColor: Colors.black.withValues(alpha: 0.4),
       builder: (_) => const _ModernSuccessDialog(),
     );
+  }
+
+  /*
+  * used to check rate time and calculate duration for show rate dialog
+  * */
+  Future<void> checkAndShowRateUsDialog() async{
+    int rateUsTime  = Get.find<SharedPreferences>().getInt(ratedTimeKey) ?? 0;
+    int currentTime = DateTime.now().millisecondsSinceEpoch;
+    // Calculate the duration in hours
+    int duration = (currentTime - rateUsTime) ~/ Duration.millisecondsPerHour;
+
+    try {
+      if(duration > 24){
+        // Update rateUsTime in shared preferences
+        rateUsTime = currentTime;
+        await Get.find<SharedPreferences>().setInt(ratedTimeKey, rateUsTime);
+        // Show the rate us dialog
+        showRateUsDialog();
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  /*
+  * used to display rate dialog using in_app_review
+  * */
+  Future<void> showRateUsDialog() async {
+    print("Attempting to request  review");
+    try{
+      if (await _inAppReview.isAvailable()) {
+        print("In-App Review is available");
+        await _inAppReview.requestReview();
+      } else {
+        print("In-App Review is not available, opening store listing");
+        _inAppReview.openStoreListing();
+      }
+    }catch(e){
+      print('Error requesting review: $e');
+    }
   }
 }
 

@@ -27,6 +27,7 @@ const String errorMessage = 'Oops! something went wrong, try again later';
 const String queryWebUrl = 'https://dhiyodha.com/';
 const String storedEmail = 'username';
 const String storedPassword = 'password';
+const String ratedTimeKey = 'dhiyodha_rated_time';
 // const String baseUrl = 'http://13.234.19.67:8097/'; LocalHost URL
 const String baseUrl = 'http://13.202.103.22:8097/';  /*'https://api.socialclub.dhiyodha.com:8097/';*/
 const String playStoreUrl =
