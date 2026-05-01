@@ -265,7 +265,7 @@ class TestimonialDetailsPageState extends State<TestimonialDetailsPage> {
                             onTap: () async {
                               Get.back();
                               bool isDelete = await testimonialVM
-                                  .deleteTestimonial(myTestimonialChildData.id);
+                                  .deleteTestimonial(myTestimonialChildData.testimonialUuid);
                               if (isDelete) {
                                 Get.back(result: true);
                                 /*showSnackBar("testimonials_deleted".tr,

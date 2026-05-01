@@ -66,7 +66,7 @@ class MyTestimonialData {
 
 class MyTestimonialChildData {
   String? id;
-  String? uuid;
+  String? testimonialUuid;
   String? review;
   String? type;
   Reviewer? reviewer;
@@ -79,7 +79,7 @@ class MyTestimonialChildData {
   String? designation;
 
   MyTestimonialChildData(
-      {this.uuid,
+      {this.testimonialUuid,
       this.id,
       this.review,
       this.type,
@@ -94,7 +94,7 @@ class MyTestimonialChildData {
 
   MyTestimonialChildData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    uuid = json['uuid'];
+    testimonialUuid = json['testimonialUuid'];
     review = json['review'];
     type = json['type'];
     reviewer = json['comments'] != null
@@ -112,7 +112,7 @@ class MyTestimonialChildData {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['uuid'] = this.uuid;
+    data['testimonialUuid'] = this.testimonialUuid;
     data['review'] = this.review;
     data['type'] = this.type;
     if (this.reviewer != null) {

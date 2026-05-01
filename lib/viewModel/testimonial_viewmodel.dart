@@ -180,6 +180,7 @@ class TestimonialViewModel extends GetxController implements GetxService {
     if (weekly['testimonials'] != null) {
       for (var v in weekly['testimonials']['list']) {
         testimonialSenderList.add(MyTestimonialChildData.fromJson({
+          "testimonialUuid": v['testimonialUuid'],
           "reviewerFirstName": v['fullName']?.split(" ").first,
           "reviewerLastName": v['fullName']?.split(" ").length > 1
               ? v['fullName']?.split(" ").last
