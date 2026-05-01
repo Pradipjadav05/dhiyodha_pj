@@ -1144,14 +1144,15 @@ class HomePageState extends State<HomePage> {
                     children: [
                       // Visitor
                       Expanded(
-                        child: InkWell(
+                        child: GestureDetector(
                           onTap: () {
                             Get.toNamed(Routes.getAddVisitorPageRoute(
                                 isFromMeeting: true));
                           },
-                          child: Padding(
+                          child: Container(
+                            color: Colors.transparent,
                             padding:
-                                const EdgeInsets.symmetric(horizontal: 4.0),
+                            const EdgeInsets.symmetric(horizontal: 4.0),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1181,9 +1182,10 @@ class HomePageState extends State<HomePage> {
                           onTap: () async {
                             await Get.toNamed(Routes.getSpeakerPageRoute());
                           },
-                          child: Padding(
+                          child: Container(
+                            color: Colors.transparent,
                             padding:
-                                const EdgeInsets.symmetric(horizontal: 4.0),
+                            const EdgeInsets.symmetric(horizontal: 4.0),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1209,11 +1211,12 @@ class HomePageState extends State<HomePage> {
                       Container(color: bluishPurple, width: 1.5),
                       // Trainer
                       Expanded(
-                        child: InkWell(
+                        child: GestureDetector(
                           onTap: () async {
                             await Get.toNamed(Routes.getTrainerPageRoute());
                           },
-                          child: Padding(
+                          child: Container(
+                            color: Colors.transparent,
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 4.0),
                             child: Column(
@@ -1245,7 +1248,8 @@ class HomePageState extends State<HomePage> {
                           onTap: () async {
                             await Get.toNamed(Routes.getGuestPageRoute());
                           },
-                          child: Padding(
+                          child: Container(
+                            color: Colors.transparent,
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 4.0),
                             child: Column(

@@ -180,11 +180,13 @@ class VisitorPageState extends State<VisitorPage>
                                     ),
                                   ),
                                 ),
-                                if (data.attendanceStatus != null &&
-                                    data.attendanceStatus!.isNotEmpty)
                                   Container(
+                                   constraints: BoxConstraints(
+                                     minWidth: 50,
+                                   ),
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 8, vertical: 4),
+                                    margin: EdgeInsets.only(right: 10),
                                     decoration: BoxDecoration(
                                       color: data.attendanceStatus
                                                   ?.toUpperCase() ==

@@ -319,6 +319,7 @@ class HomeViewModel extends GetxController implements GetxService {
     _isLoading = false;
 
     if (response.statusCode == 200) {
+      nextMeeting = NextMeeting();
       meetingBannerList = [];
       businessPresentationBannerList = [];
       trainingBannerList = [];

@@ -169,9 +169,7 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
                   label: 'select_business_category'.tr,
                   icon: Icons.business_center_outlined,
                   controller: _businessCatController,
-                  options: vvm.businessCatList
-                      .where((b) => b != vvm.businessCatList[0])
-                      .toList(),
+                  options: vvm.businessCatList,
                   onSelected: (val) {
                     vvm.selectedBusinessCategory = val;
                     widget.onStateChanged();
@@ -487,7 +485,7 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
       showSnackBar("enter_name".tr);
     } else if (vvm.emailController.text.isEmpty) {
       showSnackBar("enter_email".tr);
-    } else if (vvm.contactNumberController.text.isEmpty) {
+    } else if (vvm.contactNumberController.text.isEmpty || vvm.contactNumberController.text.trim().length < 10) {
       showSnackBar("enter_contact_no".tr);
     } else if (vvm.companyNameController.text.isEmpty) {
       showSnackBar("enter_cmp_name".tr);

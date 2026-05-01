@@ -119,7 +119,7 @@ class VisitorChildData {
     date = json['date'];
     businessCategory = json['businessCategory'];
     name = json['name'];
-    contactNumber = json['contactNumber'];
+    contactNumber = json['contactNumber'].toString();
     companyName = json['companyName'];
     addedBy = json['addedBy'];
     groupName = json['groupName'];
