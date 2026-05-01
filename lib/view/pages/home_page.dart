@@ -1884,7 +1884,7 @@ class HomePageState extends State<HomePage> {
                             color: midnightBlue, fontSize: fontSize16),
                       ),
                       Text(
-                        '0', // No overall attendance count provided, set to 0
+                        '', // No overall attendance count provided, set to 0
                         style: fontBold.copyWith(
                           color: bluishPurple,
                           fontSize: fontSize20,
