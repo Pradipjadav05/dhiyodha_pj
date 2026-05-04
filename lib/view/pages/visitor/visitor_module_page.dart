@@ -87,7 +87,7 @@ class AddVisitorsPageState extends State<AddVisitorsPage> {
                   isFromMeeting: widget.isFromMeeting,
                   isAppBarRequired: false,
                   onStateChanged: () async {
-                    await initData();
+                    // await initData();
                     isListScreen.value = false;
                   },
                 )),

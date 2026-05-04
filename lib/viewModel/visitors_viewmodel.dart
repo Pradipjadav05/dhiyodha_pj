@@ -639,7 +639,7 @@ class VisitorsViewModel extends GetxController implements GetxService {
 
   Future<void> getCountries() async {
     Response response = await visitorsRepo.getCountries();
-    _isLoading = false;
+    _isLoading = true;
     if (response.statusCode == 200) {
       _countryList = [];
       _countryList.add("Select Country");
