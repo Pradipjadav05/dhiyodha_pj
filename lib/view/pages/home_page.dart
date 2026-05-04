@@ -2115,37 +2115,6 @@ class HomePageState extends State<HomePage> {
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ClipRRect(
-                  //   borderRadius: BorderRadius.circular(21),
-                  //   child: () {
-                  //     final String? avatarUrl =
-                  //         data.createdBy == globalCurrentUserData.uuid
-                  //             ? globalCurrentUserData.profileUrl
-                  //             : data.profileUrl;
-                  //
-                  //     return avatarUrl != null && avatarUrl.isNotEmpty
-                  //         ? CachedNetworkImage(
-                  //             imageUrl: avatarUrl,
-                  //             width: 42.0,
-                  //             height: 42.0,
-                  //             fit: BoxFit.cover,
-                  //             placeholder: (context, url) =>
-                  //                 SizedBox(width: 42.0, height: 42.0),
-                  //             errorWidget: (context, url, error) => Image.asset(
-                  //               profileImage,
-                  //               width: 42.0,
-                  //               height: 42.0,
-                  //               fit: BoxFit.cover,
-                  //             ),
-                  //           )
-                  //         : Image.asset(
-                  //             profileImage,
-                  //             width: 42.0,
-                  //             height: 42.0,
-                  //             fit: BoxFit.cover,
-                  //           );
-                  //   }(),
-                  // ),
                   _profileAvatar(data.createdBy == globalCurrentUserData.uuid
                       ? globalCurrentUserData.profileUrl
                       : data.profileUrl),
@@ -2451,16 +2420,25 @@ class HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      child: ClipOval(
-        child: profileUrl != null && profileUrl.isNotEmpty
-            ? CachedNetworkImage(
-                imageUrl: profileUrl,
-                width: size,
-                height: size,
-                fit: BoxFit.cover,
-                errorWidget: (context, url, error) => _avatarFallback(),
-              )
-            : _avatarFallback(),
+      child: GestureDetector(
+        onTap: () {
+          _openBannerViewer(
+            context,
+            profileUrl ?? "",
+            "",
+          );
+        },
+        child: ClipOval(
+          child: profileUrl != null && profileUrl.isNotEmpty
+              ? CachedNetworkImage(
+                  imageUrl: profileUrl,
+                  width: size,
+                  height: size,
+                  fit: BoxFit.cover,
+                  errorWidget: (context, url, error) => _avatarFallback(),
+                )
+              : _avatarFallback(),
+        ),
       ),
     );
   }

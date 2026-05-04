@@ -172,9 +172,10 @@ class TestimonialPageState extends State<TestimonialPage> {
         contentPadding: EdgeInsets.all(paddingSize10),
         onTap: () async {
           Get.toNamed(Routes.getTestimonialDetailsPageRoute(data))
-              ?.then((result) {
+              ?.then((result) async {
             if (result == true) {
               showSnackBar("testimonials_deleted".tr, isError: false);
+              await getTestimonialData();
             }
           });
         },

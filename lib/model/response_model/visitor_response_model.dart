@@ -66,7 +66,7 @@ class VisitorChildData {
   String? state;
   String? city;
   String? pinCode;
-  String? chapter;
+  // String? chapter;
   String? date;
   String? businessCategory;
   String? name;
@@ -91,7 +91,7 @@ class VisitorChildData {
       this.state,
       this.city,
       this.pinCode,
-      this.chapter,
+      // this.chapter,
       this.date,
       this.businessCategory,
       this.name,
@@ -115,7 +115,7 @@ class VisitorChildData {
     country = json['country'];
     state = json['state'];
     city = json['city'];
-    chapter = json['chapter'];
+    // chapter = json['chapter'];
     date = json['date'];
     businessCategory = json['businessCategory'];
     name = json['name'];
@@ -130,7 +130,7 @@ class VisitorChildData {
     profileUrl = json['profileUrl'];
     designation = json['designation'];
     meetingName = json['meetingName'];
-    chapterName = json['chapterName'];
+    chapterName = json['chapter'];
     vcard = json['vcard'];
     attendanceStatus = json['attendanceStatus'];
     pinCode = json['pinCode'];
@@ -142,7 +142,7 @@ class VisitorChildData {
     data['country'] = this.country;
     data['state'] = this.state;
     data['city'] = this.city;
-    data['chapter'] = this.chapter;
+    // data['chapter'] = this.chapter;
     data['date'] = this.date;
     data['businessCategory'] = this.businessCategory;
     data['name'] = this.name;
@@ -157,7 +157,7 @@ class VisitorChildData {
     data['profileUrl'] = this.profileUrl;
     data['designation'] = this.designation;
     data['meetingName'] = this.meetingName;
-    data['chapterName'] = this.chapterName;
+    data['chapter'] = this.chapterName;
     data['vcard'] = this.vcard;
     data['attendanceStatus'] = this.attendanceStatus;
     data['pinCode'] = this.pinCode;

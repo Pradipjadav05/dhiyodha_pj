@@ -179,17 +179,17 @@ class TestimonialViewModel extends GetxController implements GetxService {
     /// Sender
     if (weekly['testimonials'] != null) {
       for (var v in weekly['testimonials']['list']) {
+        final nameParts = (v['fullName'] ?? "").toString().split(" ");
+
         testimonialSenderList.add(MyTestimonialChildData.fromJson({
           "testimonialUuid": v['testimonialUuid'],
-          "reviewerFirstName": v['fullName']?.split(" ").first,
-          "reviewerLastName": v['fullName']?.split(" ").length > 1
-              ? v['fullName']?.split(" ").last
-              : "",
+          "reviewerFirstName": nameParts.isNotEmpty ? nameParts.first : "",
+          "reviewerLastName": nameParts.length > 1 ? nameParts.last : "",
           "reviewerPofileUrl": v['profileImage'],
           "review": v['review'],
-          "type": v['designation'],
+          "type": v['designation'] ?? "",
           "designation": v['designation'],
-          "companyName": v['companyName'],
+          "companyName": v['companyName'] ?? "",
           "number": v['number'],
           "date": v['date'],
         }));
@@ -199,16 +199,16 @@ class TestimonialViewModel extends GetxController implements GetxService {
     /// Receiver
     if (weekly['testimonialReviewers'] != null) {
       for (var v in weekly['testimonialReviewers']['list']) {
+        final nameParts = (v['fullName'] ?? "").toString().split(" ");
+
         testimonialReceiverList.add(MyTestimonialChildData.fromJson({
-          "reviewerFirstName": v['fullName']?.split(" ").first,
-          "reviewerLastName": v['fullName']?.split(" ").length > 1
-              ? v['fullName']?.split(" ").last
-              : "",
+          "reviewerFirstName": nameParts.isNotEmpty ? nameParts.first : "",
+          "reviewerLastName": nameParts.length > 1 ? nameParts.last : "",
           "reviewerPofileUrl": v['profileImage'],
           "review": v['review'],
-          "type": v['designation'],
+          "type": v['designation'] ?? "",
           "designation": v['designation'],
-          "companyName": v['companyName'],
+          "companyName": v['companyName'] ?? "",
           "number": v['number'],
           "date": v['date'],
         }));

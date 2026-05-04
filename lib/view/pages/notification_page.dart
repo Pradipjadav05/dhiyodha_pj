@@ -31,15 +31,15 @@ class NotificationPageState extends State<NotificationPage> {
                 color: Theme.of(context).textTheme.bodyLarge!.color),
           ),
         ),
-        body: SafeArea(
-          child: ListView.builder(
-            shrinkWrap: true,
-            itemBuilder: (context, index) {
-              return _notificationListItems(index);
-            },
-            itemCount: 8,
-          ),
-        ),
+        // body: SafeArea(
+        //   child: ListView.builder(
+        //     shrinkWrap: true,
+        //     itemBuilder: (context, index) {
+        //       return _notificationListItems(index);
+        //     },
+        //     itemCount: 8,
+        //   ),
+        // ),
       );
     });
   }
