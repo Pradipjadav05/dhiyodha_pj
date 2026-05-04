@@ -2250,14 +2250,23 @@ class HomePageState extends State<HomePage> {
               ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(radius10)),
                 child: data.imageUrl != null && data.imageUrl!.isNotEmpty
-                    ? CachedNetworkImage(
-                        imageUrl: data.imageUrl!,
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) => const Center(
-                          child: SizedBox.shrink(),
+                    ? GestureDetector(
+                        onTap: () {
+                          _openBannerViewer(
+                            context,
+                            data.imageUrl ?? "",
+                            "",
+                          );
+                        },
+                        child: CachedNetworkImage(
+                          imageUrl: data.imageUrl!,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) => const Center(
+                            child: SizedBox.shrink(),
+                          ),
+                          errorWidget: (context, url, error) => SizedBox.shrink(),
                         ),
-                        errorWidget: (context, url, error) => SizedBox.shrink(),
-                      )
+                    )
                     : SizedBox.shrink(),
               ),
               SizedBox(height: paddingSize5),
@@ -2420,25 +2429,16 @@ class HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      child: GestureDetector(
-        onTap: () {
-          _openBannerViewer(
-            context,
-            profileUrl ?? "",
-            "",
-          );
-        },
-        child: ClipOval(
-          child: profileUrl != null && profileUrl.isNotEmpty
-              ? CachedNetworkImage(
-                  imageUrl: profileUrl,
-                  width: size,
-                  height: size,
-                  fit: BoxFit.cover,
-                  errorWidget: (context, url, error) => _avatarFallback(),
-                )
-              : _avatarFallback(),
-        ),
+      child: ClipOval(
+        child: profileUrl != null && profileUrl.isNotEmpty
+            ? CachedNetworkImage(
+                imageUrl: profileUrl,
+                width: size,
+                height: size,
+                fit: BoxFit.cover,
+                errorWidget: (context, url, error) => _avatarFallback(),
+              )
+            : _avatarFallback(),
       ),
     );
   }
