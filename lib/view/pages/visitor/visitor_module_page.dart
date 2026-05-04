@@ -73,7 +73,7 @@ class AddVisitorsPageState extends State<AddVisitorsPage> {
                         bgColor: midnightBlue,
                         textColor: periwinkle,
                         onPressed: () async {
-                          await initData();
+                          // await initData();
                           isListScreen.value = false;
                         },
                       ),
