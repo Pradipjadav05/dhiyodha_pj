@@ -36,9 +36,9 @@ class HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!mounted) return;
-      callInitAPIs();
+      await callInitAPIs();
     });
   }
 
@@ -2687,10 +2687,12 @@ class HomePageState extends State<HomePage> {
   }
 
   Future<void> callInitAPIs() async {
-    await Get.find<HomeViewModel>().initData();
-    await getCurrentUser(Get.find<HomeViewModel>());
-    await callPostOrMyPostAPI(Get.find<HomeViewModel>());
-    await getDashboardData("ALL");
+    await Future.wait([
+      Get.find<HomeViewModel>().initData(),
+      getCurrentUser(Get.find<HomeViewModel>()),
+      callPostOrMyPostAPI(Get.find<HomeViewModel>()),
+      getDashboardData("ALL"),
+    ]);
 
     // check and show rating dialog
     await checkAndShowRateUsDialog();
