@@ -248,22 +248,7 @@ class MemberProfilePageState extends State<MemberProfilePage> {
               },
               child: Hero(
                 tag: widget.membersChildData.profileUrl ?? "",
-                child: ClipRRect(
-                    borderRadius: BorderRadius.circular(50),
-                    child: widget.membersChildData.profileUrl != null &&
-                            widget.membersChildData.profileUrl!.isNotEmpty
-                        ? CachedNetworkImage(
-                            height: 68.0,
-                            width: 68.0,
-                            imageUrl: widget.membersChildData.profileUrl!,
-                            fit: BoxFit.fill,
-                            placeholder: (context, url) => const Center(
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            ),
-                            errorWidget: (context, url, error) =>
-                                _placeholderAvatar(),
-                          )
-                        : _placeholderAvatar()),
+                child: _profileAvatar(widget.membersChildData.profileUrl ?? "", size: 68.0),
               ),
             ),
             SizedBox(width: paddingSize15),
@@ -649,18 +634,9 @@ class MemberProfilePageState extends State<MemberProfilePage> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            if (i.senderProfileUrl != null &&
-                                i.senderProfileUrl!.isNotEmpty)
-                              CachedNetworkImage(
-                                imageUrl: i.senderProfileUrl!,
-                                width: 42.0,
-                                height: 42.0,
-                                fit: BoxFit.cover,
-                                placeholder: (context, url) => const SizedBox.shrink(),
-                                errorWidget: (context, url, error) => _testimonialPlaceholderAvatar(),
-                              )
-                            else
-                              _testimonialPlaceholderAvatar(),
+                            _profileAvatar(
+                                i.senderProfileUrl ?? '',
+                                size: 42.0),
                             SizedBox(width: paddingSize15),
                             Column(
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -817,10 +793,37 @@ class MemberProfilePageState extends State<MemberProfilePage> {
     );
   }
 
-  Widget _testimonialPlaceholderAvatar() {
+  Widget _profileAvatar(String? profileUrl, {double size = 42}) {
     return Container(
-      width: 42.0,
-      height: 42.0,
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: Colors.white, width: 2.5),
+        boxShadow: [
+          BoxShadow(
+            color: midnightBlue.withValues(alpha:0.15),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: ClipOval(
+        child: profileUrl != null && profileUrl.isNotEmpty
+            ? CachedNetworkImage(
+          imageUrl: profileUrl,
+          width: size,
+          height: size,
+          fit: BoxFit.cover,
+          errorWidget: (context, url, error) => _avatarFallback(),
+        )
+            : _avatarFallback(),
+      ),
+    );
+  }
+
+  Widget _avatarFallback() {
+    return Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         gradient: LinearGradient(
