@@ -253,13 +253,13 @@ class MembersViewmodel extends GetxController implements GetxService {
   // ────────────────────────────────────────────────────────────
   // getGroups — loads chapter list for worldwide search dropdown
   // ────────────────────────────────────────────────────────────
-  Future<void> getGroups(
+  Future<void> getGroupsAll(
       int page, int size, String? sort, String? orderBy, String? search) async {
     _isLoading = true;
     update();
 
     final Response response =
-        await membersRepo.getGroups(page, size, sort, orderBy, search);
+        await membersRepo.getGroupsAll(page, size, sort, orderBy, search);
     _isLoading = false;
 
     if (response.statusCode == 200) {

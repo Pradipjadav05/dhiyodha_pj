@@ -28,7 +28,7 @@ class MembersRepo {
         .getData('$searchTypeUrl?searchType=$searchType&name=$search');
   }
 
-  Future<Response> getGroups(
+  Future<Response> getGroupsAll(
       int page, int size, String? sort, String? orderBy, String? search) async {
     Map<String, dynamic> queryParameters = Map<String, dynamic>();
     queryParameters.addAll(<String, dynamic>{
@@ -39,7 +39,7 @@ class MembersRepo {
       "search": search
     });
     return await apiClient.getData(
-        '$groupsUrl?page=$page&size=$size&sort=$sort&sortDirection=$orderBy&search=$search');
+        '$groupsUrlAll?page=$page&size=$size&sort=$sort&sortDirection=$orderBy&search=$search');
   }
 
   Future<Response> getWorldWideSearchedUsersOrMembers(

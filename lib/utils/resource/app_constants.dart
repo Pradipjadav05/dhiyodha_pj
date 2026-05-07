@@ -38,8 +38,8 @@ const String stateListUrl = baseUrl + 'api/fetch/new/states/';
 const String cityListUrl = baseUrl + 'api/fetch/new/cities/';
 const String businessCategoriesUrl = baseUrl + 'api/users/active-business-categories';
 
-// const String groupsUrl = baseUrl + 'api/groups/';
-const String groupsUrl = baseUrl + 'api/teams/all';
+const String groupsUrl = baseUrl + 'api/groups/';
+const String groupsUrlAll = baseUrl + 'api/teams/all';
 
 /** AUTHENTICATION APIS*/
 const String loginUrl = baseUrl + 'api/socialAuth/authenticate';

@@ -160,7 +160,7 @@ class MembersPageState extends State<MembersPage>
               _resetAutocompleteControllers();
               await Future.wait([
                membersVM.getCountries(),
-               membersVM.getGroups(0, membersVM.size.value, '', '', ''),
+               membersVM.getGroupsAll(0, membersVM.size.value, '', '', ''),
                membersVM.getBusinessCategories(),
               ]);
             },
