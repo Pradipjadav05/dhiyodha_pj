@@ -28,10 +28,12 @@ class AddVisitorsPageState extends State<AddVisitorsPage> {
   Future<void> initData() async {
     VisitorsViewModel vvm = Get.find<VisitorsViewModel>();
     await vvm.initData();
-    await vvm.getCountries();
-    await vvm.getBusinessCategories();
-    await vvm.getMeetingsList();
-    await vvm.getGroups(vvm.page.value, vvm.size.value, "", "", "");
+    await Future.wait([
+      vvm.getCountries(),
+      vvm.getBusinessCategories(),
+      vvm.getMeetingsList(),
+      vvm.getGroups(vvm.page.value, vvm.size.value, "", "", ""),
+    ]);
   }
 
   @override

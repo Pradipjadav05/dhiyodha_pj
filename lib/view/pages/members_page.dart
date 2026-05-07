@@ -158,9 +158,11 @@ class MembersPageState extends State<MembersPage>
               membersVM.isWorldWideListShow.value = false;
               membersVM.worldWiseMembersData = [];
               _resetAutocompleteControllers();
-              await membersVM.getGroups(0, membersVM.size.value, '', '', '');
-              await membersVM.getCountries();
-              await membersVM.getBusinessCategories();
+              await Future.wait([
+               membersVM.getCountries(),
+               membersVM.getGroups(0, membersVM.size.value, '', '', ''),
+               membersVM.getBusinessCategories(),
+              ]);
             },
           ),
         ],
