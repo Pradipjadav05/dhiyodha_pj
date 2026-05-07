@@ -97,10 +97,10 @@ class TestimonialViewModel extends GetxController implements GetxService {
     _totalPages = 0.obs;
     _isExpanded = false.obs;
     _isAgreeTerms = false.obs;
-    _tyfcbToController = TextEditingController();
-    _amountController = TextEditingController();
-    _commentsController = TextEditingController();
-    _testimonialController = TextEditingController();
+    _tyfcbToController.clear();
+    _amountController.clear();
+    _commentsController.clear();
+    _testimonialController.clear();
     // _myTestimonialList = [];
   }
 

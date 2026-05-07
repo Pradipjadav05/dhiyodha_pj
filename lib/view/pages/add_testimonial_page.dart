@@ -22,9 +22,18 @@ class AddTestimonialPage extends StatefulWidget {
 }
 
 class AddTestimonialPageState extends State<AddTestimonialPage> {
+  final TestimonialViewModel testimonialVM = Get.find<TestimonialViewModel>();
+
   @override
   void initState() {
     super.initState();
+    initData();
+  }
+
+  Future<void> initData() async {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      testimonialVM.initData();
+    });
   }
 
   @override
