@@ -514,8 +514,6 @@ class _AddVisitorFormWidgetState extends State<AddVisitorFormWidget> {
         if (isSuccess) {
           Get.back(closeOverlays: true, canPop: true);
         showSnackBar("visitor_added".tr, isError: false);
-      } else {
-        showSnackBar("errorMessage".tr);
       }
       }
     } finally {

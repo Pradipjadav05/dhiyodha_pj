@@ -452,6 +452,8 @@ class VisitorPageState extends State<VisitorPage>
                       context,
                       visitorName: data.name,
                     );
+
+                    await setupInitialData();
                   } finally {
                     _isMarkingAttendance.value = false;
                   }

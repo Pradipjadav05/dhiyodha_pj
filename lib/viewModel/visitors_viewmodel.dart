@@ -610,6 +610,7 @@ class VisitorsViewModel extends GetxController implements GetxService {
       isSuccess = true;
     } else {
       isSuccess = false;
+      showSnackBar(response.body["errors"]?[0] ?? "errorMessage".tr, isError: true);
       ApiChecker.checkApi(response);
     }
     update();
