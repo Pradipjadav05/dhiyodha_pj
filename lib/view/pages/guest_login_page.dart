@@ -443,12 +443,9 @@ class GuestLoginPageState extends State<GuestLoginPage> {
       final bool isOTPSent = await loginVM.sendOtp(phone, '91');
       if (isOTPSent) {
         loginVM.isMobileNumberValid.value = true;
-      } else {
-        showSnackBar('otp_fail_msg'.tr);
       }
     } else {
       loginVM.isMobileNumberValid.value = false;
-      showSnackBar('wrong_mobile_number'.tr);
     }
   }
 
@@ -479,8 +476,6 @@ class GuestLoginPageState extends State<GuestLoginPage> {
 
       if (isOTPVerified) {
         Get.toNamed(Routes.getGuestDashboardPageRoute());
-      } else {
-        showSnackBar('invalid_OTP'.tr);
       }
     } else {
       if (!loginVM.isAgreeTerms.value) {

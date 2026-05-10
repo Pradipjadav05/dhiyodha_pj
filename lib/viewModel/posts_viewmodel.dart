@@ -143,6 +143,7 @@ class PostsViewModel extends GetxController implements GetxService {
       isSuccess = true;
     } else {
       isSuccess = false;
+      showSnackBar(response.body["errors"][0] ?? 'errorMessage'.tr);
       ApiChecker.checkApi(response);
     }
     update();
@@ -183,6 +184,7 @@ class PostsViewModel extends GetxController implements GetxService {
     if (response.statusCode == 201) {
       responseModel = ResponseModel(true, response.body["message"]);
     } else {
+      showSnackBar(response.body["errors"][0] ?? 'errorMessage'.tr);
       responseModel = ResponseModel(false, response.statusText);
     }
     _isLoading = false;

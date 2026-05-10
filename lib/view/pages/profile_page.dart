@@ -281,8 +281,6 @@ class ProfilePageState extends State<ProfilePage> {
                 bool resp = await postVM.updateProfile(userProfileRequestModel);
                 if (resp) {
                   showSnackBar("profile_updated".tr, isError: false);
-                } else {
-                  showSnackBar('errorMessage'.tr);
                 }
                 await _refreshUserData();
               },

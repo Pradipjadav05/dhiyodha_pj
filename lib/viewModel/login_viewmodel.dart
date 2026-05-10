@@ -123,6 +123,9 @@ class LoginViewModel extends GetxController implements GetxService {
       await loginRepo.saveAuthToken(response.body['data']['accessToken'],
           response.body['data']['refreshToken'], email, password);
     } else {
+      showSnackBar(
+        response.body["errors"][0] ?? "Invalid credentials. Please try again.",
+      );
       responseModel = LoginResponse(
           timestamp: response.body['timestamp'],
           status: response.body['status'],
@@ -145,6 +148,7 @@ class LoginViewModel extends GetxController implements GetxService {
     if (response.statusCode == 201) {
       isSuccess = true;
     } else {
+      showSnackBar(response.body["errors"][0] ?? 'wrong_mobile_number'.tr);
       ApiChecker.checkApi(response);
     }
     update();
@@ -165,6 +169,7 @@ class LoginViewModel extends GetxController implements GetxService {
       isSuccess = true;
       showSnackBar('${response.body["message"]}', isError: false);
     } else {
+      showSnackBar(response.body["errors"][0] ?? 'otp_fail_msg'.tr);
       ApiChecker.checkApi(response);
     }
     update();
@@ -182,6 +187,7 @@ class LoginViewModel extends GetxController implements GetxService {
     if (response.statusCode == 200) {
       isSuccess = true;
     } else {
+      showSnackBar(response.body["errors"][0] ?? 'invalid_OTP'.tr);
       ApiChecker.checkApi(response);
     }
     update();

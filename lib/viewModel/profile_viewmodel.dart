@@ -3,6 +3,8 @@ import 'package:dhiyodha/model/response_model/response_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
+import '../view/widgets/common_snackbar.dart';
+
 class ProfileViewModel extends GetxController implements GetxService {
   final ProfileRepo profileRepo;
 
@@ -49,6 +51,7 @@ class ProfileViewModel extends GetxController implements GetxService {
     if (response.statusCode == 200) {
       responseModel = ResponseModel(true, response.body["message"]);
     } else {
+      showSnackBar(response.body["errors"][0] ?? 'errorMessage'.tr);
       responseModel = ResponseModel(false, response.statusText);
     }
     update();

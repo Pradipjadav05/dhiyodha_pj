@@ -188,8 +188,6 @@ class AddAskPageState extends State<AddAskPage> {
                               askVM.contentController.text);
                           if (resp.isSuccess) {
                             Get.back(result: resp, closeOverlays: true);
-                          } else {
-                            showSnackBar(resp.message);
                           }
                         } else {
                           showSnackBar("ask_content_required".tr);

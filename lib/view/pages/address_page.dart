@@ -402,8 +402,6 @@ class AddressPageState extends State<AddressPage> {
       if (resp) {
         Get.back(result: true, canPop: true, closeOverlays: true);
         showSnackBar("profile_updated".tr, isError: false);
-      } else {
-        showSnackBar('errorMessage'.tr);
       }
     }
   }

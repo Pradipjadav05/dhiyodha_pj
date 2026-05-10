@@ -270,8 +270,6 @@ class TestimonialDetailsPageState extends State<TestimonialDetailsPage> {
                                 Get.back(result: true);
                                 /*showSnackBar("testimonials_deleted".tr,
                                     isError: false);*/
-                              } else {
-                                showSnackBar('errorMessage'.tr);
                               }
                             },
                           ),

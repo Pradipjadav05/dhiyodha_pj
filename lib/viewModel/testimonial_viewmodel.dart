@@ -6,6 +6,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../view/widgets/common_snackbar.dart';
+
 class TestimonialViewModel extends GetxController implements GetxService {
   final TestimonialRepo testimonialRepo;
 
@@ -144,6 +146,7 @@ class TestimonialViewModel extends GetxController implements GetxService {
       isSuccess = true;
     } else {
       isSuccess = false;
+      showSnackBar(response.body["errors"][0] ?? 'errorMessage'.tr);
       ApiChecker.checkApi(response);
     }
     update();
@@ -162,6 +165,7 @@ class TestimonialViewModel extends GetxController implements GetxService {
       isSuccess = true;
     } else {
       isSuccess = false;
+      showSnackBar(response.body["errors"][0] ?? 'errorMessage'.tr);
       ApiChecker.checkApi(response);
     }
     update();

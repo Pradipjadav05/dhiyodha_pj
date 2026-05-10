@@ -6,6 +6,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../view/widgets/common_snackbar.dart';
+
 class TyfcbViewModel extends GetxController implements GetxService {
   final TyfcbRepo tyfcbRepo;
 
@@ -165,6 +167,7 @@ class TyfcbViewModel extends GetxController implements GetxService {
     if (response.statusCode == 201) {
       responseModel = ResponseModel(true, response.body["message"]);
     } else {
+      showSnackBar(response.body["errors"][0] ?? 'errorMessage'.tr);
       responseModel = ResponseModel(false, response.statusText);
     }
     _isLoading = false;

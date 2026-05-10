@@ -8,6 +8,7 @@ import 'package:dhiyodha/model/response_model/visitor_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../view/widgets/common_snackbar.dart';
 import 'home_viewmodel.dart';
 
 class VisitingCardViewModel extends GetxController implements GetxService {
@@ -200,6 +201,7 @@ class VisitingCardViewModel extends GetxController implements GetxService {
       isSuccess = true;
     } else {
       isSuccess = false;
+      showSnackBar(response.body["errors"][0] ?? 'errorMessage'.tr);
       ApiChecker.checkApi(response);
     }
 

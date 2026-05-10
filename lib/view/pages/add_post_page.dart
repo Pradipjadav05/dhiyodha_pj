@@ -195,8 +195,6 @@ class AddPostPageState extends State<AddPostPage> {
                                       result: true,
                                       canPop: true,
                                       closeOverlays: true);
-                                } else {
-                                  showSnackBar('errorMessage'.tr);
                                 }
                               }
                             },

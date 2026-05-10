@@ -127,8 +127,6 @@ class AddTestimonialPageState extends State<AddTestimonialPage> {
                                   Get.back(result: true);
                                   showSnackBar("testimonial_added".tr,
                                       isError: false);
-                                } else {
-                                  showSnackBar('errorMessage'.tr);
                                 }
                               }
                             },

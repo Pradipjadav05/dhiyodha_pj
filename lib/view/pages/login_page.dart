@@ -198,10 +198,6 @@ class LoginPageState extends State<LoginPage> {
         Get.offAllNamed(Routes.getHomePageRoute());
       } else {
         if (!mounted) return;
-
-        showSnackBar(
-          status.message ?? "Invalid credentials. Please try again.",
-        );
       }
     }
   }

@@ -589,8 +589,6 @@ class AddReferralSlipPageState extends State<AddReferralSlipPage> {
       if (isSuccess) {
         Get.back(result: true);
         showSnackBar('referral_added'.tr, isError: false);
-      } else {
-        showSnackBar('errorMessage'.tr);
       }
     }
   }

@@ -6,6 +6,8 @@ import 'package:dhiyodha/model/response_model/members_list_response_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
+import '../view/widgets/common_snackbar.dart';
+
 class ReferralSlipViewModel extends GetxController implements GetxService {
   final ReferralRepo referralRepo;
 
@@ -357,6 +359,7 @@ class ReferralSlipViewModel extends GetxController implements GetxService {
       if (response.statusCode == 201) {
         isSuccess = true;
       } else {
+        showSnackBar(response.body["errors"][0] ?? 'errorMessage'.tr);
         ApiChecker.checkApi(response);
       }
     } finally {

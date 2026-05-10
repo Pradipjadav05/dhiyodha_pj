@@ -5,6 +5,8 @@ import 'package:dhiyodha/utils/helper/date_converter.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../view/widgets/common_snackbar.dart';
+
 class OneToOneSlipViewModel extends GetxController implements GetxService {
   final OneToOneRepo oneToOneRepo;
 
@@ -166,6 +168,7 @@ class OneToOneSlipViewModel extends GetxController implements GetxService {
       if (response.statusCode == 201) {
         isSuccess = true;
       } else {
+        showSnackBar(response.body["errors"][0] ?? 'errorMessage'.tr);
         ApiChecker.checkApi(response);
       }
     } finally {

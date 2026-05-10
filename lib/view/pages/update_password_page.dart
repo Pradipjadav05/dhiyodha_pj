@@ -123,8 +123,6 @@ class UpdatePasswordPageState extends State<UpdatePasswordPage> {
                           showSnackBar(resp.message, isError: false);
                           Get.back(
                               result: true, canPop: true, closeOverlays: true);
-                        } else {
-                          showSnackBar('errorMessage'.tr);
                         }
                       }
                     },

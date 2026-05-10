@@ -830,8 +830,6 @@ class HomePageState extends State<HomePage> {
                                 if (isSuccess) {
                                   showSnackBar("post_deleted".tr,
                                       isError: false);
-                                } else {
-                                  showSnackBar("errorMessage".tr);
                                 }
                               } else {
                                 Get.close(1);
@@ -840,8 +838,6 @@ class HomePageState extends State<HomePage> {
                                 if (isSuccess) {
                                   showSnackBar("post_deleted".tr,
                                       isError: false);
-                                } else {
-                                  showSnackBar("errorMessage".tr);
                                 }
                               }
                             },
@@ -2659,8 +2655,6 @@ class HomePageState extends State<HomePage> {
                                         showSnackBar("added_comments".tr,
                                             isError: false);
                                         homeVM.commentController.text = "";
-                                      } else {
-                                        showSnackBar('errorMessage'.tr);
                                       }
                                     }
                                   },

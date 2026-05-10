@@ -304,6 +304,8 @@ class HomeViewModel extends GetxController implements GetxService {
       }
       update();
       return true;
+    } else {
+      showSnackBar(response.body["errors"][0] ?? 'errorMessage'.tr);
     }
     update();
     return false;
@@ -563,6 +565,8 @@ class HomeViewModel extends GetxController implements GetxService {
       _postData.removeWhere((p) => p.postUuid == postUuid);
       update();
       return true;
+    } else {
+      showSnackBar(response.body["errors"][0] ?? "errorMessage".tr);
     }
     ApiChecker.checkApi(response);
     // update();
@@ -582,6 +586,8 @@ class HomeViewModel extends GetxController implements GetxService {
       }
       update();
       return true;
+    } else {
+      showSnackBar(response.body["errors"][0] ?? "errorMessage".tr);
     }
     ApiChecker.checkApi(response);
     update();

@@ -4,6 +4,8 @@ import 'package:dhiyodha/model/request_model/update_profile_request_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
+import '../view/widgets/common_snackbar.dart';
+
 class ContactViewmodel extends GetxController implements GetxService {
   final ContactRepo contactRepo;
 
@@ -42,6 +44,7 @@ class ContactViewmodel extends GetxController implements GetxService {
       isSuccess = true;
     } else {
       isSuccess = false;
+      showSnackBar(response.body["errors"][0] ?? 'errorMessage'.tr);
       ApiChecker.checkApi(response);
     }
     update();

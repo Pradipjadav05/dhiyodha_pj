@@ -334,8 +334,6 @@ class MyBioPagePageState extends State<MyBioPage> {
     final bool resp = await vvm.updateProfile(request);
     if (resp) {
       Get.back(result: true, canPop: true, closeOverlays: true);
-    } else {
-      showSnackBar('errorMessage'.tr);
     }
   }
 }

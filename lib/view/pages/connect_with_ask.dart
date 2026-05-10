@@ -155,8 +155,6 @@ class ConnectWithAskPageState extends State<ConnectWithAskPage> {
     if (responseModel.isSuccess) {
       Get.back(closeOverlays: true, canPop: true);
       showSnackBar(responseModel.message, isError: false);
-    } else {
-      showSnackBar(responseModel.message);
     }
   }
 

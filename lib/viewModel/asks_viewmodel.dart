@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:get/get.dart';
 
+import '../view/widgets/common_snackbar.dart';
+
 class AsksViewModel extends GetxController implements GetxService {
   final AsksRepo asksRepo;
 
@@ -238,6 +240,9 @@ class AsksViewModel extends GetxController implements GetxService {
     if (response.statusCode == 201) {
       responseModel = new ResponseModel(true, response.body['message']);
     } else {
+      showSnackBar(
+        response.body["errors"][0] ?? response.body["message"],
+      );
       responseModel = new ResponseModel(false, errorMessage);
     }
     update();
@@ -289,6 +294,7 @@ class AsksViewModel extends GetxController implements GetxService {
       responseModel = new ResponseModel(true, response.body['message']);
     } else {
       responseModel = new ResponseModel(false, errorMessage);
+      showSnackBar(response.body["errors"][0] ?? responseModel.message);
     }
     update();
     return responseModel;
