@@ -184,7 +184,7 @@ class MembersViewmodel extends GetxController implements GetxService {
   // loadMore — for chapter roster pagination
   // ────────────────────────────────────────────────────────────
   Future<bool> loadMore() async {
-    if (_page.value < _totalPages.value) {
+    if (_page.value < _totalPages.value-1) {
       _page.value += 1;
       await getUsersOrMembers(_page.value, _size.value, '', '', '');
       return true;
@@ -216,7 +216,7 @@ class MembersViewmodel extends GetxController implements GetxService {
       response.body['data']['data'].forEach((item) {
         _membersData.add(MembersChildData.fromJson(item));
       });
-      _totalPages.value = (response.body['data']['total'] / size).round();
+      _totalPages.value = (response.body['data']['total'] / size).ceil();
     } else {
       ApiChecker.checkApi(response);
     }

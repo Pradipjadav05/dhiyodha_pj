@@ -107,7 +107,7 @@ class TestimonialViewModel extends GetxController implements GetxService {
   }
 
   Future<bool> loadMore() async {
-    if (page.value < totalPages.value) {
+    if (page.value < totalPages.value-1) {
       page.value += 1;
       await getMyTestimonial(page.value, size.value, "", "", "");
       return true;
@@ -120,6 +120,9 @@ class TestimonialViewModel extends GetxController implements GetxService {
       int page, int size, String? sort, String? orderBy, String? search) async {
     _isLoading = true;
     update();
+    if (page == 0) {
+      _myTestimonialList = [];
+    }
     Response response = await testimonialRepo.getMyTestimonial(
         page, size, sort, orderBy, search);
     _isLoading = false;
@@ -129,7 +132,7 @@ class TestimonialViewModel extends GetxController implements GetxService {
             MyTestimonialChildData.fromJson(order);
         _myTestimonialList.add(testimonialChildData);
       });
-      totalPages.value = (response.body['data']['total'] / size).round();
+      totalPages.value = (response.body['data']['total'] / size).ceil();
     } else {
       ApiChecker.checkApi(response);
     }

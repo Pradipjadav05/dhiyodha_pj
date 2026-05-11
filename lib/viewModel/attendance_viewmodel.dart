@@ -29,7 +29,7 @@ class AttendanceViewModel extends GetxController implements GetxService {
   }
 
   Future<bool> loadMore() async {
-    if (page.value < totalPages.value) {
+    if (page.value < totalPages.value-1) {
       page.value += 1;
       await getAttendanceList(page.value, size.value);
       return true;

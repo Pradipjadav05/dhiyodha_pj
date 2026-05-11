@@ -675,9 +675,10 @@ class VisitorPageState extends State<VisitorPage>
                                 whenEmptyLoad: true,
                                 delegate: const DefaultLoadMoreDelegate(),
                                 textBuilder: DefaultLoadMoreTextBuilder.english,
-                                onLoadMore: visitorVM.loadMore,
                                 child: ListView.builder(
-                                  physics: const BouncingScrollPhysics(),
+                                  primary: false,
+                                  shrinkWrap: true,
+                                  // physics: const BouncingScrollPhysics(),
                                   padding: const EdgeInsets.fromLTRB(
                                       16, 12, 16, 100),
                                   itemCount: visitorVM.visitorData.length,
@@ -685,6 +686,7 @@ class VisitorPageState extends State<VisitorPage>
                                     return _visitorCard(index, visitorVM);
                                   },
                                 ),
+                                onLoadMore: visitorVM.loadMore,
                               ),
                             )
                           : Expanded(child: _buildEmptyState()),

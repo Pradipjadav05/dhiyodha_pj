@@ -298,7 +298,7 @@ class VisitorsViewModel extends GetxController implements GetxService {
   }
 
   Future<bool> loadMore() async {
-    if (page.value < totalPages.value) {
+    if (page.value < totalPages.value-1) {
       page.value += 1;
       await getVisitors(page.value, size.value, "", "", "");
       return true;
@@ -551,7 +551,9 @@ class VisitorsViewModel extends GetxController implements GetxService {
       int page, int size, String? sort, String? orderBy, String? search) async {
     _isLoading = true;
     update();
-    _visitorData = [];
+    if (page == 0) {
+      _visitorData = [];
+    }
     Response response =
         await visitorsRepo.getVisitors(page, size, sort, orderBy, search);
     _isLoading = false;
@@ -560,7 +562,7 @@ class VisitorsViewModel extends GetxController implements GetxService {
         VisitorChildData visitorChildData = VisitorChildData.fromJson(visitor);
         _visitorData.add(visitorChildData);
       });
-      totalPages.value = (response.body['data']['total'] / size).round();
+      totalPages.value = (response.body['data']['total'] / size).ceil();
     } else {
       ApiChecker.checkApi(response);
     }

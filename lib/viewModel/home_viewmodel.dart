@@ -201,7 +201,7 @@ class HomeViewModel extends GetxController implements GetxService {
   List<dynamic> gustList = [];
 
   Future<bool> loadMore() async {
-    if (page.value < totalPages.value) {
+    if (page.value < totalPages.value-1) {
       page.value += 1;
       if (isAllPost.value == false) {
         await getMyPosts();
@@ -224,6 +224,9 @@ class HomeViewModel extends GetxController implements GetxService {
       int page, int size, String? sort, String? orderBy, String? search) async {
     _isLoading = true;
     update();
+    if (page == 0) {
+      _postData = [];
+    }
     Response response =
         await homeRepo.getPosts(page, size, sort, orderBy, search);
     _isLoading = false;
@@ -233,7 +236,7 @@ class HomeViewModel extends GetxController implements GetxService {
         _setLikeState(postChildData);
         _postData.add(postChildData);
       });
-      totalPages.value = (response.body['data']['total'] / size).round();
+      totalPages.value = (response.body['data']['total'] / size).ceil();
     } else {
       ApiChecker.checkApi(response);
     }
