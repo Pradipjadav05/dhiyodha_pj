@@ -784,6 +784,7 @@ class VisitorsViewModel extends GetxController implements GetxService {
           pinCode: v['pinCode'],
           vcard: v['vcard'],
           attendanceStatus: v['attendanceStatus'],
+          addedByName: v['addedByName'],
         ));
       }
     }

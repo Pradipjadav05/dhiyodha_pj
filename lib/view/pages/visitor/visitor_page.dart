@@ -356,6 +356,12 @@ class VisitorPageState extends State<VisitorPage>
           value: data.businessCategory ?? '—',
         ),
         _divider(),
+        _detailRow(
+          assetPath: members,
+          label: 'visitor_added_by'.tr,
+          value: data.addedByName ?? '—',
+        ),
+        _divider(),
         _detailRowTappable(
           assetPath: vCard,
           label: 'v_card'.tr,

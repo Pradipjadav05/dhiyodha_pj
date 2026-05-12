@@ -84,6 +84,7 @@ class VisitorChildData {
   String? chapterName;
   String? vcard;
   String? attendanceStatus;
+  String? addedByName;
 
   VisitorChildData(
       {this.uuId,
@@ -108,6 +109,7 @@ class VisitorChildData {
       this.chapterName,
       this.vcard,
       this.attendanceStatus,
+      this.addedByName,
       this.meetingCode});
 
   VisitorChildData.fromJson(Map<String, dynamic> json) {
@@ -133,6 +135,7 @@ class VisitorChildData {
     chapterName = json['chapter'];
     vcard = json['vcard'];
     attendanceStatus = json['attendanceStatus'];
+    addedByName = json['addedByName'];
     pinCode = json['pinCode'];
   }
 
@@ -160,6 +163,7 @@ class VisitorChildData {
     data['chapter'] = this.chapterName;
     data['vcard'] = this.vcard;
     data['attendanceStatus'] = this.attendanceStatus;
+    data['addedByName'] = this.addedByName;
     data['pinCode'] = this.pinCode;
     return data;
   }
