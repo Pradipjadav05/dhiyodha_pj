@@ -65,10 +65,13 @@ class VisitorPageState extends State<VisitorPage>
     } else {
       visitorVM.isLoading = true;
       visitorVM.update();
-      await homeVM.dashboardData(homeVM.selectedDuration);
-      visitorVM.setDashboardVisitors(homeVM.lastMonthlyData ?? {});
-      visitorVM.isLoading = false;
-      visitorVM.update();
+      try {
+        await homeVM.dashboardData(homeVM.selectedDuration);
+        visitorVM.setDashboardVisitors(homeVM.lastMonthlyData ?? {});
+      } finally {
+        visitorVM.isLoading = false;
+        visitorVM.update();
+      }
     }
   }
 

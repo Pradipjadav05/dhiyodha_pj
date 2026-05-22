@@ -554,19 +554,22 @@ class VisitorsViewModel extends GetxController implements GetxService {
     if (page == 0) {
       _visitorData = [];
     }
-    Response response =
-        await visitorsRepo.getVisitors(page, size, sort, orderBy, search);
-    _isLoading = false;
-    if (response.statusCode == 200) {
-      response.body['data']['data'].forEach((visitor) {
-        VisitorChildData visitorChildData = VisitorChildData.fromJson(visitor);
-        _visitorData.add(visitorChildData);
-      });
-      totalPages.value = (response.body['data']['total'] / size).ceil();
-    } else {
-      ApiChecker.checkApi(response);
+    try {
+      Response response =
+          await visitorsRepo.getVisitors(page, size, sort, orderBy, search);
+      if (response.statusCode == 200) {
+        response.body['data']['data'].forEach((visitor) {
+          VisitorChildData visitorChildData = VisitorChildData.fromJson(visitor);
+          _visitorData.add(visitorChildData);
+        });
+        totalPages.value = (response.body['data']['total'] / size).ceil();
+      } else {
+        ApiChecker.checkApi(response);
+      }
+    } finally {
+      _isLoading = false;
+      update();
     }
-    update();
   }
 
   Future<bool> addVisitors(
@@ -765,7 +768,7 @@ class VisitorsViewModel extends GetxController implements GetxService {
   void setDashboardVisitors(Map<String, dynamic> weekly) {
     _visitorData = [];
 
-    if (weekly['visitors'] != null) {
+    if (weekly['visitors'] != null && weekly['visitors']['list'] != null) {
       for (var v in weekly['visitors']['list']) {
         _visitorData.add(VisitorChildData(
           uuId: v['visitorUuid'],
