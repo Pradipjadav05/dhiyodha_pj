@@ -75,8 +75,8 @@ class MembersRepo {
     }
     if (chapter != null && chapter.isNotEmpty) {
       queryParams = queryParams.isNotEmpty
-          ? queryParams + "&chapter=${chapter.trim().replaceAll(" ", "")}"
-          : "chapter=${chapter.trim().replaceAll(" ", "")}";
+          ? queryParams + "&groupId=${chapter.trim().replaceAll(" ", "")}"
+          : "groupId=${chapter.trim().replaceAll(" ", "")}";
     }
 
     return await apiClient.getData('$filtersUrl?$queryParams');

@@ -311,10 +311,10 @@ class MembersViewmodel extends GetxController implements GetxService {
         _isWorldWideListShow.value = true;
       } else {
         _isWorldWideListShow.value = false;
-        showSnackBar('no_member_found'.tr);
+        showSnackBar(response.body["errors"]?[0] ?? "no_member_found".tr, isError: true);
       }
     } else {
-      showSnackBar('no_member_found'.tr);
+      showSnackBar(response.body["errors"]?[0] ?? "no_member_found".tr, isError: true);
       ApiChecker.checkApi(response);
     }
     update();

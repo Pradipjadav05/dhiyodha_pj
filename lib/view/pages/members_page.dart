@@ -1014,6 +1014,17 @@ class MembersPageState extends State<MembersPage>
   }
 
   Future<void> _collectDataAndSearchMember(MembersViewmodel membersVM) async {
+    String selectedChapterUuid = '';
+    if (membersVM.selectedChapter != 'Select Chapter' &&
+        membersVM.selectedChapter.toString().isNotEmpty) {
+      for (var group in membersVM.groupChildData) {
+        if (group.groupName == membersVM.selectedChapter) {
+          selectedChapterUuid = group.uuid ?? '';
+          break;
+        }
+      }
+    }
+
     await membersVM.getWorldWideSearchedUsersOrMembers(
       membersVM.selectedCity != 'Select City' &&
               membersVM.selectedCity.toString().isNotEmpty
@@ -1032,10 +1043,7 @@ class MembersPageState extends State<MembersPage>
               membersVM.selectedBusinessCategory != membersVM.businessCatList[0]
           ? membersVM.selectedBusinessCategory.toString().toUpperCase()
           : '',
-      membersVM.selectedChapter != 'Select Chapter' &&
-              membersVM.selectedChapter.toString().isNotEmpty
-          ? membersVM.selectedChapter
-          : '',
+      selectedChapterUuid,
     );
   }
 }
