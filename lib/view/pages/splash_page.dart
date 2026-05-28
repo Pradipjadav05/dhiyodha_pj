@@ -7,6 +7,7 @@ import 'package:dhiyodha/utils/resource/app_media_assets.dart';
 import 'package:dhiyodha/viewModel/splash_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:in_app_update/in_app_update.dart';
 
 class SplashPage extends StatefulWidget {
   @override
@@ -75,6 +76,18 @@ class SplashPageState extends State<SplashPage> {
     Get.find<SplashViewModel>().initData().then((isSuccess) {
       if (isSuccess) {
         Timer(const Duration(seconds: 4), () async {
+          if (GetPlatform.isAndroid) {
+            try {
+              AppUpdateInfo updateInfo = await InAppUpdate.checkForUpdate();
+              if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
+                await InAppUpdate.performImmediateUpdate();
+                return;
+              }
+            } catch (e) {
+              debugPrint("In-app update check failed or not available: $e");
+            }
+          }
+
           if (Get.find<SplashViewModel>().isLoggedIn()) {
             Get.find<SplashViewModel>().login();
             Get.offNamed(Routes.getHomePageRoute());
