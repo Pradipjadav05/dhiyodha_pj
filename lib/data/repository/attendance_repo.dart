@@ -10,4 +10,8 @@ class AttendanceRepo {
   Future<Response> getAttendanceList(int page, int size) async {
     return await apiClient.getData('$getAttendanceListUrl?page=$page&size=$size');
   }
+
+  Future<Response> getAttendanceHistory(int page, int size) async {
+    return await apiClient.getData('$getAttendanceHistoryUrl?page=$page&size=$size&sort=updatedAt&sortDirection=DESC');
+  }
 }

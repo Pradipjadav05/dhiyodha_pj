@@ -17,6 +17,8 @@ class AttendancePage extends StatefulWidget {
 }
 
 class _AttendancePageState extends State<AttendancePage> {
+  int _selectedTabIndex = 0;
+
   @override
   void initState() {
     super.initState();
@@ -35,29 +37,136 @@ class _AttendancePageState extends State<AttendancePage> {
         ),
       ),
       body: GetBuilder<AttendanceViewModel>(builder: (attendanceVM) {
-        if (attendanceVM.isLoading && attendanceVM.page == 0) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        if (attendanceVM.attendanceList.isEmpty) {
-          return Center(
-            child: Text("No records found", style: fontRegular.copyWith(fontSize: fontSize14)),
-          );
-        }
-
-        return LoadMore(
-          isFinish: attendanceVM.page.value >= attendanceVM.totalPages.value,
-          onLoadMore: attendanceVM.loadMore,
-          textBuilder: DefaultLoadMoreTextBuilder.english,
-          child: ListView.builder(
-            padding: EdgeInsets.all(paddingSize14),
-            itemCount: attendanceVM.attendanceList.length,
-            itemBuilder: (context, index) {
-              return _attendanceCard(attendanceVM.attendanceList[index]);
-            },
-          ),
+        return Column(
+          children: [
+            if (attendanceVM.isLoading || attendanceVM.isHistoryLoading)
+              LinearProgressIndicator(
+                color: midnightBlue,
+                backgroundColor: lavenderMist,
+                minHeight: 3,
+                borderRadius: BorderRadius.circular(radius20),
+              ),
+            _buildTabSelector(attendanceVM),
+            Expanded(
+              child: _selectedTabIndex == 0
+                  ? _buildActiveAttendance(attendanceVM)
+                  : _buildAttendanceHistory(attendanceVM),
+            ),
+          ],
         );
       }),
+    );
+  }
+
+  Widget _buildTabSelector(AttendanceViewModel attendanceVM) {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 14, 16, 6),
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: const Color(0xFFE3E8F4),
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Row(
+        children: [
+          _tabPill(
+            label: "attendance".tr,
+            isActive: _selectedTabIndex == 0,
+            onTap: () {
+              setState(() {
+                _selectedTabIndex = 0;
+              });
+            },
+          ),
+          _tabPill(
+            label: "attendance_history".tr,
+            isActive: _selectedTabIndex == 1,
+            onTap: () {
+              setState(() {
+                _selectedTabIndex = 1;
+              });
+              if (attendanceVM.attendanceHistoryList.isEmpty) {
+                attendanceVM.getAttendanceHistory(0, 10);
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _tabPill({
+    required String label,
+    required bool isActive,
+    required VoidCallback onTap,
+  }) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          decoration: BoxDecoration(
+            color: isActive ? midnightBlue : Colors.transparent,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Center(
+            child: Text(
+              label,
+              style: TextStyle(
+                color: isActive ? Colors.white : Colors.grey,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActiveAttendance(AttendanceViewModel attendanceVM) {
+    if (attendanceVM.attendanceList.isEmpty) {
+      if (attendanceVM.isLoading) {
+        return const SizedBox.shrink();
+      }
+      return Center(
+        child: Text("No records found", style: fontRegular.copyWith(fontSize: fontSize14)),
+      );
+    }
+
+    return LoadMore(
+      isFinish: attendanceVM.page.value >= attendanceVM.totalPages.value,
+      onLoadMore: attendanceVM.loadMore,
+      textBuilder: DefaultLoadMoreTextBuilder.english,
+      child: ListView.builder(
+        padding: EdgeInsets.only(left: paddingSize14, right: paddingSize14, bottom: paddingSize14),
+        itemCount: attendanceVM.attendanceList.length,
+        itemBuilder: (context, index) {
+          return _attendanceCard(attendanceVM.attendanceList[index]);
+        },
+      ),
+    );
+  }
+
+  Widget _buildAttendanceHistory(AttendanceViewModel attendanceVM) {
+    if (attendanceVM.attendanceHistoryList.isEmpty) {
+      if (attendanceVM.isHistoryLoading) {
+        return const SizedBox.shrink();
+      }
+      return Center(
+        child: Text("No records found", style: fontRegular.copyWith(fontSize: fontSize14)),
+      );
+    }
+
+    return LoadMore(
+      isFinish: attendanceVM.historyPage.value >= attendanceVM.historyTotalPages.value,
+      onLoadMore: attendanceVM.loadMoreHistory,
+      textBuilder: DefaultLoadMoreTextBuilder.english,
+      child: ListView.builder(
+        padding: EdgeInsets.only(left: paddingSize14, right: paddingSize14, bottom: paddingSize14),
+        itemCount: attendanceVM.attendanceHistoryList.length,
+        itemBuilder: (context, index) {
+          return _attendanceCard(attendanceVM.attendanceHistoryList[index]);
+        },
+      ),
     );
   }
 

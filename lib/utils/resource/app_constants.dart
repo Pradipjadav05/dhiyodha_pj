@@ -102,6 +102,7 @@ const String getMembersUrl = baseUrl + 'api/users/';
 const String filtersUrl = baseUrl + 'api/users/filter';
 const String markAttendanceUrl = baseUrl + 'api/attendance';
 const String getAttendanceListUrl = baseUrl + 'api/attendance';
+const String getAttendanceHistoryUrl = baseUrl + 'api/attendance/history';
 
 /** DOCUMENT APIs*/
 const String uploadDocumentUrl = baseUrl + 'api/document/upload';

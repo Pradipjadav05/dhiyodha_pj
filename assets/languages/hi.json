@@ -308,5 +308,6 @@
   "visitor_uuid_not_found": "विज़िटर UUID नहीं मिला",
   "scan_qr_code_message": "कृपया आगे बढ़ने के लिए QR कोड स्कैन करें।",
   "invalid_qr_message": "QR कोड में latitude और longitude होना चाहिए।",
-  "visitor_added_by": "द्वारा जोड़ा गया"
+  "visitor_added_by": "द्वारा जोड़ा गया",
+  "attendance_history": "उपस्थिति इतिहास"
 }
