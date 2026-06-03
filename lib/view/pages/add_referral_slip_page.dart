@@ -568,7 +568,7 @@ class AddReferralSlipPageState extends State<AddReferralSlipPage> {
         selectedStatus.add('TOLD_THEM_YOU_WOULD_CALL');
       }
       if (addReferralsVM.referralStatusByCards.value) {
-        selectedStatus.add('GIVEN_YOUR_CARD');
+        selectedStatus.add('GIVE_YOUR_CARD');
       }
 
       final bool isSuccess = await addReferralsVM.addReferralsData(
